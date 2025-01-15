@@ -17,7 +17,7 @@ const config: Config = {
           "linear-gradient(97.39deg, #FF8243 0%, #FFAE00 100%)",
       },
       fontFamily: {
-        poppins: ["Poppins", "serif"],
+        quicksand: ["var(--font-quicksand)", "sans-serif"], // Use the CSS variable
       },
 
       borderRadius: {

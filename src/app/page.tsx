@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div>
       <HomePage />
-      <Button variant="gradientOrangeBtn">Sign up</Button>
+      <Button variant="gradientOrangeBtn">Đăng kí</Button>
     </div>
   );
 }
