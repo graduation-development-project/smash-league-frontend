@@ -14,7 +14,7 @@ const Login = () => {
 
   //   console.log("Check Session ", session);
   const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);``
   const [userEmail, setUserEmail] = useState("");
 
   const [changePassword, setChangePassword] = useState(false);
