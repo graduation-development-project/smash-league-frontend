@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import NextAuthWrapper from "@/library/next.auth.wrapper";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Quicksand({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"], // Specify the weights you need
+  style: ["normal"], // Include styles if needed
+  variable: "--font-quicksand", // Optional: Create a CSS variable for the font
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={poppins.className}>
         {" "}
         <AntdRegistry>
           <NextAuthWrapper>{children}</NextAuthWrapper>
