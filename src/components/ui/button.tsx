@@ -9,17 +9,32 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "font-quicksand font-bold text-[16px] font-bold border-none rounded-[20px] px-[20px] py-[10px]",
+        // default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
           "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent hover:text-accent-foreground font-quicksand font-bold",
         link: "text-primary underline-offset-4 hover:underline",
         gradientOrangeBtn:
-          "w-[108px] h-[44px] bg-gradient-orange text-white font-quicksand font-bold text-[16px] font-bold border-none rounded-[20px] px-[20px] py-[10px]",
+          "w-[108px] h-[44px] text-white font-quicksand font-bold text-[16px] font-bold border-none rounded-[20px] px-[20px] py-[10px] ",
+        
+      },
+      shadow: {
+        shadowBtn: "shadow-shadowBtn",
+        shadowNone: "shadow-none",
+        shadowComp: "shadow-shadowComp",
+      },
+
+      colorBtn: {
+        gradientOrangeBtn: "bg-gradient-orange hover:bg-dark-gradient-orange text-white",
+        gradientGreenBtn: "bg-gradient-green hover:bg-dark-gradient-green text-white",
+        whiteBtn: "bg-gradient-orange bg-clip-text text-transparent "
+        // bgDarkGradientOrange: "bg-dar k-gradient-orange",
+        // bgDarkGradientGreen: "bg-dark-gradient-green",
       },
 
       size: {
@@ -32,28 +47,30 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: "default",
       size: "default",
+      // shadow: "shadowBtn",
+      colorBtn: "gradientOrangeBtn",
     },
   }
 );
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, shadow, colorBtn, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, shadow, colorBtn, className }))}
         ref={ref}
         {...props}
       />
     );
   }
 );
-Button.displayName = "Button";
+Button.displayName = "Button"; 
 
 export { Button, buttonVariants };

@@ -4,7 +4,7 @@ import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import NextAuthWrapper from "@/library/next.auth.wrapper";
 
-const poppins = Quicksand({
+const quicksand = Quicksand({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"], // Specify the weights you need
   style: ["normal"], // Include styles if needed
@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>
+      <body className={quicksand.className}>
         {" "}
         <AntdRegistry>
           <NextAuthWrapper>{children}</NextAuthWrapper>
