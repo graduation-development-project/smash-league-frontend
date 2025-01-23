@@ -37,6 +37,8 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        primaryColor: "#FF8243",
+        secondColor: "#2B927F",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
