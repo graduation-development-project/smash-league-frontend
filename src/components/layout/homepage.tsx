@@ -8,7 +8,7 @@ import TournamentsMain from "../modules/tournaments.main";
 const HomePage = () => {
   return (
     <MainLayout>
-      <div className="flex justify-center items-center min-h-[100vh]">
+      <div className="flex justify-center items-center min-h-[100vh] w-full">
         {/* <Result
           icon={<CrownOutlined />}
           title="Smash League Project - createdBy @smashleague"
