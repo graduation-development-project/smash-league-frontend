@@ -4,7 +4,7 @@ import React from "react";
 import { Button } from "../../ui/button";
 import { RightOutlined } from "@ant-design/icons";
 import styles from "@/components/layout/layout.module.scss";
-import images from "@/assets";
+import images from "@/assets/images";
 import Image from "next/image";
 
 export default function Header() {
@@ -37,11 +37,27 @@ export default function Header() {
           {/* Navigation */}
           <ul className="flex gap-12 text-lg font-quicksand font-bold">
             {["News", "Tournaments", "Teams", "Organizer Zone", "About"].map(
-              (item, index) => (
-                <li key={index} className={styles.textTab}>
-                  {item}
-                </li>
-              )
+              (item, index) => {
+                if (item === "News" || item === "Tournaments") {
+                  return (
+                    <li
+                      key={index}
+                      className={`${styles.textTab} hover:text-primaryColor before:bg-primaryColor`}
+                    >
+                      {item}
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li
+                      key={index}
+                      className={`${styles.textTab} hover:text-secondColor before:bg-secondColor`}
+                    >
+                      {item}
+                    </li>
+                  );
+                }
+              }
             )}
           </ul>
 

@@ -10,10 +10,6 @@
   align-items: center;
   max-width: max-content;
 
-  &:hover {
-    color: #74ba74;
-  }
-
   &::before {
     position: absolute;
     content: "";
@@ -21,7 +17,6 @@
     left: 0;
     width: 0;
     height: 4px;
-    background-color: #74ba74;
     opacity: 0; /* Start hidden */
     transition: width 0.5s ease, opacity 0.3s ease;
   }

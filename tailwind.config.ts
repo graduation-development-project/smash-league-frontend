@@ -37,7 +37,7 @@ const config: Config = {
       },
       colors: {
         primaryColor: "#FF8243",
-        secondColor: "#2B927F",
+        secondColor: "#74ba74",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

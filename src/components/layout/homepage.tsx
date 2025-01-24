@@ -3,7 +3,7 @@
 import { Result } from "antd";
 import { CrownOutlined } from "@ant-design/icons";
 import MainLayout from "./mainlayout/layout";
-import TournamentsMain from "../modules/tournaments.main";
+import FeaturedTournamentMain from "../organisms/tournaments.main";
 
 const HomePage = () => {
   return (
@@ -14,7 +14,7 @@ const HomePage = () => {
           title="Smash League Project - createdBy @smashleague"
         /> */}
 
-        <TournamentsMain />
+        <FeaturedTournamentMain />
       </div>
     </MainLayout>
   );
