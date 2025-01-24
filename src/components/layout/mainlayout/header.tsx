@@ -4,12 +4,12 @@ import React from "react";
 import { Button } from "../../ui/button";
 import { RightOutlined } from "@ant-design/icons";
 import styles from "@/components/layout/layout.module.scss";
-import images from "@/assets";
+import images from "@/assets/images";
 import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="relative w-full flex flex-col justify-center">
+    <header className="relative w-full flex flex-col justify-center mb-7">
       {/* Background Image */}
       <div className="absolute w-full min-h-[100vh] z-0 shadow-shadowComp rounded">
         <Image
@@ -37,11 +37,27 @@ export default function Header() {
           {/* Navigation */}
           <ul className="flex gap-12 text-lg font-quicksand font-bold">
             {["News", "Tournaments", "Teams", "Organizer Zone", "About"].map(
-              (item, index) => (
-                <li key={index} className={styles.textTab}>
-                  {item}
-                </li>
-              )
+              (item, index) => {
+                if (item === "News" || item === "Tournaments") {
+                  return (
+                    <li
+                      key={index}
+                      className={`${styles.textTab} hover:text-primaryColor before:bg-primaryColor`}
+                    >
+                      {item}
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li
+                      key={index}
+                      className={`${styles.textTab} hover:text-secondColor before:bg-secondColor`}
+                    >
+                      {item}
+                    </li>
+                  );
+                }
+              }
             )}
           </ul>
 
