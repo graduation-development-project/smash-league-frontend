@@ -9,7 +9,7 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="relative w-full flex flex-col justify-center">
+    <header className="relative w-full flex flex-col justify-center mb-7">
       {/* Background Image */}
       <div className="absolute w-full min-h-[100vh] z-0 shadow-shadowComp rounded">
         <Image
