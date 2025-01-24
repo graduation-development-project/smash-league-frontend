@@ -13,14 +13,13 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "gradient-orange":
-          "linear-gradient(97deg, #FF8243 0%, #FFAE00 100%)",
-        "dark-gradient-orange": 
+        "gradient-orange": "linear-gradient(97deg, #FF8243 0%, #FFAE00 100%)",
+        "dark-gradient-orange":
           "linear-gradient(97deg, #DA7135 0%, #DB9403 100%)",
-        "gradient-green": 
-          "linear-gradient(97deg, #2B927F 0%, #74BA74 100%)",
-        "dark-gradient-green": 
+        "gradient-green": "linear-gradient(97deg, #2B927F 0%, #74BA74 100%)",
+        "dark-gradient-green":
           "linear-gradient(97deg, #267665 0%, #5A935D 100%)",
+        // "hero-background": "url('/src/assets/Hero.png')",
       },
       fontFamily: {
         quicksand: ["var(--font-quicksand)", "sans-serif"], // Use the CSS variable
@@ -28,7 +27,7 @@ const config: Config = {
       boxShadow: {
         shadowBtn: "0px 2px 4px 0px rgb(0 0 0 / 0.25)",
         shadowComp: "0px 0px 20px 0px rgb(0 0 0 / 0.4)",
-        none: "0px 0px 0px 0px"
+        none: "0px 0px 0px 0px",
       },
 
       borderRadius: {

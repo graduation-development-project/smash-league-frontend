@@ -1,0 +1,58 @@
+//Header
+.textTab {
+  position: relative;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  height: 30px; /* Smooth color transition */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: max-content;
+
+  &:hover {
+    color: #74ba74;
+  }
+
+  &::before {
+    position: absolute;
+    content: "";
+    bottom: -10px;
+    left: 0;
+    width: 0;
+    height: 4px;
+    background-color: #74ba74;
+    opacity: 0; /* Start hidden */
+    transition: width 0.5s ease, opacity 0.3s ease;
+  }
+
+  &:hover::before {
+    width: 100%; /* Set underline width on hover */
+    opacity: 1; /* Make underline visible */
+  }
+}
+
+//Footer
+
+.container {
+  display: flex;
+  padding: 10px 0px;
+  justify-content: start;
+  align-items: center;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.container span {
+  display: block;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    color: #74ba74;
+    font-weight: 700;
+    margin-left: 20px;
+    transform: scale(1.1);
+  }
+}
