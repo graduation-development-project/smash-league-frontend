@@ -134,12 +134,18 @@ body {
     --chart-5: 340 75% 55%;
   }
 }
+* {
+  margin: 0;
+  padding: 0;
+}
 
 @layer base {
   * {
     @apply border-border;
+ 
   }
   body {
     @apply bg-background text-foreground;
+
   }
 }

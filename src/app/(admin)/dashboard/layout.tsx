@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
-import AdminContent from "@/components/layout/admin.content";
-import AdminFooter from "@/components/layout/admin.footer";
-import AdminHeader from "@/components/layout/admin.header";
-import AdminSideBar from "@/components/layout/admin.sidebar";
+import AdminContent from "@/components/layout/adminlayout/admin.content";
+import AdminFooter from "@/components/layout/adminlayout/admin.footer";
+import AdminHeader from "@/components/layout/adminlayout/admin.header";
+import AdminSideBar from "@/components/layout/adminlayout/admin.sidebar";
 import { AdminContextProvider } from "@/library/admin.context";
 
 const AdminLayout = async ({
