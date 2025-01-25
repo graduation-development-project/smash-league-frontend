@@ -5,9 +5,9 @@ import Link from "next/link";
 import { authenticate, loginGoogle } from "@/utils/actions";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import ModalReactive from "./modal.reactive";
+import ModalReactive from "../general/organisms/auth/modal.reactive";
 import { useState } from "react";
-import ModalChangePassword from "./modal.change.password";
+import ModalChangePassword from "../general/organisms/auth/modal.change.password";
 
 const Login = () => {
   const { data: session } = useSession();

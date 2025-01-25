@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import images from "@/assets/images";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import TextGradientBtn from "./text.gradient.btn";
 
 const TourCard = () => {

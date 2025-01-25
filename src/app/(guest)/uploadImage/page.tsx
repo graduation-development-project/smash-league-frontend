@@ -1,4 +1,4 @@
-import UploadImage from "@/components/image/upload.image";
+import UploadImage from "@/components/pages/image/upload.image";
 import React from "react";
 
 const UploadImagePage = () => {

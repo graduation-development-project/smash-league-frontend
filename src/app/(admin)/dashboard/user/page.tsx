@@ -1,4 +1,4 @@
-import UserTable from "@/components/admin/user.table";
+import UserTable from "@/components/general/molecules/admin/user.table";
 
 const ManageUserPage = () => {
     return (
