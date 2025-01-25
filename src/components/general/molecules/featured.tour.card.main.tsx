@@ -7,7 +7,7 @@ import {
   ClockIcon,
   LocationIcon,
 } from "@/assets/icons";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import TextGradientBtn from "../atoms/text.gradient.btn";
 
 const FeaturedTourCardMain = () => {
