@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image";
 import React from "react";
 import images from "@/assets/images";
@@ -6,8 +8,8 @@ import TextGradientBtn from "./text.gradient.btn";
 
 const TourCard = () => {
   return (
-    <div className="w-full h-full flex justify-between items-center gap-5">
-      <div className="relative w-full flex">
+    <div className="w-full h-full flex justify-between gap-5">
+      <div className="relative w-full flex justify-center items-center rounded-[15px]">
         <div className="absolute w-full h-full z-0 shadow-shadowComp rounded-[15px]">
           <Image
             src={images.featuredTourCard}
@@ -28,7 +30,7 @@ const TourCard = () => {
           </h1>
         </div>
 
-        <div className="text-white text-right text-[16px] font-semibold absolute z-10 top-0 left-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-[3px] rounded-br-[10px]">
+        <div className="text-white text-right text-[16px] font-semibold absolute z-10 top-0 left-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-[3px] rounded-tl-[5px] rounded-br-[10px]">
           Ho Chi Minh
         </div>
 
