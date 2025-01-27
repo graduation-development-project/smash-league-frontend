@@ -9,16 +9,16 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="relative w-full flex flex-col justify-center mb-7">
+    <header className="relative w-full flex flex-col justify-center">
       {/* Background Image */}
       <div className="absolute w-full min-h-[100vh] z-0 shadow-shadowComp rounded">
         <Image
           src={images.heroImage}
           alt="Hero Background"
-          layout="fill"
-          objectFit="cover"
+          fill
           quality={100}
           priority
+          className="object-cover"
         />
       </div>
 

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import React from "react";
@@ -14,11 +14,10 @@ const TourCard = () => {
           <Image
             src={images.featuredTourCard}
             alt="FeaturedTournamentMain"
-            layout="fill"
-            objectFit="cover"
+            fill
             quality={100}
             priority
-            className="rounded"
+            className="rounded object-cover"
           />
         </div>
 
@@ -36,6 +35,10 @@ const TourCard = () => {
 
         <div className="text-white text-right text-[16px] font-semibold absolute z-10 top-0 right-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-[3px] rounded-bl-[10px]">
           22-25 Dec
+        </div>
+
+        <div className="absolute z-10 bottom-1 right-1 w-10 h-10">
+          <Image src={images.sponsorImage} alt="Sponsor" fill/>
         </div>
       </div>
       <div className="flex flex-col gap-5 min-w-max ">
