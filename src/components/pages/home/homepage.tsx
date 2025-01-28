@@ -2,12 +2,8 @@
 import MainLayout from "../../layout/mainlayout/layout";
 import FeaturedTournamentMain from "../../general/organisms/tournaments.main";
 import TourCardSliderMain from "@/components/general/atoms/tour.card.slider.main";
-import NewsCard from "@/components/general/molecules/news.card";
-import NewsBulletinMain from "@/components/general/organisms/news.main";
-
 import { HomeContextProvider } from "@/library/home.context";
-
-
+import OrganizerZone from "@/components/general/organisms/organizer.zone";
 
 const HomePage = () => {
   return (
@@ -15,11 +11,11 @@ const HomePage = () => {
 
     <HomeContextProvider>
       <MainLayout>
-        <div className="flex flex-col gap-5 justify-center items-center h-screen w-full">
-          <FeaturedTournamentMain />
-          <NewsBulletinMain />
-
-          {/* <TourCardSliderMain /> */}
+        <div className="flex flex-col px-[20px]">
+          <div className="flex flex-col gap-5 justify-center items-center h-max w-full mt-32">
+            <FeaturedTournamentMain />
+          </div>
+          <OrganizerZone />
         </div>
       </MainLayout>
     </HomeContextProvider>
