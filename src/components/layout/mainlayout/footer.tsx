@@ -5,7 +5,7 @@ import styles from "@/components/layout/layout.module.scss";
 
 const Footer = () => {
   return (
-    <footer className="w-full h-[494px] gap-2 flex flex-col bg-black bottom-0 ">
+    <footer className="w-full h-[494px] gap-2 flex flex-col bg-black bottom-0 mt-7">
       <div className="w-full h-5/6 pr-[40px] pl-[50px] ml-[40px] py-[80px] flex justify-between items-start gap-6 shrink-0">
         <div className="h-full w-full flex flex-col  gap-4 text-[#B4B4AC]">
           <h1 className="mb-2 text-[20px] font-bold text-white">

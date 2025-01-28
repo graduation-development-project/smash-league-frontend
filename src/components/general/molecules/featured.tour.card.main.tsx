@@ -11,17 +11,50 @@ import { Button } from "../../ui/button";
 import TextGradientBtn from "../atoms/text.gradient.btn";
 import TourCardSliderMain from "../atoms/tour.card.slider.main";
 import { useHomeContext } from "@/library/home.context";
-import { sliderImages } from "@/assets/images";
+import { sliderImages } from "@/assets/data";
 
 const FeaturedTourCardMain = () => {
-  const { activeSlide } = useHomeContext();
+  const { activeSlide, setActiveSlide } = useHomeContext();
   const slide = sliderImages.find((item) => item.id === activeSlide);
+
+  const handleSlideChange = (index: number) => {
+    setActiveSlide(index);
+  };
 
   return (
     <div className="w-full flex flex-col">
       <div className="relative w-full h-full flex flex-col">
         <div className="absolute w-full h-full z-0 shadow-shadowComp rounded-[15px]">
           <TourCardSliderMain />
+          <div className="w-[90%] flex items-center justify-center gap-2 mt-4">
+            <div className="flex items-center gap-3">
+              {sliderImages.map((item) => {
+                const isActive = activeSlide === item.id;
+
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleSlideChange(item.id)}
+                    className={`relative h-full w-full rounded-full shadow-md transition-all duration-300 flex justify-center items-center ${
+                      isActive
+                        ? "border border-primaryColor scale-100"
+                        : "border border-gray-300 bg-gray-300"
+                    }`}
+                  >
+                    {isActive && (
+                      <span className="absolute inline-flex h-full w-full rounded-full border border-primaryColor animate-ping"></span>
+                    )}
+                    {/* Inner circle */}
+                    <p
+                      className={`rounded-full w-[8px] h-[8px] outline-none border-none ${
+                        isActive ? "bg-primaryColor scale-95" : "bg-gray-300"
+                      }`}
+                    ></p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
         <div className="relative z-10 flex flex-col p-10 gap-3">
           <div className="flex flex-col gap-2">
@@ -39,15 +72,14 @@ const FeaturedTourCardMain = () => {
             </span>
           </div>
           <ul className="flex flex-col gap-2 text-[16px] text-white leading-[16px]">
-            <li className="flex items-center gap-2">
-              <CanlendarIcon /> {slide?.date}
-            </li>
-            <li className="flex items-center gap-2">
-              <ClockIcon /> Registration Deadline: {slide?.registerDeadline}
-            </li>
-            <li className="flex items-center gap-2">
-              <LocationIcon /> {slide?.location}
-            </li>
+            {slide?.details.map((item) => {
+              return (
+                <li key={item.id} className="flex items-center gap-2 ">
+                  <item.icon className="hover:text-orange-400 hover:animate-around transition-all duration-300 cursor-pointer" />{" "}
+                  {item.content}
+                </li>
+              );
+            })}
           </ul>
           <div className="flex gap-5 mt-10">
             <Button size={"lg"}>Participate now</Button>
