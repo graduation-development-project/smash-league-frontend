@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import FeaturedTourCardMain from "../molecules/featured.tour.card.main";
 import FeaturedTourCard from "../molecules/featured.tour.card";

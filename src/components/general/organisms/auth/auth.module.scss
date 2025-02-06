@@ -1,0 +1,28 @@
+.textForgetPassword {
+  position: relative;
+  color: black;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  height: 20px; /* Smooth color transition */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: max-content;
+
+  &::before {
+    position: absolute;
+    content: "";
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    opacity: 0; /* Start hidden */
+    transition: width 0.5s ease, opacity 0.3s ease;
+  }
+
+  &:hover::before {
+    width: 100%; /* Set underline width on hover */
+    opacity: 1; /* Make underline visible */
+  }
+}
+

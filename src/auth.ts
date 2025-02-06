@@ -8,9 +8,13 @@ import { sendRequest } from "./utils/api";
 import { IUser } from "./types/next-auth";
 import Google from "next-auth/providers/google";
 
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    Google,
+    Google({
+      // Google requires "offline" access_type to provide a `refresh_token`
+      authorization: { params: { access_type: "offline", prompt: "consent" } },
+    }),
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
@@ -52,42 +56,94 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/auth/login",
   },
   callbacks: {
-    async jwt({ token, user, profile, account }) {
-      // console.log("Check account", account);
-      // console.log("Check profile", profile);
-      if (account?.provider === "google" && profile?.email) {
-        // Call your API to handle login or user creation for Google
-        const res = await sendRequest<IBackendRes<any>>({
+    async jwt({ token, user, account, profile }) {
+      if (account) {
+        if (account.provider === "google" && profile?.email) {
+          const res = await sendRequest<IBackendRes<any>>({
+            method: "POST",
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login-google`,
+            body: { email: profile.email, name: profile.name },
+          });
+
+          if (res.statusCode === 201) {
+            token.user = {
+              _id: res.data?._id,
+              name: res.data?.name,
+              email: res.data?.email,
+            };
+          } else {
+            throw new Error("Failed to authenticate via Google.");
+          }
+        }
+
+        return {
+          ...token,
+          accessToken: account.access_token ?? account.accessToken,
+          expires_at:
+            account.expires_at ?? Math.floor(Date.now() / 1000) + 3600,
+          refresh_token: account.refresh_token ?? token.refresh_token,
+        };
+      }
+
+      if (Date.now() < (token.access_expire ?? token.expires_at) * 1000) {
+        return token;
+      }
+
+      if (!token.refresh_token) {
+        throw new TypeError("Missing refresh_token");
+      }
+
+      try {
+        const response = await fetch("https://oauth2.googleapis.com/token", {
           method: "POST",
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login-google`,
-          body: { email: profile.email, name: profile.name },
+          body: new URLSearchParams({
+            client_id: process.env.AUTH_GOOGLE_ID!,
+            client_secret: process.env.AUTH_GOOGLE_SECRET!,
+            grant_type: "refresh_token",
+            refresh_token: token.refresh_token!,
+          }),
         });
 
-        console.log("Check res", res);
+        const tokens = await response.json();
 
-        if (+res.statusCode === 201) {
-          token.user = {
-            _id: res.data?.user?._id,
-            name: res.data?.user?.name,
-            email: res.data?.user?.email,
-          };
-        } else {
-          throw new Error("Failed to authenticate via Google.");
-        }
-      }
+        if (!response.ok) throw tokens;
 
-      if (user) {
-        token.user = user as IUser; // Attaching user to token
+        return {
+          ...token,
+          accessToken: tokens.access_token,
+          expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in),
+          refresh_token: tokens.refresh_token ?? token.refresh_token,
+        };
+      } catch (error) {
+        console.error("Error refreshing access_token", error);
+        token.error = "RefreshTokenError";
+        return token;
       }
-      return token;
     },
     session({ session, token }) {
+      session.error = token.error;
       (session.user as IUser) = token.user; // Attaching token user to session
       return session;
     },
+
     authorized: async ({ auth }) => {
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
     },
   },
 });
+
+declare module "next-auth" {
+  interface Session {
+    error?: "RefreshTokenError";
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    access_token: string;
+    expires_at: number;
+    refresh_token?: string;
+    error?: "RefreshTokenError";
+  }
+}

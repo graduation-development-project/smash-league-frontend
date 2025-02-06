@@ -1,8 +1,10 @@
-import Login from "@/components/auth/login";
+import Login from "@/components/pages/auth/login";
+
+
 
 const LoginPage = async () => {
 
-  return <Login />;
+  return <Login/>
 };
 
 export default LoginPage;

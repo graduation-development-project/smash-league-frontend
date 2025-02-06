@@ -10,7 +10,7 @@ const HomePage = () => {
 
     <HomeContextProvider>
       <MainLayout>
-        <div className="flex flex-col px-[20px]">
+        <div className="flex flex-col">
           <div className="flex flex-col gap-5 justify-center items-center h-max w-full mt-32">
             <FeaturedTournamentMain />
           </div>
