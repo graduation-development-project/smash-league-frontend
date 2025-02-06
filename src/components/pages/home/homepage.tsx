@@ -1,6 +1,7 @@
 "use client";
 import MainLayout from "../../layout/mainlayout/layout";
 import FeaturedTournamentMain from "../../general/organisms/tournaments.main";
+import TourCardSliderMain from "@/components/general/atoms/tour.card.slider.main";
 import { HomeContextProvider } from "@/library/home.context";
 import OrganizerZone from "@/components/general/organisms/organizer.zone";
 
