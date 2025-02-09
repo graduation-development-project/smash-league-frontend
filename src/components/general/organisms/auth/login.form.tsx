@@ -52,7 +52,8 @@ const LoginForm = () => {
       });
     } else {
       //redirect to /dashboard
-      router.push("/dashboard");
+      router.push("/auth/direction");
+      // console.log("Success login");
     }
   };
 
@@ -83,71 +84,71 @@ const LoginForm = () => {
               autoComplete="off"
               layout="vertical"
             >
-              <Form.Item
-                label="Email"
-                name="username"
-                style={{
-                  fontWeight: "bold",
-                }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your email!",
-                  },
-                ]}
-              >
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Input: {
-                        /* here is your component tokens */
-                        activeBorderColor: "#FF8243",
-                        activeShadow: "0 0 0 2px #fffff",
-                        hoverBorderColor: "#FF8243",
-                      },
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Input: {
+                      /* here is your component tokens */
+                      activeBorderColor: "#FF8243",
+                      activeShadow: "0 0 0 2px #fffff",
+                      hoverBorderColor: "#FF8243",
                     },
+                  },
+                }}
+              >
+                <Form.Item
+                  label="Email"
+                  name="username"
+                  style={{
+                    fontWeight: "bold",
                   }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your email!",
+                    },
+                  ]}
                 >
                   <Input
                     style={{
                       padding: "8px",
                     }}
                   />
-                </ConfigProvider>
-              </Form.Item>
+                </Form.Item>
+              </ConfigProvider>
 
-              <Form.Item
-                label="Password"
-                name="password"
-                style={{
-                  fontWeight: "bold",
-                }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your password!",
-                  },
-                ]}
-              >
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Input: {
-                        /* here is your component tokens */
-                        activeBorderColor: "#FF8243",
-                        activeShadow: "0 0 0 2px #fffff",
-                        hoverBorderColor: "#FF8243",
-                      },
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Input: {
+                      /* here is your component tokens */
+                      activeBorderColor: "#FF8243",
+                      activeShadow: "0 0 0 2px #fffff",
+                      hoverBorderColor: "#FF8243",
                     },
+                  },
+                }}
+              >
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  style={{
+                    fontWeight: "bold",
                   }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your password!",
+                    },
+                  ]}
                 >
                   <Input.Password
                     style={{
                       padding: "8px",
                     }}
                   />
-                </ConfigProvider>
-              </Form.Item>
+                </Form.Item>
+              </ConfigProvider>
 
               <Form.Item>
                 <div
@@ -224,7 +225,7 @@ const LoginForm = () => {
                 onMouseEnter={() => setIsBack(true)}
                 onMouseLeave={() => setIsBack(false)}
                 className={`group border border-primaryColor p-[5px] rounded-full transition-transform duration-300 ${
-                  isBack ? "bg-primaryColor -translate-x-full" : ""
+                  isBack ? "bg-primaryColor" : ""
                 }`}
               >
                 {isBack ? (

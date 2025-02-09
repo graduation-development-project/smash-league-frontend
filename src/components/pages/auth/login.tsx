@@ -8,7 +8,7 @@ import React from "react";
 const Login = () => {
   return (
     <div className="flex justify-around w-full h-screen ">
-      <div className="w-1/2 h-full bg-yellow-500 mix-blend-multiply">
+      <div className="w-1/2 h-full bg-yellow-800 mix-blend-multiply">
         <Image
           src={images.orangeBackgroundImage}
           alt="Orange Background"
@@ -19,7 +19,7 @@ const Login = () => {
           className="w-full h-full object-fill mix-blend-multiply"
         />
       </div>
-      <div className="w-1/2 h-full shadow-shadowComp ">
+      <div className="w-1/2 h-full shadow-shadowComp">
         {" "}
         <LoginForm />
       </div>

@@ -8,7 +8,6 @@ import { sendRequest } from "./utils/api";
 import { IUser } from "./types/next-auth";
 import Google from "next-auth/providers/google";
 
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Google({
@@ -39,6 +38,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: res.data?.user?.name,
             email: res.data?.user?.email,
             access_token: res.data?.access_token,
+            role: "athlete",
           };
           //401 is wrong password
         } else if (+res.statusCode === 401) {
@@ -57,6 +57,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     async jwt({ token, user, account, profile }) {
+      if (user) {
+        token.user = user as IUser; // Store the user in the JWT // Store access_token for API calls
+      }
+
       if (account) {
         if (account.provider === "google" && profile?.email) {
           const res = await sendRequest<IBackendRes<any>>({
@@ -70,6 +74,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               _id: res.data?._id,
               name: res.data?.name,
               email: res.data?.email,
+              role: "admin",
             };
           } else {
             throw new Error("Failed to authenticate via Google.");
@@ -121,7 +126,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
     session({ session, token }) {
-      session.error = token.error;
       (session.user as IUser) = token.user; // Attaching token user to session
       return session;
     },

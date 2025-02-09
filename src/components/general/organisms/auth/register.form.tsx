@@ -41,41 +41,38 @@ const RegisterForm = () => {
   };
 
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Form: {
-            /* here is your component tokens */
-            // labelColor: "#FF8243"
-          },
-          Input: {
-            activeBorderColor: 'red',
-            hoverBorderColor: 'red',
-            /* here is your component tokens */
-          },
-        },
-      }}
-    >
-      <Row justify={"center"} style={{ marginTop: "100px" }}>
-        <Col xs={24} md={16} lg={14}>
-          <fieldset
-            style={{
-              padding: "15px",
-              margin: "5px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",
-              backgroundColor: "#fff",
-            }}
+    <Row justify={"center"} style={{ marginTop: "100px" }}>
+      <Col xs={24} md={16} lg={14}>
+        <fieldset
+          style={{
+            padding: "15px",
+            margin: "5px",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+            boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "#fff",
+          }}
+        >
+          <legend className="text-center font-bold text-[22px] border-none outline-none ">
+            Sign Up <span className="text-secondColor ">Smash League</span>
+          </legend>
+          <Form
+            name="basic"
+            onFinish={onFinish}
+            autoComplete="off"
+            layout="vertical"
           >
-            <legend className="text-center font-bold text-[22px] border-none outline-none ">
-              Sign Up <span className="text-secondColor ">Smash League</span>
-            </legend>
-            <Form
-              name="basic"
-              onFinish={onFinish}
-              autoComplete="off"
-              layout="vertical"
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    /* here is your component tokens */
+                    activeBorderColor: "#74ba74",
+                    activeShadow: "0 0 0 2px #fffff",
+                    hoverBorderColor: "#74ba74",
+                  },
+                },
+              }}
             >
               <Form.Item
                 label="Email"
@@ -92,7 +89,20 @@ const RegisterForm = () => {
               >
                 <Input style={{ padding: "8px" }} />
               </Form.Item>
+            </ConfigProvider>
 
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    /* here is your component tokens */
+                    activeBorderColor: "#74ba74",
+                    activeShadow: "0 0 0 2px #fffff",
+                    hoverBorderColor: "#74ba74",
+                  },
+                },
+              }}
+            >
               <Form.Item
                 label="Password"
                 name="password"
@@ -108,7 +118,20 @@ const RegisterForm = () => {
               >
                 <Input.Password style={{ padding: "8px" }} />
               </Form.Item>
+            </ConfigProvider>
 
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    /* here is your component tokens */
+                    activeBorderColor: "#74ba74",
+                    activeShadow: "0 0 0 2px #fffff",
+                    hoverBorderColor: "#74ba74",
+                  },
+                },
+              }}
+            >
               <Form.Item
                 label="Name"
                 name="name"
@@ -116,60 +139,60 @@ const RegisterForm = () => {
               >
                 <Input style={{ padding: "8px" }} />
               </Form.Item>
+            </ConfigProvider>
 
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  style={{
-                    padding: "20px",
-                    backgroundColor: "#74ba74",
-                    fontWeight: "bold",
-                    fontSize: "16px",
-                    marginTop: "10px",
-                  }}
-                >
-                  Sign Up
-                </Button>
-              </Form.Item>
-            </Form>
-            <div
-              onClick={() => router.push("/")}
-              className="flex justify-center items-center"
-            >
-              <Link
-                href="/"
-                onMouseEnter={() => setIsBack(true)}
-                onMouseLeave={() => setIsBack(false)}
-                className={`group border border-secondColor p-[5px] rounded-full transition-transform duration-300 ${
-                  isBack ? "bg-secondColor -translate-x-full" : ""
-                }`}
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                block
+                style={{
+                  padding: "20px",
+                  backgroundColor: "#74ba74",
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                  marginTop: "10px",
+                }}
               >
-                {isBack ? (
-                  <ArrowLeft
-                    size={20}
-                    className="text-secondColor group-hover:text-white transition"
-                  />
-                ) : (
-                  <Home
-                    size={20}
-                    className="text-secondColor group-hover:text-white transition"
-                  />
-                )}
-              </Link>
-            </div>
-            <Divider />
-            <div style={{ textAlign: "center" }}>
-              Already have an account?{" "}
-              <Link href={"/auth/login"} style={{ color: "#74ba74" }}>
-                Log In
-              </Link>
-            </div>
-          </fieldset>
-        </Col>
-      </Row>
-    </ConfigProvider>
+                Sign Up
+              </Button>
+            </Form.Item>
+          </Form>
+          <div
+            onClick={() => router.push("/")}
+            className="flex justify-center items-center"
+          >
+            <Link
+              href="/"
+              onMouseEnter={() => setIsBack(true)}
+              onMouseLeave={() => setIsBack(false)}
+              className={`group border border-secondColor p-[5px] rounded-full transition-transform duration-300 ${
+                isBack ? "bg-secondColor" : ""
+              }`}
+            >
+              {isBack ? (
+                <ArrowLeft
+                  size={20}
+                  className="text-secondColor group-hover:text-white transition"
+                />
+              ) : (
+                <Home
+                  size={20}
+                  className="text-secondColor group-hover:text-white transition"
+                />
+              )}
+            </Link>
+          </div>
+          <Divider />
+          <div style={{ textAlign: "center" }}>
+            Already have an account?{" "}
+            <Link href={"/auth/login"} style={{ color: "#74ba74" }}>
+              Log In
+            </Link>
+          </div>
+        </fieldset>
+      </Col>
+    </Row>
   );
 };
 
