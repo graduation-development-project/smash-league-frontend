@@ -1,0 +1,17 @@
+services:
+  client:
+    container_name: smash-league-client
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - AUTH_SECRET=your-auth-secret
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
+      - AUTH_GOOGLE_ID=your-google-client-id
+      - AUTH_GOOGLE_SECRET=your-google-client-secret
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
