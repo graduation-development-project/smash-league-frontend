@@ -7,7 +7,7 @@ import OrganizerZoneCard from "../molecules/organizer.zone.card";
 const OrganizerZone = () => {
   return (
     <div>
-      <main className="w-full h-max flex flex-col gap-[20px] bg-white rounded-[15px] p-[40px] shrink-0 items-start shadow-shadowComp mt-10">
+      <main className="w-full h-max flex flex-col gap-[20px] bg-white p-[40px] shrink-0 items-start shadow-shadowComp mt-10">
         <div className="flex flex-col gap-2 items-start">
           <h1 className="text-[32px] text-center font-bold leading-normal text-black">
             <span className="text-secondColor">Organizer</span> Zone
