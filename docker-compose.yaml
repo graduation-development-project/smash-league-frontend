@@ -4,6 +4,7 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+    command: bash -c "npm run build; npm run start;"
     environment:
       - AUTH_SECRET=your-auth-secret
       - NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
