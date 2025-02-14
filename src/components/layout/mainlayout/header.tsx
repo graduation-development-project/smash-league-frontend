@@ -6,9 +6,12 @@ import styles from "@/components/layout/layout.module.scss";
 import images from "@/assets/images";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function Header() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const route = localStorage.getItem("route") || "";
 
   return (
     <header className="relative w-full flex flex-col justify-center">
@@ -29,7 +32,13 @@ export default function Header() {
         {/* Top Section */}
         <div className="flex justify-between items-center text-white">
           {/* Logo */}
-          <div className="flex flex-col items-center gap-1">
+          <div
+            className="flex flex-col items-center gap-1 cursor-pointer"
+            onClick={() => {
+              localStorage.setItem("route", "home");
+              router.push("/");
+            }}
+          >
             <h1 className="text-3xl font-bold text-primaryColor font-quicksand">
               SMASH LEAGUE
             </h1>
@@ -44,7 +53,19 @@ export default function Header() {
                   return (
                     <li
                       key={index}
-                      className={`${styles.textTab} hover:text-primaryColor before:bg-primaryColor`}
+                      className={`${
+                        styles.textTab
+                      } hover:text-primaryColor before:bg-primaryColor ${
+                        item === route
+                          ? "text-primaryColor before:bg-primaryColor"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        localStorage.setItem("route", item);
+                        router.push(
+                          `/${item.charAt(0).toLowerCase() + item.slice(1)}`
+                        );
+                      }}
                     >
                       {item}
                     </li>
@@ -53,7 +74,19 @@ export default function Header() {
                   return (
                     <li
                       key={index}
-                      className={`${styles.textTab} hover:text-secondColor before:bg-secondColor`}
+                      className={`${
+                        styles.textTab
+                      } hover:text-secondColor before:bg-secondColor ${
+                        item === route
+                          ? "text-secondColor before:bg-secondColor  before:bg-opacity-100"
+                          : "before:bg-secondColor"
+                      }`}
+                      onClick={() => {
+                        localStorage.setItem("route", item);
+                        router.push(
+                          `/${item.charAt(0).toLowerCase() + item.slice(1)}`
+                        );
+                      }}
                     >
                       {item}
                     </li>
@@ -64,9 +97,13 @@ export default function Header() {
           </ul>
 
           {/* Login Button */}
-          <Button variant="icons" onClick={() => router.push("/auth/login")}>
-            Log in <RightOutlined />
-          </Button>
+          {session?.user ? (
+            <Button>{session?.user?.name}</Button>
+          ) : (
+            <Button variant="icons" onClick={() => router.push("/auth/login")}>
+              Log in <RightOutlined />
+            </Button>
+          )}
         </div>
       </div>
 
@@ -85,9 +122,15 @@ export default function Header() {
             tournaments. Manage matches effortlessly, track your standings, and
             celebrate victories with us. Let the challenge begin!
           </p>
-          <Button variant="icons" className="mt-4" onClick={() => router.push("/auth/register")}>
-            Sign up <RightOutlined />
-          </Button>
+          {!session?.user && (
+            <Button
+              variant="icons"
+              className="mt-4"
+              onClick={() => router.push("/auth/register")}
+            >
+              Sign up <RightOutlined />
+            </Button>
+          )}
         </div>
 
         {/* Hero Image */}

@@ -1,7 +1,6 @@
 //Header
 .textTab {
   position: relative;
-  color: #fff;
   cursor: pointer;
   transition: color 0.3s ease;
   height: 30px; /* Smooth color transition */
@@ -27,6 +26,9 @@
   }
 }
 
+.textTab.active::before {
+  color: #74ba74 !important; /* Override text color when active */
+}
 //Footer
 
 .container {

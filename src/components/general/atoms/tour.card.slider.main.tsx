@@ -6,13 +6,12 @@ import Image from "next/image";
 import { useHomeContext } from "@/library/home.context";
 
 const TourCardSliderMain = () => {
-  const { activeSlide} = useHomeContext(); // Ensure useHomeContext is correctly used
+  const { activeSlide } = useHomeContext(); // Ensure useHomeContext is correctly used
 
   if (!sliderImages || sliderImages.length === 0) {
     console.error("sliderImages is not defined or empty.");
     return <div>No images available</div>;
   }
-
 
   return (
     <div className="w-full h-full flex flex-col gap-3 bg-transparent">
@@ -29,12 +28,11 @@ const TourCardSliderMain = () => {
               alt={`Featured Tournament ${item.id}`}
               quality={100}
               priority
-              className="rounded shadow-lg w-full h-full object-cover"
+              className="rounded shadow-lg w-full h-full object-cover animate-fadeInRight"
             />
           </div>
         ))}
       </div>
-     
     </div>
   );
 };

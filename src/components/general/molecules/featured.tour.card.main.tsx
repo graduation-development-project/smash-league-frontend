@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   TrophyIcon,
   CanlendarIcon,
@@ -16,9 +16,17 @@ import { sliderImages } from "@/assets/data";
 const FeaturedTourCardMain = () => {
   const { activeSlide, setActiveSlide } = useHomeContext();
   const slide = sliderImages.find((item) => item.id === activeSlide);
+  const [fadeInBottom, setFadeInBottom] = useState<boolean>(false);
+
+  useEffect(() => {
+    setFadeInBottom(true);
+  }, [activeSlide]);
+
+  console.log("Check fadeInBottom", fadeInBottom);
 
   const handleSlideChange = (index: number) => {
     setActiveSlide(index);
+    setFadeInBottom(false);
   };
 
   return (
@@ -56,7 +64,11 @@ const FeaturedTourCardMain = () => {
             </div>
           </div>
         </div>
-        <div className="relative z-10 flex flex-col p-10 gap-3">
+        <div
+          className={`relative z-10 flex flex-col p-10 gap-3 transition-opacity duration-500 ${
+            fadeInBottom ? "opacity-100 animate-fadeInBottom" : "opacity-0"
+          }`}
+        >
           <div className="flex flex-col gap-2">
             <h1 className="font-semibold text-[24px] text-white leading-[20px]">
               {slide?.title}
@@ -85,8 +97,12 @@ const FeaturedTourCardMain = () => {
             <Button size={"lg"}>Participate now</Button>
             <TextGradientBtn textColor="orange" size="lg">Read more</TextGradientBtn>
           </div>
-        </div> 
-        <div className="text-white text-right text-[16px] font-semibold absolute z-10 top-0 right-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-[3px] rounded-bl-[10px]">
+        </div>
+        <div
+          className={`text-white text-right text-[16px] font-semibold absolute z-10 top-0 right-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-[3px] rounded-bl-[10px] ${
+            fadeInBottom ? "opacity-100 animate-fadeInBottom" : "opacity-0"
+          }`}
+        >
           Featured Tournament
         </div>
       </div>

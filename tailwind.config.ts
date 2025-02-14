@@ -19,9 +19,25 @@ const config: Config = {
             transform: "rotateY(360deg)",
           },
         },
+        fadeInRight: {
+          "0%": {
+            opacity: "0",
+            transform: "translateX(50px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+        },
+        fadeInBottom: {
+          "0%": { opacity: "0", transform: "translateY(50px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         around: "around 0.3s ease-in-out",
+        fadeInRight: "fadeInRight 0.5s ease-in-out",
+        fadeInBottom: "fadeInBottom 0.5s ease-in-out",
       },
 
       backgroundImage: {
