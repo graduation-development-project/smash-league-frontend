@@ -6,7 +6,7 @@ import styles from "@/components/layout/layout.module.scss";
 const Footer = () => {
   return (
     <footer className="w-full h-[494px] gap-2 flex flex-col bg-black bottom-0 mt-7">
-      <div className="w-full h-5/6 pr-[40px] pl-[50px] ml-[40px] py-[80px] flex justify-between items-start gap-6 shrink-0">
+      <div className="h-5/6 pr-[40px] pl-[50px] ml-[40px] py-[80px] flex justify-between items-start gap-6 ">
         <div className="h-full w-full flex flex-col  gap-4 text-[#B4B4AC]">
           <h1 className="mb-2 text-[20px] font-bold text-white">
             SCORES AND SCHEDULE
@@ -59,7 +59,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="flex justify-center items-center text-white font-semibold px-[10px] py-[20px]  ">
-        © 2024 SMASH LEAGUE Badminton Tournament Platform. All rights reserved.
+        © 2025 SMASH LEAGUE Badminton Tournament Platform. All rights reserved.
       </div>
     </footer>
   );
