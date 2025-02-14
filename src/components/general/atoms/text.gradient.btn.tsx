@@ -3,13 +3,14 @@
 import React from "react";
 import { Button } from "../../ui/button";
 
-const TextGradientBtn = ({ textColor, children }: TextGradientBtnProps) => {
+const TextGradientBtn = ({ textColor, children, size }: TextGradientBtnProps) => {
+  const sizeValue = size === "sm" ? "sm" : size === "lg" ? "lg" : "default";
   return (
     <div>
       <Button
         variant={"outline"}
         colorBtn={"whiteBtn"}
-        size={"lg"}
+        size={sizeValue}
       className={`border border-solid transition duration-300 ${
           textColor === "orange"
             ? "hover:border-primaryColor border-transparent border-2"

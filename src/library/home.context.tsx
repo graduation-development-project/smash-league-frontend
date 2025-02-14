@@ -15,6 +15,7 @@ export const HomeContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [activeSlide, setActiveSlide] = useState(1);
+  
 
   return (
     <HomeContext.Provider value={{ activeSlide, setActiveSlide }}>
