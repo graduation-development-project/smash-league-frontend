@@ -19,10 +19,10 @@ const HomePage = () => {
           <div className="">
             <WelcomeIntroMain />
           </div>
-          <div className="flex flex-col gap-5 justify-center items-center h-max w-full mt-32">
+          <div className="flex flex-col gap-5 justify-center items-center h-max w-full">
             <FeaturedTournamentMain />
           </div>
-          <div className="flex flex-col items-center h-max w-full mb-8">
+          <div className="flex flex-col items-center h-max w-full">
             <BannerMain />
           </div>
           <div className="flex flex-col items-center h-max w-full">
@@ -38,6 +38,7 @@ const HomePage = () => {
         </div>
       </MainLayout>
     </HomeContextProvider>
+
   );
 };
 

@@ -4,6 +4,7 @@ import AdminFooter from "@/components/layout/adminlayout/admin.footer";
 import AdminHeader from "@/components/layout/adminlayout/admin.header";
 import AdminSideBar from "@/components/layout/adminlayout/admin.sidebar";
 import { AdminContextProvider } from "@/library/admin.context";
+import { signIn } from "next-auth/react";
 
 const AdminLayout = async ({
   children,
@@ -11,6 +12,9 @@ const AdminLayout = async ({
   children: React.ReactNode;
 }>) => {
   const session = await auth();
+  if (session?.error === "RefreshTokenError") {
+    await signIn("google", { callbackUrl: "/dashboard" }); // Force sign in to obtain a new set of access and refresh tokens
+  }
 
   return (
     <AdminContextProvider>

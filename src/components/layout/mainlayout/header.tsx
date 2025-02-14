@@ -1,13 +1,15 @@
 "use client";
-
 import React from "react";
 import { Button } from "../../ui/button";
 import { RightOutlined } from "@ant-design/icons";
 import styles from "@/components/layout/layout.module.scss";
 import images from "@/assets/images";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const router = useRouter();
+
   return (
     <header className="relative w-full flex flex-col justify-center">
       {/* Background Image */}
@@ -62,7 +64,7 @@ export default function Header() {
           </ul>
 
           {/* Login Button */}
-          <Button variant="icons">
+          <Button variant="icons" onClick={() => router.push("/auth/login")}>
             Log in <RightOutlined />
           </Button>
         </div>
@@ -83,7 +85,7 @@ export default function Header() {
             tournaments. Manage matches effortlessly, track your standings, and
             celebrate victories with us. Let the challenge begin!
           </p>
-          <Button variant="icons" className="mt-4">
+          <Button variant="icons" className="mt-4" onClick={() => router.push("/auth/register")}>
             Sign up <RightOutlined />
           </Button>
         </div>

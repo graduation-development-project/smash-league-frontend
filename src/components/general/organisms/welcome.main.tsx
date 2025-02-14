@@ -26,7 +26,7 @@ const WelcomeIntroMain = () => {
     }
   ]
   return (
-    <div className='flex flex-col gap-8 justify-center items-center h-fit w-full mt-36 p-[100px]'>
+    <div className='flex flex-col gap-8 justify-center items-center h-fit w-full mt-32 py-12 px-[100px]'>
         <div className='flex flex-col text-center'>
             <h2 className='text-textColor text-[32px] font-bold'>Welcome to <span className='text-primaryColor'>SMASH LEAGUE</span></h2>
             <span className='text-textColor2 font-semibold'>Your all-in-one platform for organizing, officiating, and competing in badminton tournaments</span>
