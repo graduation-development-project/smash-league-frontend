@@ -83,9 +83,9 @@ const FeaturedTourCardMain = () => {
           </ul>
           <div className="flex gap-5 mt-10">
             <Button size={"lg"}>Participate now</Button>
-            <TextGradientBtn textColor="orange">Read more</TextGradientBtn>
+            <TextGradientBtn textColor="orange" size="lg">Read more</TextGradientBtn>
           </div>
-        </div>
+        </div> 
         <div className="text-white text-right text-[16px] font-semibold absolute z-10 top-0 right-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-[3px] rounded-bl-[10px]">
           Featured Tournament
         </div>

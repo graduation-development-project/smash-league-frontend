@@ -6,7 +6,7 @@ import FeaturedTourCard from "../molecules/featured.tour.card";
 
 const FeaturedTournamentMain = () => {
   return (
-    <main className="w-3/4 h-max flex flex-col gap-[20px] bg-white rounded-[15px] p-[30px] shrink-0 items-start shadow-shadowComp mt-10">
+    <main className="w-3/4 h-max flex flex-col gap-[20px] bg-white rounded-[15px] p-[30px] shrink-0 items-start shadow-shadowComp ">
       <div className="flex flex-col gap-2 items-start">
         <h1 className="text-[32px] text-center font-bold leading-normal text-black">
           Battlefied of <span className="text-primaryColor">Champions</span>
