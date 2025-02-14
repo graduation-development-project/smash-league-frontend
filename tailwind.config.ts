@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   darkMode: ["class"],
@@ -68,7 +69,9 @@ const config: Config = {
       colors: {
         primaryColor: "#FF8243",
         secondColor: "#74ba74",
+        thirdColor: "#2B927F",
         textColor: "#2c2c2c",
+        textColor2: "#6A6A6A",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -112,6 +115,72 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(({ addUtilities }: any) => {
+      const newUtilities = {
+        ".scrollbar-thin": {
+          "scrollbar-width": "thin",
+          scrollbarColor: "white white",
+          // display: "none",
+        },
+        ".scrollbar-webkit": {
+          "&::-webkit-scrollbar": {
+            width: "16px",
+            // height: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "white",
+            borderRadius: "20px",
+            // margin: "4px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#FF8243",
+            borderRadius: "100vw",
+            border: "1px solid white",
+            minHeight: "20px",
+          },
+          "&:hover": {
+            // visibility: "visible",
+            scrollbarColor: "#2B927F white",
+            "scrollbar-width": "thin",
+          },
+        },
+        ".scrollbar-webkit-orange": {
+          "&::-webkit-scrollbar": {
+            width: "16px",
+            // height: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "white",
+            borderRadius: "20px",
+            // margin: "4px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#FF8243",
+            borderRadius: "100vw",
+            border: "1px solid white",
+            minHeight: "20px",
+          },
+          "&:hover": {
+            // visibility: "visible",
+            scrollbarColor: "#FF8243 white",
+            "scrollbar-width": "thin",
+          },
+        },
+        /* Chrome, Safari and Opera */
+        ".scrollbar-hidden::-webkit-scrollbar": {
+          // display: "none",
+          visibility: "hidden",
+        },
+        ".scrollbar-hidden": {
+          "scrollbar-width": "none" /* Firefox */,
+          "-ms-overflow-style": "none" /* IE and Edge */,
+        },
+      };
+
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    }),
+  ],
 };
 export default config;

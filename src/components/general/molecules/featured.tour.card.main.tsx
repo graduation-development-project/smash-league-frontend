@@ -95,7 +95,7 @@ const FeaturedTourCardMain = () => {
           </ul>
           <div className="flex gap-5 mt-10">
             <Button size={"lg"}>Participate now</Button>
-            <TextGradientBtn textColor="orange">Read more</TextGradientBtn>
+            <TextGradientBtn textColor="orange" size="lg">Read more</TextGradientBtn>
           </div>
         </div>
         <div
