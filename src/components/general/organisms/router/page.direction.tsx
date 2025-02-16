@@ -18,7 +18,9 @@ const PageDirection = () => {
       setPage(localStorage.getItem("page") || "Home");
     };
 
+    // Lắng nghe sự kiện thay đổi localStorage từ các tab khác
     window.addEventListener("storage", handleStorageChange);
+
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };

@@ -1,5 +1,6 @@
 import HomePage from "@/components/pages/home/homepage";
 import TeamPage from "@/components/pages/teams/teampage";
+import TournamentPage from "@/components/pages/tournaments/tournament.page";
 
 export const routes = [
     {
@@ -14,5 +15,7 @@ export const routes = [
     },
     {
         path: '/tournaments',
+        name: 'Tournaments',
+        component: TournamentPage
     }
 ]

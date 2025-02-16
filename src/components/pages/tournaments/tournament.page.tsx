@@ -1,0 +1,80 @@
+"use client"
+import OnGoingTournament from '@/components/general/organisms/tournaments/on-going.tournament'
+import { HomeContextProvider } from '@/library/home.context'
+import { ConfigProvider, Input, Tabs, TabsProps } from 'antd'
+import { SearchProps } from 'antd/es/input'
+import Search from 'antd/es/input/Search'
+import React from 'react'
+
+const TournamentPage = () => {
+    const onChange = (key: string) => {
+        console.log(key);
+    };
+    const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+
+
+    const items: TabsProps["items"] = [
+        {
+            key: "1",
+            label: "ON-GOING",
+            children: <OnGoingTournament />,
+        },
+        {
+            key: "2",
+            label: "FUTURED",
+              children: <OnGoingTournament />,
+        },
+        // {
+        //     key: "3",
+        //     label: <Search style={{ width: "100%" }} placeholder="Search here" onSearch={onSearch} enterButton />,
+        //     children: "Content of Tab Pane 3",
+        // },
+    ];
+    return (
+
+        <HomeContextProvider>
+            <div className='w-full h-max flex flex-col gap-5 justify-center items-center'>
+                <div className='w-full '>
+                    <ConfigProvider
+                        theme={{
+                            components: {
+                                Tabs: {
+                                    /* here is your component tokens */
+                                    itemColor: "#000000",
+                                    itemSelectedColor: "#FF8243",
+                                    inkBarColor: "#FF8243",
+                                    itemHoverColor: "#FF8243",
+                                    itemActiveColor: "#FF8243",
+                                    horizontalItemPaddingLG: "0px 0px 16px 0px",
+                                },
+                            },
+                        }}
+                    >
+                        <Tabs
+                            tabBarStyle={{
+                                width: "100%",
+                                fontWeight: 500,
+                                fontFamily: "Quicksand ,sans-serif",
+                                boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                                marginTop: "70px",
+                            }}
+                            style={{ width: "100%" }}
+                            size="large"
+                            centered
+                            tabBarGutter={60}
+                            defaultActiveKey="1"
+                            items={items}
+                            onChange={onChange}
+                        />
+                    </ConfigProvider >
+                    {/* <Input placeholder="Search" style={{ width: "80%", marginTop: "20px" }} /> */}
+                </div>
+
+
+            </div>
+        </HomeContextProvider>
+
+    )
+}
+
+export default TournamentPage
