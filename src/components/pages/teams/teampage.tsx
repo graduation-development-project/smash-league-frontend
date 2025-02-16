@@ -3,6 +3,7 @@ import React from "react";
 import { ConfigProvider, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import AllTeams from "@/components/general/organisms/teams/all-teams";
+import MyTeams from "@/components/general/organisms/teams/my-teams";
 // import "./styles.css";
 const TeamPage = () => {
   const onChange = (key: string) => {
@@ -17,27 +18,13 @@ const TeamPage = () => {
     },
     {
       key: "2",
-      label: "YOUR TEAMS",
-      children: "Content of Tab Pane 2",
+      label: "MY TEAMS",
+      children: <MyTeams />,
     },
     {
       key: "3",
-      label: "MEMBERS",
-      children: (
-        <div className="w-full flex flex-col items-center ">
-          Content of tab Pane 3
-        </div>
-      ),
-    },
-    {
-      key: "4",
-      label: "TOURNAMENTS",
-      children: "Content of Tab Pane 4",
-    },
-    {
-      key: "5",
-      label: "PARTICIPATED TEAMS",
-      children: "Content of Tab Pane 5",
+      label: "PARTICIPATED TOURNAMENTS",
+      children: "Content of Tab Pane 3",
     },
   ];
   return (

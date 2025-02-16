@@ -29,6 +29,29 @@
 .textTab.active::before {
   color: #74ba74 !important; /* Override text color when active */
 }
+
+.textActiveTab {
+  position: relative;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  height: 30px; /* Smooth color transition */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: max-content;
+
+  &::before {
+    position: absolute;
+    content: "";
+    bottom: -10px;
+    left: 0;
+    width: 0;
+    height: 4px;
+    opacity: 1;
+    width: 100%;
+    transition: width 0.5s ease, opacity 0.3s ease;
+  }
+}
 //Footer
 
 .container {

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import { RightOutlined } from "@ant-design/icons";
 import styles from "@/components/layout/layout.module.scss";
@@ -11,7 +11,12 @@ import { useSession } from "next-auth/react";
 export default function Header() {
   const router = useRouter();
   const { data: session } = useSession();
-  const route = localStorage.getItem("route") || "";
+  const [route, setRoute] = useState("");
+
+  useEffect(() => {
+    const storedRoute = localStorage.getItem("page") || "";
+    setRoute(storedRoute);
+  }, []);
 
   return (
     <header className="relative w-full flex flex-col justify-center">
@@ -35,7 +40,8 @@ export default function Header() {
           <div
             className="flex flex-col items-center gap-1 cursor-pointer"
             onClick={() => {
-              localStorage.setItem("route", "home");
+              localStorage.setItem("page", "Home");
+              setRoute("Home");
               router.push("/");
             }}
           >
@@ -61,7 +67,8 @@ export default function Header() {
                           : ""
                       }`}
                       onClick={() => {
-                        localStorage.setItem("route", item);
+                        localStorage.setItem("page", item);
+                        setRoute(item);
                         router.push(
                           `/${item.charAt(0).toLowerCase() + item.slice(1)}`
                         );
@@ -74,15 +81,18 @@ export default function Header() {
                   return (
                     <li
                       key={index}
-                      className={`${
+                      className={`relative ${
                         styles.textTab
-                      } hover:text-secondColor before:bg-secondColor ${
-                        item === route
-                          ? "text-secondColor before:bg-secondColor  before:bg-opacity-100"
-                          : "before:bg-secondColor"
-                      }`}
+                      } hover:text-secondColor 
+                                before:bg-secondColor 
+                                ${
+                                  item === route
+                                    ? "text-secondColor before:!opacity-100"
+                                    : "before:opacity-50"
+                                }`}
                       onClick={() => {
-                        localStorage.setItem("route", item);
+                        localStorage.setItem("page", item);
+                        setRoute(item);
                         router.push(
                           `/${item.charAt(0).toLowerCase() + item.slice(1)}`
                         );

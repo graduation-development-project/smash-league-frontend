@@ -2,6 +2,7 @@ import React from "react";
 import SearchTeamBar from "../../molecules/teams/search-teams-bar";
 import TeamCard from "../../atoms/teams/team-card";
 import { ConfigProvider, Pagination } from "antd";
+import TeamsBanner from "../../molecules/teams/teams-banner";
 
 const AllTeams = () => {
   return (
@@ -10,7 +11,7 @@ const AllTeams = () => {
 
       {/* Centering Grid Items */}
       <div className="grid grid-cols-3 gap-x-1 gap-y-6  w-full place-items-center justify-items-center px-5">
-        {Array.from({ length: 12 }).map((_, index) => (
+        {Array.from({ length: 6}).map((_, index) => (
           <div key={index}>
             <TeamCard />
           </div>
@@ -30,7 +31,7 @@ const AllTeams = () => {
           }}
         >
           <Pagination
-          style={{fontWeight: 600}}
+            style={{ fontWeight: 600 }}
             size="default"
             total={12}
             showTotal={(total) => `Total ${total} items`}
@@ -39,6 +40,8 @@ const AllTeams = () => {
           />
         </ConfigProvider>
       </div>
+
+      <TeamsBanner />
     </div>
   );
 };
