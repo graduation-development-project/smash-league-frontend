@@ -67,7 +67,10 @@ export default function Header() {
                           : ""
                       }`}
                       onClick={() => {
+
                         localStorage.setItem("page", item);
+                        console.log(item.charAt(0).toLowerCase() + item.slice(1));
+                        
                         setRoute(item);
                         router.push(
                           `/${item.charAt(0).toLowerCase() + item.slice(1)}`

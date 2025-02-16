@@ -8,7 +8,7 @@ const MainLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <main className="flex flex-col gap-[80px] font-quicksand">
+    <main className="flex flex-col gap-5 font-quicksand">
       <Header />
       <div className="font-quicksand">{children}</div>
       <Footer />
