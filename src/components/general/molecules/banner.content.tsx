@@ -8,8 +8,8 @@ const BannerContent = ({ buttonColor }: { buttonColor: string }) => {
             <div className='flex flex-col gap-3 text-white'>
                 <h1 className='text-2xl font-bold'>Take Your Badminton Journey to the Next Level</h1>
                 <h3 className='text-lg font-medium'>
-                    Join BadmintonHub today to transform your experience—whether you're organizing tournaments, officiating as a referee, or
-                    stepping onto the court as a player. We've got everything
+                    Join BadmintonHub today to transform your experience—whether you&apos;re organizing tournaments, officiating as a referee, or
+                    stepping onto the court as a player. We&apos;ve got everything
                     you need to thrive in the badminton community.
                 </h3>
             </div>
