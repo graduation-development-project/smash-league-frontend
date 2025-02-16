@@ -5,6 +5,7 @@ import type { TabsProps } from "antd";
 import AllTeams from "@/components/general/organisms/teams/all-teams";
 import MyTeams from "@/components/general/organisms/teams/my-teams";
 // import "./styles.css";
+import ParticipatedTournamentsOfTeams from "../../general/organisms/teams/participated-tournaments";
 const TeamPage = () => {
   const onChange = (key: string) => {
     console.log(key);
@@ -24,7 +25,7 @@ const TeamPage = () => {
     {
       key: "3",
       label: "PARTICIPATED TOURNAMENTS",
-      children: "Content of Tab Pane 3",
+      children: <ParticipatedTournamentsOfTeams />,
     },
   ];
   return (
@@ -47,8 +48,8 @@ const TeamPage = () => {
         tabBarStyle={{
           width: "100%",
           fontWeight: 500,
-          fontFamily: "Quicksand ,sans-serif",
           boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+          marginTop: 150,
         }}
         style={{ width: "100%" }}
         size="large"

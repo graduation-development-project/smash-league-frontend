@@ -14,7 +14,7 @@ const HomePage = () => {
     // set theo role hiện layout
 
     <HomeContextProvider>
-      <MainLayout>
+      {/* <MainLayout> */}
         <div className="flex flex-col gap-20">
           <div className="">
             <WelcomeIntroMain />
@@ -36,7 +36,7 @@ const HomePage = () => {
           </div>
            
         </div>
-      </MainLayout>
+      {/* </MainLayout> */}
     </HomeContextProvider>
 
   );

@@ -9,7 +9,7 @@ const images = {
   googleImage: require("@/assets/images/google.png"),
   orangeBackgroundImage: require("@/assets/images/orange-badminton-image.jpg"),
   greenBackgroundImage: require("@/assets/images/green-badminton-image.jpg"),
-
+  backgroundImage: require("@/assets/images/background-image.png"),
 };
 
 export default images;

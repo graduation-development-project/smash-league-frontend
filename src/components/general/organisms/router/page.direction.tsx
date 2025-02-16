@@ -4,11 +4,18 @@ import React, { useState, useEffect } from "react";
 import { routes } from "./routes";
 
 const PageDirection = () => {
-  const [page, setPage] = useState(() => localStorage.getItem("page") || "/");
+  // Start with `null` to avoid SSR mismatch
+  const [page, setPage] = useState<string | null>(null);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedPage = localStorage.getItem("page") || "Home";
+      setPage(storedPage);
+    }
+
+    // Listen for localStorage changes
     const handleStorageChange = () => {
-      setPage(localStorage.getItem("page") || "/");
+      setPage(localStorage.getItem("page") || "Home");
     };
 
     window.addEventListener("storage", handleStorageChange);
@@ -17,9 +24,17 @@ const PageDirection = () => {
     };
   }, []);
 
+  if (page === null) {
+    // Avoid rendering until client-side state is ready
+    return <div>Loading...</div>;
+  }
+
   const route = routes.find((route) => route.name === page);
 
-  if (!route || !route.component) return null;
+  if (!route?.component) {
+    console.warn(`No component found for page: ${page}`);
+    return null;
+  }
 
   const Page = route.component;
 
