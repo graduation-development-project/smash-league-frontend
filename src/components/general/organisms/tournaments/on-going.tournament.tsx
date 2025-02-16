@@ -2,7 +2,8 @@ import React from 'react'
 import FeaturedTournamentMain from '../tournaments.main'
 import TourListBoard from '../../molecules/tournaments/tour-list.board'
 import { Search } from 'lucide-react'
-import SearchTeamBar from '../../molecules/teams/search-teams-bar'
+import SearchTeamBar from '../../atoms/teams/search-teams-bar'
+
 
 const OnGoingTournament = () => {
     return (

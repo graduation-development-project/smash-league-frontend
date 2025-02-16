@@ -4,6 +4,10 @@ interface TextGradientBtnProps {
   children: React.ReactNode;
 }
 
+interface TeamProps {
+  team: { id: number; name: string };
+}
+
 interface IconTextProps {
   icon: any;
   title: string;
@@ -15,15 +19,15 @@ interface StandingScoreCardProps {
   podium: PodiumSingleScoreCardProps[] | PodiumTeamScoreCardProps[];
 }
 interface PodiumSingleScoreCardProps {
-  rank: number,
+  rank: number;
   name: string;
   address: string;
   age: number;
   height: number;
 }
 interface PodiumTeamScoreCardProps {
-  rank: number,
-  player1: PodiumSingleScoreCardProps,
+  rank: number;
+  player1: PodiumSingleScoreCardProps;
   player2: PodiumSingleScoreCardProps;
   teamName: string;
 }

@@ -7,87 +7,138 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
-import "./teams.module.scss";
-
-const { Header, Content, Footer, Sider } = Layout;
-
-type MenuItem = Required<MenuProps>["items"][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
-
-const items: MenuItem[] = [
-  getItem("Option 1", "1", <PieChartOutlined />),
-  getItem("Option 2", "2", <DesktopOutlined />),
-  getItem("User", "sub1", <UserOutlined />, [
-    getItem("Tom", "3"),
-    getItem("Bill", "4"),
-    getItem("Alex", "5"),
-  ]),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem("Team 1", "6"),
-    getItem("Team 2", "8"),
-  ]),
-  getItem("Files", "9", <FileOutlined />),
-];
+import { ConfigProvider, Layout, Menu, theme } from "antd";
+import TeamsMember from "../../molecules/teams/teams-member";
+import TeamsParticipatedTournaments from "../../molecules/teams/teams-participated-tournaments";
+import TeamsRules from "../../molecules/teams/teams-rules";
 
 const MyTeams = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const { Header, Content, Footer, Sider } = Layout;
+
+  const list = [
+    {
+      id: 1,
+      name: "FPT",
+    },
+    {
+      id: 2,
+      name: "UEH",
+    },
+    {
+      id: 3,
+      name: "RMIT",
+    },
+  ];
+
+  type MenuItem = Required<MenuProps>["items"][number];
+
+  function getItem(
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    children?: MenuItem[]
+  ): MenuItem {
+    return {
+      key,
+      icon,
+      children,
+      label,
+    } as MenuItem;
+  }
+
+  const teamsList: MenuItem[] = list.map((team, index) =>
+    getItem(team.name, `sub${team.id}`, <UserOutlined />, [
+      getItem("Members", `members_${team.id}`),
+      getItem("Tournaments", `tournaments_${team.id}`),
+      getItem("Rules", `rules_${team.id}`),
+    ])
+  );
+
+  const [selectedKey, setSelectedKey] = useState("members_1");
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const numberTeam = selectedKey.split("_")[1];
+  const options = selectedKey.split("_")[0];
+
+  const foundTeam = list.find((team) => team.id === Number(numberTeam)) || null;
+
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-        style={{
-         
-        }}
-      >
-        <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          defaultSelectedKeys={["1"]}
-          mode="inline"
-          items={items}
-        />
-      </Sider>
-      <Layout>
-        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+    <Layout
+      style={{
+        height: "100%",
+        backgroundColor: "white",
+        padding: "0px 20px",
+      }}
+    >
+      <div className="flex flex-col gap-3 p-3 bg-white">
+        <div className="text-[16px] font-bold font-quicksand shadow-shadowBtn flex justify-center items-center p-2">
+          The Team List
+        </div>
+
+        <Sider
+          style={{
+            height: "100%",
+            background: "white",
+          }}
+        >
+          <div className="demo-logo-vertical" />
+          <ConfigProvider
+            theme={{
+              components: {
+                Menu: {
+                  /* here is your component tokens */
+                  darkItemBg: "white",
+                  darkItemColor: "black",
+                  darkItemSelectedColor: "#FF8243",
+                  darkItemHoverColor: "#FF8243",
+                  darkSubMenuItemBg: "white",
+                  darkItemSelectedBg: "#f7f7f7",
+                },
+              },
+            }}
+          >
+            <Menu
+              style={{
+                // border: "1px solid black",
+                padding: "16px 16px 0px 0px",
+                borderRadius: "15px",
+                boxShadow: "0px 0px 20px 0px rgb(0 0 0 / 0.4)",
+                fontWeight: "500",
+              }}
+              theme="dark"
+              defaultSelectedKeys={["sub1"]}
+              mode="inline"
+              items={teamsList}
+              onClick={({ key }) => setSelectedKey(key)}
+            />
+          </ConfigProvider>
+        </Sider>
+      </div>
+      <Layout style={{ background: "white" }}>
         <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
           <div
             style={{
               padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
+              paddingTop: 36,
+              paddingBottom: 36,
+              height: "100%",
+              background: "white",
+              borderRadius: "15px",
+              boxShadow: "0px 0px 20px 0px rgb(0 0 0 / 0.4)",
             }}
           >
-            Bill is a cat.
+            {foundTeam &&
+              (options === "members" ? (
+                <TeamsMember team={foundTeam} />
+              ) : options === "tournaments" ? (
+                <TeamsParticipatedTournaments team={foundTeam} />
+              ) : (
+                <TeamsRules team={foundTeam} />
+              ))}
           </div>
         </Content>
-        {/* <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer> */}
       </Layout>
     </Layout>
   );

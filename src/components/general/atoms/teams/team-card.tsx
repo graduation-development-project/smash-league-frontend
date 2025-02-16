@@ -8,7 +8,7 @@ const TeamCard = () => {
   const [isFull, setIsFull] = useState(false);
 
   return (
-    <div className="w-max h-max flex flex-col justify-center bg-white shadow-shadowComp rounded-[15px] p-5 gap-3">
+    <div className="w-max h-max flex flex-col justify-center bg-white border border-slate-300 rounded-[15px] p-5 gap-3">
       <div
         className={`w-max h-max flex justify-center items-center  text-white text-[16px] font-bold self-stretch rounded-[20px] px-[20px] py-[5px] ${
           isFull ? "bg-red-600" : "bg-secondColor"
