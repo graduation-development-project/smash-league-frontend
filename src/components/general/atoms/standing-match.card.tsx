@@ -1,4 +1,5 @@
 import { AlignJustify, Dot } from 'lucide-react'
+import Image from 'next/image'
 import React, { useState } from 'react'
 
 const StandingMatchCard = () => {
@@ -110,6 +111,7 @@ const StandingMatchCard = () => {
             </div>
             <div className='h-full flex flex-col py-3 overflow-y-scroll scrollbar-webkit-orange scrollbar-thin'>
                 {user?.map((card, index) => {
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
                     const [isCollapsible, setIsCollapsible] = useState(false);
                     return (
                         <div key={index} className='flex flex-col px-3 py-1'>
@@ -127,10 +129,10 @@ const StandingMatchCard = () => {
                                             <div key={index} className={`h-fit w-full flex-row justify-between items-center ${isCollapsible ? "flex" : "hidden"}`}>
                                                 <div className='h-fit flex flex-row justify-center gap-3 items-center'>
                                                     <div className='w-12 h-12 rounded-full'>
-                                                        <img
+                                                        <Image
                                                             className='w-full h-full object-cover rounded-full border'
                                                             src={user.avatar}
-                                                            alt=""
+                                                            alt="User Avatar"
                                                         />
                                                     </div>
                                                     <div className='h-fit flex flex-col justify-between text-[12px]'>
