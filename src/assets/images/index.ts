@@ -14,6 +14,7 @@ const images = {
   badmintonChampionShip: require("@/assets/images/badminton-championship.jpg"),
   badmintonSummerOlympics: require("@/assets/images/badminton-summer-olympics.jpg"),
   badmintonRacket: require("@/assets/images/badminton-racket.webp"),
+  avatarMale: require("@/assets/images/avatar-male.png"),
 };
 
 export default images;
