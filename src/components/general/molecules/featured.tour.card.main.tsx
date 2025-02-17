@@ -22,7 +22,6 @@ const FeaturedTourCardMain = () => {
     setFadeInBottom(true);
   }, [activeSlide]);
 
-  console.log("Check fadeInBottom", fadeInBottom);
 
   const handleSlideChange = (index: number) => {
     setActiveSlide(index);
