@@ -1,12 +1,13 @@
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import TextGradientBtn from './text.gradient.btn'
+import Image from 'next/image'
 
 const NewsCard = () => {
   return (
     <div className='flex flex-row gap-4 bg-white w-full h-40 p-4 rounded-lg shadow-shadowBtn' >
       <div className='w-52 h-full rounded-lg'>
-        <img className='w-full h-full object-cover rounded-lg'
+        <Image className='w-full h-full object-cover rounded-lg'
           src="https://shuttlesmash.com/wp-content/uploads/2018/12/Badminton-Doubles.jpg"
           alt="" />
       </div>

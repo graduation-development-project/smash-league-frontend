@@ -1,4 +1,5 @@
 import { CalendarDays, MapPin } from 'lucide-react'
+import Image from 'next/image'
 import React from 'react'
 
 
@@ -18,7 +19,7 @@ const StandingCard = () => {
   return (
     <div className='flex flex-col w-52 h-max shadow-shadowBtn rounded-xl p-2 gap-1'>
         <div className='h-1/2 aspect-square '>
-             <img className='w-full h-full object-cover rounded-lg border border-primaryColor' src="https://static.vecteezy.com/system/resources/previews/008/579/214/non_2x/badminton-logo-vector.jpg" alt="" />
+             <Image className='w-full h-full object-cover rounded-lg border border-primaryColor' src="https://static.vecteezy.com/system/resources/previews/008/579/214/non_2x/badminton-logo-vector.jpg" alt="" />
         </div>
         <b className='text-[14px] text-textColor'>The Shuttlecock Masters Championship</b>
 

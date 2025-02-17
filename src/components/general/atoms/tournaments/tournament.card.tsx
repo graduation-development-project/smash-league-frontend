@@ -1,12 +1,13 @@
 "use client";
 import {  CalendarClock, CalendarX, ClockAlert, MapPin, Users } from 'lucide-react'
+import Image from 'next/image';
 import React from 'react'
 
 const TournamentCard = () => {
     return (
         <div className='w-[350px] h-max flex flex-col gap-2 rounded-xl p-2 border '>
             <div className='w-full h-[200px]'>
-                <img
+                <Image
                     className='w-full h-full object-cover rounded-lg'
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Badminton_at_the_2012_Summer_Olympics_9133.jpg/1200px-Badminton_at_the_2012_Summer_Olympics_9133.jpg"
                     alt=""

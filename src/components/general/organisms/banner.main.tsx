@@ -2,13 +2,14 @@
 import React from 'react'
 import BannerContent from '../molecules/banner.content'
 import BannerSlider from '../molecules/banner.slider'
+import Image from 'next/image'
 
 const BannerMain = () => {
     return (
         <div className='relative w-full h-[600px] flex shadow-shadowComp'>
             <div className='absolute z-0 flex w-full h-full '>
                 <div className='absolute w-full h-full inset-0 bg-black opacity-40'/>
-                <img className='w-full h-full object-cover opacity-' src="https://seumelhorjogo.com/wp-content/uploads/2024/02/badminton.jpg" alt="" />
+                <Image className='w-full h-full object-cover opacity-' src="https://seumelhorjogo.com/wp-content/uploads/2024/02/badminton.jpg" alt="" />
                 
             </div>
             <div className='absolute z-10 w-full h-full flex gap-5 p-10 items-center '>

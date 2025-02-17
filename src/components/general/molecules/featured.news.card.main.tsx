@@ -1,5 +1,6 @@
 import React from 'react'
 import TextGradientBtn from '../atoms/text.gradient.btn'
+import Image from 'next/image'
 
 const FeaturedNewsCardMain = () => {
   return (
@@ -7,7 +8,7 @@ const FeaturedNewsCardMain = () => {
         <span className='bg-gradient-orange bg-clip-text text-transparent font-bold text-[20px]'>View More</span>
         <div className='w-full aspect-[3/2] bg-white flex flex-col gap-5 p-5 rounded-lg shadow-shadowBtn text-left'>
             <div className='w-full aspect-video'>
-                <img className='w-full h-full object-cover rounded-lg' src="https://shuttlesmash.com/wp-content/uploads/2018/12/Badminton-Doubles.jpg" alt="" />
+                <Image className='w-full h-full object-cover rounded-lg' src="https://shuttlesmash.com/wp-content/uploads/2018/12/Badminton-Doubles.jpg" alt="" />
             </div>
             <div className='flex flex-col justify-between gap-3'>
                 <h4 className='font-semibold '>India Triumphs on the Global Stage</h4>
