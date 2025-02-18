@@ -11,7 +11,7 @@ const OrganizerZoneCardMain = () => {
         <div className="absolute w-full h-full z-0 shadow-shadowComp rounded-[15px] overflow-hidden">
           <Image
             src={organizerImage.url}
-            alt="FeaturedTournamentMain"
+            alt="OrganizersZoneCard"
             fill
             quality={100}
             priority

@@ -1,6 +1,8 @@
-import { AlignJustify, Dot } from 'lucide-react';
-import Image from 'next/image';
-import React, { useState } from 'react';
+import images from "@/assets/images";
+import { AlignJustify, Dot } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
+import avatarMale from "@/assets/images/avatar-male.png";
 
 const StandingMatchCard = () => {
     const [isCollapsible, setIsCollapsible] = useState<{ [key: number]: boolean }>({});
@@ -16,7 +18,7 @@ const StandingMatchCard = () => {
             match: [
                 {
                     name: "John Doe",
-                    avatar: "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png",
+                    avatar: avatarMale,
                     score: "1",
                     address: "123 Main St, Anytown, USA",
                     age: 30,
@@ -24,7 +26,7 @@ const StandingMatchCard = () => {
                 },
                 {
                     name: "Jane Doe",
-                    avatar: "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-2.png",
+                    avatar: avatarMale,
                     score: "2",
                     address: "456 Oak Ave, Somewhere, Earth",
                     age: 28,
@@ -38,7 +40,7 @@ const StandingMatchCard = () => {
             match: [
                 {
                     name: "Alice Johnson",
-                    avatar: "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-3.png",
+                    avatar: avatarMale,
                     score: "3",
                     address: "789 Pine Rd, City, Country",
                     age: 25,
@@ -46,7 +48,7 @@ const StandingMatchCard = () => {
                 },
                 {
                     name: "Emma Watson",
-                    avatar: "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-4.png",
+                    avatar: avatarMale,
                     score: "0",
                     address: "987 Maple St, Townsville",
                     age: 32,

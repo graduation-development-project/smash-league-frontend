@@ -1,5 +1,5 @@
 import React from "react";
-import SearchTeamBar from "../../molecules/teams/search-teams-bar";
+import SearchTeamBar from "../../atoms/teams/search-teams-bar";
 import TeamCard from "../../atoms/teams/team-card";
 import { ConfigProvider, Pagination } from "antd";
 import TeamsBanner from "../../molecules/teams/teams-banner";
@@ -10,8 +10,8 @@ const AllTeams = () => {
       <SearchTeamBar />
 
       {/* Centering Grid Items */}
-      <div className="grid grid-cols-3 gap-x-1 gap-y-6  w-full place-items-center justify-items-center px-5">
-        {Array.from({ length: 6}).map((_, index) => (
+      <div className="w-[90%] grid grid-cols-3 gap-x-1 gap-y-6 place-items-center justify-items-center px-5 py-8 bg-white shadow-shadowComp rounded-[15px]">
+        {Array.from({ length: 6 }).map((_, index) => (
           <div key={index}>
             <TeamCard />
           </div>
