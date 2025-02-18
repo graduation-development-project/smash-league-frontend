@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./header";
 import Footer from "./footer";
+import { ToastContainer } from "react-toastify";
 
 const MainLayout = ({
   children,
@@ -9,6 +10,7 @@ const MainLayout = ({
 }>) => {
   return (
     <main className="flex flex-col gap-5 font-quicksand">
+      {/* <ToastContainer /> */}
       <Header />
       <div className="font-quicksand ">{children}</div>
       <Footer />

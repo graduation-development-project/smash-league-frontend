@@ -20,28 +20,34 @@ const RegisterForm = () => {
   const [isBack, setIsBack] = useState(false);
 
   const onFinish = async (values: any) => {
-    const { email, password, name } = values;
+    const { email, password, firstName, lastName, phoneNumber } = values;
+
+    // console.log(values);
+    router.push(`/verify/${encodeURIComponent(email)}`);
+
     const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/sign-up`,
       method: "POST",
       body: {
         email,
         password,
-        name,
+        firstName,
+        lastName,
+        phoneNumber,
       },
     });
-    if (res?.data) {
-      router.push(`/verify/${res?.data?._id}`);
+    if (res) {
+      router.push(`/verify/${encodeURIComponent(email)}`);
     } else {
       notification.error({
         message: "Register error",
-        description: res?.message,
+        description: "Please try again", 
       });
     }
   };
 
   return (
-    <Row justify={"center"} style={{ marginTop: "100px" }}>
+    <Row justify={"center"} style={{ marginTop: "10px" }}>
       <Col xs={24} md={16} lg={14}>
         <fieldset
           style={{
@@ -62,6 +68,87 @@ const RegisterForm = () => {
             autoComplete="off"
             layout="vertical"
           >
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    /* here is your component tokens */
+                    activeBorderColor: "#74ba74",
+                    activeShadow: "0 0 0 2px #fffff",
+                    hoverBorderColor: "#74ba74",
+                  },
+                },
+              }}
+            >
+              <Form.Item
+                label="First Name"
+                name="firstName"
+                style={{ fontWeight: "bold" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your first name!",
+                  },
+                ]}
+              >
+                <Input style={{ padding: "8px" }} />
+              </Form.Item>
+            </ConfigProvider>
+
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    /* here is your component tokens */
+                    activeBorderColor: "#74ba74",
+                    activeShadow: "0 0 0 2px #fffff",
+                    hoverBorderColor: "#74ba74",
+                  },
+                },
+              }}
+            >
+              <Form.Item
+                label="Last Name"
+                name="lastName"
+                style={{ fontWeight: "bold" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your last name!",
+                  },
+                ]}
+              >
+                <Input style={{ padding: "8px" }} />
+              </Form.Item>
+            </ConfigProvider>
+
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    /* here is your component tokens */
+                    activeBorderColor: "#74ba74",
+                    activeShadow: "0 0 0 2px #fffff",
+                    hoverBorderColor: "#74ba74",
+                  },
+                },
+              }}
+            >
+              <Form.Item
+                label="Phone Number"
+                name="phoneNumber"
+                style={{ fontWeight: "bold" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your phone number!",
+                  },
+                ]}
+              >
+                <Input style={{ padding: "8px" }} />
+              </Form.Item>
+            </ConfigProvider>
+
             <ConfigProvider
               theme={{
                 components: {
@@ -117,27 +204,6 @@ const RegisterForm = () => {
                 ]}
               >
                 <Input.Password style={{ padding: "8px" }} />
-              </Form.Item>
-            </ConfigProvider>
-
-            <ConfigProvider
-              theme={{
-                components: {
-                  Input: {
-                    /* here is your component tokens */
-                    activeBorderColor: "#74ba74",
-                    activeShadow: "0 0 0 2px #fffff",
-                    hoverBorderColor: "#74ba74",
-                  },
-                },
-              }}
-            >
-              <Form.Item
-                label="Name"
-                name="name"
-                style={{ fontWeight: "bold" }}
-              >
-                <Input style={{ padding: "8px" }} />
               </Form.Item>
             </ConfigProvider>
 
