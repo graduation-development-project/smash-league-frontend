@@ -31,3 +31,8 @@ interface PodiumTeamScoreCardProps {
   player2: PodiumSingleScoreCardProps;
   teamName: string;
 }
+
+interface CreateTeamsModalProps {
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}

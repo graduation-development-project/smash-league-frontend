@@ -3,6 +3,8 @@
 import PageDirection from "@/components/general/organisms/router/page.direction";
 import MainLayout from "@/components/layout/mainlayout/layout";
 import { useState, useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -17,16 +19,18 @@ export default function Home() {
   }, []);
 
   return (
-    <MainLayout>
-      {isLoading ? (
-        <div className="flex justify-center items-center h-screen">
-          <p>Loading...</p>
-        </div>
-      ) : (
-        <div>
-          <PageDirection />
-        </div>
-      )}
-    </MainLayout>
+    <>
+      <MainLayout>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-screen">
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <div>
+            <PageDirection />
+          </div>
+        )}
+      </MainLayout>
+    </>
   );
 }

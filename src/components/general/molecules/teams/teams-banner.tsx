@@ -1,9 +1,21 @@
+"use client";
+
 import images from "@/assets/images";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import CreateTeamsModal from "./create-teams-modal";
+import AlertCreateTeamsModal from "./alert-create-teams-modal";
 
 const TeamsBanner = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const [role, setRole] = useState("Team Leader");
+
   return (
     <div className="w-full h-full relative">
       <div className="absolute z-0 w-full h-full rounded">
@@ -17,7 +29,7 @@ const TeamsBanner = () => {
         />
       </div>
       <div className="relative z-10 flex justify-between w-full h-full p-10">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
           <h1 className="text-white text-[24px] font-quicksand font-bold">
             Struggling to Find Your Perfect Team?
           </h1>
@@ -26,7 +38,24 @@ const TeamsBanner = () => {
             Assemble players who share your vision and style, and take your game
             to the next level.
           </p>
-          <Button className="w-max px-4 flex justify-center items-center">Create Your Team</Button>
+          <Button
+            className="w-max px-4 py-2 flex justify-center items-center"
+            onClick={showModal}
+          >
+            Create Your Team
+          </Button>
+
+          {role === "Team Leader" ? (
+            <CreateTeamsModal
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+            />
+          ) : (
+            <AlertCreateTeamsModal
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+            />
+          )}
         </div>
         <div className="">
           <Image

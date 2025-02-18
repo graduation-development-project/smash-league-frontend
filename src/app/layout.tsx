@@ -3,6 +3,7 @@ import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import NextAuthWrapper from "@/library/next.auth.wrapper";
+import { ToastContainer } from "react-toastify";
 
 const quicksand = Quicksand({
   subsets: ["latin"],
@@ -26,7 +27,10 @@ export default function RootLayout({
       <body className={quicksand.className}>
         {" "}
         <AntdRegistry>
-          <NextAuthWrapper>{children}</NextAuthWrapper>
+          <NextAuthWrapper>
+            {children}
+            <ToastContainer />
+          </NextAuthWrapper>
         </AntdRegistry>
       </body>
     </html>
