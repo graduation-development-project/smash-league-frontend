@@ -4,9 +4,9 @@ import VerifyForm from "@/components/general/organisms/auth/verify.form";
 import React from "react";
 
 const Verify = (props: any) => {
-  const { id } = props;
+  const { email } = props;
 
-  return <VerifyForm id={id} />;
+  return <VerifyForm email={email} />;
 };
 
 export default Verify;

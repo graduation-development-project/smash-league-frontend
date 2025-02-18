@@ -1,9 +1,60 @@
-import React from 'react'
+"use client";
+import MainLayout from "@/components/layout/mainlayout/layout";
+import { Button } from "@/components/ui/button";
+import React, { useEffect, useRef } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import { io, Socket } from "socket.io-client";
 
 const Organizer = () => {
-    return (
-        <div>Organizer</div>
-    )
-}
+  const socketRef = useRef<Socket | null>(null); // Store socket reference
 
-export default Organizer 
+  useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io("http://localhost:3005", {
+        transports: ["websocket"],
+      });
+
+      socketRef.current.on("connect", () => {
+        console.log("Connected to Socket.io");
+      });
+
+      socketRef.current.on("message", (data) => {
+        toast.info(data, {
+          position: "top-right",
+          theme: "light",
+        });
+      });
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, []);
+
+  const runWithLocal = () => {
+    toast.info("Notification with local", {
+      position: "top-right",
+      theme: "light",
+    });
+  };
+
+  const runWithEvent = () => {
+    if (socketRef.current) {
+      socketRef.current.emit("message", "Hello from client");
+    }
+  };
+
+  return (
+    // <MainLayout>
+    <div>
+      <Button onClick={runWithLocal}>Run with Local</Button>
+      <Button onClick={runWithEvent}>Run with Event</Button>
+    </div>
+    // </MainLayout>
+  );
+};
+
+export default Organizer;
