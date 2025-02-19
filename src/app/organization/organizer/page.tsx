@@ -10,7 +10,7 @@ const Organizer = () => {
 
   useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io("http://localhost:3005", {
+      socketRef.current = io("https://socket.smashit.com.vn", {
         transports: ["websocket"],
       });
 
