@@ -54,6 +54,8 @@ const config: Config = {
       },
       fontFamily: {
         quicksand: ["var(--font-quicksand)", "sans-serif"], // Use the CSS variable
+        poppins: ["var(--font-poppins)", "sans-serif"],
+        notoSans: ["var(--font-quicksand)", "sans-serif"],
       },
       boxShadow: {
         shadowBtn: "0px 2px 4px 0px rgb(0 0 0 / 0.25)",

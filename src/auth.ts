@@ -1,50 +1,56 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import {
   InactivatedAccountError,
   InvalidEmailPasswordError,
 } from "./utils/error";
 import { sendRequest } from "./utils/api";
-import { IUser } from "./types/next-auth";
-import Google from "next-auth/providers/google";
+import { AccessToken, IUser } from "./types/next-auth";
+import axios from "axios";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Google({
-      // Google requires "offline" access_type to provide a `refresh_token`
       authorization: { params: { access_type: "offline", prompt: "consent" } },
     }),
     Credentials({
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
       credentials: {
         username: {},
         password: {},
       },
       authorize: async (credentials) => {
-        const res = await sendRequest<IBackendRes<ILogin>>({
-          method: "POST",
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login`,
-          body: {
-            username: credentials.username,
-            password: credentials.password,
-          },
-        });
+        // const res = await sendRequest<IBackendRes<ILogin>>({
+        //   method: "POST",
+        //   url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/sign-in`,
+        //   body: {
+        //     email: credentials.username,
+        //     password: credentials.password,
+        //   },
+        // });
 
-        if (+res.statusCode === 201) {
-          // return user object with their profile data
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/sign-in`,
+          {
+            email: credentials.username,
+            password: credentials.password,
+          }
+        );
+
+        // console.log("Check res", res.data);
+
+        if (res.status === 201) {
           return {
-            _id: res.data?.user?._id,
-            name: res.data?.user?.name,
-            email: res.data?.user?.email,
-            access_token: res.data?.access_token,
-            role: "athlete",
+            id: res.data?.id,
+            name: res.data?.name,
+            email: res.data?.email,
+            access_token: res.data?.accessToken,
+            refresh_token: res.data?.refreshToken,
+            role: res.data?.roles[0],
           };
-          //401 is wrong password
-        } else if (+res.statusCode === 401) {
+        } else if (res.status === 401) {
           throw new InvalidEmailPasswordError();
-          //400 is account is not activated
-        } else if (+res.statusCode === 400) {
+        } else if (res.status === 400) {
           throw new InactivatedAccountError();
         } else {
           throw new Error("Internal Server Error");
@@ -58,7 +64,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user, account, profile }) {
       if (user) {
-        token.user = user as IUser; // Store the user in the JWT // Store access_token for API calls
+        // console.log("Check user", user);
+        token.user = user as IUser;
+        token.expires_at = Math.floor(Date.now() / 1000) + 3600; // 1-hour expiry
       }
 
       if (account) {
@@ -69,12 +77,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             body: { email: profile.email, name: profile.name },
           });
 
-          if (res.statusCode === 201) {
+          if (res.status === 200) {
             token.user = {
-              _id: res.data?._id,
+              id: res.data?.id,
               name: res.data?.name,
               email: res.data?.email,
-              role: "admin",
+              access_token: res.data?.access_token,
+              refresh_token: res.data?.refresh_token,
             };
           } else {
             throw new Error("Failed to authenticate via Google.");
@@ -83,24 +92,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         return {
           ...token,
-          accessToken: account.access_token ?? account.accessToken,
+          access_token: account.access_token ?? account.accessToken,
           expires_at:
             account.expires_at ?? Math.floor(Date.now() / 1000) + 3600,
           refresh_token: account.refresh_token ?? token.refresh_token,
         };
       }
 
-      if (Date.now() < (token.access_expire ?? token.expires_at) * 1000) {
+      // If the access token is still valid, return it
+      if (Date.now() < token.expires_at * 1000) {
         return token;
       }
 
+      // Refresh token flow
       if (!token.refresh_token) {
-        throw new TypeError("Missing refresh_token");
+        console.error("Missing refresh token, logging out.");
+        return { ...token, error: "RefreshTokenError" };
       }
 
       try {
         const response = await fetch("https://oauth2.googleapis.com/token", {
           method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({
             client_id: process.env.AUTH_GOOGLE_ID!,
             client_secret: process.env.AUTH_GOOGLE_SECRET!,
@@ -115,23 +128,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         return {
           ...token,
-          accessToken: tokens.access_token,
+          access_token: tokens.access_token,
           expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in),
           refresh_token: tokens.refresh_token ?? token.refresh_token,
         };
       } catch (error) {
-        console.error("Error refreshing access_token", error);
-        token.error = "RefreshTokenError";
-        return token;
+        console.error("Error refreshing access token:", error);
+        return { ...token, error: "RefreshTokenError" };
       }
     },
     session({ session, token }) {
-      (session.user as IUser) = token.user; // Attaching token user to session
+      (session.user as IUser) = token.user;
+      console.log("Session:", session.user);
+      // Attaching token user to session
       return session;
     },
 
     authorized: async ({ auth }) => {
-      // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
     },
   },

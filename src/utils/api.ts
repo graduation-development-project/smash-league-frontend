@@ -27,7 +27,7 @@ export const sendRequest = async <T>(props: IRequest) => {
 
   return fetch(url, options).then((res) => {
     if (res.ok) {
-      return res.json() as T; //generic
+      return res as T ; //generic
     } else {
       return res.json().then(function (json) {
         // to be able to access error status when you catch the error

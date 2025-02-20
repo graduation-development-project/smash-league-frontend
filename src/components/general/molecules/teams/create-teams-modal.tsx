@@ -1,11 +1,27 @@
+"use client";
+
 import { Button, ConfigProvider, Form, Input, Modal } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React from "react";
+import Image from "next/image";
+import React, { useState } from "react";
 
 const CreateTeamsModal = ({
   isModalOpen,
   setIsModalOpen,
 }: CreateTeamsModalProps) => {
+  const [teamLeaderId, setTeamLeaderId] = React.useState<string>("1");
+
+  const [file, setFile] = useState<File | null>(null);
+  const [imageURL, setImageURL] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // api truyen file => URL 3 anh sau khi up len cloud
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
   const handleCreateTeam = (values: any) => {
     console.log("check", values);
     setIsModalOpen(false);
@@ -14,8 +30,6 @@ const CreateTeamsModal = ({
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-  const [teamLeaderId, setTeamLeaderId] = React.useState<string>("1");
 
   return (
     <div>
@@ -52,61 +66,98 @@ const CreateTeamsModal = ({
             onFinish={handleCreateTeam}
             layout="vertical"
           >
-            <Form.Item
-              label="Team Leader Id"
-              name="teamLeaderId"
-              hidden
-              initialValue={teamLeaderId}
-            >
-              <Input placeholder="Team Name" disabled />
-            </Form.Item>
-
-            <Form.Item
-              label="Team Name"
-              name="teamName"
-              rules={[
-                { required: true, message: "Please input your team name!" },
-              ]}
-            >
-              <Input placeholder="Team Name" />
-            </Form.Item>
-
-            <Form.Item
-              label="Description"
-              name="teamDescription"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your team description!",
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    /* here is your component tokens */
+                    activeBorderColor: "#FF8243",
+                    activeShadow: "0 0 0 2px #fffff",
+                    hoverBorderColor: "#FF8243",
+                  },
                 },
-              ]}
+              }}
             >
-              <TextArea rows={4} placeholder="Team Description" />
-            </Form.Item>
+              <Form.Item
+                label="Team Leader Id"
+                name="teamLeaderId"
+                hidden
+                initialValue={teamLeaderId}
+              >
+                <Input placeholder="Team Name" disabled />
+              </Form.Item>
 
-            <Form.Item>
-              <div className="w-full flex justify-end gap-2">
-                <Button type="default" htmlType="button" onClick={handleCancel}>
-                  Cancel
-                </Button>
+              <Form.Item
+                label="Team Name"
+                name="teamName"
+                rules={[
+                  { required: true, message: "Please input your team name!" },
+                ]}
+              >
+                <Input placeholder="Team Name" />
+              </Form.Item>
 
-                <ConfigProvider
-                  theme={{
-                    token: {
-                      colorPrimary: "#74ba74",
-                    },
-                  }}
-                >
+              <Form.Item
+                label="Description"
+                name="teamDescription"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your team description!",
+                  },
+                ]}
+              >
+                <TextArea rows={4} placeholder="Team Description" />
+              </Form.Item>
+
+              <Form.Item name="teamImage" label="Team Image">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="mb-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                <div>
+                  {file && (
+                    <Image
+                      src={URL.createObjectURL(file)}
+                      alt="Uploaded"
+                      width={200}
+                      height={200}
+                      className="max-w-full h-auto rounded-lg shadow"
+                    />
+                  )}
+                </div>
+              </Form.Item>
+
+              <Form.Item>
+                <div className="w-full flex justify-end gap-2">
                   <Button
-                    style={{ fontWeight: "500" }}
-                    type="primary"
-                    htmlType="submit"
+                    type="default"
+                    htmlType="button"
+                    onClick={handleCancel}
                   >
-                    Create Team
+                    Cancel
                   </Button>
-                </ConfigProvider>
-              </div>
-            </Form.Item>
+
+                  <ConfigProvider
+                    theme={{
+                      token: {
+                        colorPrimary: "#74ba74",
+                      },
+                    }}
+                  >
+                    <Button
+                      style={{ fontWeight: "500" }}
+                      type="primary"
+                      htmlType="submit"
+                    >
+                      Create Team
+                    </Button>
+                  </ConfigProvider>
+                </div>
+              </Form.Item>
+            </ConfigProvider>
           </Form>
         </Modal>
       </ConfigProvider>

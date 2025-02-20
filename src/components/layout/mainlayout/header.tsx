@@ -7,6 +7,7 @@ import images from "@/assets/images";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Navigation from "./navigation";
 
 export default function Header() {
   const router = useRouter();
@@ -33,91 +34,8 @@ export default function Header() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 px-10 mt-6 w-full ">
-        {/* Top Section */}
-        <div className="flex justify-between items-center text-white">
-          {/* Logo */}
-          <div
-            className="flex flex-col items-center gap-1 cursor-pointer"
-            onClick={() => {
-              localStorage.setItem("page", "Home");
-              setRoute("Home");
-              router.push("/");
-            }}
-          >
-            <h1 className="text-3xl font-bold text-primaryColor font-quicksand">
-              SMASH LEAGUE
-            </h1>
-            <p className="text-sm">Elevate your game, smash the league</p>
-          </div>
-
-          {/* Navigation */}
-          <ul className="flex gap-12 text-lg font-quicksand font-bold">
-            {["News", "Tournaments", "Teams", "Organizer Zone", "About"].map(
-              (item, index) => {
-                if (item === "News" || item === "Tournaments") {
-                  return (
-                    <li
-                      key={index}
-                      className={`${
-                        styles.textTab
-                      } hover:text-primaryColor before:bg-primaryColor ${
-                        item === route
-                          ? "text-primaryColor before:bg-primaryColor"
-                          : ""
-                      }`}
-                      onClick={() => {
-
-                        localStorage.setItem("page", item);
-                        console.log(item.charAt(0).toLowerCase() + item.slice(1));
-                        
-                        setRoute(item);
-                        router.push(
-                          `/${item.charAt(0).toLowerCase() + item.slice(1)}`
-                        );
-                      }}
-                    >
-                      {item}
-                    </li>
-                  );
-                } else {
-                  return (
-                    <li
-                      key={index}
-                      className={`relative ${
-                        styles.textTab
-                      } hover:text-secondColor 
-                                before:bg-secondColor 
-                                ${
-                                  item === route
-                                    ? "text-secondColor before:!opacity-100"
-                                    : "before:opacity-50"
-                                }`}
-                      onClick={() => {
-                        localStorage.setItem("page", item);
-                        setRoute(item);
-                        router.push(
-                          `/${item.charAt(0).toLowerCase() + item.slice(1)}`
-                        );
-                      }}
-                    >
-                      {item}
-                    </li>
-                  );
-                }
-              }
-            )}
-          </ul>
-
-          {/* Login Button */}
-          {session?.user ? (
-            <Button>{session?.user?.name}</Button>
-          ) : (
-            <Button variant="icons" onClick={() => router.push("/auth/login")}>
-              Log in <RightOutlined />
-            </Button>
-          )}
-        </div>
+      <div className="relative z-10 px-10 mt-3 w-full">
+        <Navigation />
       </div>
 
       {/* Hero Section */}
