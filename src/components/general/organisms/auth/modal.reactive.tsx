@@ -54,7 +54,7 @@ const ModalReactive = (props: any) => {
       method: "POST",
       body: {
         code,
-        _id: userId,
+        id: userId,
       },
     });
 

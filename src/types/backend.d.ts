@@ -14,8 +14,8 @@ declare global {
 
   interface IBackendRes<T> {
     error?: string | string[];
-    message: string;
-    statusCode: number | string;
+    message?: string;
+    status: number | string;
     data?: T;
   }
 
@@ -31,10 +31,11 @@ declare global {
 
   interface ILogin {
     user: {
-      _id: string;
+      id: string;
       email: string;
       name: string;
     };
     access_token: string;
+    refresh_token: string;
   }
 }

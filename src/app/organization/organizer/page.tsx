@@ -1,8 +1,7 @@
 "use client";
-import MainLayout from "@/components/layout/mainlayout/layout";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useRef } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { io, Socket } from "socket.io-client";
 
 const Organizer = () => {
@@ -10,7 +9,7 @@ const Organizer = () => {
 
   useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io("https://socket.smashit.com.vn", {
+      socketRef.current = io("http://smashit.com.vn", {
         transports: ["websocket"],
       });
 

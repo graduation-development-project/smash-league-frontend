@@ -19,7 +19,7 @@ const buttonVariants = cva(
         // secondary:
         //   "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         // ghost: "hover:bg-accent hover:text-accent-foreground font-quicksand font-bold",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-primary underline-offset-4 hover:underline bg-transparent",
         icons:
           "w-[108px] h-[44px] flex items-center justify-center gap-[5px] text-white font-quicksand text-[16px] font-bold border-none rounded-[20px] px-[20px] py-[40px]",
       },
@@ -43,7 +43,7 @@ const buttonVariants = cva(
 
       size: {
         default:"h-10 min-w-32 rounded-full px-[20px] py-[24px]",
-        sm: "h-9 min-w-32  rounded-full px-3",
+        sm: "h-9 min-w-32  rounded-full px-1",
         lg: "h-11 min-w-32 rounded-full px-8",
         icon: "h-10 w-10",
       },

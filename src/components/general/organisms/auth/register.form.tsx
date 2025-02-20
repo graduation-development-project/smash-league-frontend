@@ -36,12 +36,14 @@ const RegisterForm = () => {
         phoneNumber,
       },
     });
+
+    console.log("Check", res);
     if (res) {
       router.push(`/verify/${encodeURIComponent(email)}`);
     } else {
       notification.error({
         message: "Register error",
-        description: "Please try again", 
+        description: "Please try again",
       });
     }
   };
@@ -83,7 +85,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="First Name"
                 name="firstName"
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,
@@ -110,7 +112,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="Last Name"
                 name="lastName"
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,
@@ -137,7 +139,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="Phone Number"
                 name="phoneNumber"
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,
@@ -164,9 +166,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="Email"
                 name="email"
-                style={{
-                  fontWeight: "bold",
-                }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,
@@ -193,9 +193,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="Password"
                 name="password"
-                style={{
-                  fontWeight: "bold",
-                }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,

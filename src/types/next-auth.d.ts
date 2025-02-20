@@ -2,11 +2,17 @@ import NextAuth, { DefaultSession } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
 interface IUser {
-  _id: string;
+  id: string;
   name: string;
   email: string;
-  access_token?: string;
-  role: string
+  access_token: string;
+  refresh_token: string;
+  role?: string
+}
+
+
+interface AccessToken {
+  access_token: string;
 }
 declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */

@@ -35,9 +35,11 @@ const LoginForm = () => {
 
   const onFinish = async (values: any) => {
     const { username, password } = values;
+
     setUserEmail("");
     //trigger sign-in
     const res = await authenticate(username, password);
+
 
     if (res?.error) {
       //error

@@ -9,6 +9,8 @@ const UploadImage: React.FC = () => {
   const [imageURL, setImageURL] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // api truyen file => URL 3 anh sau khi up len cloud
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
@@ -85,7 +87,18 @@ const UploadImage: React.FC = () => {
       )}
 
       <div className="mt-8">
-      
+        {file && (
+          <div className="">
+            <h3 className="text-lg font-medium mb-2">Uploaded Image:</h3>
+            <Image
+              src={URL.createObjectURL(file)}
+              alt="Uploaded"  
+              width={500}
+              height={500}
+              className="max-w-full h-auto rounded-lg shadow"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

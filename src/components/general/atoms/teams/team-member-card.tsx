@@ -1,52 +1,47 @@
 "use client";
 import { Avatar } from "antd";
-import { BookUser, MapPinCheckInside, UserRoundPen } from "lucide-react";
-import React, { useMemo } from "react";
+import { IoCalendarOutline } from "react-icons/io5";
+import { BsGenderMale, BsGenderFemale } from "react-icons/bs";
+import { GrLocation } from "react-icons/gr";
+import React, { useMemo, useState } from "react";
 
 const TeamMemberCard = () => {
-  const gender = "Female";
+  const [gender, setGender] = useState("Female");
   const name = "Tran Anh Minh";
 
   // Generate a random color only once per component instance
-  const avatarColor = useMemo(() => `#${Math.random().toString(16).slice(-6)}`, []);
+  const avatarColor = useMemo(
+    () => `#${Math.random().toString(16).slice(-6)}`,
+    []
+  );
 
   return (
-    <div className="flex flex-col bg-white border border-slate-300 rounded-[15px] py-5 px-10 gap-3 cursor-pointer transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105">
-      {/* Avatar & Name */}
-      <div className="flex flex-col items-center gap-2 transition-all duration-300 ease-in-out hover:text-primaryColor">
-        <Avatar
-          size={64}
-          style={{
-            backgroundColor: avatarColor,
-            color: "#fff",
-            fontSize: "24px",
-          }}
-        >
+    <div className="flex bg-white border border-slate-300 rounded-[5px] py-4 px-9 gap-3 cursor-pointer transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105">
+      <div>
+        <Avatar size={40} style={{ backgroundColor: avatarColor }}>
           {name.charAt(0).toUpperCase()}
         </Avatar>
-        <h1 className="text-[18px] font-bold">{name}</h1>
       </div>
-
-      {/* Age */}
-      <p className="flex items-center gap-2 transition-all duration-300 ease-in-out hover:text-primaryColor hover:translate-x-1">
-        <BookUser className="w-5 h-5 transition-all duration-300 ease-in-out" />
-        <span className="font-medium">Age:</span>
-        <span className="font-bold">24</span>
-      </p>
-
-      {/* Gender */}
-      <p className="flex items-center gap-2 transition-all duration-300 ease-in-out hover:text-primaryColor hover:translate-x-1">
-        <UserRoundPen className="w-5 h-5 transition-all duration-300 ease-in-out" />
-        <span className="font-medium">Gender:</span>
-        <span className="font-bold">{gender}</span>
-      </p>
-
-      {/* Location */}
-      <p className="flex items-center gap-2 transition-all duration-300 ease-in-out hover:text-primaryColor hover:translate-x-1">
-        <MapPinCheckInside className="w-5 h-5 transition-all duration-300 ease-in-out" />
-        <span className="font-medium">Location:</span>
-        <span className="font-bold">Ho Chi Minh</span>
-      </p>
+      <div className="flex flex-col gap-1">
+        <h3 className="text-[16px] font-bold text-[#2c2c2c]">{name}</h3>
+        <p className="flex items-center gap-1 hover:text-primaryColor hover:scale-105 hover:font-bold transition duration-300 ease-in-out">
+          <IoCalendarOutline size={16} />
+          Age: <span className="text-[14px] text-slate-500">25</span>
+        </p>
+        <p className="flex items-center gap-1 hover:text-primaryColor hover:scale-105 hover:font-bold transition duration-300 ease-in-out">
+          {gender === "Male" ? (
+            <BsGenderMale size={16} />
+          ) : (
+            <BsGenderFemale size={16} />
+          )}
+          Gender: <span className="text-[14px] text-slate-500">{gender}</span>
+        </p>
+        <p className="flex items-center gap-1 hover:text-primaryColor hover:scale-105 hover:font-bold transition duration-300 ease-in-out">
+          <GrLocation size={16} />
+          Location:{" "}
+          <span className="w-max text-[14px] text-slate-500">Ho Chi Minh</span>
+        </p>
+      </div>
     </div>
   );
 };
