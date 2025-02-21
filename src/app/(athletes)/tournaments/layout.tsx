@@ -1,14 +1,19 @@
+import { auth } from "@/auth";
 import MainLayout from "@/components/layout/mainlayout/layout";
 import React from "react";
 
-const TournamentsLayout = ({
+const TournamentsLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const session = await auth();
+
   return (
-    <MainLayout>
-      <div className="flex flex-col w-full justify-center items-center mt-24">{children}</div>
+    <MainLayout session={session}>
+      <div className="flex flex-col w-full justify-center items-center mt-24">
+        {children}
+      </div>
     </MainLayout>
   );
 };

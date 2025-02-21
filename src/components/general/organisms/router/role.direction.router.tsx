@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import Loaders from "../../atoms/loaders/loaders";
 
 const RoleDirectionRouter = (props: any) => {
   const { session } = props;
@@ -16,6 +17,10 @@ const RoleDirectionRouter = (props: any) => {
     }
   }, [session, router]);
 
-  return null;
+  return (
+    <div>
+      <Loaders />
+    </div>
+  );
 };
 export default RoleDirectionRouter;

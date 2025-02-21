@@ -47,11 +47,11 @@ const TeamDetailsPage = () => {
   ];
 
   return (
-    <div className="w-full h-full relative z-0 shadow-shadowComp">
+    <div className="w-full h-full relative z-0 shadow-shadowComp rounded-[5px]">
       <img
         src="https://assets.challonge.com/assets/community_default_banners/default-cover-3-redesign-2693250cf849ef7bcd3975c81ca64c06e6bdffd39d47ae0c454fd0d6e0006fb4.svg"
         alt=""
-        className="w-full h-[300px] object-cover"
+        className="w-full h-[300px] object-cover rounded-[5px]"
       />
 
       <div className="w-full h-full flex flex-col items-center relative z-20 ">

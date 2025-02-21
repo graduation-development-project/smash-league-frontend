@@ -1,10 +1,13 @@
+import { auth } from "@/auth";
 import MainLayout from "@/components/layout/mainlayout/layout";
 import TeamPage from "@/components/pages/teams/teampage";
 import React from "react";
 
-const Team = () => {
+const Team = async () => {
+  const session = await auth();
+
   return (
-    <MainLayout>
+    <MainLayout session={session}>
       <div>
         <TeamPage />
       </div>
