@@ -11,8 +11,7 @@ services:
       - "3000:3000"
     restart: unless-stopped
     volumes:
-      - .:/usr/src/app/client
-      - /usr/src/app/client/node_modules
+      - client:/usr/src/app/client
   socket:
     container_name: smash-league-socket
     build: 
@@ -25,5 +24,8 @@ services:
       - "3005:3005"
     restart: unless-stopped
     volumes:
-      - .:/usr/src/app/socket
-      - /usr/src/app/socket/node_modules
+      - socket:/usr/src/app/socket
+
+volumes:
+  client: 
+  socket: 
