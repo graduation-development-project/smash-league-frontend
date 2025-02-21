@@ -9,9 +9,10 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Navigation from "./navigation";
 
-export default function Header() {
+export default function Header(props: any) {
+  const { session } = props;
   const router = useRouter();
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const [route, setRoute] = useState("");
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function Header() {
 
       {/* Content */}
       <div className="relative z-10 px-10 mt-3 w-full">
-        <Navigation />
+        <Navigation session={session} />
       </div>
 
       {/* Hero Section */}

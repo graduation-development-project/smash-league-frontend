@@ -105,7 +105,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       // Refresh token flow
-      if (!token.refresh_token) {
+      if (!token?.user?.refresh_token) {
         console.error("Missing refresh token, logging out.");
         return { ...token, error: "RefreshTokenError" };
       }
@@ -139,7 +139,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     session({ session, token }) {
       (session.user as IUser) = token.user;
-      console.log("Session:", session.user);
+      // console.log("Session:", session.user);
       // Attaching token user to session
       return session;
     },
