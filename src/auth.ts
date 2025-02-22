@@ -28,32 +28,37 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         //     password: credentials.password,
         //   },
         // });
+        try {
+          const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/sign-in`,
+            {
+              email: credentials.username,
+              password: credentials.password,
+            }
+          );
 
-        const res = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/sign-in`,
-          {
-            email: credentials.username,
-            password: credentials.password,
+          console.log("Check res in authorize", res.status);
+
+          if (+res.status === 201) {
+            return {
+              id: res.data?.id,
+              name: res.data?.name,
+              email: res.data?.email,
+              access_token: res.data?.accessToken,
+              refresh_token: res.data?.refreshToken,
+              role: res.data?.roles[0],
+            };
+          } else {
+            return null;
           }
-        );
-
-        // console.log("Check res", res.data);
-
-        if (res.status === 201) {
-          return {
-            id: res.data?.id,
-            name: res.data?.name,
-            email: res.data?.email,
-            access_token: res.data?.accessToken,
-            refresh_token: res.data?.refreshToken,
-            role: res.data?.roles[0],
-          };
-        } else if (res.status === 401) {
-          throw new InvalidEmailPasswordError();
-        } else if (res.status === 400) {
-          throw new InactivatedAccountError();
-        } else {
-          throw new Error("Internal Server Error");
+        } catch (error: any) {
+          if (error.status === 400) {
+            throw new InvalidEmailPasswordError();
+          } else if (error.status === 401) {
+            throw new InactivatedAccountError();
+          } else {
+            throw new Error("Internal Server Error");
+          }
         }
       },
     }),

@@ -23,7 +23,6 @@ const RegisterForm = () => {
     const { email, password, firstName, lastName, phoneNumber } = values;
 
     // console.log(values);
-    router.push(`/verify/${encodeURIComponent(email)}`);
 
     const res = await sendRequest<IBackendRes<any>>({
       url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/sign-up`,
@@ -37,13 +36,12 @@ const RegisterForm = () => {
       },
     });
 
-    console.log("Check", res);
-    if (res) {
+    if (res?.status === 200 || res?.status === 201) {
       router.push(`/verify/${encodeURIComponent(email)}`);
     } else {
       notification.error({
         message: "Register error",
-        description: "Please try again",
+        description: res?.message,
       });
     }
   };

@@ -39,7 +39,7 @@ const LoginForm = () => {
     //trigger sign-in
     const res = await authenticate(username, password);
 
-
+    console.log("Check res", res);
     if (res?.error) {
       //error
       if (res?.code === 2) {

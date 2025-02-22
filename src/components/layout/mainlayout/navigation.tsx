@@ -33,6 +33,13 @@ const Navigation = (props: any) => {
       key: "2",
       label: "Public Profile",
       icon: <RiProfileFill size={20} />,
+      onClick: () => {
+        localStorage.setItem("page", "Home");
+        setRoute("Profile");
+        router.push(
+          `/profile/${session?.user?.role.toLowerCase()}/${session?.user?.id}`
+        );
+      },
     },
     {
       key: "3",
