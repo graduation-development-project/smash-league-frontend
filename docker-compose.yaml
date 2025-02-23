@@ -16,7 +16,7 @@ services:
     container_name: smash-league-socket
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: socket.Dockerfile
     command: bash -c "node server.mjs"
     environment:
       - .env
