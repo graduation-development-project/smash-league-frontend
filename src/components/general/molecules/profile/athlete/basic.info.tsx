@@ -6,7 +6,7 @@ import React from "react";
 const BasicInfo = () => {
   return (
     <div className="w-full h-full flex flex-col gap-4 rounded-[10px] shadow-shadowBtn p-6">
-      <h2 className="text-[36px] font-bold text-primaryColor underline border-primaryColor w-full h-full">
+      <h2 className="text-[32px] font-bold text-primaryColor underline border-primaryColor w-full h-full">
         BASIC INFO
       </h2>
       <div className="w-full h-full flex justify-between">

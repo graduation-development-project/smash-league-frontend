@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { LoadingOutlined } from "@ant-design/icons";
+import { ConsoleSqlOutlined, LoadingOutlined } from "@ant-design/icons";
 import Image from "next/image";
 
 const UploadImage: React.FC = () => {
@@ -52,6 +52,7 @@ const UploadImage: React.FC = () => {
     }
   };
 
+  console.log(imageURL);
   return (
     <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-xl font-semibold mb-4">Upload an Image</h1>
@@ -81,6 +82,8 @@ const UploadImage: React.FC = () => {
           <Image
             src={imageURL}
             alt="Uploaded"
+            width={500}
+            height={500}
             className="max-w-full h-auto rounded-lg shadow"
           />
         </div>
@@ -92,7 +95,7 @@ const UploadImage: React.FC = () => {
             <h3 className="text-lg font-medium mb-2">Uploaded Image:</h3>
             <Image
               src={URL.createObjectURL(file)}
-              alt="Uploaded"  
+              alt="Uploaded"
               width={500}
               height={500}
               className="max-w-full h-auto rounded-lg shadow"
