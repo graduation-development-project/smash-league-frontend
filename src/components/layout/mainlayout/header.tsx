@@ -35,7 +35,7 @@ export default function Header(props: any) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 px-10 mt-3 w-full">
+      <div className="relative z-10 px-10 py-2 w-full">
         <Navigation session={session} />
       </div>
 
@@ -58,7 +58,10 @@ export default function Header(props: any) {
             <Button
               variant="icons"
               className="mt-4"
-              onClick={() => router.push("/auth/register")}
+              onClick={() => {
+                localStorage.setItem("page", "Home");
+                router.push("/auth/register");
+              }}
             >
               Sign up <RightOutlined />
             </Button>

@@ -17,7 +17,7 @@ const TeamDetails = async () => {
       </div>
       <div className="px-[100px]">
         <TeamsContextProvider>
-          <TeamDetailsPage />
+          <TeamDetailsPage session={session} />
         </TeamsContextProvider>
       </div>
       <Footer />

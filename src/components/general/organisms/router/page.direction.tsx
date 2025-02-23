@@ -28,7 +28,7 @@ const PageDirection = () => {
   if (!page) {
     return (
       <div>
-        <Spinner />
+        <Spinner isLoading={true} />
       </div>
     );
   }
