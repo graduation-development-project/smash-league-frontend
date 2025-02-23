@@ -33,6 +33,13 @@ const Navigation = (props: any) => {
       key: "2",
       label: "Public Profile",
       icon: <RiProfileFill size={20} />,
+      onClick: () => {
+        localStorage.setItem("page", "Home");
+        setRoute("Profile");
+        router.push(
+          `/profile/${session?.user?.role.toLowerCase()}/${session?.user?.id}`
+        );
+      },
     },
     {
       key: "3",
@@ -60,22 +67,22 @@ const Navigation = (props: any) => {
     setRoute(storedRoute);
   }, []);
   return (
-    <div className="w-full py-4">
+    <div className="w-full py-2">
       {/* Top Section */}
       <div className="flex justify-between items-center text-white">
         {/* Logo */}
         <div
-          className="flex flex-col items-center gap-1 cursor-pointer"
+          className="flex flex-col items-center cursor-pointer"
           onClick={() => {
             localStorage.setItem("page", "Home");
             setRoute("Home");
             router.push("/");
           }}
         >
-          <h1 className="text-3xl font-bold text-primaryColor font-quicksand">
+          <h1 className="text-[28px] font-bold text-primaryColor font-quicksand">
             SMASH LEAGUE
           </h1>
-          <p className="text-sm">Elevate your game, smash the league</p>
+          <p className="text-[13px]">Elevate your game, smash the league</p>
         </div>
 
         {/* Navigation */}
@@ -142,14 +149,20 @@ const Navigation = (props: any) => {
             overlayStyle={{ fontFamily: "inherit", fontWeight: "600" }}
           >
             <a onClick={(e) => e.preventDefault()}>
-              <Button>
+              <Button size={"sm"}>
                 Welcome {session?.user?.name}
                 <DownOutlined />
               </Button>
             </a>
           </Dropdown>
         ) : (
-          <Button variant="icons" onClick={() => router.push("/auth/login")}>
+          <Button
+            variant="icons"
+            onClick={() => {
+              localStorage.setItem("page", "Home");
+              router.push("/auth/login");
+            }}
+          >
             Log in <RightOutlined />
           </Button>
         )}

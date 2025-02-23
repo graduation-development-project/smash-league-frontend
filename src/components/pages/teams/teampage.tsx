@@ -6,7 +6,9 @@ import AllTeams from "@/components/general/organisms/teams/all-teams";
 import MyTeams from "@/components/general/organisms/teams/my-teams";
 // import "./styles.css";
 import ParticipatedTournamentsOfTeams from "../../general/organisms/teams/participated-tournaments";
-const TeamPage = () => {
+import { useSession } from "next-auth/react";
+const TeamPage = (props: any) => {
+  const { session } = props;
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -17,16 +19,20 @@ const TeamPage = () => {
       label: "ALL TEAMS",
       children: <AllTeams />,
     },
-    {
-      key: "2",
-      label: "MY TEAMS",
-      children: <MyTeams />,
-    },
-    {
-      key: "3",
-      label: "PARTICIPATED TOURNAMENTS",
-      children: <ParticipatedTournamentsOfTeams />,
-    },
+    ...(session?.user
+      ? [
+          {
+            key: "2",
+            label: "MY TEAMS",
+            children: <MyTeams />,
+          },
+          {
+            key: "3",
+            label: "PARTICIPATED TOURNAMENTS",
+            children: <ParticipatedTournamentsOfTeams />,
+          },
+        ]
+      : []),
   ];
   return (
     <ConfigProvider

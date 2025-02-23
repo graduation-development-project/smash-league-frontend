@@ -29,40 +29,39 @@ const ModalReactive = (props: any) => {
   const onFinishStep0 = async (values: any) => {
     const { email } = values;
     const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/retry-active`,
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/resend-otp`,
       method: "POST",
       body: {
         email,
       },
     });
 
-    if (res?.data) {
-      setUserId(res?.data?._id);
+    if (res.status === 200 || res.status === 201) {
       setCurrent(1);
     } else {
       notification.error({
         message: "Call APIs error",
-        description: res?.message,
+        description: "Please try again",
       });
     }
   };
 
   const onFinishStep1 = async (values: any) => {
-    const { code } = values;
+    const { otp } = values;
     const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/check-code`,
-      method: "POST",
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/verify-otp`,
+      method: "PUT",
       body: {
-        code,
-        id: userId,
+        email: userEmail,
+        otp,
       },
     });
 
-    if (res?.data) {
+    if (res?.status === 200 || res?.status === 201) {
       setCurrent(2);
     } else {
       notification.error({
-        message: "Call APIs error",
+        message: "Verify error",
         description: res?.message,
       });
     }
@@ -73,7 +72,10 @@ const ModalReactive = (props: any) => {
         title="Kích hoạt tài khoản"
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setCurrent(0);
+        }}
         maskClosable={false}
         footer={null}
       >
@@ -135,20 +137,20 @@ const ModalReactive = (props: any) => {
               layout="vertical"
             >
               <Form.Item
-                label="Code"
-                name="code"
+                label="OTP"
+                name="otp"
                 rules={[
                   {
                     required: true,
-                    message: "Please input your code!",
+                    message: "Please input your OTP!",
                   },
                 ]}
               >
-                <Input />
+                <Input.OTP />
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit">
-                  Active
+                  Activate
                 </Button>
               </Form.Item>
             </Form>

@@ -9,7 +9,7 @@ const Team = async () => {
   return (
     <MainLayout session={session}>
       <div>
-        <TeamPage />
+        <TeamPage session={session} />
       </div>
     </MainLayout>
   );

@@ -19,7 +19,7 @@ const RoleDirectionRouter = (props: any) => {
 
   return (
     <div>
-      <Loaders />
+      <Loaders isLoading={true} />
     </div>
   );
 };

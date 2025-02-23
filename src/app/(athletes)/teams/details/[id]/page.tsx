@@ -12,12 +12,12 @@ const TeamDetails = async () => {
   return (
     // <MainLayout>
     <>
-      <div className="px-10 w-full bg-[#2c2c2c] z-20">
+      <div className="px-10 w-full bg-[#2c2c2c] z-20 shadow-lg rounded-[5px] fixed">
         <Navigation session={session} />
       </div>
       <div className="px-[100px]">
         <TeamsContextProvider>
-          <TeamDetailsPage />
+          <TeamDetailsPage session={session} />
         </TeamsContextProvider>
       </div>
       <Footer />

@@ -10,8 +10,10 @@ import UpdateTeamsForm from "@/components/general/molecules/teams/update.teams.f
 import TournamentsTeamsDetails from "@/components/general/organisms/teams/tournaments.teams.details";
 import MembersTeamsDetails from "@/components/general/organisms/teams/members.teams.details";
 import AnnouncementsTeamsDetails from "../../general/organisms/teams/announcements.teams.details";
+import { useSession } from "next-auth/react";
 
-const TeamDetailsPage = () => {
+const TeamDetailsPage = (props: any) => {
+  const { session } = props;
   const onChange = (key: string) => {
     setActiveKey(key);
   };
@@ -39,11 +41,15 @@ const TeamDetailsPage = () => {
       label: "Tournaments",
       children: <TournamentsTeamsDetails />,
     },
-    {
-      key: "5",
-      label: "Update Info",
-      children: <UpdateTeamsForm />,
-    },
+    ...(session?.user.role === "team leader"
+      ? [
+          {
+            key: "5",
+            label: "Update Info",
+            children: <UpdateTeamsForm />,
+          },
+        ]
+      : []),
   ];
 
   return (
