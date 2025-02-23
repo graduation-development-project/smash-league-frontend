@@ -16,19 +16,19 @@ const TeamPage = (props: any) => {
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "ALL TEAMS",
+      label: "All Teams",
       children: <AllTeams />,
     },
     ...(session?.user
       ? [
           {
             key: "2",
-            label: "MY TEAMS",
+            label: "My Teams",
             children: <MyTeams />,
           },
           {
             key: "3",
-            label: "PARTICIPATED TOURNAMENTS",
+            label: "Particaipated Tournaments",
             children: <ParticipatedTournamentsOfTeams />,
           },
         ]
