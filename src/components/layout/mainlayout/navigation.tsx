@@ -37,7 +37,7 @@ const Navigation = (props: any) => {
         localStorage.setItem("page", "Home");
         setRoute("Profile");
         router.push(
-          `/profile/${session?.user?.role.toLowerCase()}/${session?.user?.id}`
+          `/profile/${session?.user?.role.toLowerCase()}/${session?.user?.name.toLowerCase()}`
         );
       },
     },

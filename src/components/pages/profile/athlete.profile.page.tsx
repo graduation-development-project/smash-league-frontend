@@ -6,8 +6,21 @@ import OverviewAthleteProfile from "@/components/general/organisms/profile/athle
 import { Avatar, ConfigProvider, Tabs, TabsProps } from "antd";
 import React, { useState } from "react";
 import { CiLocationOn } from "react-icons/ci";
+import TournamentsAthleteProfile from "../../general/organisms/profile/athlete/tournaments.athlete.profile";
+import UpdateInformationProfile from "@/components/general/organisms/profile/athlete/update.information.profile";
 
-const AthleteProfilePage = () => {
+const AthleteProfilePage = (props: any) => {
+  const { session } = props;
+  const user = {
+    accessToken:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0MTkxNzd9.fvQaEsYcX956KnXmI5HpGtTosAfxrYgtsg1SdgjxHlA",
+    refreshToken:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0NDI1Nzd9.mlxCTkI_ujgJh5Hx-JJpV1rKsZmCrsp1OaozJETWyNk",
+    email: "smount273@gmail.com",
+    name: "Tran Anh Minh",
+    roles: ["Athlete"],
+    id: "dc033ba7-de1a-4fcc-b1f7-d9901388594b",
+  };
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const onChange = (key: string) => {
     console.log(key);
@@ -22,13 +35,17 @@ const AthleteProfilePage = () => {
     {
       key: "2",
       label: "Tournaments",
-      children: "Content of Tournaments",
+      children: <TournamentsAthleteProfile />,
     },
-    {
-      key: "3",
-      label: "Ranking",
-      children: "Content of Ranking",
-    },
+    ...(session?.user?.id === user?.id
+      ? [
+          {
+            key: "3",
+            label: "Update Information",
+            children: <UpdateInformationProfile session={session} />,
+          },
+        ]
+      : []),
   ];
 
   return (

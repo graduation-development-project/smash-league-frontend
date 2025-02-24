@@ -12,7 +12,7 @@ const AthleteProfile = async () => {
         <Navigation session={session} />
       </div>
       <div className="mt-[70px] relative">
-        <AthleteProfilePage />
+        <AthleteProfilePage session={session} />
       </div>
       <Footer />
     </>
