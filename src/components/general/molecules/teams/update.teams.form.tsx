@@ -1,9 +1,6 @@
 "use client";
-
-import { PlusOutlined } from "@ant-design/icons";
 import { Button, ConfigProvider, Form, Image, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { Upload } from "lucide-react";
 import React, { useState } from "react";
 
 const UpdateTeamsForm = () => {
