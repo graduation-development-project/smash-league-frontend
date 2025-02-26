@@ -6,13 +6,26 @@ services:
       dockerfile: Dockerfile
     command: bash -c "npm run build; npm run start;"
     environment:
-      - AUTH_SECRET=your-auth-secret
-      - NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
-      - AUTH_GOOGLE_ID=your-google-client-id
-      - AUTH_GOOGLE_SECRET=your-google-client-secret
+      - .env
     ports:
       - "3000:3000"
     restart: unless-stopped
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - client:/usr/src/app/client
+  socket:
+    container_name: smash-league-socket
+    build: 
+      context: .
+      dockerfile: socket.Dockerfile
+    command: bash -c "node server.mjs"
+    environment:
+      - .env
+    ports:
+      - "3005:3005"
+    restart: unless-stopped
+    volumes:
+      - socket:/usr/src/app/socket
+
+volumes:
+  client: 
+  socket: 

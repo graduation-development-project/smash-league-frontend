@@ -7,7 +7,7 @@ import {
   SolutionOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { sendRequest } from "@/utils/api";
      
 const ModalChangePassword = (props: any) => {
@@ -20,29 +20,30 @@ const ModalChangePassword = (props: any) => {
 
   if (!hasMounted) return <></>;
 
+
   const onFinishStep0 = async (values: any) => {
     const { email } = values;
     const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/retry-password`,
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/send-reset-password-link`,
       method: "POST",
       body: {
         email,
       },
     });
 
-    if (res?.data) {
-      setUserEmail(res?.data?.email);
+    if (res) {
+      setUserEmail(email);
       setCurrent(1);
     } else {
       notification.error({
         message: "Call APIs error",
-        description: res?.message,
+        description: "Please try again",
       });
     }
   };
 
   const onFinishStep1 = async (values: any) => {
-    const { code, password, confirmPassword } = values;
+    const { otp, password, confirmPassword } = values;
 
     if (password !== confirmPassword) {
       notification.error({
@@ -52,22 +53,21 @@ const ModalChangePassword = (props: any) => {
       });
     }
     const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/change-password`,
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/reset-password`,
       method: "PUT",
       body: {
-        code,
+        otp,
         password,
-        confirmPassword,
         email: userEmail,
       },
     });
 
-    if (res?.data) {
+    if (res) {
       setCurrent(2);
     } else {
       notification.error({
         message: "Call APIs error",
-        description: res?.message,
+        description: "Please try again",
       });
     }
   };
@@ -149,16 +149,16 @@ const ModalChangePassword = (props: any) => {
               layout="vertical"
             >
               <Form.Item
-                label="Code"
-                name="code"
+                label="OTP"
+                name="otp"
                 rules={[
                   {
                     required: true,
-                    message: "Please input your code!",
+                    message: "Please input your OTP!",
                   },
                 ]}
               >
-                <Input />
+                <Input.OTP />
               </Form.Item>
 
               <Form.Item

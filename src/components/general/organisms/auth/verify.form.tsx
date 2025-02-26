@@ -24,23 +24,24 @@ const VerifyForm = (props: any) => {
   const onFinish = async (values: any) => {
     const { email, otp } = values;
 
-    console.log("Check verify", values);
-    // const res = await sendRequest<IBackendRes<any>>({
-    //     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/check-code`,
-    //     method: "POST",
-    //     body: {
-    //         email, otp
-    //     }
-    // })
-    // if (res?.data) {
-    //     message.success("Kích hoạt tài khoản thành công.")
-    //     router.push(`/auth/login`);
-    // } else {
-    //     notification.error({
-    //         message: "Verify error",
-    //         description: res?.message
-    //     })
-    // }
+    const res = await sendRequest<IBackendRes<any>>({
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/verify-otp`,
+      method: "PUT",
+      body: {
+        email,
+        otp,
+      },
+    });
+
+    if (res?.status === 200) {
+      message.success("Verify successfully.");
+      router.push(`/auth/login`);
+    } else {
+      notification.error({
+        message: "Verify error",
+        description: res?.message,
+      });
+    }
   };
 
   return (

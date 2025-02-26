@@ -28,17 +28,18 @@ const LoginForm = () => {
   //   console.log("Check Session ", session);
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  ``;
   const [userEmail, setUserEmail] = useState("");
 
   const [changePassword, setChangePassword] = useState(false);
 
   const onFinish = async (values: any) => {
     const { username, password } = values;
+
     setUserEmail("");
     //trigger sign-in
     const res = await authenticate(username, password);
 
+    console.log("Check res", res);
     if (res?.error) {
       //error
       if (res?.code === 2) {

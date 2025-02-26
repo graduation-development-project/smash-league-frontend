@@ -3,19 +3,24 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import Loaders from "../../atoms/loaders/loaders";
 
-const RoleDirectionRouter = () => {
-  const { data: session, status } = useSession();
+const RoleDirectionRouter = (props: any) => {
+  const { session } = props;
   const router = useRouter();
 
   useEffect(() => {
     if (session?.user?.role === "admin") {
       router.push("/dashboard");
-    } else if (session?.user?.role === "athlete") {
+    } else if (session?.user?.role === "Athlete") {
       router.push("/");
     }
-  }, [session, router, status]);
+  }, [session, router]);
 
-  return null;
+  return (
+    <div>
+      <Loaders isLoading={true} />
+    </div>
+  );
 };
 export default RoleDirectionRouter;

@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { routes } from "./routes";
+import Spinner from "../../atoms/loaders/spinner";
 
 const PageDirection = () => {
-  // Start with `null` to avoid SSR mismatch
   const [page, setPage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -13,12 +13,11 @@ const PageDirection = () => {
       setPage(storedPage);
     }
 
-    // Listen for localStorage changes
+    // Listen for localStorage changes across tabs
     const handleStorageChange = () => {
       setPage(localStorage.getItem("page") || "Home");
     };
 
-    // Lắng nghe sự kiện thay đổi localStorage từ các tab khác
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
@@ -26,20 +25,22 @@ const PageDirection = () => {
     };
   }, []);
 
-  if (page === null) {
-    // Avoid rendering until client-side state is ready
-    return <div>Loading...</div>;
+  if (!page) {
+    return (
+      <div>
+        <Spinner isLoading={true} />
+      </div>
+    );
   }
 
   const route = routes.find((route) => route.name === page);
 
   if (!route?.component) {
     console.warn(`No component found for page: ${page}`);
-    return null;
+    return <div>Page not found</div>;
   }
 
   const Page = route.component;
-
   return <Page />;
 };
 

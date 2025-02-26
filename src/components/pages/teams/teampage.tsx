@@ -6,7 +6,9 @@ import AllTeams from "@/components/general/organisms/teams/all-teams";
 import MyTeams from "@/components/general/organisms/teams/my-teams";
 // import "./styles.css";
 import ParticipatedTournamentsOfTeams from "../../general/organisms/teams/participated-tournaments";
-const TeamPage = () => {
+import { useSession } from "next-auth/react";
+const TeamPage = (props: any) => {
+  const { session } = props;
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -14,19 +16,23 @@ const TeamPage = () => {
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "ALL TEAMS",
+      label: "All Teams",
       children: <AllTeams />,
     },
-    {
-      key: "2",
-      label: "MY TEAMS",
-      children: <MyTeams />,
-    },
-    {
-      key: "3",
-      label: "PARTICIPATED TOURNAMENTS",
-      children: <ParticipatedTournamentsOfTeams />,
-    },
+    ...(session?.user
+      ? [
+          {
+            key: "2",
+            label: "My Teams",
+            children: <MyTeams />,
+          },
+          {
+            key: "3",
+            label: "Particaipated Tournaments",
+            children: <ParticipatedTournamentsOfTeams />,
+          },
+        ]
+      : []),
   ];
   return (
     <ConfigProvider
@@ -47,11 +53,12 @@ const TeamPage = () => {
       <Tabs
         tabBarStyle={{
           width: "100%",
-          fontWeight: 500,
+          fontWeight: 600,
           boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
           marginTop: 150,
+          fontFamily: "inherit",
         }}
-        style={{ width: "100%" }}
+        style={{ width: "100%", fontFamily: "inherit" }}
         size="large"
         centered
         tabBarGutter={60}

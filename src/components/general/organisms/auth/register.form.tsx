@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import {
   Button,
@@ -23,7 +24,6 @@ const RegisterForm = () => {
     const { email, password, firstName, lastName, phoneNumber } = values;
 
     // console.log(values);
-    router.push(`/verify/${encodeURIComponent(email)}`);
 
     const res = await sendRequest<IBackendRes<any>>({
       url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/sign-up`,
@@ -36,12 +36,13 @@ const RegisterForm = () => {
         phoneNumber,
       },
     });
-    if (res) {
+
+    if (res?.status === 200 || res?.status === 201) {
       router.push(`/verify/${encodeURIComponent(email)}`);
     } else {
       notification.error({
         message: "Register error",
-        description: "Please try again", 
+        description: res?.message,
       });
     }
   };
@@ -83,7 +84,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="First Name"
                 name="firstName"
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,
@@ -110,7 +111,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="Last Name"
                 name="lastName"
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,
@@ -137,7 +138,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="Phone Number"
                 name="phoneNumber"
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,
@@ -164,9 +165,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="Email"
                 name="email"
-                style={{
-                  fontWeight: "bold",
-                }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,
@@ -193,9 +192,7 @@ const RegisterForm = () => {
               <Form.Item
                 label="Password"
                 name="password"
-                style={{
-                  fontWeight: "bold",
-                }}
+                style={{ fontWeight: "500" }}
                 rules={[
                   {
                     required: true,
