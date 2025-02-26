@@ -1,5 +1,5 @@
 import React from 'react'
-import StandingCard from '../atoms/standing.card'
+import StandingCard from '../../atoms/standing.card'
 
 const StandingTourBoard = ({ handleHiddenBoard }: { handleHiddenBoard: (index: number) => void }) => {
   const listStandingCard = [0, 1, 2, 3, 4, 5, 6];

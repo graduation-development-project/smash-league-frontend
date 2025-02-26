@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import OrganizerZoneCardMain from "../molecules/organizer.zone.card.main";
-import OrganizerZoneCard from "../molecules/organizer.zone.card";
+import OrganizerZoneCardMain from "../molecules/organizer-zone/organizer.zone.card.main";
+import OrganizerZoneCard from "../molecules/organizer-zone/organizer.zone.card";
 
 const OrganizerZone = () => {
   return (

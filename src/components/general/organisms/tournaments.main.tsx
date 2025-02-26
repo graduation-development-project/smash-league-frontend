@@ -1,8 +1,9 @@
 "use client"
 
 import React from "react";
-import FeaturedTourCardMain from "../molecules/featured.tour.card.main";
-import FeaturedTourCard from "../molecules/featured.tour.card";
+import FeaturedTourCardMain from "../molecules/tournaments/featured.tour.card.main";
+import FeaturedTourCard from "../molecules/tournaments/featured.tour.card";
+
 
 const FeaturedTournamentMain = () => {
   return (

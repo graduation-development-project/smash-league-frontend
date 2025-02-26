@@ -1,5 +1,5 @@
 import React from 'react'
-import NewsCard from '../atoms/news.card'
+import NewsCard from '../../atoms/news.card'
 
 const FeaturedNewsCard = () => {
   return (
