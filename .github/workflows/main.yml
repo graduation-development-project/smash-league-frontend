@@ -12,6 +12,12 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
+    - name: Run "docker compose"
+      run: |
+          docker container stop smash-league-client
+          docker container rm smash-league-client
+          docker container stop smash-league-socket
+          docker container rm smash-league-socket
     - name: Set up environment variables
       run: |
           echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
