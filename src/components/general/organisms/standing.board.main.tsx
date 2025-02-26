@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import StandingTourBoard from '../molecules/standing.tour.board'
-import StandingScoreBoard from '../molecules/standing-score.board'
+import StandingTourBoard from '../molecules/standing-board/standing.tour.board'
+import StandingScoreBoard from '../molecules/standing-board/standing-score.board'
 
 const StandingBoardMain = () => {
   const [hiddenBoard, setHiddenBoard] = useState(true);

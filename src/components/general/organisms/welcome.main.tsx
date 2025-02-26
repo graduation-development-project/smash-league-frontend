@@ -1,5 +1,5 @@
 import React from 'react'
-import WelcomeIntroCard from '../molecules/welcome.intro.card'
+import WelcomeIntroCard from '../molecules/welcome/welcome.intro.card'
 
 const WelcomeIntroMain = () => {
   const cardContent = [

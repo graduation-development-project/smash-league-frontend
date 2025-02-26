@@ -1,7 +1,8 @@
 import React from 'react'
 import NewsCard from '../atoms/news.card'
-import FeaturedNewsCard from '../molecules/featured.news.card'
-import FeaturedNewsCardMain from '../molecules/featured.news.card.main'
+import FeaturedNewsCard from '../molecules/news/featured.news.card'
+import FeaturedNewsCardMain from '../molecules/news/featured.news.card.main'
+
 
 const NewsBulletinMain = () => {
     return (

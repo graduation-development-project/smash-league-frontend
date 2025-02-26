@@ -1,5 +1,5 @@
 import React from "react";
-import OrganizerCard from "../atoms/organizer.zone.card";
+import OrganizerCard from "../../atoms/organizer.zone.card";
 
 const OrganizerZoneCard = () => {
   return (

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { organizerImage } from "@/assets/data";
-import TextGradientBtn from "../atoms/text.gradient.btn";
+import TextGradientBtn from "../../atoms/text.gradient.btn";
 import { Button } from "@/components/ui/button";
 
 const OrganizerZoneCardMain = () => {

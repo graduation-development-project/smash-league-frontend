@@ -1,7 +1,7 @@
 import React from 'react'
 
-import StandingMatchCard from '../atoms/standing-match.card';
-import StandingScoreCard from '../atoms/standing-score.card';
+import StandingMatchCard from '../../atoms/standing-match.card';
+import StandingScoreCard from '../../atoms/standing-score.card';
 
 const StandingScoreBoard = ({ isVisible }: { isVisible: boolean }) => {
   if (!isVisible) return null;
