@@ -7,11 +7,12 @@ import {
   ClockIcon,
   LocationIcon,
 } from "@/assets/icons";
-import { Button } from "../../ui/button";
-import TextGradientBtn from "../atoms/text.gradient.btn";
-import TourCardSliderMain from "../atoms/tour.card.slider.main";
+
 import { useHomeContext } from "@/library/home.context";
 import { sliderImages } from "@/assets/data";
+import TourCardSliderMain from "../../atoms/tour.card.slider.main";
+import { Button } from "@/components/ui/button";
+import TextGradientBtn from "../../atoms/text.gradient.btn";
 
 const FeaturedTourCardMain = () => {
   const { activeSlide, setActiveSlide } = useHomeContext();

@@ -1,5 +1,5 @@
 import React from 'react'
-import WelcomeCard from '../atoms/welcome.card'
+import WelcomeCard from '../../atoms/welcome.card'
 
 const WelcomeIntroCard = ({ cardContent }: { cardContent: any }) => {
 

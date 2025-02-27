@@ -1,7 +1,8 @@
 import React from "react";
-import TextGradientBtn from "../atoms/text.gradient.btn";
+
 import Image from "next/image";
 import images from "@/assets/images";
+import TextGradientBtn from "../../atoms/text.gradient.btn";
 
 const FeaturedNewsCardMain = () => {
   return (
