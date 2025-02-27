@@ -14,7 +14,7 @@ const BasicInfo = () => {
           <div className="w-full h-full flex gap-2">
             <InfoBox title="AGE" info="24" />
             <InfoBox title="HEIGHT(cm)" info="175" />
-            <InfoBox title="HAND" info="Right" />
+            <InfoBox title="HAND" info="R" />
           </div>
           <div className="w-full h-full flex gap-2 justify-center">
             <InfoBox title="LOCATION" info="Thu Duc, Ho Chi Minh" />

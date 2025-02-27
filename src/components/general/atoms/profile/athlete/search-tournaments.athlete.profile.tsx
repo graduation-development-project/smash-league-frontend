@@ -4,7 +4,7 @@ import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, ConfigProvider, Dropdown, Input, MenuProps } from "antd";
 import React, { useState } from "react";
 
-const SearchTournamentsProfile = () => {
+const SearchTournamentsAthleteProfile = () => {
   const [filterValue, setFilterValue] = useState("2025");
 
   const items: MenuProps["items"] = [
@@ -91,4 +91,4 @@ const SearchTournamentsProfile = () => {
   );
 };
 
-export default SearchTournamentsProfile;
+export default SearchTournamentsAthleteProfile;

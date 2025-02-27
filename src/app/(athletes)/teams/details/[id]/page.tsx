@@ -10,19 +10,17 @@ import React from "react";
 const TeamDetails = async () => {
   const session = await auth();
   return (
-    // <MainLayout>
     <>
       <div className="px-10 w-full bg-[#2c2c2c] z-20 shadow-lg rounded-[5px] fixed">
         <Navigation session={session} />
       </div>
-      <div className="px-[100px]">
+      <div className="px-24">
         <TeamsContextProvider>
           <TeamDetailsPage session={session} />
         </TeamsContextProvider>
       </div>
       <Footer />
     </>
-    // </MainLayout>
   );
 };
 

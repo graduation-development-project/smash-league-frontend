@@ -1,54 +1,57 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import OverviewOrganizerProfile from "@/components/general/organisms/profile/organizer/overview.oganizer.profile";
 import { Button } from "@/components/ui/button";
+import { useProfileContext } from "@/library/profile.context";
 import { Avatar, ConfigProvider, Tabs, TabsProps } from "antd";
 import React from "react";
-import OverviewTeamDetails from "../../general/organisms/teams/overview.team.details";
-import { useTeamsContext } from "@/library/teams.context";
-import UpdateTeamsForm from "@/components/general/molecules/teams/update.teams.form";
-import TournamentsTeamsDetails from "@/components/general/organisms/teams/tournaments.teams.details";
-import MembersTeamsDetails from "@/components/general/organisms/teams/members.teams.details";
-import AnnouncementsTeamsDetails from "../../general/organisms/teams/announcements.teams.details";
+import TournamentsOrganizerProfile from "../../general/organisms/profile/organizer/tournaments.organizer.profile";
+import AnnouncementsOrganizerProfile from "@/components/general/organisms/profile/organizer/announcements.organizer.profile";
+import DashboardOrganizerProfile from "@/components/general/organisms/profile/organizer/dashboard.organizers.profile";
 
-const TeamDetailsPage = (props: any) => {
+const OrganizerProfilePage = (props: any) => {
   const { session } = props;
+  const { organizerId, activeKey, setActiveKey } = useProfileContext();
+
+  console.log("organizerId", organizerId);
   const onChange = (key: string) => {
     setActiveKey(key);
   };
-
-  const { activeKey, setActiveKey } = useTeamsContext();
 
   const items: TabsProps["items"] = [
     {
       key: "1",
       label: "Overview",
-      children: <OverviewTeamDetails />,
+      children: <OverviewOrganizerProfile />,
     },
     {
       key: "2",
-      label: "Members",
-      children: <MembersTeamsDetails />,
+      label: "Announcements",
+      children: <AnnouncementsOrganizerProfile />,
     },
     {
       key: "3",
-      label: "Announcements",
-      children: <AnnouncementsTeamsDetails />,
+      label: "Tournaments",
+      children: <TournamentsOrganizerProfile />,
     },
     {
       key: "4",
-      label: "Tournaments",
-      children: <TournamentsTeamsDetails />,
+      label: "Events",
+      children: "Content of Events",
     },
-    ...(session?.user.role === "team leader"
-      ? [
-          {
-            key: "5",
-            label: "Update Info",
-            children: <UpdateTeamsForm />,
-          },
-        ]
-      : []),
+
+    {
+      key: "5",
+      label: "Dashboard",
+      children: <DashboardOrganizerProfile />,
+    },
+
+    {
+      key: "6",
+      label: "Update Information",
+      children: "Content of Update Information",
+    },
   ];
 
   return (
@@ -62,11 +65,13 @@ const TeamDetailsPage = (props: any) => {
       <div className="w-full h-full flex flex-col items-center relative z-20 ">
         <div className="w-1/2 h-full flex justify-between items-center px-6 mt-2 ">
           {" "}
-          <div className="flex flex-col gap-1">
-            <h1 className="text-[24px] font-bold">Team Name</h1>
-            <p className="text-[14px] text-slate-400 ">100 Team Members</p>
+          <div className="flex flex-col">
+            <h1 className="text-[24px] font-bold">Organizer Name</h1>
+            <div className="text-[14px] text-slate-400 italic">
+              <p>organizers@gmail.com</p>
+            </div>
           </div>
-          <Button size={"sm"}>Join</Button>
+          <Button size={"sm"}>Follow</Button>
         </div>
         <ConfigProvider
           theme={{
@@ -111,11 +116,11 @@ const TeamDetailsPage = (props: any) => {
             boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
           }}
         >
-          S
+          M
         </Avatar>
       </div>
     </div>
   );
 };
 
-export default TeamDetailsPage;
+export default OrganizerProfilePage;

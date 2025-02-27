@@ -56,8 +56,8 @@ const Navigation = (props: any) => {
       onClick: () => {
         localStorage.setItem("page", "Home");
         setRoute("Home");
-        signOut({ callbackUrl: "/auth/login" });
-        // router.push("/auth/login");
+        signOut();
+        router.push("/auth/login");
       },
     },
   ];
@@ -87,7 +87,7 @@ const Navigation = (props: any) => {
 
         {/* Navigation */}
         <ul className="flex gap-12 text-lg font-quicksand font-bold">
-          {["News", "Tournaments", "Teams", "Organizer Zone", "About"].map(
+          {["News", "Tournaments", "Teams", "Organizers Zone", "About"].map(
             (item, index) => {
               if (item === "News" || item === "Tournaments") {
                 return (
@@ -102,11 +102,9 @@ const Navigation = (props: any) => {
                     }`}
                     onClick={() => {
                       localStorage.setItem("page", item);
-                      console.log(item.charAt(0).toLowerCase() + item.slice(1));
-
                       setRoute(item);
                       router.push(
-                        `/${item.charAt(0).toLowerCase() + item.slice(1)}`
+                        `/${item.toLowerCase().replace(/\s+/g, "-")}`
                       );
                     }}
                   >
@@ -130,7 +128,7 @@ const Navigation = (props: any) => {
                       localStorage.setItem("page", item);
                       setRoute(item);
                       router.push(
-                        `/${item.charAt(0).toLowerCase() + item.slice(1)}`
+                        `/${item.toLowerCase().replace(/\s+/g, "-")}`
                       );
                     }}
                   >

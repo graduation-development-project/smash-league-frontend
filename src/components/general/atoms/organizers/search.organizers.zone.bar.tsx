@@ -1,22 +1,15 @@
-import {
-  DownOutlined,
-  SearchOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { DownOutlined, SearchOutlined, TeamOutlined } from "@ant-design/icons";
 import {
   Button,
   ConfigProvider,
   Dropdown,
+  Input,
   MenuProps,
   message,
-  Space,
 } from "antd";
-import Input from "antd/es/input/Input";
-import { CirclePlus, CircleX } from "lucide-react";
 import React from "react";
 
-const SearchTeamBar = () => {
+const SearchOrganizersZoneBar = () => {
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     message.info("Click on left button.");
     console.log("click left button", e);
@@ -29,19 +22,17 @@ const SearchTeamBar = () => {
 
   const items: MenuProps["items"] = [
     {
-      label: <p className="text-[16px] font-semibold">All Teams</p>,
+      label: <p className="text-[16px] font-semibold">Beginners</p>,
       key: "1",
-      icon: <TeamOutlined style={{ fontSize: 15 }} />,
+
     },
     {
-      label: <p className="text-[16px] font-semibold">Open</p>,
+      label: <p className="text-[16px] font-semibold">Intermediate</p>,
       key: "2",
-      icon: <CirclePlus size={15} />,
     },
     {
-      label: <p className=" text-[16px] font-semibold">Full</p>,
+      label: <p className=" text-[16px] font-semibold">Advanced</p>,
       key: "3",
-      icon: <CircleX size={15} />,
     },
   ];
 
@@ -50,9 +41,9 @@ const SearchTeamBar = () => {
     onClick: handleMenuClick,
   };
   return (
-    <div className="w-[90%] flex items-center justify-between gap-10 shadow-shadowBtn bg-white rounded-[15px] p-4 ">
+    <div className="w-fulll flex items-center justify-between gap-10 shadow-shadowBtn bg-white rounded-[10px] p-4 ">
       <div className="w-[85%] flex flex-col gap-4 ">
-        <h2 className="text-[16px] font-bold">Search Teams</h2>
+        <h2 className="text-[16px] font-bold">Search Organizers</h2>
         <ConfigProvider
           theme={{
             components: {
@@ -67,7 +58,7 @@ const SearchTeamBar = () => {
         >
           <Input
             size="large"
-            placeholder="Find a Team name here..."
+            placeholder="Find a Organizer name here..."
             suffix={
               <SearchOutlined
                 style={{ fontSize: 20, color: "#FF8243", fontWeight: "bold" }}
@@ -77,7 +68,7 @@ const SearchTeamBar = () => {
         </ConfigProvider>
       </div>
       <div className="w-[15%] flex flex-col gap-4 ">
-        <h2 className="text-[16px] font-bold">Filter By Status</h2>
+        <h2 className="text-[16px] font-bold">Filter By Levels</h2>
         <ConfigProvider
           theme={{
             components: {
@@ -102,7 +93,7 @@ const SearchTeamBar = () => {
               }}
             >
               {/* <Space> */}
-              --- Choose Status ---
+              --- Choose Level ---
               <DownOutlined />
               {/* </Space> */}
             </Button>
@@ -113,4 +104,4 @@ const SearchTeamBar = () => {
   );
 };
 
-export default SearchTeamBar;
+export default SearchOrganizersZoneBar;
