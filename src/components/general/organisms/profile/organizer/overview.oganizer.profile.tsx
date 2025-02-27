@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
 import { IoLogoDiscord } from "react-icons/io5";
@@ -6,28 +7,29 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 import { Avatar, Rate, Tooltip } from "antd";
 import { FaRegUser } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import TournamentCard from "../../atoms/tournaments/tournament.card";
-import { useTeamsContext } from "@/library/teams.context";
-const OverviewTeamDetails = () => {
+import { useProfileContext } from "@/library/profile.context";
+import TournamentCard from "@/components/general/atoms/tournaments/tournament.card";
+
+const OverviewOrganizerProfile = () => {
   const [isSocialMediaVisible, setIsSocialMediaVisible] = useState(true);
-  const { setActiveKey } = useTeamsContext();
+  const { setActiveKey } = useProfileContext();
   return (
     <div className="w-full h-full flex justify-around px-8 py-4 gap-3">
       {/* Tournaments */}
-      <div className="w-[60%] flex flex-col gap-3 px-5">
+      <div className="w-[70%] flex flex-col gap-3 ">
         <Button
           variant={"link"}
           colorBtn={"whiteBtn"}
           shadow={"shadowNone"}
           className="w-full justify-end text-primaryColor"
-          onClick={() => setActiveKey("4")}
+          onClick={() => setActiveKey("3")}
         >
           View all tournaments
         </Button>
 
-        <div className="w-full grid grid-cols-2 gap-5 place-items-center ">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index}>
+        <div className="w-full h-full grid grid-cols-3 gap-5 place-items-center">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="w-max h-max">
               <TournamentCard />
             </div>
           ))}
@@ -35,7 +37,7 @@ const OverviewTeamDetails = () => {
       </div>
       {/* Rating */}
 
-      <div className="w-[40%] h-full flex flex-col gap-5 justify-center items-center">
+      <div className="w-[30%] h-full flex flex-col gap-5 justify-center items-center">
         <div className="w-full flex flex-col shadow-shadowBtn bg-white p-5 rounded-[5px] gap-2 ">
           <h1 className="w-max text-[20px] font-bold italic border-b-[2px] border-primaryColor hover:text-primaryColor hover:border-b-[3px] cursor-pointer">
             Rating
@@ -114,7 +116,7 @@ const OverviewTeamDetails = () => {
           </div>
           <div className="flex flex-col gap-4">
             <h1 className="w-max text-[20px] font-bold italic border-b-[2px] border-primaryColor hover:text-primaryColor hover:border-b-[3px] cursor-pointer">
-              Team Leader
+              Host
             </h1>
             <p>
               <Tooltip title="Ho Duong Trung Nguyen" placement="bottomLeft">
@@ -133,4 +135,4 @@ const OverviewTeamDetails = () => {
   );
 };
 
-export default OverviewTeamDetails;
+export default OverviewOrganizerProfile;
