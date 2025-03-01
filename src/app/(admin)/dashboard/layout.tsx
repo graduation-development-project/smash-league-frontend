@@ -18,13 +18,28 @@ const AdminLayout = async ({
 
   return (
     <AdminContextProvider>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", width: "100%", minHeight: "100%" }}>
+        {/* Sidebar */}
         <div className="left-side" style={{ minWidth: 80 }}>
           <AdminSideBar />
         </div>
-        <div className="right-side" style={{ flex: 1 }}>
+
+        {/* Right-side layout */}
+        <div
+          className="right-side"
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100%",
+          }}
+        >
           <AdminHeader session={session} />
-          <AdminContent>{children}</AdminContent>
+          <div style={{ flex: 1 }}>
+            {" "}
+            {/* Push footer to bottom */}
+            <AdminContent>{children}</AdminContent>
+          </div>
           <AdminFooter />
         </div>
       </div>

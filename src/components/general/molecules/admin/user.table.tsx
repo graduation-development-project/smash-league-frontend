@@ -1,57 +1,57 @@
-'use client'
-import { Button, Table } from "antd"
+"use client";
+import { Button, Table } from "antd";
 
 const UserTable = () => {
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Mike',
-            age: 32,
-            address: '10 Downing Street',
-        },
-        {
-            key: '2',
-            name: 'John',
-            age: 42,
-            address: '10 Downing Street',
-        },
-    ];
+  const dataSource = [
+    {
+      key: "1",
+      name: "Mike",
+      age: 32,
+      address: "10 Downing Street",
+    },
+    {
+      key: "2",
+      name: "John",
+      age: 42,
+      address: "10 Downing Street",
+    },
+  ];
 
-    const columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
-        },
-    ];
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+  ];
 
-    return (
-        <>
-            <div style={{
-                display: "flex", justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 20
-            }}>
-                <span>Manager Users</span>
-                <Button>Create User</Button>
-            </div>
-            <Table
-                bordered
-                dataSource={dataSource}
-                columns={columns}
-            />
-        </>
-    )
-}
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 20,
+          fontFamily: "inherit",
+        }}
+      >
+        <span>Manager Users</span>
+        <Button style={{fontFamily:"inherit"}}>Create User</Button>
+      </div>
+      <Table bordered dataSource={dataSource} columns={columns} style={{fontFamily:"inherit"}} />
+    </>
+  );
+};
 
 export default UserTable;
