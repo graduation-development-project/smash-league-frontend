@@ -72,7 +72,9 @@ const TeamCard = () => {
         </div>
       </div>
 
-      <Button size={"lg"}>Request to Join</Button>
+      <Button size={"lg"} onClick={() => router.push("/teams/details/1")}>
+        Request to Join
+      </Button>
     </div>
   );
 };

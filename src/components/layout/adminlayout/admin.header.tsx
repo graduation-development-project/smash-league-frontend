@@ -6,12 +6,13 @@ import { useContext } from "react";
 import { DownOutlined, SmileOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Dropdown, Space } from "antd";
-import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const AdminHeader = (props: any) => {
   // const { data: session, status } = useSession();
   const { session } = props;
+  const router = useRouter();
 
   const { Header } = Layout;
   const { collapseMenu, setCollapseMenu } = useContext(AdminContext)!;
@@ -19,16 +20,23 @@ const AdminHeader = (props: any) => {
   const items: MenuProps["items"] = [
     {
       key: "1",
+      label: "My Profile",
+    },
+    {
+      key: "2",
       label: <span>Settings</span>,
     },
-
     {
-      key: "4",
+      type: "divider",
+    },
+    {
+      key: "3",
       danger: true,
       label: <span>Sign Out</span>,
       onClick: () => {
         console.log("Check Signout");
         signOut();
+        router.push("/auth/login");
       },
     },
   ];
@@ -42,6 +50,7 @@ const AdminHeader = (props: any) => {
           background: "#f5f5f5",
           justifyContent: "space-between",
           alignItems: "center",
+          fontFamily: "inherit",
         }}
       >
         <Button
@@ -52,12 +61,13 @@ const AdminHeader = (props: any) => {
             fontSize: "16px",
             width: 64,
             height: 64,
+            fontFamily: "inherit",
           }}
         />
         <Dropdown
           menu={{ items }}
           trigger={["hover"]}
-          overlayStyle={{ width: "10px" }}
+          overlayStyle={{ width: "10px", fontFamily: "inherit" }}
         >
           <a
             onClick={(e) => e.preventDefault()}
@@ -65,10 +75,11 @@ const AdminHeader = (props: any) => {
               color: "unset",
               lineHeight: "0 !important",
               marginRight: 20,
+              fontFamily: "inherit",
             }}
           >
             <Space>
-              Welcome {session?.user?.email ?? ""}
+              Welcome{session?.user?.name ?? ""}
               <DownOutlined />
             </Space>
           </a>
