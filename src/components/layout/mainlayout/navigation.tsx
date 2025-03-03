@@ -1,69 +1,69 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { Button } from "../../ui/button";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { Button } from '../../ui/button';
 import {
   DownOutlined,
   RightOutlined,
   SettingOutlined,
-} from "@ant-design/icons";
-import styles from "@/components/layout/layout.module.scss";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { Dropdown, MenuProps, Space } from "antd";
-import { MdAccountCircle } from "react-icons/md";
-import { RiProfileFill } from "react-icons/ri";
-import { IoSettingsSharp } from "react-icons/io5";
-import { MdLogout } from "react-icons/md";
-import { signOut } from "next-auth/react";
+} from '@ant-design/icons';
+import styles from '@/components/layout/layout.module.scss';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { Dropdown, MenuProps, Space } from 'antd';
+import { MdAccountCircle } from 'react-icons/md';
+import { RiProfileFill } from 'react-icons/ri';
+import { IoSettingsSharp } from 'react-icons/io5';
+import { MdLogout } from 'react-icons/md';
+import { signOut } from 'next-auth/react';
 const Navigation = (props: any) => {
   const router = useRouter();
   const { session } = props;
-  const [route, setRoute] = useState("");
+  const [route, setRoute] = useState('');
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      key: "1",
-      label: "My Account",
+      key: '1',
+      label: 'My Account',
       icon: <MdAccountCircle size={20} />,
     },
     {
-      type: "divider",
+      type: 'divider',
     },
     {
-      key: "2",
-      label: "Public Profile",
+      key: '2',
+      label: 'Public Profile',
       icon: <RiProfileFill size={20} />,
       onClick: () => {
-        localStorage.setItem("page", "Home");
-        setRoute("Profile");
+        localStorage.setItem('page', 'Home');
+        setRoute('Profile');
         router.push(
-          `/profile/${session?.user?.role.toLowerCase()}/${session?.user?.name.toLowerCase()}`
+          `/profile/${session?.user?.role.toLowerCase()}/${session?.user?.name.toLowerCase()}`,
         );
       },
     },
     {
-      key: "3",
-      label: "Settings",
+      key: '3',
+      label: 'Settings',
       icon: <IoSettingsSharp size={20} />,
     },
     {
-      type: "divider",
+      type: 'divider',
     },
     {
-      key: "4",
-      label: "Log Out",
+      key: '4',
+      label: 'Log Out',
       icon: <MdLogout size={20} />,
       onClick: () => {
-        localStorage.setItem("page", "Home");
-        setRoute("Home");
-        signOut();
-        router.push("/auth/login");
+        localStorage.setItem('page', 'Home');
+        setRoute('Home');
+        signOut({ redirect: false });
+        router.push('/auth/login');
       },
     },
   ];
 
   useEffect(() => {
-    const storedRoute = localStorage.getItem("page") || "";
+    const storedRoute = localStorage.getItem('page') || '';
     setRoute(storedRoute);
   }, []);
   return (
@@ -74,9 +74,9 @@ const Navigation = (props: any) => {
         <div
           className="flex flex-col items-center cursor-pointer"
           onClick={() => {
-            localStorage.setItem("page", "Home");
-            setRoute("Home");
-            router.push("/");
+            localStorage.setItem('page', 'Home');
+            setRoute('Home');
+            router.push('/');
           }}
         >
           <h1 className="text-[28px] font-bold text-primaryColor font-quicksand">
@@ -87,9 +87,9 @@ const Navigation = (props: any) => {
 
         {/* Navigation */}
         <ul className="flex gap-12 text-lg font-quicksand font-bold">
-          {["News", "Tournaments", "Teams", "Organizers Zone", "About"].map(
+          {['News', 'Tournaments', 'Teams', 'Organizers Zone', 'About'].map(
             (item, index) => {
-              if (item === "News" || item === "Tournaments") {
+              if (item === 'News' || item === 'Tournaments') {
                 return (
                   <li
                     key={index}
@@ -97,14 +97,14 @@ const Navigation = (props: any) => {
                       styles.textTab
                     } hover:text-primaryColor before:bg-primaryColor ${
                       item === route
-                        ? "text-primaryColor before:bg-primaryColor"
-                        : ""
+                        ? 'text-primaryColor before:bg-primaryColor'
+                        : ''
                     }`}
                     onClick={() => {
-                      localStorage.setItem("page", item);
+                      localStorage.setItem('page', item);
                       setRoute(item);
                       router.push(
-                        `/${item.toLowerCase().replace(/\s+/g, "-")}`
+                        `/${item.toLowerCase().replace(/\s+/g, '-')}`,
                       );
                     }}
                   >
@@ -121,14 +121,14 @@ const Navigation = (props: any) => {
                             before:bg-secondColor 
                             ${
                               item === route
-                                ? "text-secondColor before:!opacity-100"
-                                : "before:opacity-50"
+                                ? 'text-secondColor before:!opacity-100'
+                                : 'before:opacity-50'
                             }`}
                     onClick={() => {
-                      localStorage.setItem("page", item);
+                      localStorage.setItem('page', item);
                       setRoute(item);
                       router.push(
-                        `/${item.toLowerCase().replace(/\s+/g, "-")}`
+                        `/${item.toLowerCase().replace(/\s+/g, '-')}`,
                       );
                     }}
                   >
@@ -136,7 +136,7 @@ const Navigation = (props: any) => {
                   </li>
                 );
               }
-            }
+            },
           )}
         </ul>
 
@@ -144,10 +144,10 @@ const Navigation = (props: any) => {
         {session?.user ? (
           <Dropdown
             menu={{ items }}
-            overlayStyle={{ fontFamily: "inherit", fontWeight: "600" }}
+            overlayStyle={{ fontFamily: 'inherit', fontWeight: '600' }}
           >
             <a onClick={(e) => e.preventDefault()}>
-              <Button size={"sm"}>
+              <Button size={'sm'}>
                 Welcome {session?.user?.name}
                 <DownOutlined />
               </Button>
@@ -157,8 +157,8 @@ const Navigation = (props: any) => {
           <Button
             variant="icons"
             onClick={() => {
-              localStorage.setItem("page", "Home");
-              router.push("/auth/login");
+              localStorage.setItem('page', 'Home');
+              router.push('/auth/login');
             }}
           >
             Log in <RightOutlined />
