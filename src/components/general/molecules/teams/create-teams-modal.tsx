@@ -35,7 +35,7 @@ const CreateTeamsModal = ({
       teamDescription,
       accessToken,
     );
-    console.log('Check', response);
+    // console.log('Check', response);
     setIsLoading(false);
     setIsModalOpen(false);
     if (response?.status === 200 || response?.status === 201) {

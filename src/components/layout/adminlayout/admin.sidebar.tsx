@@ -38,6 +38,7 @@ const AdminSideBar = () => {
           { key: "athletes", label: "Athletes" },
           { key: "organizers", label: "Organizers" },
           { key: "umpires", label: "Umpires" },
+          {key:"staffs", label:"Staffs"},
         ],
       },
       {
