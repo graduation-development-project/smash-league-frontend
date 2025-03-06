@@ -17,7 +17,7 @@ const TeamPage = (props: any) => {
     {
       key: "1",
       label: "All Teams",
-      children: <AllTeams />,
+      children: <AllTeams session={session}/>,
     },
     ...(session?.user
       ? [

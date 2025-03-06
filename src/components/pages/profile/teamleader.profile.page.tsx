@@ -1,15 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-
 'use client';
+
 import Loaders from '@/components/general/atoms/loaders/loaders';
 import OverviewAthleteProfile from '@/components/general/organisms/profile/athlete/overview.athlete.profile';
+import TournamentsAthleteProfile from '@/components/general/organisms/profile/athlete/tournaments.athlete.profile';
+import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 import { Avatar, ConfigProvider, Tabs, TabsProps } from 'antd';
 import React, { useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
-import TournamentsAthleteProfile from '../../general/organisms/profile/athlete/tournaments.athlete.profile';
-import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 
-const AthleteProfilePage = (props: any) => {
+const TeamLeaderProfilePage = (props: any) => {
   const { session } = props;
   const user = {
     accessToken:
@@ -44,6 +44,11 @@ const AthleteProfilePage = (props: any) => {
             label: 'Update Information',
             children: <UpdateInformationProfile session={session} />,
           },
+          {
+            key: '4',
+            label: 'My Teams List',
+            children: <div>My Teams List</div>,
+          },
         ]
       : []),
   ];
@@ -68,10 +73,10 @@ const AthleteProfilePage = (props: any) => {
               />
               <div className="flex flex-col gap-2">
                 <h1 className="text-white text-[32px] font-bold">
-                  HO DUONG TRUNG NGUYEN
+                  Vo Nguyen Trung Son
                 </h1>
                 <div className="text-white text-[14px] italic ">
-                  trungnguyen2734@gmail.com
+                 smount273@gmail.com
                 </div>
                 <div className="text-white text-[14px] font-semibold flex gap-1">
                   <CiLocationOn size={20} /> <span>Thu Duc, Ho Chi Minh</span>
@@ -120,4 +125,4 @@ const AthleteProfilePage = (props: any) => {
   );
 };
 
-export default AthleteProfilePage;
+export default TeamLeaderProfilePage;

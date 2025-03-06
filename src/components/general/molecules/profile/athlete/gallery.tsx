@@ -11,7 +11,7 @@ const Gallery = () => {
         {Array.from({ length: 9 }).map((_, index) => (
           <div key={index} className="w-max h-max flex justify-center">
             <Image
-              width={450} 
+              width={435} 
               height={350} 
               src="https://thebridge.in/h-upload/uid/1WBjBeRGUTAFdtLSbygdVctMuxxkfATBS2658560.jpg"
               alt="gallery"

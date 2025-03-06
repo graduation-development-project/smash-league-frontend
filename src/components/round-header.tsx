@@ -29,12 +29,13 @@ export default function RoundHeader({
   x,
   y = 0,
   width = 0,
-  roundHeader ,
+  roundHeader,
   canvasPadding,
   numOfRounds,
   tournamentRoundText,
   columnIndex,
 }: RoundHeaderProps) {
+  console.log('Check', tournamentRoundText);
   return (
     <g>
       <Rect
@@ -67,9 +68,12 @@ export default function RoundHeader({
           'Final'}
         {!roundHeader?.roundTextGenerator &&
           columnIndex + 1 === numOfRounds - 1 &&
-          'Semi-final'}
+          'Semi Final'}
         {!roundHeader?.roundTextGenerator &&
-          columnIndex + 1 < numOfRounds - 1 &&
+          columnIndex + 1 === numOfRounds - 2 &&
+          'Quarter Final'}
+        {!roundHeader?.roundTextGenerator &&
+          columnIndex + 1 < numOfRounds - 2 &&
           `Round ${tournamentRoundText}`}
         {roundHeader?.roundTextGenerator &&
           roundHeader?.roundTextGenerator(columnIndex + 1, numOfRounds)}

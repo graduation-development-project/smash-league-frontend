@@ -14,7 +14,7 @@ const OverviewOrganizerProfile = () => {
   const [isSocialMediaVisible, setIsSocialMediaVisible] = useState(true);
   const { setActiveKey } = useProfileContext();
   return (
-    <div className="w-full h-full flex justify-around px-8 py-4 gap-3">
+    <div className="w-full h-full flex justify-around px-2 py-4 gap-3">
       {/* Tournaments */}
       <div className="w-[70%] flex flex-col gap-3 ">
         <Button
@@ -27,7 +27,7 @@ const OverviewOrganizerProfile = () => {
           View all tournaments
         </Button>
 
-        <div className="w-full h-full grid grid-cols-3 gap-5 place-items-center">
+        <div className="w-full h-full grid grid-cols-3 place-items-center">
           {Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="w-max h-max">
               <TournamentCard />

@@ -13,6 +13,7 @@ import Connectors from './connectors';
 import defaultTheme from '../themes/themes';
 import RoundHeader from '../components/round-header';
 import { ThemeProvider } from 'styled-components';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
   matches,
@@ -94,6 +95,7 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
           <MatchContextProvider>
             <g>
               {columns.map((matchesColumn, columnIndex) =>
+      
                 matchesColumn.map((match, rowIndex) => {
                   const { x, y } = calculatePositionOfMatch(
                     rowIndex,
@@ -104,7 +106,7 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
                       rowHeight: rowHeight || 0,
                     },
                   );
-
+                  console.log("Check columns", columns)
                   const previousBottomPosition = (rowIndex + 1) * 2 - 1;
                   const { previousTopMatch, previousBottomMatch } =
                     getPreviousMatches(

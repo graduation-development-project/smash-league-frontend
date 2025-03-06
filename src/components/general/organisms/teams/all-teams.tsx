@@ -5,7 +5,8 @@ import { ConfigProvider, Pagination } from "antd";
 import TeamsBanner from "../../molecules/teams/teams-banner";
 import PaginationCard from "../../atoms/pagination/pagination-card";
 
-const AllTeams = () => {
+const AllTeams = (props:any) => {
+  const {session} = props;
   return (
     <div className="w-full h-full flex flex-col justify-center items-center p-5 gap-20">
       <SearchTeamBar />
@@ -23,7 +24,7 @@ const AllTeams = () => {
         <PaginationCard />
       </div>
 
-      <TeamsBanner />
+      <TeamsBanner session = {session}/>
     </div>
   );
 };

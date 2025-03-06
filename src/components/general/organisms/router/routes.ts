@@ -5,7 +5,7 @@ import TournamentPage from "@/components/pages/tournaments/tournament.page";
 
 export const routes = [
   {
-    path: "/",
+    path: "/home",
     name: "Home",
     component: HomePage,
   },
