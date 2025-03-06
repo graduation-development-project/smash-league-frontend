@@ -12,7 +12,7 @@ import React from "react";
 
 const TournamentCard = () => {
   return (
-    <div className="w-[350px] h-max flex flex-col gap-2 rounded-xl p-2 border ">
+    <div className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-2 border ">
       <div className="w-full h-[200px]">
         <Image
           className="w-full h-full object-cover rounded-lg"

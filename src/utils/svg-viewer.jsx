@@ -21,6 +21,7 @@ const SvgViewer = ({
 
   useEffect(() => {
     Viewer.current.pan(...startAt);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const lockToBoundaries = (v) => {

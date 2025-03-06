@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Button,
   Col,
@@ -8,18 +8,18 @@ import {
   Input,
   notification,
   Row,
-} from "antd";
-import Link from "next/link";
-import { authenticate } from "@/utils/actions";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import ModalReactive from "@/components/general/organisms/auth/modal.reactive";
-import { useState } from "react";
-import ModalChangePassword from "@/components/general/organisms/auth/modal.change.password";
-import Image from "next/image";
-import images from "@/assets/images";
-import { ArrowLeft, Home } from "lucide-react";
-import styles from "@/components/general/organisms/auth/auth.module.scss";
+} from 'antd';
+import Link from 'next/link';
+import { authenticate } from '@/utils/actions';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import ModalReactive from '@/components/general/organisms/auth/modal.reactive';
+import { useState } from 'react';
+import ModalChangePassword from '@/components/general/organisms/auth/modal.change.password';
+import Image from 'next/image';
+import images from '@/assets/images';
+import { ArrowLeft, Home } from 'lucide-react';
+import styles from '@/components/general/organisms/auth/auth.module.scss';
 
 const LoginForm = () => {
   const { data: session } = useSession();
@@ -28,18 +28,18 @@ const LoginForm = () => {
   //   console.log("Check Session ", session);
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState('');
 
   const [changePassword, setChangePassword] = useState(false);
 
   const onFinish = async (values: any) => {
     const { username, password } = values;
 
-    setUserEmail("");
+    setUserEmail('');
     //trigger sign-in
     const res = await authenticate(username, password);
 
-    console.log("Check res", res);
+    console.log('Check res', res);
     if (res?.error) {
       //error
       if (res?.code === 2) {
@@ -48,32 +48,32 @@ const LoginForm = () => {
         return;
       }
       notification.error({
-        message: "Error login",
-        description: res?.error,
+        message: 'Error login',
+        description: 'Please try again',
       });
     } else {
       //redirect to /dashboard
-      router.push("/auth/direction");
+      router.push('/');
       // console.log("Success login");
     }
   };
 
   const handleLoginGoogle = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
+    signIn('google', { callbackUrl: '/dashboard' });
   };
 
   return (
     <>
-      <Row justify={"center"} style={{ marginTop: "80px" }}>
+      <Row justify={'center'} style={{ marginTop: '80px' }}>
         <Col xs={24} md={16} lg={40}>
           <fieldset
             style={{
-              padding: "15px",
-              margin: "5px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",
-              backgroundColor: "#fff",
+              padding: '15px',
+              margin: '5px',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              boxShadow: '0 10px 10px rgba(0, 0, 0, 0.1)',
+              backgroundColor: '#fff',
             }}
           >
             <legend className="text-center font-bold text-[22px]  border-none outline-none ">
@@ -90,9 +90,9 @@ const LoginForm = () => {
                   components: {
                     Input: {
                       /* here is your component tokens */
-                      activeBorderColor: "#FF8243",
-                      activeShadow: "0 0 0 2px #fffff",
-                      hoverBorderColor: "#FF8243",
+                      activeBorderColor: '#FF8243',
+                      activeShadow: '0 0 0 2px #fffff',
+                      hoverBorderColor: '#FF8243',
                     },
                   },
                 }}
@@ -101,18 +101,18 @@ const LoginForm = () => {
                   label="Email"
                   name="username"
                   style={{
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                   }}
                   rules={[
                     {
                       required: true,
-                      message: "Please input your email!",
+                      message: 'Please input your email!',
                     },
                   ]}
                 >
                   <Input
                     style={{
-                      padding: "8px",
+                      padding: '8px',
                     }}
                   />
                 </Form.Item>
@@ -123,9 +123,9 @@ const LoginForm = () => {
                   components: {
                     Input: {
                       /* here is your component tokens */
-                      activeBorderColor: "#FF8243",
-                      activeShadow: "0 0 0 2px #fffff",
-                      hoverBorderColor: "#FF8243",
+                      activeBorderColor: '#FF8243',
+                      activeShadow: '0 0 0 2px #fffff',
+                      hoverBorderColor: '#FF8243',
                     },
                   },
                 }}
@@ -134,18 +134,18 @@ const LoginForm = () => {
                   label="Password"
                   name="password"
                   style={{
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                   }}
                   rules={[
                     {
                       required: true,
-                      message: "Please input your password!",
+                      message: 'Please input your password!',
                     },
                   ]}
                 >
                   <Input.Password
                     style={{
-                      padding: "8px",
+                      padding: '8px',
                     }}
                   />
                 </Form.Item>
@@ -154,11 +154,11 @@ const LoginForm = () => {
               <Form.Item>
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    rowGap: "10px",
-                    marginTop: "20px",
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    rowGap: '10px',
+                    marginTop: '20px',
                   }}
                 >
                   <Button
@@ -166,10 +166,10 @@ const LoginForm = () => {
                     htmlType="submit"
                     block
                     style={{
-                      padding: "20px",
-                      backgroundColor: "#FF8243",
-                      fontWeight: "bold",
-                      fontSize: "16px",
+                      padding: '20px',
+                      backgroundColor: '#FF8243',
+                      fontWeight: 'bold',
+                      fontSize: '16px',
                     }}
                   >
                     Log In
@@ -177,8 +177,8 @@ const LoginForm = () => {
                   <Button
                     type="link"
                     style={{
-                      alignSelf: "flex-end",
-                      color: "black",
+                      alignSelf: 'flex-end',
+                      color: 'black',
                     }}
                     onClick={() => setChangePassword(true)}
                   >
@@ -200,10 +200,10 @@ const LoginForm = () => {
                 type="text"
                 block
                 style={{
-                  border: "1px solid #ccc",
-                  padding: "20px 20px",
-                  borderRadius: "5px",
-                  width: "70%",
+                  border: '1px solid #ccc',
+                  padding: '20px 20px',
+                  borderRadius: '5px',
+                  width: '70%',
                 }}
               >
                 <Image
@@ -218,15 +218,15 @@ const LoginForm = () => {
 
             <div
               // onMouseEnter={() => router.push("/")}
-              onClick={() => router.push("/")}
+              onClick={() => router.push('/')}
               className="flex justify-center items-center mt-5"
             >
               <Link
-                href="/"
+                href="/home"
                 onMouseEnter={() => setIsBack(true)}
                 onMouseLeave={() => setIsBack(false)}
                 className={`group border border-primaryColor p-[5px] rounded-full transition-transform duration-300 ${
-                  isBack ? "bg-primaryColor" : ""
+                  isBack ? 'bg-primaryColor' : ''
                 }`}
               >
                 {isBack ? (
@@ -244,9 +244,9 @@ const LoginForm = () => {
             </div>
 
             <Divider />
-            <div style={{ textAlign: "center" }}>
-              Don&apos;t have an account?{" "}
-              <Link href={"/auth/register"} style={{ color: "#FF8243" }}>
+            <div style={{ textAlign: 'center' }}>
+              Don&apos;t have an account?{' '}
+              <Link href={'/auth/register'} style={{ color: '#FF8243' }}>
                 Sign Up
               </Link>
             </div>

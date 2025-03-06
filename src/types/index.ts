@@ -35,4 +35,15 @@ interface PodiumTeamScoreCardProps {
 interface CreateTeamsModalProps {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  session?: any;
+}
+
+interface PackageCardProps {
+  title: string;
+  newPrice: number;
+  oldPrice: number;
+  description: string;
+  advantages: string[];
+  credit: number;
+  recommended?: boolean;
 }
