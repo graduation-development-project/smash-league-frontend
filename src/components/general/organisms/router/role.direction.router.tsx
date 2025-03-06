@@ -12,7 +12,7 @@ const RoleDirectionRouter = (props: any) => {
       router.push('/dashboard');
     } else if (session?.user?.role === 'Athlete') {
       router.push('/home');
-    } else {
+    } else if (!session) {
       router.push('/home');
     }
   }, [session, router]);

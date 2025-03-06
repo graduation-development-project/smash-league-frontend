@@ -35,7 +35,7 @@ export default function RoundHeader({
   tournamentRoundText,
   columnIndex,
 }: RoundHeaderProps) {
-  console.log('Check', tournamentRoundText);
+  // console.log('Check', tournamentRoundText);
   return (
     <g>
       <Rect

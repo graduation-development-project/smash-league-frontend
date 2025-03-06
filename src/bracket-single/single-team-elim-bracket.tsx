@@ -106,7 +106,7 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
                       rowHeight: rowHeight || 0,
                     },
                   );
-                  console.log("Check columns", columns)
+                  // console.log("Check columns", columns)
                   const previousBottomPosition = (rowIndex + 1) * 2 - 1;
                   const { previousTopMatch, previousBottomMatch } =
                     getPreviousMatches(
