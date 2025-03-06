@@ -5,6 +5,7 @@ import { ConfigProvider, Input, Tabs, TabsProps } from 'antd'
 import { SearchProps } from 'antd/es/input'
 import Search from 'antd/es/input/Search'
 import React from 'react'
+import MyTournaments from './my-tour.tour'
 
 const TournamentPage = () => {
     const onChange = (key: string) => {
@@ -16,13 +17,13 @@ const TournamentPage = () => {
     const items: TabsProps["items"] = [
         {
             key: "1",
-            label: "ON-GOING",
+            label: "Search",
             children: <OnGoingTournament />,
         },
         {
             key: "2",
-            label: "FUTURED",
-              children: <OnGoingTournament />,
+            label: "My Tournaments",
+              children: <MyTournaments />,
         },
         // {
         //     key: "3",
@@ -34,12 +35,23 @@ const TournamentPage = () => {
 
         <HomeContextProvider>
             <div className='w-full h-max flex flex-col gap-5 justify-center items-center'>
-                <div className='w-full '>
+                <div className='w-full'>
                     <ConfigProvider
+                    
                         theme={{
                             components: {
+                                Menu: {
+                                    horizontalItemSelectedColor: "#FF8243",
+                                    horizontalItemSelectedBg: "",
+                                    
+                                    itemSelectedColor: "#FF8243",
+                                    itemSelectedBg: "#ff82431f",
+                                    fontFamily: 'inherit'
+                                },
                                 Tabs: {
+ 
                                     /* here is your component tokens */
+                                    fontFamily: "inherit",
                                     itemColor: "#000000",
                                     itemSelectedColor: "#FF8243",
                                     inkBarColor: "#FF8243",
@@ -47,18 +59,24 @@ const TournamentPage = () => {
                                     itemActiveColor: "#FF8243",
                                     horizontalItemPaddingLG: "0px 0px 16px 0px",
                                 },
+                                Layout: {
+                                    fontFamily: "inherit",
+                                },
+                                Pagination: {
+                                    fontFamily: "inherit",
+                                },
+                                
                             },
                         }}
                     >
                         <Tabs
                             tabBarStyle={{
                                 width: "100%",
-                                fontWeight: 500,
-                                fontFamily: "Quicksand ,sans-serif",
+                                fontWeight: 700,
+                                fontSize: 25,
                                 boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                                marginTop: "70px",
                             }}
-                            style={{ width: "100%" }}
+                            style={{ width: "100%", }}
                             size="large"
                             centered
                             tabBarGutter={60}

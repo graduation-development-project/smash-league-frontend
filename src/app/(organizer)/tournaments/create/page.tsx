@@ -8,7 +8,6 @@ const CreateTour1 = () => {
       <div className='mt-36'>
         <CreateTourPage />
       </div>
-
     </MainLayout>
   )
 }
