@@ -13,12 +13,8 @@ const steps = [
         title: 'Invitations & Additional Options',
         content: <CreateTourStep2 />,
     },
-    // {
-    //     title: 'Last',
-    //     content: 'Last-content',
-    // },
 ];
-const CreateTourPage = () => {
+const UpdateTourPage = () => {
     const { token } = theme.useToken();
     const [form] = Form.useForm();
     const [currentStep, setCurrentStep] = useState(0);
@@ -60,14 +56,14 @@ const CreateTourPage = () => {
         const { occurDate } = values
         const date = occurDate[0]
         const location = [street, ward, district, province].join(', ')
-        console.log(occurDate[0].toISOString()    );
+        console.log(occurDate[0].toISOString());
     }
 
     return (
         <div className='w-full h-max  py-10 px-10 '>
             <div className='w-full h-max flex flex-col rounded-md shadow-shadowBtn py-10 px-10 gap-5'>
                 <div className='w-max border-b-4 border-primaryColor'>
-                    <h1 className='text-[32px] font-bold leading-normal text-textColor  px-4'>New<span className='text-primaryColor'> Tournaments</span> </h1>
+                    <h1 className='text-[32px] font-bold leading-normal text-textColor  px-4'>Update<span className='text-primaryColor'> Tournaments</span> </h1>
                 </div>
                 <ConfigProvider
                     theme={{
@@ -140,7 +136,7 @@ const CreateTourPage = () => {
                                     style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', fontWeight: 'bold' }}
                                     onClick={() => message.success('Processing complete!')}
                                 >
-                                    Done
+                                    Update
                                 </Button>
                             )}
                             {currentStep < steps.length - 1 && (
@@ -153,12 +149,7 @@ const CreateTourPage = () => {
                                     Next Step
                                 </Button>
                             )}
-
-
                         </div>
-
-
-
                     </Form>
                 </ConfigProvider>
 
@@ -170,4 +161,4 @@ const CreateTourPage = () => {
 
 
 
-export default CreateTourPage
+export default UpdateTourPage
