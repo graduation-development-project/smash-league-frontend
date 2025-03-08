@@ -4,14 +4,17 @@ import { ConfigProvider, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import AllTeams from "@/components/general/organisms/teams/all-teams";
 import MyTeams from "@/components/general/organisms/teams/my-teams";
-// import "./styles.css";
 import ParticipatedTournamentsOfTeams from "../../general/organisms/teams/participated-tournaments";
-import { useSession } from "next-auth/react";
+
 const TeamPage = (props: any) => {
   const { session } = props;
   const onChange = (key: string) => {
     console.log(key);
   };
+
+  // if(isLoading){
+  //   return <Loaders isLoading={isLoading}/>
+  //  }
 
   const items: TabsProps["items"] = [
     {

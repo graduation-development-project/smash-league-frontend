@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from 'react';
 
 interface ProfileIdProps {
   athleteId: string;
@@ -9,6 +9,8 @@ interface ProfileIdProps {
   setOrganizerId: (key: string) => void;
   activeKey: string;
   setActiveKey: (key: string) => void;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const ProfileContext = createContext<ProfileIdProps | null>(null);
@@ -18,9 +20,10 @@ export const ProfileContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [athleteId, setAthleteId] = useState("");
-  const [organizerId, setOrganizerId] = useState("");
-  const [activeKey, setActiveKey] = useState("1");
+  const [athleteId, setAthleteId] = useState('');
+  const [organizerId, setOrganizerId] = useState('');
+  const [activeKey, setActiveKey] = useState('1');
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <ProfileContext.Provider
       value={{
@@ -30,6 +33,8 @@ export const ProfileContextProvider = ({
         setOrganizerId,
         activeKey,
         setActiveKey,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}
@@ -42,7 +47,7 @@ export const useProfileContext = () => {
 
   if (!context) {
     throw new Error(
-      "useProfileContext must be used within a ProfileContextProvider"
+      'useProfileContext must be used within a ProfileContextProvider',
     );
   }
 
