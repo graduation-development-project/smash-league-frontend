@@ -35,7 +35,7 @@ export default function Header(props: any) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 px-10 py-2 w-full">
+      <div className="relative z-20 px-10 py-2 w-full">
         <Navigation session={session} />
       </div>
 

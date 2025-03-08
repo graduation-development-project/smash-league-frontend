@@ -18,7 +18,9 @@ const TournamentCard = () => {
   
 
   return (
-    <div className="w-[350px] h-max flex flex-col gap-2 rounded-xl p-2 border hover:shadow-shadowBtn cursor-pointer" onClick={() => router.push("/tournaments/details")}>
+
+    <div className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-2 border hover:shadow-shadowBtn cursor-pointer" onClick={() => router.push("/tournaments/details")}>
+
       <div className="w-full h-[200px]">
         <Image
           className="w-full h-full object-cover rounded-lg"

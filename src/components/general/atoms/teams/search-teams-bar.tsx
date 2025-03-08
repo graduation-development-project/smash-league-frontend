@@ -50,7 +50,7 @@ const SearchTeamBar = () => {
     onClick: handleMenuClick,
   };
   return (
-    <div className="w-[90%] flex items-center justify-between gap-10 shadow-shadowComp bg-white rounded-[15px] p-4 ">
+    <div className="w-[90%] flex items-center justify-between gap-10 shadow-shadowBtn bg-white rounded-[15px] p-4 ">
       <div className="w-[85%] flex flex-col gap-4 ">
         <h2 className="text-[16px] font-bold">Search Teams</h2>
         <ConfigProvider
@@ -91,7 +91,7 @@ const SearchTeamBar = () => {
             },
           }}
         >
-          <Dropdown menu={menuProps} >
+          <Dropdown menu={menuProps}>
             <Button
               size="large"
               style={{

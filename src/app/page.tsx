@@ -1,14 +1,11 @@
 import { auth } from "@/auth";
-import PageDirection from "@/components/general/organisms/router/page.direction";
-import MainLayout from "@/components/layout/mainlayout/layout";
-import { useState, useEffect } from "react";
+import RoleDirectionRouter from "@/components/general/organisms/router/role.direction.router";
+import React from "react";
 
-export default async function Home() {
+const Direction = async () => {
   const session = await auth();
 
-  return (
-    <MainLayout session={session}>
-      <PageDirection/>
-    </MainLayout>
-  );
-}
+  return <RoleDirectionRouter session={session} />;
+};
+
+export default Direction;

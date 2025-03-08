@@ -88,17 +88,17 @@ const UpdateTeamsForm = () => {
               onChange={handleFileChange}
               className="mb-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
-            <div>
-              {file && (
-                <Image
-                  src={URL.createObjectURL(file)}
-                  alt="Uploaded"
-                  width={200}
-                  height={200}
-                  className="max-w-full h-auto rounded-lg shadow"
-                />
-              )}
-            </div>
+          </Form.Item>
+
+          <Form.Item>
+            {file && (
+              <Image
+                src={URL.createObjectURL(file)}
+                alt="Uploaded"
+                width={200}
+                height={200}
+              />
+            )}
           </Form.Item>
 
           <Form.Item>

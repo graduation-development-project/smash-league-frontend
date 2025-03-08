@@ -6,16 +6,25 @@ import Spinner from "../../atoms/loaders/spinner";
 
 const PageDirection = () => {
   const [page, setPage] = useState<string | null>(null);
+  const [currentUrl, setCurrentUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      localStorage.setItem("page", "Home");
       const storedPage = localStorage.getItem("page") || "Home";
       setPage(storedPage);
+
+      // Find the route for the stored page and get its path
+      const route = routes.find((route) => route.name === storedPage);
+      setCurrentUrl(route ? route.path : null);
     }
 
-    // Listen for localStorage changes across tabs
     const handleStorageChange = () => {
-      setPage(localStorage.getItem("page") || "Home");
+      const newPage = localStorage.getItem("page") || "Home";
+      setPage(newPage);
+
+      const route = routes.find((route) => route.name === newPage);
+      setCurrentUrl(route ? route.path : null);
     };
 
     window.addEventListener("storage", handleStorageChange);
@@ -41,7 +50,12 @@ const PageDirection = () => {
   }
 
   const Page = route.component;
-  return <Page />;
+
+  return (
+    <div>
+      <Page />
+    </div>
+  );
 };
 
 export default PageDirection;

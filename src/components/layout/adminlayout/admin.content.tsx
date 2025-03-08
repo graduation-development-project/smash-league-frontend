@@ -1,28 +1,38 @@
-'use client'
+"use client";
 
-import { Layout } from "antd";
+import { ConfigProvider, Layout } from "antd";
 
 const AdminContent = ({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) => {
-    const { Content } = Layout;
+  const { Content } = Layout;
 
-    return (
-        <Content>
-            <div
-                style={{
-                    padding: 24,
-                    minHeight: 'calc(100vh - 180px)',
-                    // background: "#ccc",
-                    // borderRadius: "#ccc",
-                }}
-            >
-                {children}
-            </div>
-        </Content>
-    )
-}
+  return (
+    <ConfigProvider
+      theme={{
+        token: {
+          /* here is your global tokens */
+          colorPrimary: "#FF8243",
+        },
+      }}
+    >
+      <Content>
+        <div
+          style={{
+            padding: 24,
+            minHeight: "calc(100vh - 180px)",
+            // background: "#ccc",
+            // borderRadius: "#ccc",
+            fontFamily: "inherit"
+          }}
+        >
+          {children}
+        </div>
+      </Content>
+    </ConfigProvider>
+  );
+};
 
 export default AdminContent;

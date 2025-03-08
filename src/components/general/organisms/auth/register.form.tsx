@@ -42,7 +42,7 @@ const RegisterForm = () => {
     } else {
       notification.error({
         message: "Register error",
-        description: res?.message,
+        description: "Please try again",
       });
     }
   };
@@ -226,7 +226,7 @@ const RegisterForm = () => {
             className="flex justify-center items-center"
           >
             <Link
-              href="/"
+              href="/home"
               onMouseEnter={() => setIsBack(true)}
               onMouseLeave={() => setIsBack(false)}
               className={`group border border-secondColor p-[5px] rounded-full transition-transform duration-300 ${

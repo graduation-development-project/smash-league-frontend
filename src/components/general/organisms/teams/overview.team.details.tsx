@@ -25,7 +25,7 @@ const OverviewTeamDetails = () => {
           View all tournaments
         </Button>
 
-        <div className="w-full grid grid-cols-2 gap-5 ">
+        <div className="w-full grid grid-cols-2 gap-5 place-items-center ">
           {Array.from({ length: 4 }).map((_, index) => (
             <div key={index}>
               <TournamentCard />
