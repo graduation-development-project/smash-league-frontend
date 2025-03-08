@@ -4,17 +4,17 @@ import { ConfigProvider, Pagination } from 'antd'
 
 const TourListBoard = () => {
   return (
-    <div className='w-full h-max flex flex-col p-10 gap-10 bg-white shadow-shadowComp rounded-xl'>
-      <h1 className='text-[32px] text-start font-bold leading-normal text-black'><span className='text-primaryColor'>Tournaments</span> List</h1>
-      <div className="grid grid-cols-3 gap-x-6 gap-y-6  w-full place-items-center justify-items-center px-5">
-        {Array.from({ length: 6 }).map((_, index) => (
+    <div className='w-full h-max flex flex-col px-5 py-5 gap-5 bg-white shadow-shadowComp rounded-lg'>
+      <h1 className='text-[32px] text-start px-5 font-bold leading-normal text-black'><span className='text-primaryColor'>Tournaments</span> List</h1>
+      <div className="grid grid-cols-4 gap-x-8 gap-y-8 w-full place-items-center justify-items-center ">
+        {Array.from({ length: 12 }).map((_, index) => (
           <div key={index}>
             <TournamentCard />
           </div>
         ))}
       </div>
       <div className='w-full flex justify-center'>
-        <div className="flex justify-center items-center bg-white w-max py-3 px-6 shadow-shadowBtn rounded-xl">
+        <div className="flex justify-center items-center bg-white w-max py-3 px-6 shadow-shadowBtn rounded-xl mt-2">
           <ConfigProvider
             theme={{
               token: {
