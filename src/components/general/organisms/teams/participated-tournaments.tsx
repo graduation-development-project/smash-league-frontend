@@ -15,7 +15,7 @@ const ParticipatedTournamentsOfTeams = () => {
       ))}
     </div>
 
-    <PaginationCard />
+    <PaginationCard total={12} currentPage={1} totalPerPage={6} onChange={() => {}}/>
   </div>
   )
 }

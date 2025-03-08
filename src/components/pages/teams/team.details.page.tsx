@@ -18,6 +18,7 @@ const TeamDetailsPage = (props: any) => {
 
   if (!teamId) return <Spinner isLoading={isLoading} />;
 
+  console.log('Check session', session?.user?.role);
   const onChange = (key: string) => {
     setActiveKey(key);
   };

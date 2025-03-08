@@ -4,6 +4,7 @@ import { createTeamAPI, searchTeamsAPI } from '@/services/team';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Form, Input, Modal, notification } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -14,7 +15,7 @@ const CreateTeamsModal = ({
   session,
 }: CreateTeamsModalProps) => {
   const [teamLeaderId, setTeamLeaderId] = React.useState<string>('1');
-
+  const { update } = useSession();
   const [file, setFile] = useState<File | null>(null);
   const [imageURL, setImageURL] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -22,8 +23,6 @@ const CreateTeamsModal = ({
 
   // console.log('check', session?.user?.access_token);
   // api truyen file => URL 3 anh sau khi up len cloud
-
-
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -56,6 +55,13 @@ const CreateTeamsModal = ({
         theme: 'light',
       });
       window.location.reload();
+      update({
+        ...session,
+        user: {
+          ...session?.user,
+          role: session?.user?.role.push('TeamLeader'),
+        },
+      });
     } else {
       toast.error('Error create team', {
         position: 'top-right',

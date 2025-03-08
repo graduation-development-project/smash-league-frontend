@@ -1,7 +1,7 @@
-import React from "react";
-import SearchTeamsParticipatedTournaments from "../../atoms/teams/search-teams-participated-tournaments";
-import TeamsTournamentsCard from "../../atoms/teams/teams-tournaments-card";
-import PaginationCard from "../../atoms/pagination/pagination-card";
+import React from 'react';
+import SearchTeamsParticipatedTournaments from '../../atoms/teams/search-teams-participated-tournaments';
+import TeamsTournamentsCard from '../../atoms/teams/teams-tournaments-card';
+import PaginationCard from '../../atoms/pagination/pagination-card';
 
 const TeamsParticipatedTournaments = ({ team }: TeamProps) => {
   return (
@@ -15,7 +15,12 @@ const TeamsParticipatedTournaments = ({ team }: TeamProps) => {
         ))}
       </div>
 
-      <PaginationCard />
+      <PaginationCard
+        total={12}
+        currentPage={1}
+        totalPerPage={6}
+        onChange={() => {}}
+      />
     </div>
   );
 };

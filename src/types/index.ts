@@ -38,12 +38,16 @@ interface CreateTeamsModalProps {
   session?: any;
 }
 
+interface TeamLeadersProps {
+
+}
+
 interface TeamDetailsProps {
   description: string;
   id: string;
   logo: string;
   status: string;
-  teamLeader: {};
+  teamLeader: any;
   teamName: string;
 }
 

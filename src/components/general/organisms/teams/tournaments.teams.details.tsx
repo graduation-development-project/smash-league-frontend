@@ -24,7 +24,7 @@ const TournamentsTeamsDetails = () => {
           </div>
           <div className="w-full flex justify-center items-center">
             {" "}
-            <PaginationCard />
+            <PaginationCard total={12} currentPage={1} totalPerPage={6} onChange={() => {}}/>
           </div>
         </div>
       ) : (

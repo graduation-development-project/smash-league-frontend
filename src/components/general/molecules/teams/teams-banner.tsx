@@ -7,7 +7,7 @@ import CreateTeamsModal from './create-teams-modal';
 import AlertCreateTeamsModal from './alert-create-teams-modal';
 
 const TeamsBanner = (props: any) => {
-  const { session} = props;
+  const { session } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -46,10 +46,10 @@ const TeamsBanner = (props: any) => {
             Create Your Team
           </Button>
 
-          {role === 'Athlete' ? (
+          {role.includes('Athlete') ? (
             <CreateTeamsModal
               isModalOpen={isModalOpen}
-              session = {session}
+              session={session}
               setIsModalOpen={setIsModalOpen}
             />
           ) : (

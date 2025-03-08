@@ -11,6 +11,11 @@ import { useTeamsContext } from '@/library/teams.context';
 const OverviewTeamDetails = () => {
   const [isSocialMediaVisible, setIsSocialMediaVisible] = useState(true);
   const { setActiveKey, teamDetails } = useTeamsContext();
+  console.log(teamDetails);
+  const fullName =
+    teamDetails?.teamLeader?.firstName +
+    ' ' +
+    teamDetails?.teamLeader?.lastName;
   return (
     <div className="w-full h-full flex justify-around px-8 py-4 gap-3">
       {/* Tournaments */}
@@ -100,7 +105,7 @@ const OverviewTeamDetails = () => {
               Team Leader
             </h1>
             <p>
-              <Tooltip title="Ho Duong Trung Nguyen" placement="bottomLeft">
+              <Tooltip title={fullName} placement="bottomLeft">
                 {' '}
                 <Avatar
                   style={{ backgroundColor: 'gray' }}

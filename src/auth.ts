@@ -1,18 +1,18 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import Google from 'next-auth/providers/google';
 import {
   InactivatedAccountError,
   InvalidEmailPasswordError,
-} from "./utils/error";
-import { sendRequest } from "./utils/api";
-import { AccessToken, IUser } from "./types/next-auth";
-import axios from "axios";
+} from './utils/error';
+import { sendRequest } from './utils/api';
+import { AccessToken, IUser } from './types/next-auth';
+import axios from 'axios';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Google({
-      authorization: { params: { access_type: "offline", prompt: "consent" } },
+      authorization: { params: { access_type: 'offline', prompt: 'consent' } },
     }),
     Credentials({
       credentials: {
@@ -34,10 +34,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             {
               email: credentials.username,
               password: credentials.password,
-            }
+            },
           );
 
-          console.log("Check res in authorize", res.status);
+          console.log('Check res in authorize', res.status);
 
           if (+res.status === 201) {
             return {
@@ -46,7 +46,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               email: res.data?.email,
               access_token: res.data?.accessToken,
               refresh_token: res.data?.refreshToken,
-              role: res.data?.roles[0],
+              role: res.data?.roles, 
             };
           } else {
             return null;
@@ -57,7 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           } else if (error.status === 401) {
             throw new InactivatedAccountError();
           } else {
-            throw new Error("Internal Server Error");
+            throw new Error('Internal Server Error');
           }
         }
       },
@@ -65,7 +65,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   trustHost: true,
   pages: {
-    signIn: "/auth/login",
+    signIn: '/auth/login',
   },
   callbacks: {
     async jwt({ token, user, account, profile }) {
@@ -76,9 +76,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (account) {
-        if (account.provider === "google" && profile?.email) {
+        if (account.provider === 'google' && profile?.email) {
           const res = await sendRequest<IBackendRes<any>>({
-            method: "POST",
+            method: 'POST',
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login-google`,
             body: { email: profile.email, name: profile.name },
           });
@@ -92,7 +92,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               refresh_token: res.data?.refresh_token,
             };
           } else {
-            throw new Error("Failed to authenticate via Google.");
+            throw new Error('Failed to authenticate via Google.');
           }
         }
 
@@ -112,18 +112,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       // Refresh token flow
       if (!token?.user?.refresh_token) {
-        console.error("Missing refresh token, logging out.");
-        return { ...token, error: "RefreshTokenError" };
+        console.error('Missing refresh token, logging out.');
+        return { ...token, error: 'RefreshTokenError' };
       }
 
       try {
-        const response = await fetch("https://oauth2.googleapis.com/token", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        const response = await fetch('https://oauth2.googleapis.com/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({
             client_id: process.env.AUTH_GOOGLE_ID!,
             client_secret: process.env.AUTH_GOOGLE_SECRET!,
-            grant_type: "refresh_token",
+            grant_type: 'refresh_token',
             refresh_token: token.refresh_token!,
           }),
         });
@@ -139,8 +139,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           refresh_token: tokens.refresh_token ?? token.refresh_token,
         };
       } catch (error) {
-        console.error("Error refreshing access token:", error);
-        return { ...token, error: "RefreshTokenError" };
+        console.error('Error refreshing access token:', error);
+        return { ...token, error: 'RefreshTokenError' };
       }
     },
     session({ session, token }) {
@@ -156,17 +156,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 });
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
-    error?: "RefreshTokenError";
+    error?: 'RefreshTokenError';
   }
 }
 
-declare module "next-auth/jwt" {
+declare module 'next-auth/jwt' {
   interface JWT {
     access_token: string;
     expires_at: number;
     refresh_token?: string;
-    error?: "RefreshTokenError";
+    error?: 'RefreshTokenError';
   }
 }

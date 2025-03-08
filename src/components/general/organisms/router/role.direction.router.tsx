@@ -8,9 +8,9 @@ const RoleDirectionRouter = (props: any) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (session?.user?.role === 'admin') {
+    if (session?.user?.role.includes('Admin')) {
       router.push('/dashboard');
-    } else if (session?.user?.role === 'Athlete') {
+    } else if (session?.user?.role.includes('Athlete')) {
       router.push('/home');
     } else if (!session) {
       router.push('/home');
