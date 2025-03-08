@@ -52,7 +52,7 @@ const MatchCard = () => {
         {
           setScore.map((item: any, index) => {
             return (
-              <div className='flex items-center gap-4'>
+              <div key={index} className='flex items-center gap-4'>
                 <div className='flex items-center gap-1 bg-[#ffffff2a] px-5 py-1 rounded-md'>
                   <span className={item.player1 > item.player2 ? 'text-[#93e093]' : ''}>{item.player1}</span>       
                   -

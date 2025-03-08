@@ -38,6 +38,19 @@ interface CreateTeamsModalProps {
   session?: any;
 }
 
+interface TeamLeadersProps {
+
+}
+
+interface TeamDetailsProps {
+  description: string;
+  id: string;
+  logo: string;
+  status: string;
+  teamLeader: any;
+  teamName: string;
+}
+
 interface PackageCardProps {
   title: string;
   newPrice: number;
@@ -46,4 +59,13 @@ interface PackageCardProps {
   advantages: string[];
   credit: number;
   recommended?: boolean;
+}
+
+interface PaginationProps {
+  total: number;
+  currentPage: number;
+  setCurrentPage?: React.Dispatch<React.SetStateAction<number>>;
+  totalPerPage: number;
+  setTotalPerPage?: React.Dispatch<React.SetStateAction<number>>;
+  onChange: (page: number) => void;
 }

@@ -9,6 +9,10 @@ import EmptyCard from "../../molecules/empty/empty.card";
 
 const MembersTeamsDetails = () => {
   const [isMembers, setIsMembers] = useState(true);
+
+  const handleChange = () => {
+
+  }
   return (
     <>
       {isMembers ? (
@@ -51,7 +55,7 @@ const MembersTeamsDetails = () => {
             ))}
           </div>
 
-          <PaginationCard />
+          <PaginationCard total={12} currentPage={1} totalPerPage={6}  onChange={handleChange}/>
         </div>
       ) : (
         <EmptyCard

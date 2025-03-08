@@ -1,5 +1,4 @@
 'use client';
-
 import images from '@/assets/images';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
@@ -16,7 +15,7 @@ const TeamsBanner = (props: any) => {
   };
 
   const [role, setRole] = useState(session?.user?.role);
-  console.log(role);
+  // console.log(role);
 
   return (
     <div className="w-full h-full relative">
@@ -47,10 +46,10 @@ const TeamsBanner = (props: any) => {
             Create Your Team
           </Button>
 
-          {role === 'Athlete' ? (
+          {role.includes('Athlete') ? (
             <CreateTeamsModal
               isModalOpen={isModalOpen}
-              session = {session}
+              session={session}
               setIsModalOpen={setIsModalOpen}
             />
           ) : (
