@@ -58,9 +58,11 @@ const CreateTourPage = () => {
     const handleFinish = (values: any) => {
         const { street, ward, district, province } = values
         const { occurDate } = values
-        const date = occurDate[0]
+        // const date = occurDate[0]
         const location = [street, ward, district, province].join(', ')
-        console.log(occurDate[0].toISOString()    );
+        console.log(values);
+        
+        // console.log(occurDate[0].toISOString()    );
     }
 
     return (
@@ -138,17 +140,17 @@ const CreateTourPage = () => {
                                     htmlType='submit'
                                     type="primary"
                                     style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', fontWeight: 'bold' }}
-                                    onClick={() => message.success('Processing complete!')}
+                                    // onClick={handleFinish}
                                 >
                                     Done
                                 </Button>
                             )}
                             {currentStep < steps.length - 1 && (
                                 <Button
-                                    
+                                    htmlType='submit'
                                     type="primary"
                                     style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', fontWeight: 'bold' }}
-                                    onClick={() => nextStep()}
+                                    // onClick={handleFinish}
                                 >
                                     Next Step
                                 </Button>
