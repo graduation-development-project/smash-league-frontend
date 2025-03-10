@@ -1,47 +1,47 @@
 /* eslint-disable @next/next/no-img-element */
 
-"use client";
-import Loaders from "@/components/general/atoms/loaders/loaders";
-import OverviewAthleteProfile from "@/components/general/organisms/profile/athlete/overview.athlete.profile";
-import { Avatar, ConfigProvider, Tabs, TabsProps } from "antd";
-import React, { useState } from "react";
-import { CiLocationOn } from "react-icons/ci";
-import TournamentsAthleteProfile from "../../general/organisms/profile/athlete/tournaments.athlete.profile";
-import UpdateInformationProfile from "@/components/general/organisms/profile/athlete/update.information.profile";
+'use client';
+import Loaders from '@/components/general/atoms/loaders/loaders';
+import OverviewAthleteProfile from '@/components/general/organisms/profile/athlete/overview.athlete.profile';
+import { Avatar, ConfigProvider, Tabs, TabsProps } from 'antd';
+import React, { useState } from 'react';
+import { CiLocationOn } from 'react-icons/ci';
+import TournamentsAthleteProfile from '../../general/organisms/profile/athlete/tournaments.athlete.profile';
+import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 
 const AthleteProfilePage = (props: any) => {
   const { session } = props;
   const user = {
     accessToken:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0MTkxNzd9.fvQaEsYcX956KnXmI5HpGtTosAfxrYgtsg1SdgjxHlA",
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0MTkxNzd9.fvQaEsYcX956KnXmI5HpGtTosAfxrYgtsg1SdgjxHlA',
     refreshToken:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0NDI1Nzd9.mlxCTkI_ujgJh5Hx-JJpV1rKsZmCrsp1OaozJETWyNk",
-    email: "smount273@gmail.com",
-    name: "Tran Anh Minh",
-    roles: ["Athlete"],
-    id: "dc033ba7-de1a-4fcc-b1f7-d9901388594b",
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0NDI1Nzd9.mlxCTkI_ujgJh5Hx-JJpV1rKsZmCrsp1OaozJETWyNk',
+    email: 'smount273@gmail.com',
+    name: 'Tran Anh Minh',
+    roles: ['Athlete'],
+    id: 'dc033ba7-de1a-4fcc-b1f7-d9901388594b',
   };
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const onChange = (key: string) => {
     console.log(key);
   };
 
-  const items: TabsProps["items"] = [
+  const items: TabsProps['items'] = [
     {
-      key: "1",
-      label: "Overview",
+      key: '1',
+      label: 'Overview',
       children: <OverviewAthleteProfile />,
     },
     {
-      key: "2",
-      label: "Tournaments",
+      key: '2',
+      label: 'Tournaments',
       children: <TournamentsAthleteProfile />,
     },
-    ...(session?.user?.id === user?.id
+    ...(session?.user?.id === session?.user?.id
       ? [
           {
-            key: "3",
-            label: "Update Information",
+            key: '3',
+            label: 'Update Information',
             children: <UpdateInformationProfile session={session} />,
           },
         ]
@@ -62,7 +62,7 @@ const AthleteProfilePage = (props: any) => {
           <div className="absolute z-10 w-full h-full flex items-center top-0 pl-10">
             <div className="flex items-center justify-center gap-4">
               <Avatar
-                style={{ border: "3px solid #FF8243" }}
+                style={{ border: '3px solid #FF8243' }}
                 size={200}
                 src="https://thebridge.in/h-upload/uid/1WBjBeRGUTAFdtLSbygdVctMuxxkfATBS2658560.jpg"
               />
@@ -87,25 +87,25 @@ const AthleteProfilePage = (props: any) => {
               components: {
                 Tabs: {
                   /* here is your component tokens */
-                  itemColor: "#000000",
-                  itemSelectedColor: "#FF8243",
-                  inkBarColor: "#FF8243",
-                  itemHoverColor: "#FF8243",
-                  itemActiveColor: "#FF8243",
-                  horizontalItemPaddingLG: "0px 0px 16px 0px",
+                  itemColor: '#000000',
+                  itemSelectedColor: '#FF8243',
+                  inkBarColor: '#FF8243',
+                  itemHoverColor: '#FF8243',
+                  itemActiveColor: '#FF8243',
+                  horizontalItemPaddingLG: '0px 0px 16px 0px',
                 },
               },
             }}
           >
             <Tabs
               tabBarStyle={{
-                width: "100%",
+                width: '100%',
                 fontWeight: 600,
                 // boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
                 marginTop: 30,
-                fontFamily: "inherit",
+                fontFamily: 'inherit',
               }}
-              style={{ width: "100%", fontFamily: "inherit" }}
+              style={{ width: '100%', fontFamily: 'inherit' }}
               size="large"
               centered
               tabBarGutter={60}

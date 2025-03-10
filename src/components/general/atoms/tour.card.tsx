@@ -54,7 +54,7 @@ const TourCard = () => {
           <div className="w-full h-2 bg-gradient-to-r from-primaryColor from-50% to-slate-400 to-50%  outline-none rounded "></div>
         </div>
         <div className="flex flex-col gap-2">
-          <TextGradientBtn textColor="orange">More Details</TextGradientBtn>
+          <TextGradientBtn textColor="orange" size="sm">More Details</TextGradientBtn>
           <Button size={"sm"}>Watch Live</Button>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { ConfigProvider, Pagination } from "antd";
 
 const PaginationCard = () => {
   return (
-    <div className="flex justify-center items-center bg-white w-max py-3 px-6 shadow-shadowBtn rounded-[15px]">
+    <div className="flex justify-center items-center bg-white w-max py-3 px-6 shadow-shadowBtn rounded-[10px]">
       <ConfigProvider
         theme={{
           token: {

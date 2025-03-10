@@ -10,7 +10,6 @@ import UpdateTeamsForm from "@/components/general/molecules/teams/update.teams.f
 import TournamentsTeamsDetails from "@/components/general/organisms/teams/tournaments.teams.details";
 import MembersTeamsDetails from "@/components/general/organisms/teams/members.teams.details";
 import AnnouncementsTeamsDetails from "../../general/organisms/teams/announcements.teams.details";
-import { useSession } from "next-auth/react";
 
 const TeamDetailsPage = (props: any) => {
   const { session } = props;

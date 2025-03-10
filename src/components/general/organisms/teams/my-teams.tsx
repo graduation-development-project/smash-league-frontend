@@ -55,9 +55,7 @@ const MyTeams = () => {
   );
 
   const [selectedKey, setSelectedKey] = useState("members_1");
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+ 
 
   const numberTeam = selectedKey.split("_")[1];
   const options = selectedKey.split("_")[0];
@@ -73,7 +71,7 @@ const MyTeams = () => {
       }}
     >
       <div className="flex flex-col gap-3 p-3 bg-white">
-        <div className="text-[16px] font-bold font-quicksand shadow-shadowBtn flex justify-center items-center p-2">
+        <div className="text-[16px] font-bold font-quicksand shadow-shadowBtn flex justify-center items-center p-2 rounded-[5px]">
           The Team List
         </div>
 
@@ -103,9 +101,11 @@ const MyTeams = () => {
               style={{
                 // border: "1px solid black",
                 padding: "16px 16px 0px 0px",
-                borderRadius: "15px",
-                boxShadow: "0px 0px 20px 0px rgb(0 0 0 / 0.4)",
+                borderRadius: "10px",
+                boxShadow: "0px 2px 4px 0px rgb(0 0 0 / 0.25)",
                 fontWeight: "500",
+                fontSize: "16px",
+                lineHeight: "24px",
               }}
               theme="dark"
               defaultSelectedKeys={["sub1"]}
@@ -125,8 +125,8 @@ const MyTeams = () => {
               paddingBottom: 36,
               height: "100%",
               background: "white",
-              borderRadius: "15px",
-              boxShadow: "0px 0px 20px 0px rgb(0 0 0 / 0.4)",
+              borderRadius: "10px",
+              boxShadow: "0px 2px 4px 0px rgb(0 0 0 / 0.25)",
             }}
           >
             {foundTeam &&

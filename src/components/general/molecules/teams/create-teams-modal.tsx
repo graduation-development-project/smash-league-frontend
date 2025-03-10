@@ -1,20 +1,23 @@
-"use client";
-
-import { Button, ConfigProvider, Form, Input, Modal } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import Image from "next/image";
-import React, { useState } from "react";
+'use client';
+import { createTeamAPI } from '@/service/team';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Button, ConfigProvider, Form, Input, Modal, notification } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import Image from 'next/image';
+import React, { useState } from 'react';
 
 const CreateTeamsModal = ({
   isModalOpen,
   setIsModalOpen,
+  session,
 }: CreateTeamsModalProps) => {
-  const [teamLeaderId, setTeamLeaderId] = React.useState<string>("1");
+  const [teamLeaderId, setTeamLeaderId] = React.useState<string>('1');
 
   const [file, setFile] = useState<File | null>(null);
-  const [imageURL, setImageURL] = useState<string>("");
+  const [imageURL, setImageURL] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // console.log('check', session?.user?.access_token);
   // api truyen file => URL 3 anh sau khi up len cloud
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,9 +25,30 @@ const CreateTeamsModal = ({
       setFile(e.target.files[0]);
     }
   };
-  const handleCreateTeam = (values: any) => {
-    console.log("check", values);
+  const handleCreateTeam = async (values: any) => {
+    const { teamLeaderId, teamName, teamDescription } = values;
+    const accessToken = session?.user?.access_token;
+    setIsLoading(true);
+    const response = await createTeamAPI(
+      file,
+      teamName,
+      teamDescription,
+      accessToken,
+    );
+    // console.log('Check', response);
+    setIsLoading(false);
     setIsModalOpen(false);
+    if (response?.status === 200 || response?.status === 201) {
+      notification.success({
+        message: 'Create team successfully',
+        description: 'Please check your team',
+      });
+    } else {
+      notification.error({
+        message: 'Create team error',
+        description: 'Please try again',
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -38,10 +62,10 @@ const CreateTeamsModal = ({
           components: {
             Button: {
               /* here is your component tokens */
-              defaultHoverBorderColor: "#FF8243",
-              defaultHoverColor: "#FF8243",
-              defaultActiveColor: "#FF8243",
-              defaultActiveBorderColor: "#FF8243",
+              defaultHoverBorderColor: '#FF8243',
+              defaultHoverColor: '#FF8243',
+              defaultActiveColor: '#FF8243',
+              defaultActiveBorderColor: '#FF8243',
             },
           },
         }}
@@ -53,12 +77,12 @@ const CreateTeamsModal = ({
           //   onOk={handleOk}
           okButtonProps={{
             style: {
-              display: "none",
+              display: 'none',
             },
           }}
           onCancel={handleCancel}
           cancelButtonProps={{
-            style: { fontWeight: "600", display: "none" },
+            style: { fontWeight: '600', display: 'none' },
           }}
         >
           <Form
@@ -71,9 +95,9 @@ const CreateTeamsModal = ({
                 components: {
                   Input: {
                     /* here is your component tokens */
-                    activeBorderColor: "#FF8243",
-                    activeShadow: "0 0 0 2px #fffff",
-                    hoverBorderColor: "#FF8243",
+                    activeBorderColor: '#FF8243',
+                    activeShadow: '0 0 0 2px #fffff',
+                    hoverBorderColor: '#FF8243',
                   },
                 },
               }}
@@ -91,7 +115,7 @@ const CreateTeamsModal = ({
                 label="Team Name"
                 name="teamName"
                 rules={[
-                  { required: true, message: "Please input your team name!" },
+                  { required: true, message: 'Please input your team name!' },
                 ]}
               >
                 <Input placeholder="Team Name" />
@@ -103,7 +127,7 @@ const CreateTeamsModal = ({
                 rules={[
                   {
                     required: true,
-                    message: "Please input your team description!",
+                    message: 'Please input your team description!',
                   },
                 ]}
               >
@@ -117,6 +141,9 @@ const CreateTeamsModal = ({
                   onChange={handleFileChange}
                   className="mb-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                 />
+              </Form.Item>
+
+              <Form.Item>
                 <div>
                   {file && (
                     <Image
@@ -143,16 +170,21 @@ const CreateTeamsModal = ({
                   <ConfigProvider
                     theme={{
                       token: {
-                        colorPrimary: "#74ba74",
+                        colorPrimary: '#74ba74',
                       },
                     }}
                   >
                     <Button
-                      style={{ fontWeight: "500" }}
+                      style={{ fontWeight: '500' }}
                       type="primary"
                       htmlType="submit"
                     >
                       Create Team
+                      {isLoading && (
+                        <LoadingOutlined
+                          style={{ marginLeft: '5px', fontSize: '20px' }}
+                        />
+                      )}
                     </Button>
                   </ConfigProvider>
                 </div>

@@ -4,6 +4,7 @@ import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import NextAuthWrapper from "@/library/next.auth.wrapper";
 import { ToastContainer } from "react-toastify";
+import { ProfileContextProvider } from "@/library/profile.context";
 
 const quicksand = Quicksand({
   subsets: ["latin"],
@@ -28,8 +29,10 @@ export default function RootLayout({
         {" "}
         <AntdRegistry>
           <NextAuthWrapper>
-            {children}
-            <ToastContainer />
+            <ProfileContextProvider>
+              {children}
+              <ToastContainer />
+            </ProfileContextProvider>
           </NextAuthWrapper>
         </AntdRegistry>
       </body>
