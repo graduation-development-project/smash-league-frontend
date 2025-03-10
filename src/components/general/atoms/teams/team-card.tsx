@@ -1,39 +1,45 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Tooltip } from "antd";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+'use client';
+import { Button } from '@/components/ui/button';
+import { useTeamsContext } from '@/library/teams.context';
+import { AntDesignOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Tooltip } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
-const TeamCard = () => {
+const TeamCard = (team: any) => {
   const [isFull, setIsFull] = useState(false);
+  const { teamId, setTeamId } = useTeamsContext();
   const router = useRouter();
+  const fullName =
+    team.team.teamLeader.firstName + ' ' + team.team.teamLeader.lastName;
+
+  const handleTeamClick = () => {
+    setTeamId(team.team.id);
+    router.push(`/teams/details/${team.team.teamName}`);
+  };
+
   return (
     <div
       className="w-max h-max flex flex-col justify-center bg-white border border-slate-300 rounded-[15px] p-5 gap-3 cursor-pointer hover:shadow-shadowComp hover:scale-110"
-      onClick={() => router.push("/teams/details/1")}
+      onClick={handleTeamClick}
     >
       <div
         className={`w-max h-max flex justify-center items-center  text-white text-[16px] font-bold self-stretch rounded-[20px] px-[20px] py-[5px] ${
-          isFull ? "bg-red-600" : "bg-secondColor"
+          isFull ? 'bg-red-600' : 'bg-secondColor'
         }`}
       >
-        {isFull ? "Full" : "Open"}
+        {isFull ? 'Full' : 'Open'}
       </div>
-      <h1 className="text-[18px] font-bold">The Smashing Dragons</h1>
+      <h1 className="text-[18px] font-bold">{team.team.teamName}</h1>
       <p className="flex items-center gap-1">
-        <Avatar style={{ backgroundColor: "gray" }} size={"small"}>
-          {"Ho Duong Trung Nguyen".charAt(0)}
+        <Avatar style={{ backgroundColor: 'gray' }} size={'small'}>
+          {fullName.charAt(0)}
         </Avatar>
-        <span className="text-[13px] font-semibold">
-          {" "}
-          Ho Duong Trung Nguyen
-        </span>
+        <span className="text-[13px] font-semibold">{fullName}</span>
       </p>
 
-      <p className="max-w-[350px] break-words text-[#6A6A6A] text-[14px] leading-normal">
-        Team focused on winning tournaments Elite players aiming for national
-        championships...
+      <p className="max-w-[350px] break-words text-[#6A6A6A] text-[14px] leading-normal truncate">
+        {team.team.description}
       </p>
 
       <div className="flex items-center gap-5 ">
@@ -41,28 +47,28 @@ const TeamCard = () => {
           max={{
             count: 4,
             style: {
-              color: "#f56a00",
-              backgroundColor: "#fde3cf",
-              cursor: "pointer",
+              color: '#f56a00',
+              backgroundColor: '#fde3cf',
+              cursor: 'pointer',
             },
           }}
         >
-          <Avatar style={{ backgroundColor: "green" }}>S</Avatar>
-          <Avatar style={{ backgroundColor: "#f56a00" }}>M</Avatar>
-          <Avatar style={{ backgroundColor: "green" }}>S</Avatar>
-          <Avatar style={{ backgroundColor: "#f56a00" }}>M</Avatar>
+          <Avatar style={{ backgroundColor: 'green' }}>S</Avatar>
+          <Avatar style={{ backgroundColor: '#f56a00' }}>M</Avatar>
+          <Avatar style={{ backgroundColor: 'green' }}>S</Avatar>
+          <Avatar style={{ backgroundColor: '#f56a00' }}>M</Avatar>
           <Tooltip
             title="Ant User"
             placement="top"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
           >
             <Avatar
-              style={{ backgroundColor: "#87d068" }}
+              style={{ backgroundColor: '#87d068' }}
               icon={<UserOutlined />}
             />
           </Tooltip>
           <Avatar
-            style={{ backgroundColor: "#1677ff" }}
+            style={{ backgroundColor: '#1677ff' }}
             icon={<AntDesignOutlined />}
           />
         </Avatar.Group>
@@ -72,7 +78,7 @@ const TeamCard = () => {
         </div>
       </div>
 
-      <Button size={"lg"} onClick={() => router.push("/teams/details/1")}>
+      <Button size={'lg'} onClick={handleTeamClick}>
         Request to Join
       </Button>
     </div>

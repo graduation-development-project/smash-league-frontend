@@ -1,7 +1,8 @@
-import { auth } from "@/auth";
-import MainLayout from "@/components/layout/mainlayout/layout";
-import TeamPage from "@/components/pages/teams/teampage";
-import React from "react";
+import { auth } from '@/auth';
+import MainLayout from '@/components/layout/mainlayout/layout';
+import TeamPage from '@/components/pages/teams/teampage';
+import { TeamsContextProvider } from '@/library/teams.context';
+import React from 'react';
 
 const Team = async () => {
   const session = await auth();
@@ -9,7 +10,7 @@ const Team = async () => {
   return (
     <MainLayout session={session}>
       <div>
-        <TeamPage session={session} />
+          <TeamPage session={session} />
       </div>
     </MainLayout>
   );

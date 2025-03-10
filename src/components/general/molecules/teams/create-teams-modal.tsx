@@ -1,10 +1,13 @@
 'use client';
-import { createTeamAPI } from '@/service/team';
+import { useTeamsContext } from '@/library/teams.context';
+import { createTeamAPI, searchTeamsAPI } from '@/services/team';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Form, Input, Modal, notification } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const CreateTeamsModal = ({
   isModalOpen,
@@ -12,10 +15,11 @@ const CreateTeamsModal = ({
   session,
 }: CreateTeamsModalProps) => {
   const [teamLeaderId, setTeamLeaderId] = React.useState<string>('1');
-
+  const { update } = useSession();
   const [file, setFile] = useState<File | null>(null);
   const [imageURL, setImageURL] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setTeamsList } = useTeamsContext();
 
   // console.log('check', session?.user?.access_token);
   // api truyen file => URL 3 anh sau khi up len cloud
@@ -35,18 +39,39 @@ const CreateTeamsModal = ({
       teamDescription,
       accessToken,
     );
+
     // console.log('Check', response);
     setIsLoading(false);
     setIsModalOpen(false);
     if (response?.status === 200 || response?.status === 201) {
-      notification.success({
-        message: 'Create team successfully',
-        description: 'Please check your team',
+      toast.success('Create team successfully', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      window.location.reload();
+      update({
+        ...session,
+        user: {
+          ...session?.user,
+          role: session?.user?.role.push('TeamLeader'),
+        },
       });
     } else {
-      notification.error({
-        message: 'Create team error',
-        description: 'Please try again',
+      toast.error('Error create team', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
       });
     }
   };

@@ -12,8 +12,8 @@ const BracketDetailsTour = () => {
         <div className='w-full h-max p-5'>
             <div className='w-full h-max min-h-56 flex flex-col gap-8'>
                 <h3 className='w-max text-4xl font-extrabold '>
-                    Battle's Bracket
-                    <div className={`w-1/2 h-1 rounded-full ${bgColor} mt-1`} />
+                    Battle&apos;s Bracket
+                    <div className={`w-1/2 h-1 rounded-full ${bgColor} mt-1`}/>
                 </h3>
                 <div className='w-full flex flex-row gap-5'>
                     <Button >Age 10-20</Button>

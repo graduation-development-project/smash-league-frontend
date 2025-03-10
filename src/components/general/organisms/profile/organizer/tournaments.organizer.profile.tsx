@@ -1,7 +1,7 @@
-import PaginationCard from "@/components/general/atoms/pagination/pagination-card";
-import SearchTournamentsOrganizersProfile from "@/components/general/atoms/profile/organizer/search-tournaments.organizer.profile";
-import TeamsTournamentsCard from "@/components/general/atoms/teams/teams-tournaments-card";
-import React from "react";
+import PaginationCard from '@/components/general/atoms/pagination/pagination-card';
+import SearchTournamentsOrganizersProfile from '@/components/general/atoms/profile/organizer/search-tournaments.organizer.profile';
+import TeamsTournamentsCard from '@/components/general/atoms/teams/teams-tournaments-card';
+import React from 'react';
 
 const TournamentsOrganizerProfile = () => {
   return (
@@ -15,7 +15,12 @@ const TournamentsOrganizerProfile = () => {
         ))}
       </div>
 
-      <PaginationCard />
+      <PaginationCard
+        total={12}
+        currentPage={1}
+        totalPerPage={6}
+        onChange={() => {}}
+      />
     </div>
   );
 };

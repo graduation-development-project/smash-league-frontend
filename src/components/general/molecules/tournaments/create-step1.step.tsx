@@ -30,7 +30,7 @@ import Image from 'next/image';
 import { Info } from 'lucide-react';
 import dayjs from "dayjs";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { getDistrictAPI, getProvinceAPI, getWardAPI } from '@/service/location';
+import { getDistrictAPI, getProvinceAPI, getWardAPI } from '@/services/location';
 
 
 interface SelectItemProps {

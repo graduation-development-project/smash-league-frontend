@@ -4,14 +4,17 @@ import { ConfigProvider, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import AllTeams from "@/components/general/organisms/teams/all-teams";
 import MyTeams from "@/components/general/organisms/teams/my-teams";
-// import "./styles.css";
 import ParticipatedTournamentsOfTeams from "../../general/organisms/teams/participated-tournaments";
-import { useSession } from "next-auth/react";
+
 const TeamPage = (props: any) => {
   const { session } = props;
   const onChange = (key: string) => {
     console.log(key);
   };
+
+  // if(isLoading){
+  //   return <Loaders isLoading={isLoading}/>
+  //  }
 
   const items: TabsProps["items"] = [
     {
@@ -55,7 +58,7 @@ const TeamPage = (props: any) => {
           width: "100%",
           fontWeight: 600,
           boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-          marginTop: 150,
+          marginTop: 70,
           fontFamily: "inherit",
         }}
         style={{ width: "100%", fontFamily: "inherit" }}

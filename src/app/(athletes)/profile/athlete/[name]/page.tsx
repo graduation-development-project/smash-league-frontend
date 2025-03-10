@@ -14,6 +14,7 @@ const AthleteProfile = async () => {
           <AthleteProfilePage session={session} />
         </div>
       </MainLayout>
+
     </>
   );
 };

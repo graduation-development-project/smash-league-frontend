@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react'
 
 const PlayerDetailTour = () => {
@@ -8,10 +9,10 @@ const PlayerDetailTour = () => {
   const tableRow = () => {
     return [1, 2, 3, 4, 5].map((player) => {
       return (
-        <tr className='h-max pt-10 text-lg font-medium text-center'>
+        <tr key={player} className='h-max pt-10 text-lg font-medium text-center'>
           <td>{player}</td>
           <td className='w-32 h-32 pt-5'>
-            <img  className='w-32 h-32 object-contain' src="https://img.bwfbadminton.com/image/upload/w_308,h_359,c_thumb,g_face:center/v1697765036/assets/players/thumbnail/87442.png" alt="" />
+            <img className='w-32 h-32 object-contain' src="https://img.bwfbadminton.com/image/upload/w_308,h_359,c_thumb,g_face:center/v1697765036/assets/players/thumbnail/87442.png" alt="" />
           </td>
           <td className=' text-start'>Malcolm Lockyer</td>
           <td>20</td>

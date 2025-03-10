@@ -6,6 +6,10 @@ import SearchOrganizersZoneBar from "../../atoms/organizers/search.organizers.zo
 import PaginationCard from "../../atoms/pagination/pagination-card";
 
 const AllOrganizers = () => {
+
+  const handleChannge = ()=> {
+
+  }
   return (
     <div className="w-full h-full flex flex-col items-center justify-center gap-6 px-20 py-4">
       <div className="w-full h-full">
@@ -20,7 +24,7 @@ const AllOrganizers = () => {
         ))}
       </div>
       <div className="flex justify-center items-center w-max h-max bg-white shadow-shadowBtn rounded-[10px]">
-        <PaginationCard />
+        <PaginationCard total={12} currentPage={1} totalPerPage={6} onChange={handleChannge}/>
       </div>
       ``
     </div>

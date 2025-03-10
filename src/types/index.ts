@@ -38,6 +38,19 @@ interface CreateTeamsModalProps {
   session?: any;
 }
 
+interface TeamLeadersProps {
+
+}
+
+interface TeamDetailsProps {
+  description: string;
+  id: string;
+  logo: string;
+  status: string;
+  teamLeader: any;
+  teamName: string;
+}
+
 interface PackageCardProps {
   title: string;
   newPrice: number;
@@ -48,11 +61,11 @@ interface PackageCardProps {
   recommended?: boolean;
 }
 
-interface LocationProps {
-  id: string,
-  name: string,
-  provinceId: string,
-  type: number,
-  typeText: string,
-  slug?: string,
+interface PaginationProps {
+  total: number;
+  currentPage: number;
+  setCurrentPage?: React.Dispatch<React.SetStateAction<number>>;
+  totalPerPage: number;
+  setTotalPerPage?: React.Dispatch<React.SetStateAction<number>>;
+  onChange: (page: number) => void;
 }

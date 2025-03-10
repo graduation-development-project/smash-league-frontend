@@ -71,7 +71,7 @@ const Navigation = (props: any) => {
         localStorage.setItem('page', 'Home');
         setRoute('Home');
         signOut({ redirect: false });
-        router.push('/home');
+        router.push('/');
       },
     },
   ];
