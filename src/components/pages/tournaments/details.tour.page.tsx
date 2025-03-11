@@ -113,7 +113,6 @@ const DetailsTourPage = () => {
                             <div>
                                 <Button variant='default' >Register Now</Button>
                             </div>
-
                         </div>
 
                     </div>

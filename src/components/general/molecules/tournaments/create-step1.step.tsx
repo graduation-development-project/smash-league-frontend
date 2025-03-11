@@ -16,15 +16,9 @@ import {
     Input,
     InputNumber,
     Radio,
-    Rate,
     Select,
     SelectProps,
-    Slider,
     Space,
-    Switch,
-    Tag,
-    TreeSelect,
-    Upload,
 } from 'antd';
 import Image from 'next/image';
 import { Info } from 'lucide-react';
@@ -71,7 +65,6 @@ const CreateTourStep1 = () => {
 
     const [winPoints, setWinPoints] = useState<Number>();
     const [lastPoints, setLastPoints] = useState<Number>();
-    // const [rules, setRules] = useState('');
     const [categories, setCategories] = useState({
         items: [
             {
