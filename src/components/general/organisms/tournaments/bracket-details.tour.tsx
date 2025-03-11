@@ -1,10 +1,14 @@
+"use client"
 import SingleTeamEliminationBracket from '@/bracket-single/single-team-elim-bracket';
 import TeamMatch from '@/components/team-match';
 import { Button } from '@/components/ui/button';
 import { teamBrackets } from '@/mock-data/simple-data';
-import React from 'react'
+import React, { useRef } from 'react'
+import { useDraggable } from 'react-use-draggable-scroll';
 
 const BracketDetailsTour = () => {
+    const ref = useRef<HTMLDivElement | null>(null); // Ensure it can be null initially
+    const { events } = useDraggable(ref as React.MutableRefObject<HTMLElement>)
     const color = '#60a5fa';
     const bgColor = `bg-[${color}]`;
     const borderColor = `border-[${color}]`;
@@ -37,7 +41,7 @@ const BracketDetailsTour = () => {
                     </td>
                 </div>
 
-                <div className='w-[1200px] h-[800px]  bg-[#e2e2e2] rounded-lg overflow-x-auto overflow-y-auto'>
+                <div className='w-[1200px] h-[800px]  bg-[#e2e2e2] rounded-lg overflow-x-auto overflow-y-auto cursor-grab' {...events} ref={ref}>
                     {/* <div className='w-[5000px] h-[3000px] bg-red-600'/> */}
                     <SingleTeamEliminationBracket
                         matches={teamBrackets}
@@ -49,4 +53,4 @@ const BracketDetailsTour = () => {
     )
 }
 
-export default BracketDetailsTour
+export default BracketDetailsTour;
