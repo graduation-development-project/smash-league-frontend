@@ -3,7 +3,7 @@ import {
   SearchOutlined,
   TeamOutlined,
   UserOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
   Button,
   ConfigProvider,
@@ -11,36 +11,45 @@ import {
   MenuProps,
   message,
   Space,
-} from "antd";
-import Input from "antd/es/input/Input";
-import { CirclePlus, CircleX } from "lucide-react";
-import React from "react";
+} from 'antd';
+import Input from 'antd/es/input/Input';
+import { CirclePlus, CircleX } from 'lucide-react';
+import { IoSearch } from 'react-icons/io5';
+import { TbLoader2 } from 'react-icons/tb';
+import React from 'react';
 
-const SearchTeamBar = () => {
+const SearchTeamBar = ({
+  searchTerms,
+  setSearchTerms,
+  isLoading,
+}: {
+  searchTerms: string;
+  setSearchTerms: React.Dispatch<React.SetStateAction<string>>;
+  isLoading: boolean;
+}) => {
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    message.info("Click on left button.");
-    console.log("click left button", e);
+    console.log('Check values', e.target);
   };
 
-  const handleMenuClick: MenuProps["onClick"] = (e) => {
-    message.info("Click on menu item.");
-    console.log("click", e);
+  const handleMenuClick: MenuProps['onClick'] = (e) => {
+    message.info('Click on menu item.');
+    console.log('click', e);
   };
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
       label: <p className="text-[16px] font-semibold">All Teams</p>,
-      key: "1",
+      key: '1',
       icon: <TeamOutlined style={{ fontSize: 15 }} />,
     },
     {
       label: <p className="text-[16px] font-semibold">Open</p>,
-      key: "2",
+      key: '2',
       icon: <CirclePlus size={15} />,
     },
     {
       label: <p className=" text-[16px] font-semibold">Full</p>,
-      key: "3",
+      key: '3',
       icon: <CircleX size={15} />,
     },
   ];
@@ -58,9 +67,9 @@ const SearchTeamBar = () => {
             components: {
               Input: {
                 /* here is your component tokens */
-                activeBorderColor: "#FF8243",
-                activeShadow: "0 0 0 2px #fffff",
-                hoverBorderColor: "#FF8243",
+                activeBorderColor: '#FF8243',
+                activeShadow: '0 0 0 2px #fffff',
+                hoverBorderColor: '#FF8243',
               },
             },
           }}
@@ -68,10 +77,15 @@ const SearchTeamBar = () => {
           <Input
             size="large"
             placeholder="Find a Team name here..."
+            onChange={(e) => {
+              setSearchTerms(e.target.value);
+            }}
             suffix={
-              <SearchOutlined
-                style={{ fontSize: 20, color: "#FF8243", fontWeight: "bold" }}
-              />
+              isLoading ? (
+                <TbLoader2 className="animate-spin" size={20} />
+              ) : (
+                <IoSearch size={20} className={searchTerms ? 'text-primaryColor' : 'text-gray-400'} />
+              )
             }
           />
         </ConfigProvider>
@@ -83,10 +97,10 @@ const SearchTeamBar = () => {
             components: {
               Button: {
                 /* here is your component tokens */
-                defaultActiveBorderColor: "#FF8243",
-                defaultActiveColor: "#FF8243",
-                defaultHoverBorderColor: "#FF8243",
-                defaultHoverColor: "#FF8243",
+                defaultActiveBorderColor: '#FF8243',
+                defaultActiveColor: '#FF8243',
+                defaultHoverBorderColor: '#FF8243',
+                defaultHoverColor: '#FF8243',
               },
             },
           }}
@@ -95,10 +109,10 @@ const SearchTeamBar = () => {
             <Button
               size="large"
               style={{
-                width: "max-content",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                width: 'max-content',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
             >
               {/* <Space> */}

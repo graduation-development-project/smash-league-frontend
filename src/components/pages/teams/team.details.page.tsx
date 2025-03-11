@@ -9,19 +9,22 @@ import UpdateTeamsForm from '@/components/general/molecules/teams/update.teams.f
 import TournamentsTeamsDetails from '@/components/general/organisms/teams/tournaments.teams.details';
 import MembersTeamsDetails from '@/components/general/organisms/teams/members.teams.details';
 import AnnouncementsTeamsDetails from '../../general/organisms/teams/announcements.teams.details';
-import Spinner from '@/components/general/atoms/loaders/spinner';
 
 const TeamDetailsPage = (props: any) => {
   const { session } = props;
-  const { activeKey, setActiveKey, teamId, teamDetails, isLoading } =
-    useTeamsContext();
+  const { activeKey, setActiveKey, teamDetails } = useTeamsContext();
+  const [user, setUser] = useState<any>(null); // Start with null to check for loading state
 
-  if (!teamId) return <Spinner isLoading={isLoading} />;
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+      setUser(storedUser);
+    }
+  }, []);
 
-  console.log('Check session', session?.user?.role);
-  const onChange = (key: string) => {
-    setActiveKey(key);
-  };
+  const isTeamLeader =
+    user?.role?.includes('Team Leader') &&
+    user?.id === teamDetails?.teamLeaderId;
 
   const items: TabsProps['items'] = [
     {
@@ -44,16 +47,20 @@ const TeamDetailsPage = (props: any) => {
       label: 'Tournaments',
       children: <TournamentsTeamsDetails />,
     },
-    ...(session?.user.role === 'team leader'
+    ...(isTeamLeader
       ? [
           {
             key: '5',
             label: 'Update Info',
-            children: <UpdateTeamsForm />,
+            children: <UpdateTeamsForm user={user} />,
           },
         ]
       : []),
   ];
+
+  const onChange = (key: string) => {
+    setActiveKey(key);
+  };
 
   return (
     <div className="w-full h-full relative z-0 shadow-shadowComp rounded-[5px]">
@@ -108,7 +115,7 @@ const TeamDetailsPage = (props: any) => {
           shape="square"
           size={135}
           style={{
-            backgroundColor: '#FF8243',
+            backgroundColor: `${teamDetails?.logo ? '' : '#FF8243'}  `,
             boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
           }}
           src={teamDetails?.logo}

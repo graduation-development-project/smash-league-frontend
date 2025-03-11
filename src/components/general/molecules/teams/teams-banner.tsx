@@ -2,13 +2,14 @@
 import images from '@/assets/images';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, {useState } from 'react';
 import CreateTeamsModal from './create-teams-modal';
 import AlertCreateTeamsModal from './alert-create-teams-modal';
 
 const TeamsBanner = (props: any) => {
   const { session } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const showModal = () => {
     setIsModalOpen(true);

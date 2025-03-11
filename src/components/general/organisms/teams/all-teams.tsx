@@ -7,30 +7,23 @@ import PaginationCard from '../../atoms/pagination/pagination-card';
 import { searchTeamsAPI } from '@/services/team';
 import Spinner from '../../atoms/loaders/spinner';
 import { useTeamsContext } from '@/library/teams.context';
+import { useDebounce } from '@/hooks/use-debounce';
 
 const AllTeams = (props: any) => {
   const { session } = props;
-  const { teamsList, setTeamsList } = useTeamsContext();
-  const { isLoading, setIsLoading } = useTeamsContext();
-  const [total, setTotal] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPerPage, setTotalPerPage] = useState<number>(6);
-  const getTeams = async () => {
-    setIsLoading(true);
-    try {
-      const res = await searchTeamsAPI(currentPage, totalPerPage);
-      setTeamsList(res?.data?.data || []);
-      setTotal(res?.data?.meta?.total);
-    } catch (error) {
-      console.error('Error fetching teams:', error);
-    }
-    setIsLoading(false);
-  };
+  const { teamsList, setTeamsList, isLoading, setIsLoading, getTeams , total, setTotal, currentPage, setCurrentPage, totalPerPage, setTotalPerPage} =
+    useTeamsContext();
+  const [searchTerms, setSearchTerms] = useState<string>('');
+
+  const debounceValue = useDebounce(searchTerms, 3000);
+
+  // console.log("Check debounce", debounceValue);
+
 
   useEffect(() => {
-    getTeams();
+    getTeams(currentPage, totalPerPage, debounceValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [debounceValue]);
 
   const handlePageChange = async (page: number) => {
     try {
@@ -48,10 +41,14 @@ const AllTeams = (props: any) => {
   return (
     <>
       <div className="w-full h-full flex flex-col justify-center items-center p-5 gap-20">
-        <SearchTeamBar />
+        <SearchTeamBar
+          searchTerms={searchTerms}
+          setSearchTerms={setSearchTerms}
+          isLoading={isLoading}
+        />
 
         {/* Centering Grid Items */}
-        {teamsList.length > 0 ? (
+        {isLoading === false && teamsList.length > 0 ? (
           <div className="w-[90%] grid grid-cols-3 gap-x-1 gap-y-6 place-items-center justify-items-center px-5 py-8 bg-white shadow-shadowBtn rounded-[15px]">
             {teamsList.map((team: any, index) => (
               <div key={index}>

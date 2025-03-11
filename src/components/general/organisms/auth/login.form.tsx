@@ -40,6 +40,7 @@ const LoginForm = () => {
     const res = await authenticate(username, password);
 
     // console.log('Check res', res);
+    // console.log('Check sesion', session?.user);
     if (res?.error) {
       //error
       if (res?.code === 2) {

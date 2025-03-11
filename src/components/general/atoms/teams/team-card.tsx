@@ -20,7 +20,7 @@ const TeamCard = (team: any) => {
 
   return (
     <div
-      className="w-max h-max flex flex-col justify-center bg-white border border-slate-300 rounded-[15px] p-5 gap-3 cursor-pointer hover:shadow-shadowComp hover:scale-110"
+      className="w-[400px] h-[300px] flex flex-col justify-center bg-white border border-slate-300 rounded-[15px] p-5 gap-3 cursor-pointer hover:shadow-shadowComp hover:scale-110"
       onClick={handleTeamClick}
     >
       <div
