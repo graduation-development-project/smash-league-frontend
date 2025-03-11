@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import {
     Button,
@@ -12,28 +12,28 @@ import {
     DatePicker,
     Divider,
     Form,
+    GetProps,
     Input,
     InputNumber,
     Radio,
-    Rate,
     Select,
     SelectProps,
-    Slider,
     Space,
-    Switch,
-    Tag,
-    TreeSelect,
-    Upload,
 } from 'antd';
 import Image from 'next/image';
 import { Info } from 'lucide-react';
 import dayjs from "dayjs";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { getDistrictAPI, getProvinceAPI, getWardAPI } from '@/services/location';
 
 
 interface SelectItemProps {
     label: string;
     value: string;
 }
+type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
+dayjs.extend(customParseFormat);
+
 
 const CreateTourStep1 = () => {
     const [form] = Form.useForm();
@@ -41,27 +41,17 @@ const CreateTourStep1 = () => {
     const { TextArea } = Input;
 
 
-    type RequiredMark = boolean | 'optional' | 'customize';
-    const customizeRequiredMark = (label: React.ReactNode, { required }: { required: boolean }) => (
-        <>
-            {required ? <Tag color="error">Required</Tag> : <Tag color="warning">optional</Tag>}
-            {label}
-        </>
-    );
-    const [requiredMark, setRequiredMarkType] = useState<RequiredMark>('optional');
-
-
-
-
-
-
-
     const [fileBgTour, setFileBgTour] = useState<File | null>(null);
     const [imageURLBgTour, setImageURLBgTour] = useState<string>("");
 
+    const [provinceId, setProvinceId] = useState('');
+    const [districtId, setDistrictId] = useState('');
     const [province, setProvince] = useState('');
     const [district, setDistrict] = useState('');
     const [ward, setWard] = useState('');
+    const [provinceList, setProvinceList] = useState([]);
+    const [districtList, setDistrictList] = useState([]);
+    const [wardList, setWardList] = useState([]);
     const [street, setStreet] = useState('');
     const location = [street, ward, district, province].join(', ')
 
@@ -75,7 +65,6 @@ const CreateTourStep1 = () => {
 
     const [winPoints, setWinPoints] = useState<Number>();
     const [lastPoints, setLastPoints] = useState<Number>();
-    // const [rules, setRules] = useState('');
     const [categories, setCategories] = useState({
         items: [
             {
@@ -86,13 +75,77 @@ const CreateTourStep1 = () => {
 
     //Registration & Fee
     const [isRegister, setIsRegister] = useState(false);
-    const [registerDate, setRegisterDate] = useState(null);
-    const [occurDate, setOccurDate] = useState(null);
+    const [registerDate, setRegisterDate] = useState<Array<dayjs.Dayjs>>([]);
+    const [drawDate, setDrawDate] = useState<Array<dayjs.Dayjs>>([]);
+    const [occurDate, setOccurDate] = useState<Array<dayjs.Dayjs>>([]);
 
 
     const [isMerchandise, setIsMerchandise] = useState(false);
 
     const [fileImgMerchandise, setFileImgMerchandise] = useState<File | null>(null);
+
+
+
+
+
+    useEffect(() => {
+        const fetchProvince = async () => {
+            try {
+                const res = await getProvinceAPI();
+                console.log(res);
+
+                setProvinceList(res)
+            } catch (error: any) {
+                console.log(error);
+            }
+        }
+        fetchProvince();
+    }, []);
+    useEffect(() => {
+        if (provinceId !== "") {
+            const fetchDistrict = async (provinceId: string) => {
+                try {
+                    const res = await getDistrictAPI(provinceId);
+                    console.log(res);
+                    setDistrictList(res);
+                } catch (error: any) {
+                    console.log(error);
+
+                }
+            }
+            fetchDistrict(provinceId);
+        }
+    }, [provinceId]);
+
+    useEffect(() => {
+        if (districtId !== "") {
+            const fetchWard = async (districtId: string) => {
+                try {
+                    const wards = await getWardAPI(districtId);
+                    setWardList(wards);
+                } catch (error: any) {
+                    console.log(error);
+                }
+            }
+            fetchWard(districtId);
+        }
+    }, [districtId]);
+
+    const handleProvinceChange = (value: string) => {
+        const [selectedProvinceId, selectedProvinceName] = value.split('|');
+        setProvinceId(selectedProvinceId);
+        setProvince(selectedProvinceName);
+    };
+    const handleDistrictChange = (value: string) => {
+        const [selectedDistrictId, selectedDistrictName] = value.split('|');
+        setDistrictId(selectedDistrictId);
+        setDistrict(selectedDistrictName);
+    };
+    const handleWardChange = (ward: string) => {
+        setWard(ward);
+    };
+
+
 
     const handleFileBgTourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -100,11 +153,26 @@ const CreateTourStep1 = () => {
         }
     };
 
-    const disabledOccurDate = (current: any) => {
-        return current && (current.isBefore(dayjs(), "day") || (registerDate && current.isBefore(registerDate, "day")));
+
+
+    //---------- Date Time Register & Occur ---------
+    const disabledRegisterDate = (current: dayjs.Dayjs) => {
+        return current && current.isBefore(dayjs().add(1, "day").startOf("day"), "day");
     };
-    const disabledRegisterDate = (current: any) => {
-        return current && current.isBefore(dayjs(), "day");
+
+    const disabledDrawDate = (current: dayjs.Dayjs) => {
+        return (
+            current &&
+            (current.isBefore(dayjs().add(1, "day").startOf("day"), "day") ||
+                (registerDate.length > 0 && current.isBefore(registerDate[1].add(1, "day").startOf("day"), "day")))
+        );
+    };
+    const disabledOccurDate = (current: dayjs.Dayjs) => {
+        return (
+            current &&
+            (current.isBefore(dayjs().add(1, "day").startOf("day"), "day") ||
+                (drawDate.length > 0 && current.isBefore(drawDate[1].add(1, "day").startOf("day"), "day")))
+        );
     };
 
 
@@ -167,8 +235,14 @@ const CreateTourStep1 = () => {
         }
     };
 
+    const handleSubmit = () => {
+        const values = form.getFieldsValue(); // Get all form values
+        console.log("Form Data:", values);
+    };
+
 
     return (
+
         <div className='w-full h-max flex flex-col items-center justify-center rounded gap-10'>
             <div className='w-full flex flex-col shadow-shadowBtn'>
                 <div className='w-full h-max flex bg-primaryColor rounded-t-md'>
@@ -181,8 +255,8 @@ const CreateTourStep1 = () => {
                         <Input placeholder="Your tournament's name" required />
                     </Form.Item>
 
-                    <Form.Item label="Tournament URL" name="url" required>
-                        <Input addonBefore="https://smashit.com.vn/" placeholder="Your tournament's URL" defaultValue="mysite" required />
+                    <Form.Item label="Tournament URL" name="url"  required>
+                        <Input addonBefore="https://smashit.com.vn/" placeholder="Your tournament's URL"  required />
                     </Form.Item>
                     <Form.Item name="tourImage" label="Tournament's Image" required>
                         <input
@@ -204,6 +278,22 @@ const CreateTourStep1 = () => {
                             )}
                         </div>
                     </Form.Item>
+
+                    <Form.Item label="Your Tour Color">
+                        <ColorPicker defaultValue="#ff8243" showText={true} />
+                    </Form.Item>
+                    <Form.Item name={"prizePool"} label="Prize pool" required>
+                        <InputNumber<number>
+                            min={0}
+                            suffix={'VND'}
+                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                            style={{ marginTop: '8px', width: '100%' }}
+                            placeholder="Prize pool"
+                            changeOnWheel
+                            width={'100%'}
+                        />
+                    </Form.Item>
                     <Form.Item style={{ rowGap: '10px' }} label="Location" required>
                         <Space.Compact block>
                             <Form.Item
@@ -212,9 +302,14 @@ const CreateTourStep1 = () => {
                                 noStyle
                                 rules={[{ required: true, message: 'Province is required' }]}
                             >
-                                <Select onChange={(e) => setProvince(e)} placeholder="Select province">
-                                    <Select.Option value="Ho Chi Minh">HCM</Select.Option>
-                                    <Select.Option value="Ha Noi">HN</Select.Option>
+                                <Select onChange={(e) => handleProvinceChange(e)} placeholder="Select province">
+                                    {
+                                        provinceList.map((province: any) => {
+                                            return (
+                                                <Select.Option key={province.id} value={`${province.id}|${province.name}`}>{province.typeText} {province.name}</Select.Option>
+                                            )
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
                             <Form.Item
@@ -222,9 +317,15 @@ const CreateTourStep1 = () => {
                                 noStyle
                                 rules={[{ required: true, message: 'District is required' }]}
                             >
-                                <Select onChange={(e) => setDistrict(e)} placeholder="Select district">
-                                    <Select.Option value="summer">Happy Summer Camp</Select.Option>
-                                    <Select.Option value="winter">IceBreaker Battle</Select.Option>
+                                <Select onChange={(e) => handleDistrictChange(e)} placeholder="Select district">
+                                    {
+                                        districtList.map((district: any) => {
+                                            return (
+                                                <Select.Option key={district.id} value={`${district.id}|${district.name}`}>{district.typeText} {district.name}</Select.Option>
+                                            )
+                                        })
+                                    }
+
                                 </Select>
 
                             </Form.Item>
@@ -234,8 +335,14 @@ const CreateTourStep1 = () => {
                                 rules={[{ required: true, message: 'Ward is required' }]}
                             >
                                 <Select onChange={(e) => setWard(e)} placeholder="Select ward" >
-                                    <Select.Option value="summer">Happy Summer Camp</Select.Option>
-                                    <Select.Option value="winter">IceBreaker Battle</Select.Option>
+                                    {
+                                        wardList.map((ward: any) => {
+                                            return (
+                                                <Select.Option key={ward.id} value={ward.name}>{ward.typeText} {ward.name}</Select.Option>
+                                            )
+                                        })
+
+                                    }
                                 </Select>
                             </Form.Item>
 
@@ -268,13 +375,13 @@ const CreateTourStep1 = () => {
                         />
                     </Form.Item>
                     <Form.Item name="series" label="Series">
-                        <Select placeholder="Select event">
+                        <Select placeholder="Select serie">
                             <Select.Option value="summer">Happy Summer Camp</Select.Option>
                             <Select.Option value="winter">IceBreaker Battle</Select.Option>
                         </Select>
                         {/* <Button style={{ marginTop: '10px' }} >New Event</Button> */}
                     </Form.Item>
-                    
+
                 </div>
             </div>
 
@@ -325,37 +432,7 @@ const CreateTourStep1 = () => {
                 <div className='w-full h-max flex flex-col p-10 justify-center items-center'>
                     <div className='w-full h-max flex flex-col'>
 
-                        <Form.Item name="format" label="Format" required initialValue={"single"}>
-                            <Select placeholder="Format of Tournament">
-                                <Select.Option value="single">Single Elimination</Select.Option>
-                                <Select.Option value="robin">Round Robin</Select.Option>
-                            </Select>
-
-                        </Form.Item>
-                        <Form.Item name="maxAthletes" label="Maximum athletes" >
-                            <InputNumber min={0} max={1000} suffix={'Athletes'} style={{ width: '100%' }} placeholder="Maximum athletes" changeOnWheel />
-                        </Form.Item>
-
-                        <Form.Item name="numberOfSets" label="Number of sets" required>
-                            <Select placeholder="Number of set(s) ">
-                                <Select.Option value="1">1</Select.Option>
-                                <Select.Option value="3">3</Select.Option>
-                                <Select.Option value="5">5</Select.Option>
-                            </Select>
-                        </Form.Item>
-                        <Form.Item name="winPoints" label="Winning points">
-                            <InputNumber min={15} max={51} suffix={'Points'} style={{ width: '100%' }} placeholder="Winning points" changeOnWheel />
-                        </Form.Item>
-                        <Form.Item name="lastPoints" label="Last points" required>
-                            <InputNumber min={15} max={51} suffix={'Points'} style={{ width: '100%' }} placeholder="Last points" changeOnWheel />
-                        </Form.Item>
-                        <Form.Item name="rules" label="Rules" >
-                            <TextArea
-                                placeholder="Controlled autosize"
-                                autoSize={{ minRows: 3, maxRows: 5 }}
-                            />
-                        </Form.Item>
-                        <Form.Item label="Categories" required>
+                        <Form.Item label="Events" required>
 
                             <Divider />
                             <Checkbox indeterminate={indeterminate} onChange={(e) => setCateList(e.target.checked ? plainCateOptions : [])} checked={checkAllCateList}>
@@ -366,66 +443,111 @@ const CreateTourStep1 = () => {
 
                         </Form.Item>
                     </div>
-                    <div className='w-full h-max flex justify-center items-center'>
-                        
-                        <Form.List name="categories" >
-                            {(fields, { add, remove }) => (
-                                <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16, width: '50%' }}>
-                                    {cateList.map((category, index) => {
-                                        // Kiểm tra nếu category đã có trong danh sách fields hay chưa
-                                        const field = fields.find(f => f.name === index);
-                                        if (!field) add();
+                    {/* <div className='w-full h-max flex justify-center items-center'> */}
 
-                                        return (
-                                            <Card
-                                                size="small"
-                                                title={category}
-                                                key={category}
-                                                extra={
-                                                    <CloseOutlined onClick={() => {
-                                                        remove(index);
-                                                        setCateList(cateList.filter(item => item !== category));
-                                                    }} />
-                                                }
-                                            >
-                                                {/* <Form.Item label="Category Name" name={[index, 'name']} initialValue={category}>
-                                                                <Input value={category} disabled/>
-                                                            </Form.Item> */}
+                    {/* <Form.Item noStyle name={['categories', 'min']}> */}
+                    <Form.List name="categories">
+                        {(fields, { add, remove }) => (
+                            <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16, width: '90%' }}>
+                                {cateList.map((category, index) => {
+                                    const field = fields.find(f => f.name === index);
+                                    if (!field) add(); // Ensure correct indexing
 
-                                                {/* Sub List - Range Number */}
-                                                <Form.Item label="Age">
-                                                    <Form.List name={[index, 'rangeList']}>
-                                                        {(subFields, subOpt) => (
-                                                            <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16 }}>
-                                                                {subFields.map((subField) => (
+                                    return (
+                                        <Card
+                                            size="small"
+                                            title={category}
+                                            key={category}
+                                            style={{ borderWidth: 2, width: '100%', display: 'flex', flexDirection: 'column', rowGap: 16, alignSelf: 'center' }}
+                                            extra={
+                                                <CloseOutlined onClick={() => {
+                                                    remove(index);
+                                                    setCateList(cateList.filter(item => item !== category));
+                                                }} />
+                                            }
+                                        >
+                                                <Form.List name={[index, 'rangeList']} >
+                                                {(subFields, subOpt) => (
+                                                    <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16, width: '100%' }}>
+                                                        {subFields.map((subField) => (
+                                                            <Card
+                                                                size="small"
+                                                                style={{ borderWidth: 2, width: '90%', display: 'flex', flexDirection: 'column', rowGap: 16, alignSelf: 'center' }}
+                                                                key={subField.key}
+                                                                title={
                                                                     <Space key={subField.key}>
-                                                                        <Form.Item noStyle name={[subField.name, 'min']}>
+                                                                        From <Form.Item noStyle name={[subField.name, 'min']}>
                                                                             <InputNumber placeholder="Min" />
                                                                         </Form.Item>
+                                                                        to
                                                                         <Form.Item noStyle name={[subField.name, 'max']}>
                                                                             <InputNumber placeholder="Max" />
                                                                         </Form.Item>
-                                                                        <CloseOutlined
-                                                                            onClick={() => {
-                                                                                subOpt.remove(subField.name);
-                                                                            }}
-                                                                        />
                                                                     </Space>
-                                                                ))}
-                                                                <Button type="dashed" onClick={() => subOpt.add()} block>
-                                                                    + Add Range Age
-                                                                </Button>
-                                                            </div>
-                                                        )}
-                                                    </Form.List>
-                                                </Form.Item>
-                                            </Card>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                        </Form.List>
-                    </div>
+                                                                }
+                                                                extra={
+                                                                    <CloseOutlined onClick={() => subOpt.remove(subField.name)} />
+                                                                }
+                                                            >
+                                                                {/* FIX: Properly nest fields inside Form.List */}
+                                                                <Form.Item name={[subField.name, "maxAthletes"]} label="Maximum athletes">
+                                                                    <InputNumber min={0} max={1000} style={{ width: '100%' }} placeholder="Maximum athletes" />
+                                                                </Form.Item>
+
+                                                                <Form.Item name={[subField.name, "numberOfSets"]} label="Number of sets">
+                                                                    <Select placeholder="Number of game(s)">
+                                                                        <Select.Option value="1">1</Select.Option>
+                                                                        <Select.Option value="3">3</Select.Option>
+                                                                        <Select.Option value="5">5</Select.Option>
+                                                                    </Select>
+                                                                </Form.Item>
+
+                                                                <Form.Item name={[subField.name, "winPoints"]} label="Winning points">
+                                                                    <InputNumber min={15} max={51} style={{ width: '100%' }} placeholder="Winning points" />
+                                                                </Form.Item>
+
+                                                                <Form.Item name={[subField.name, "lastPoints"]} label="Last points">
+                                                                    <InputNumber min={15} max={51} style={{ width: '100%' }} placeholder="Last points" />
+                                                                </Form.Item>
+
+                                                                <Form.Item name={[subField.name, "rules"]} label="Rules">
+                                                                    <TextArea placeholder="Enter rules" autoSize={{ minRows: 3, maxRows: 5 }} />
+                                                                </Form.Item>
+
+                                                                <Divider />
+                                                                <Form.Item name={[subField.name, "champion"]} label="Champion Rewards">
+                                                                    <Input style={{ width: '100%' }} />
+                                                                </Form.Item>
+
+                                                                <Form.Item name={[subField.name, "runnerUp"]} label="Runner-up">
+                                                                    <Input style={{ width: '100%' }} />
+                                                                </Form.Item>
+
+                                                                <Form.Item name={[subField.name, "rdPlace"]} label="Third Place">
+                                                                    <Input style={{ width: '100%' }} />
+                                                                </Form.Item>
+
+                                                                <Form.Item name={[subField.name, "jointRdPlace"]} label="Third Place (Tie)">
+                                                                    <Input style={{ width: '100%' }} />
+                                                                </Form.Item>
+
+                                                            </Card>
+                                                        ))}
+                                                        <Button type="dashed" onClick={() => subOpt.add()} block>
+                                                            + Add Range Age
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                            </Form.List>
+                                            
+                                        </Card>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </Form.List>
+                    {/* </Form.Item> */}
+                    {/* </div> */}
                 </div>
             </div>
             <div className='w-full h-max flex flex-col shadow-shadowBtn ' >
@@ -460,13 +582,20 @@ const CreateTourStep1 = () => {
                     </Form.Item>
                     <Divider />
 
-                    <Form.Item name={"registrationDate"} label="Registration Date" required>
+                    <Form.Item name={"registrationDate"} style={{ display: 'block' }} label="Registration Date" required>
                         <RangePicker
-                            style={{ width: '100%' }}
                             placeholder={["Select Start Date", "Select End Date"]}
                             disabledDate={disabledRegisterDate}
-                            onChange={(date: any) => setRegisterDate(date)}
-
+                            showTime={{
+                                hideDisabledOptions: true,
+                                defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('23:59:59', 'HH:mm:ss')],
+                            }}
+                            onChange={(date: any) => {
+                                console.log(date, "registerDate");
+                                setRegisterDate(date);
+                            }}
+                            format="YYYY-MM-DD HH:mm:ss"
+                            style={{ width: "100%" }}
                         />
                     </Form.Item>
                     <Form.Item name={"attachments"} label="Required attachments" required>
@@ -483,12 +612,36 @@ const CreateTourStep1 = () => {
                     </div>
                 </div>
                 <div className='w-full h-max p-10'>
-                    <Form.Item name={"occurDate"} label="Occur Date" style={{ display: 'block',}} required>
+                    <Form.Item name={"drawDate"} label="Draw Date" style={{ display: 'block', }} required>
+                        <RangePicker
+                            placeholder={["Select Start Date", "Select End Date"]}
+                            disabledDate={disabledDrawDate}
+                            showTime={{
+                                hideDisabledOptions: true,
+                                defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('23:59:59', 'HH:mm:ss')],
+                            }}
+                            onChange={(date: any) => {
+                                console.log(date, "drawDate");
+                                setDrawDate(date);
+                            }}
+                            format="YYYY-MM-DD HH:mm:ss"
+                            style={{ width: "100%" }}
+                        />
+                    </Form.Item>
+                    <Form.Item name={"occurDate"} label="Occur Date" style={{ display: 'block', }} required>
                         <RangePicker
                             placeholder={["Select Start Date", "Select End Date"]}
                             disabledDate={disabledOccurDate}
-                            onChange={(date: any) => setOccurDate(date)}
-                            style={{ width: '100%' }}
+                            showTime={{
+                                hideDisabledOptions: true,
+                                defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('23:59:59', 'HH:mm:ss')],
+                            }}
+                            onChange={(date: any) => {
+                                console.log(date, "occurDate");
+                                setOccurDate(date);
+                            }}
+                            format="YYYY-MM-DD HH:mm:ss"
+                            style={{ width: "100%" }}
                         />
                     </Form.Item>
                     <Form.Item name={"checkIn"} label="Check-in before start time" required>
@@ -517,35 +670,10 @@ const CreateTourStep1 = () => {
             <div className='w-full flex flex-col shadow-shadowBtn'>
                 <div className='w-full h-max flex bg-primaryColor rounded-t-md'>
                     <div className='w-full h-max flex justify-between items-center px-10 py-1'>
-                        <h1 className='font-quicksand text-base font-bold text-white'>Rewards & Merchandise</h1>
+                        <h1 className='font-quicksand text-base font-bold text-white'>Merchandise</h1>
                     </div>
                 </div>
                 <div className='w-full h-max p-10'>
-                    <Form.Item name={"prizePool"} label="Prize pool" required>
-                        <InputNumber<number>
-                            min={0}
-                            suffix={'VND'}
-                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                            parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                            style={{ marginTop: '8px', width: '100%' }}
-                            placeholder="Prize pool"
-                            changeOnWheel
-                            width={'100%'}
-                        />
-                    </Form.Item>
-                    <Form.Item name={"champion"} label="Champion Rewards" required>
-                        <Input style={{ width: '100%' }} />
-
-                    </Form.Item>
-                    <Form.Item name={"runnerUp"} label="Runner-up" required>
-                        <Input style={{ width: '100%' }} />
-
-                    </Form.Item>
-                    <Form.Item name={"thirdPlace"} label="Third Place" required>
-                        <Input style={{ width: '100%' }} />
-
-                    </Form.Item>
-                    <Divider />
                     <Form.Item name="isMerchandise" label="Merchandise for audiences">
                         <Radio.Group
                             onChange={(e) => setIsMerchandise(e.target.value)}
@@ -590,6 +718,7 @@ const CreateTourStep1 = () => {
 
 
         </div>
+
 
     )
 }
