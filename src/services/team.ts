@@ -14,8 +14,8 @@ export const createTeamAPI = async (
     formData.append('teamName', teamName);
     formData.append('description', teamDescription);
 
-    const response = await httpRequest.post(
-      '/api/v1/team-leaders/create-team',
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/team-leaders/create-team`,
       formData,
       {
         headers: {
@@ -30,7 +30,7 @@ export const createTeamAPI = async (
       'Error creating team:',
       error.response?.data || error.message,
     );
-    throw new Error(error.response?.data?.message || 'Failed to create team');
+    return error.response?.data;
   }
 };
 
@@ -75,5 +75,69 @@ export const getTeamDetailsAPI = async (teamId: string) => {
     throw new Error(
       error.response?.data?.message || 'Failed to get team details',
     );
+  }
+};
+
+export const updateTeamDetailsAPI = async (
+  logo: File | null,
+  teamName: string,
+  teamDescription: string,
+  teamId: string,
+  accessToken: string,
+) => {
+  try {
+    const formData = new FormData();
+
+    // console.log('Check access token', accessToken);
+    formData.append('teamId', teamId);
+    formData.append('description', teamDescription);
+    formData.append('teamName', teamName);
+    formData.append('logo', logo ?? '');
+
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/team-leaders/edit-team`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error updating team:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+const inviteMemberAPI = async (
+  invitedUserEmail: string,
+  teamId: string,
+  accessToken: string,
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/team-leaders/send-invitation`,
+      {
+        invitedUserEmail: invitedUserEmail,
+        teamId: teamId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error updating team:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
   }
 };

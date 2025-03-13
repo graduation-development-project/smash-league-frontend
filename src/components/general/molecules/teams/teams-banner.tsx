@@ -14,7 +14,7 @@ const TeamsBanner = (props: any) => {
     setIsModalOpen(true);
   };
 
-  const [role, setRole] = useState(session?.user?.role);
+  const [role, setRole] = useState(session?.user?.role || []);
   // console.log(role);
 
   return (
@@ -46,7 +46,7 @@ const TeamsBanner = (props: any) => {
             Create Your Team
           </Button>
 
-          {role.includes('Athlete') ? (
+          {role && role.includes('Athlete') ? (
             <CreateTeamsModal
               isModalOpen={isModalOpen}
               session={session}

@@ -15,10 +15,21 @@ import HeadlessTippy from '@tippyjs/react/headless';
 import NotificationCard from '@/components/general/atoms/notification.card';
 import { FaAddressCard } from 'react-icons/fa';
 import { LuPackagePlus } from 'react-icons/lu';
+
 const Navigation = (props: any) => {
   const router = useRouter();
   const { session } = props;
   const [route, setRoute] = useState('');
+  const [user, setUser] = useState<any>({}); // Start with null to handle async loading
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
 
   const items: MenuProps['items'] = [
     {
@@ -26,17 +37,22 @@ const Navigation = (props: any) => {
       label: 'Public Profile',
       icon: <RiProfileFill size={15} />,
       onClick: () => {
+        if (!user || !user.role) return; // Avoid errors
         localStorage.setItem('page', 'Home');
         setRoute('Profile');
         router.push(
-          `/profile/${session?.user?.role.toLowerCase()}/${session?.user?.name.toLowerCase()}`,
+          `/profile/${
+            Array.isArray(user.role)
+              ? user.role[1]?.toLowerCase().replace(/\s+/g, '') ||
+                user.role[0]?.toLowerCase().replace(/\s+/g, '')
+              : user.role.toLowerCase().replace(/\s+/g, '')
+          }/${session?.user?.name.toLowerCase()}`,
         );
       },
     },
     {
       type: 'divider',
     },
-
     {
       key: '2',
       label: 'Become The Organizer',
@@ -67,19 +83,23 @@ const Navigation = (props: any) => {
       key: '10',
       label: 'Log Out',
       icon: <MdLogout size={15} />,
-      onClick: () => {
+      onClick: async () => {
         localStorage.setItem('page', 'Home');
         setRoute('Home');
-        signOut({ redirect: false });
-        router.push('/');
+        await signOut({ redirect: false });
+        localStorage.removeItem('user');
+        router.push('/home');
       },
     },
   ];
 
   useEffect(() => {
-    const storedRoute = localStorage.getItem('page') || '';
-    setRoute(storedRoute);
+    if (typeof window !== 'undefined') {
+      const storedRoute = localStorage.getItem('page') || '';
+      setRoute(storedRoute);
+    }
   }, []);
+
   return (
     <div className="w-full py-2">
       {/* Top Section */}

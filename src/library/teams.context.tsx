@@ -1,6 +1,6 @@
 'use client';
 
-import { getTeamDetailsAPI } from '@/services/team';
+import { getTeamDetailsAPI, searchTeamsAPI } from '@/services/team';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface TeamDetailsKeyProps {
@@ -12,8 +12,20 @@ interface TeamDetailsKeyProps {
   setIsLoading: (isLoading: boolean) => void;
   teamId: string;
   setTeamId: (teamId: string) => void;
+  getTeams: (
+    currentPage: number,
+    totalPerPage: number,
+    searchTerm: string,
+  ) => Promise<void>;
   teamDetails: TeamDetailsProps;
   setTeamDetails: (teamDetails: TeamDetailsProps) => void;
+  fetchTeamDetails: (teamId: string) => Promise<void>;
+  total: number;
+  setTotal: (total: number) => void;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  totalPerPage: number;
+  setTotalPerPage: (perPage: number) => void;
 }
 
 const TeamsContext = createContext<TeamDetailsKeyProps | null>(null);
@@ -30,6 +42,9 @@ export const TeamsContextProvider = ({
   const [teamDetails, setTeamDetails] = useState<TeamDetailsProps>(
     {} as TeamDetailsProps,
   );
+  const [total, setTotal] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPerPage, setTotalPerPage] = useState<number>(6);
 
   // Load teamId from localStorage on mount (client-side only)
   useEffect(() => {
@@ -49,22 +64,50 @@ export const TeamsContextProvider = ({
     }
   };
 
-  // Fetch team details when teamId changes
-  useEffect(() => {
-    const fetchTeamDetails = async () => {
-      if (teamId) {
-        setIsLoading(true);
-        try {
-          const res = await getTeamDetailsAPI(teamId);
-          setTeamDetails(res?.data);
-        } catch (error) {
-          console.error('Failed to fetch team details', error);
-        }
-        setIsLoading(false);
-      }
-    };
+  const getTeams = async (
+    currentPage: number,
+    totalPerPage: number,
+    searchTerm: string,
+  ) => {
+    setIsLoading(true);
+    try {
+      const res = await searchTeamsAPI(
+        currentPage,
+        totalPerPage,
+        searchTerm.trim(),
+      );
+      setTeamsList(res?.data?.data || []);
+      setTotal(res?.data?.meta?.total);
+      setCurrentPage(res?.data?.meta?.currentPage);
+      setTotalPerPage(res?.data?.meta?.totalPerPage);
+      console.log('Check pagination', res?.data?.meta);
+    } catch (error) {
+      console.error('Error fetching teams:', error);
+    }
+    setIsLoading(false);
+  };
 
-    fetchTeamDetails();
+  // useEffect(() => {
+  //   getTeams(1, 6);
+  // });
+
+  // Fetch team details when teamId changes
+
+  const fetchTeamDetails = async (teamId: string) => {
+    if (teamId) {
+      setIsLoading(true);
+      try {
+        const res = await getTeamDetailsAPI(teamId);
+        setTeamDetails(res?.data);
+      } catch (error) {
+        console.error('Failed to fetch team details', error);
+      }
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTeamDetails(teamId);
   }, [teamId]);
 
   return (
@@ -78,8 +121,16 @@ export const TeamsContextProvider = ({
         setIsLoading,
         teamId,
         setTeamId,
+        getTeams,
         teamDetails,
         setTeamDetails,
+        fetchTeamDetails,
+        total,
+        setTotal,
+        currentPage,
+        setCurrentPage,
+        totalPerPage,
+        setTotalPerPage,
       }}
     >
       {children}
