@@ -11,7 +11,7 @@ const TournamentsLayout = async ({
 
   return (
     <MainLayout session={session}>
-      <div className="flex flex-col w-full justify-center items-center mt-36 ">
+      <div className="flex flex-col w-full justify-center items-center">
         {children}
       </div>
     </MainLayout>

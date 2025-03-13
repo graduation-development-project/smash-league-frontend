@@ -1,31 +1,33 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import PaginationCard from "../../atoms/pagination/pagination-card";
-import { ConfigProvider, Empty, Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import TeamMemberCard from "../../atoms/teams/team-member-card";
-import EmptyCard from "../../molecules/empty/empty.card";
+import React, { useState } from 'react';
+import PaginationCard from '../../atoms/pagination/pagination-card';
+import { ConfigProvider, Empty, Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import TeamMemberCard from '../../atoms/teams/team-member-card';
+import EmptyCard from '../../molecules/empty/empty.card';
+import { Button } from '@/components/ui/button';
+import { IoAddCircleSharp } from 'react-icons/io5';
+import InviteMemberTeamModal from '../../molecules/teams/invite-member.team.modal';
 
 const MembersTeamsDetails = () => {
   const [isMembers, setIsMembers] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleChange = () => {
-
-  }
+  const handleChange = () => {};
   return (
     <>
       {isMembers ? (
         <div className="w-full h-full flex flex-col items-center gap-5 p-5">
-          <div className="w-1/4">
+          <div className="w-full flex justify-between items-center px-3">
             <ConfigProvider
               theme={{
                 components: {
                   Input: {
                     /* here is your component tokens */
-                    activeBorderColor: "#FF8243",
-                    activeShadow: "0 0 0 2px #fffff",
-                    hoverBorderColor: "#FF8243",
+                    activeBorderColor: '#FF8243',
+                    activeShadow: '0 0 0 2px #fffff',
+                    hoverBorderColor: '#FF8243',
                   },
                 },
               }}
@@ -34,17 +36,24 @@ const MembersTeamsDetails = () => {
                 size="large"
                 variant="outlined"
                 placeholder="Find the member"
+                style={{
+                  width: '40%',
+                }}
                 suffix={
                   <SearchOutlined
                     style={{
                       fontSize: 20,
-                      color: "#FF8243",
-                      fontWeight: "bold",
+                      color: '#FF8243',
+                      fontWeight: 'bold',
                     }}
                   />
                 }
               />
             </ConfigProvider>
+
+            <Button size={'sm'} onClick={() => setIsModalOpen(true)}>
+              <IoAddCircleSharp /> Invite Members
+            </Button>
           </div>
 
           <div className="grid grid-cols-4 gap-x-8 gap-y-6 place-items-center justify-items-center">
@@ -55,7 +64,12 @@ const MembersTeamsDetails = () => {
             ))}
           </div>
 
-          <PaginationCard total={12} currentPage={1} totalPerPage={6}  onChange={handleChange}/>
+          <PaginationCard
+            total={12}
+            currentPage={1}
+            totalPerPage={6}
+            onChange={handleChange}
+          />
         </div>
       ) : (
         <EmptyCard
@@ -63,6 +77,10 @@ const MembersTeamsDetails = () => {
           image="https://static.thenounproject.com/png/88030-200.png"
         />
       )}
+      <InviteMemberTeamModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
     </>
   );
 };

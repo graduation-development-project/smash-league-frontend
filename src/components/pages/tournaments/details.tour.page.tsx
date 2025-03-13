@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import TourListBoard from '@/components/general/molecules/tournaments/tour-list.board';
 import OnGoingTournament from '@/components/general/organisms/tournaments/on-going.tournament';

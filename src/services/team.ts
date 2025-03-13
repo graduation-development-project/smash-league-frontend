@@ -113,3 +113,31 @@ export const updateTeamDetailsAPI = async (
     return error.response?.data;
   }
 };
+
+const inviteMemberAPI = async (
+  invitedUserEmail: string,
+  teamId: string,
+  accessToken: string,
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/team-leaders/send-invitation`,
+      {
+        invitedUserEmail: invitedUserEmail,
+        teamId: teamId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error updating team:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

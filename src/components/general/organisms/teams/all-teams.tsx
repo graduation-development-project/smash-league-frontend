@@ -15,7 +15,7 @@ const AllTeams = (props: any) => {
     useTeamsContext();
   const [searchTerms, setSearchTerms] = useState<string>('');
 
-  const debounceValue = useDebounce(searchTerms, 3000);
+  const debounceValue = useDebounce(searchTerms, 1000);
 
   // console.log("Check debounce", debounceValue);
 
@@ -23,7 +23,7 @@ const AllTeams = (props: any) => {
   useEffect(() => {
     getTeams(currentPage, totalPerPage, debounceValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounceValue]);
+  }, [debounceValue, currentPage, totalPerPage]);
 
   const handlePageChange = async (page: number) => {
     try {

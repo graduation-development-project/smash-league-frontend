@@ -79,7 +79,7 @@ const TeamCard = (team: any) => {
       </div>
 
       <Button size={'lg'} onClick={handleTeamClick}>
-        Request to Join
+       View Details
       </Button>
     </div>
   );

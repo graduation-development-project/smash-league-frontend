@@ -76,7 +76,7 @@ const UpdateTeamsForm = (props: any) => {
 
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
-      <h1 className="text-[20px] font-bold">Updates Teams Infomation</h1>
+      <h1 className="text-[20px] font-bold">Update Team Infomation</h1>
       <Form
         autoComplete="off"
         onFinish={handleUpdateTeam}

@@ -139,7 +139,7 @@ const CreateTeamsModal = ({
                 hidden
                 initialValue={teamLeaderId}
               >
-                <Input placeholder="Team Name" disabled />
+                <Input placeholder="Team" disabled />
               </Form.Item>
 
               <Form.Item
