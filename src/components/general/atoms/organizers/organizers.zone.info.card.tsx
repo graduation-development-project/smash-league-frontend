@@ -7,7 +7,7 @@ import { GoPeople } from "react-icons/go";
 import { TbTournament } from "react-icons/tb";
 import { FaLocationDot } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
-import { useProfileContext } from "@/library/profile.context";
+import { useProfileContext } from "@/context/profile.context";
 
 const OrganizersZoneInfoCard = () => {
   const router = useRouter();

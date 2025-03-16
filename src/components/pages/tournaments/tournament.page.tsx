@@ -1,6 +1,6 @@
 'use client';
 import OnGoingTournament from '@/components/general/organisms/tournaments/on-going.tournament';
-import { HomeContextProvider } from '@/library/home.context';
+import { HomeContextProvider } from '@/context/home.context';
 import { ConfigProvider, Input, Tabs, TabsProps } from 'antd';
 import { SearchProps } from 'antd/es/input';
 import Search from 'antd/es/input/Search';

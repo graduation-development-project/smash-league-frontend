@@ -12,7 +12,7 @@ const AnnouncementsOrganizerProfile = () => {
         <div className="flex flex-col gap-5 w-full h-full p-8">
           {Array.from({ length: 3 }).map((_, index) => (
             <div key={index}>
-              <NotificationCard />
+              {/* <NotificationCard /> */}
             </div>
           ))}
         </div>

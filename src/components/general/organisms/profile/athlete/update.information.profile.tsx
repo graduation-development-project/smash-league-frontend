@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { Button, ConfigProvider, Form, Input } from "antd";
-import React, { useState } from "react";
-import ModalChangePassword from "../../auth/modal.change.password";
+import { Button, ConfigProvider, Form, Input } from 'antd';
+import React, { useState } from 'react';
+import ModalChangePassword from '../../auth/modal.change.password';
 
 const UpdateInformationProfile = (props: any) => {
   const { session } = props;
   const [changePassword, setChangePassword] = useState(false);
   const handleUpdateInformation = (values: any) => {
-    console.log("Check", values);
+    console.log('Check', values);
   };
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
@@ -17,35 +17,27 @@ const UpdateInformationProfile = (props: any) => {
         autoComplete="off"
         onFinish={handleUpdateInformation}
         layout="vertical"
-        style={{ width: "50%", fontFamily: "inherit", fontWeight: "400" }}
+        style={{ width: '50%', fontFamily: 'inherit', fontWeight: '400' }}
       >
         <ConfigProvider
           theme={{
             components: {
               Input: {
                 /* here is your component tokens */
-                activeBorderColor: "#FF8243",
-                activeShadow: "0 0 0 2px #fffff",
-                hoverBorderColor: "#FF8243",
+                activeBorderColor: '#FF8243',
+                activeShadow: '0 0 0 2px #fffff',
+                hoverBorderColor: '#FF8243',
               },
             },
           }}
         >
           <Form.Item
-            label="First Name"
-            name="firstName"
+            label="Full Name"
+            name="name"
             initialValue={session?.user?.name}
-            style={{ fontFamily: "inherit" }}
+            style={{ fontFamily: 'inherit' }}
           >
-            <Input placeholder="Enter your first name" />
-          </Form.Item>
-
-          <Form.Item
-            label="Last Name"
-            name="lastName"
-            initialValue={session?.user?.name}
-          >
-            <Input placeholder="Enter your last name" />
+            <Input placeholder="Enter your full name" />
           </Form.Item>
 
           <Form.Item label="Age" name="age" initialValue={24}>
@@ -55,7 +47,7 @@ const UpdateInformationProfile = (props: any) => {
           <Form.Item
             label="Address"
             name="address"
-            initialValue={"Dist. 12, Ho Chi Minh"}
+            initialValue={'Dist. 12, Ho Chi Minh'}
           >
             <Input placeholder="Enter your address" />
           </Form.Item>
@@ -64,20 +56,20 @@ const UpdateInformationProfile = (props: any) => {
         <ConfigProvider
           theme={{
             token: {
-              colorPrimary: "#74ba74",
+              colorPrimary: '#74ba74',
             },
           }}
         >
           <Form.Item>
             <div className="flex justify-end gap-1">
               <Button
-                style={{ fontFamily: "inherit", fontWeight: "500" }}
+                style={{ fontFamily: 'inherit', fontWeight: '500' }}
                 onClick={() => setChangePassword(true)}
               >
                 Change Password
               </Button>
               <Button
-                style={{ fontFamily: "inherit", fontWeight: "500" }}
+                style={{ fontFamily: 'inherit', fontWeight: '500' }}
                 type="primary"
                 htmlType="submit"
               >

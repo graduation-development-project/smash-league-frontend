@@ -3,7 +3,7 @@
 
 import OverviewOrganizerProfile from "@/components/general/organisms/profile/organizer/overview.oganizer.profile";
 import { Button } from "@/components/ui/button";
-import { useProfileContext } from "@/library/profile.context";
+import { useProfileContext } from "@/context/profile.context";
 import { Avatar, ConfigProvider, Tabs, TabsProps } from "antd";
 import React from "react";
 import TournamentsOrganizerProfile from "../../general/organisms/profile/organizer/tournaments.organizer.profile";

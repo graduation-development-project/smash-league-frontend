@@ -114,8 +114,8 @@ export const updateTeamDetailsAPI = async (
   }
 };
 
-const inviteMemberAPI = async (
-  invitedUserEmail: string,
+export const inviteMemberAPI = async (
+  invitedUserEmail: string | undefined,
   teamId: string,
   accessToken: string,
 ) => {
@@ -135,7 +135,7 @@ const inviteMemberAPI = async (
     return res;
   } catch (error: any) {
     console.error(
-      'Error updating team:',
+      'Error inviting member:',
       error.response?.data || error.message,
     );
     return error.response?.data;

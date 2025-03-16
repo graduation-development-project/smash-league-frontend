@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, ConfigProvider, Tabs, TabsProps } from 'antd';
 import React, { useEffect, useState } from 'react';
 import OverviewTeamDetails from '../../general/organisms/teams/overview.team.details';
-import { useTeamsContext } from '@/library/teams.context';
+import { useTeamsContext } from '@/context/teams.context';
 import UpdateTeamsForm from '@/components/general/molecules/teams/update.teams.form';
 import TournamentsTeamsDetails from '@/components/general/organisms/teams/tournaments.teams.details';
 import MembersTeamsDetails from '@/components/general/organisms/teams/members.teams.details';
