@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { useTeamsContext } from '@/library/teams.context';
+import { useTeamsContext } from '@/context/teams.context';
 import { AntDesignOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Tooltip } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -10,8 +10,6 @@ const TeamCard = (team: any) => {
   const [isFull, setIsFull] = useState(false);
   const { teamId, setTeamId } = useTeamsContext();
   const router = useRouter();
-  const fullName =
-    team.team.teamLeader.firstName + ' ' + team.team.teamLeader.lastName;
 
   const handleTeamClick = () => {
     setTeamId(team.team.id);
@@ -20,7 +18,7 @@ const TeamCard = (team: any) => {
 
   return (
     <div
-      className="w-max h-max flex flex-col justify-center bg-white border border-slate-300 rounded-[15px] p-5 gap-3 cursor-pointer hover:shadow-shadowComp hover:scale-110"
+      className="w-[400px] h-[300px] flex flex-col justify-center bg-white border border-slate-300 rounded-[15px] p-5 gap-3 cursor-pointer hover:shadow-shadowComp hover:scale-110"
       onClick={handleTeamClick}
     >
       <div
@@ -33,9 +31,11 @@ const TeamCard = (team: any) => {
       <h1 className="text-[18px] font-bold">{team.team.teamName}</h1>
       <p className="flex items-center gap-1">
         <Avatar style={{ backgroundColor: 'gray' }} size={'small'}>
-          {fullName.charAt(0)}
+          {team.team.teamLeader.name.charAt(0)}
         </Avatar>
-        <span className="text-[13px] font-semibold">{fullName}</span>
+        <span className="text-[13px] font-semibold">
+          {team.team.teamLeader.name}
+        </span>
       </p>
 
       <p className="max-w-[350px] break-words text-[#6A6A6A] text-[14px] leading-normal truncate">
@@ -79,7 +79,7 @@ const TeamCard = (team: any) => {
       </div>
 
       <Button size={'lg'} onClick={handleTeamClick}>
-        Request to Join
+        View Details
       </Button>
     </div>
   );

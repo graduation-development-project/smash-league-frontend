@@ -8,6 +8,16 @@ const RoleDirectionRouter = (props: any) => {
   const router = useRouter();
 
   useEffect(() => {
+    if (!session?.user) {
+      router.push('/home');
+      return;
+    }
+
+    // Store user data only if session.user exists
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('user', JSON.stringify(session.user));
+    }
+
     if (session?.user?.role.includes('Admin')) {
       router.push('/dashboard');
     } else if (session?.user?.role.includes('Athlete')) {

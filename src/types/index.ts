@@ -38,9 +38,7 @@ interface CreateTeamsModalProps {
   session?: any;
 }
 
-interface TeamLeadersProps {
-
-}
+interface TeamLeadersProps {}
 
 interface TeamDetailsProps {
   description: string;
@@ -48,6 +46,7 @@ interface TeamDetailsProps {
   logo: string;
   status: string;
   teamLeader: any;
+  teamLeaderId: string;
   teamName: string;
 }
 
@@ -64,8 +63,27 @@ interface PackageCardProps {
 interface PaginationProps {
   total: number;
   currentPage: number;
-  setCurrentPage?: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentPage?: (page: number) => void;
   totalPerPage: number;
-  setTotalPerPage?: React.Dispatch<React.SetStateAction<number>>;
+  setTotalPerPage?: (perPage: number) => void;
   onChange: (page: number) => void;
+}
+interface UserProps {
+  avatarURL: string;
+  email: string;
+  name: string;
+  id: string;
+  isVerified: boolean;
+  phoneNumber: string;
+}
+
+interface NotificationProps {
+  createdAt: string;
+  id: string;
+  title: string;
+  message: string;
+  typeId: string;
+  teamInvitationId: string;
+  teamRequestId: string;
+  tournamentRegistrationId: string;
 }

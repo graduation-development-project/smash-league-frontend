@@ -2,7 +2,7 @@
 import MainLayout from "../../layout/mainlayout/layout";
 import FeaturedTournamentMain from "../../general/organisms/tournaments.main";
 import TourCardSliderMain from "@/components/general/atoms/tour.card.slider.main";
-import { HomeContextProvider } from "@/library/home.context";
+import { HomeContextProvider } from "@/context/home.context";
 import OrganizerZone from "@/components/general/organisms/organizer.zone";
 import NewsBulletinMain from "@/components/general/organisms/news.main";
 import WelcomeIntroMain from "@/components/general/organisms/welcome.main";

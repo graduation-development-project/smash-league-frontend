@@ -46,7 +46,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               email: res.data?.email,
               access_token: res.data?.accessToken,
               refresh_token: res.data?.refreshToken,
-              role: res.data?.roles, 
+              role: res.data?.roles || [],
             };
           } else {
             return null;
@@ -68,11 +68,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: '/auth/login',
   },
   callbacks: {
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user, account, profile, trigger, session }) {
       if (user) {
         // console.log("Check user", user);
         token.user = user as IUser;
         token.expires_at = Math.floor(Date.now() / 1000) + 3600; // 1-hour expiry
+      }
+      if (trigger === 'update' && session?.user?.role) {
+        // Note, that `session` can be any arbitrary object, remember to validate it!
+        token.user.role = session.user.role;
       }
 
       if (account) {

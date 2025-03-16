@@ -37,9 +37,10 @@ const LoginForm = () => {
 
     setUserEmail('');
     //trigger sign-in
-    const res = await authenticate(username, password);
+    const res = await authenticate(username.trim(), password.trim());
 
     // console.log('Check res', res);
+    // console.log('Check sesion', session?.user);
     if (res?.error) {
       //error
       if (res?.code === 2) {

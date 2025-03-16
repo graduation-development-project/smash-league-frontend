@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import { Quicksand } from 'next/font/google';
 import './globals.css';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import NextAuthWrapper from '@/library/next.auth.wrapper';
+import NextAuthWrapper from '@/context/next.auth.wrapper';
 import { ToastContainer } from 'react-toastify';
-import { ProfileContextProvider } from '@/library/profile.context';
-import { TeamsContextProvider } from '@/library/teams.context';
+import { ProfileContextProvider } from '@/context/profile.context';
+import { TeamsContextProvider } from '@/context/teams.context';
 
 const quicksand = Quicksand({
   subsets: ['latin'],

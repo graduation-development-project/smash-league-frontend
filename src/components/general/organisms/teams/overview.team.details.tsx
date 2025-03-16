@@ -5,30 +5,44 @@ import { IoLogoDiscord } from 'react-icons/io5';
 import { FaSquareXTwitter } from 'react-icons/fa6';
 import { Avatar, Rate, Tooltip } from 'antd';
 import { FaRegUser } from 'react-icons/fa';
+import { IoArrowBack } from 'react-icons/io5';
 import { Button } from '@/components/ui/button';
 import TournamentCard from '../../atoms/tournaments/tournament.card';
-import { useTeamsContext } from '@/library/teams.context';
+import { useTeamsContext } from '@/context/teams.context';
+import { useRouter } from 'next/navigation';
 const OverviewTeamDetails = () => {
   const [isSocialMediaVisible, setIsSocialMediaVisible] = useState(true);
   const { setActiveKey, teamDetails } = useTeamsContext();
-  console.log(teamDetails);
-  const fullName =
-    teamDetails?.teamLeader?.firstName +
-    ' ' +
-    teamDetails?.teamLeader?.lastName;
+  // console.log(teamDetails);
+  const router = useRouter();
   return (
     <div className="w-full h-full flex justify-around px-8 py-4 gap-3">
       {/* Tournaments */}
       <div className="w-[60%] flex flex-col gap-3 px-5">
-        <Button
-          variant={'link'}
-          colorBtn={'whiteBtn'}
-          shadow={'shadowNone'}
-          className="w-full justify-end text-primaryColor"
-          onClick={() => setActiveKey('4')}
-        >
-          View all tournaments
-        </Button>
+        <div className="w-full h-full flex justify-between items-center">
+          <Button
+            variant={'link'}
+            colorBtn={'whiteBtn'}
+            shadow={'shadowNone'}
+            className="text-primaryColor flex items-center"
+            onClick={() => {
+              router.push('/teams');
+            }}
+          >
+            <IoArrowBack size={15} />
+            <span>Back To List</span>
+          </Button>
+
+          <Button
+            variant={'link'}
+            colorBtn={'whiteBtn'}
+            shadow={'shadowNone'}
+            className="text-primaryColor"
+            onClick={() => setActiveKey('4')}
+          >
+            View all tournaments
+          </Button>
+        </div>
 
         <div className="w-full grid grid-cols-2 gap-5 place-items-center ">
           {Array.from({ length: 4 }).map((_, index) => (
@@ -105,7 +119,10 @@ const OverviewTeamDetails = () => {
               Team Leader
             </h1>
             <p>
-              <Tooltip title={fullName} placement="bottomLeft">
+              <Tooltip
+                title={teamDetails?.teamLeader?.name}
+                placement="bottomLeft"
+              >
                 {' '}
                 <Avatar
                   style={{ backgroundColor: 'gray' }}

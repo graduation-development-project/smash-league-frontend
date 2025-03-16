@@ -3,7 +3,7 @@
 import React from "react";
 import { sliderImages } from "@/assets/data"; // Ensure sliderImages is correctly imported
 import Image from "next/image";
-import { useHomeContext } from "@/library/home.context";
+import { useHomeContext } from "@/context/home.context";
 
 const TourCardSliderMain = () => {
   const { activeSlide } = useHomeContext(); // Ensure useHomeContext is correctly used

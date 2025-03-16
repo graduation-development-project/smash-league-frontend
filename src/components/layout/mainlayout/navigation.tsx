@@ -15,10 +15,56 @@ import HeadlessTippy from '@tippyjs/react/headless';
 import NotificationCard from '@/components/general/atoms/notification.card';
 import { FaAddressCard } from 'react-icons/fa';
 import { LuPackagePlus } from 'react-icons/lu';
+import { getNotificationAPI } from '../../../services/notification';
+
 const Navigation = (props: any) => {
   const router = useRouter();
   const { session } = props;
   const [route, setRoute] = useState('');
+  const [user, setUser] = useState<any>({});
+  const [notifications, setNotifications] = useState<any>([]);
+  const [unread, setUnread] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
+
+  const getNotificationByUser = async () => {
+    try {
+      const response = await getNotificationAPI(user?.access_token);
+      setUnread(
+        response?.data?.some((notif: any) => {
+          if (notifications.length > 0) {
+            return !notifications.includes(notif);
+          } else {
+            return false;
+          }
+        }),
+      );
+      // console.log('Check noti', response?.data);
+      setNotifications(response?.data);
+      // Check if there are unread notifications
+    } catch (error: any) {
+      console.error('Error fetching notifications:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.access_token) {
+      getNotificationByUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const markNotificationsAsRead = () => {
+    setUnread(false);
+    // Optionally, send API request to mark them as read
+  };
 
   const items: MenuProps['items'] = [
     {
@@ -26,17 +72,22 @@ const Navigation = (props: any) => {
       label: 'Public Profile',
       icon: <RiProfileFill size={15} />,
       onClick: () => {
+        if (!user || !user.role) return; // Avoid errors
         localStorage.setItem('page', 'Home');
         setRoute('Profile');
         router.push(
-          `/profile/${session?.user?.role.toLowerCase()}/${session?.user?.name.toLowerCase()}`,
+          `/profile/${
+            Array.isArray(user.role)
+              ? user.role[1]?.toLowerCase().replace(/\s+/g, '') ||
+                user.role[0]?.toLowerCase().replace(/\s+/g, '')
+              : user.role.toLowerCase().replace(/\s+/g, '')
+          }/${session?.user?.name.toLowerCase()}`,
         );
       },
     },
     {
       type: 'divider',
     },
-
     {
       key: '2',
       label: 'Become The Organizer',
@@ -67,19 +118,28 @@ const Navigation = (props: any) => {
       key: '10',
       label: 'Log Out',
       icon: <MdLogout size={15} />,
-      onClick: () => {
-        localStorage.setItem('page', 'Home');
-        setRoute('Home');
-        signOut({ redirect: false });
-        router.push('/');
+      onClick: async () => {
+        try {
+          localStorage.setItem('page', 'Home');
+          setRoute('Home');
+          localStorage.removeItem('user');
+          await signOut();
+          router.push('/home');
+          router.refresh();
+        } catch (error) {
+          console.error('Logout error:', error);
+        }
       },
     },
   ];
 
   useEffect(() => {
-    const storedRoute = localStorage.getItem('page') || '';
-    setRoute(storedRoute);
+    if (typeof window !== 'undefined') {
+      const storedRoute = localStorage.getItem('page') || '';
+      setRoute(storedRoute);
+    }
   }, []);
+
   return (
     <div className="w-full py-2">
       {/* Top Section */}
@@ -161,6 +221,7 @@ const Navigation = (props: any) => {
               interactive
               delay={[500, 500]}
               placement="bottom"
+              onClickOutside={markNotificationsAsRead}
               render={(attrs) => (
                 <div
                   tabIndex={-1}
@@ -168,14 +229,24 @@ const Navigation = (props: any) => {
                   className="shadow-shadowComp relative z-60 rounded-[10px]"
                 >
                   <div className="w-full h-full bg-white rounded-[10px] px-4 py-6 flex flex-col justify-center items-center gap-2">
-                    {Array.from({ length: 3 }).map((_, index) => (
-                      <div key={index}>
-                        <NotificationCard />
+                    {notifications ? (
+                      <div>
+                        {notifications.map((notification: any) => (
+                          <div key={notification.id}>
+                            <NotificationCard notification={notification} />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                    <div className="text-[#2c2c2c] text-[14px] flex justify-center cursor-pointer bg-white mt-2 hover:text-primaryColor border border-gray-400 w-full p-1 rounded-[5px]">
-                      View All Notifications
-                    </div>
+                    ) : (
+                      <div className="text-[14px] text-gray-400">
+                        No notifications found
+                      </div>
+                    )}
+                    {notifications && notifications?.length > 0 && (
+                      <div className="text-[#2c2c2c] text-[14px] flex justify-center cursor-pointer bg-white mt-2 hover:text-primaryColor border border-gray-400 w-full p-1 rounded-[5px]">
+                        View All Notifications
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -185,7 +256,9 @@ const Navigation = (props: any) => {
                   size={25}
                   className="cursor-pointer hover:text-orange-300 hover:animate-shake"
                 />
-                <div className="absolute -top-[2px] -right-[2px] bg-primaryColor w-[9px] h-[9px] rounded-full border border-white" />
+                {unread && (
+                  <div className="absolute -top-[2px] -right-[2px] bg-primaryColor w-[9px] h-[9px] rounded-full border border-white" />
+                )}
               </div>
             </HeadlessTippy>
             <Dropdown
