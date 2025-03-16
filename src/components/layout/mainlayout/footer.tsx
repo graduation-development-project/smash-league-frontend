@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import styles from "@/components/layout/layout.module.scss";
+import React from 'react';
+import styles from '@/components/layout/layout.module.scss';
 
 const Footer = () => {
   return (
@@ -11,7 +11,7 @@ const Footer = () => {
           <h1 className="mb-2 text-[20px] font-bold text-white">
             SCORES AND SCHEDULE
           </h1>
-          {["ORDER OF PLAY", "RESULT", "EVENT SCHEDULE"].map((item, index) => {
+          {['ORDER OF PLAY', 'RESULT', 'EVENT SCHEDULE'].map((item, index) => {
             return (
               <p key={index} className={styles.container}>
                 <span>{item}</span>
@@ -23,38 +23,38 @@ const Footer = () => {
           <h1 className="mb-2 text-[20px] font-bold text-white">
             NEWS AND VIDEOS
           </h1>
-          {["TRENDING", "HIGHLIGHTS", "LIVE", "INTERVIEWS"].map(
+          {['TRENDING', 'HIGHLIGHTS', 'LIVE', 'INTERVIEWS'].map(
             (item, index) => {
               return (
                 <p key={index} className={styles.container}>
                   <span>{item}</span>
                 </p>
               );
-            }
+            },
           )}
         </div>
         <div className="h-full w-full flex flex-col gap-4 text-[#B4B4AC]">
           <h1 className="mb-2 text-[20px] font-bold text-white">DRAWS</h1>
-          {["WOMAN SINGLES", "MAN SINGLES", "MIXED DOUBLES"].map(
+          {['WOMAN SINGLES', 'MAN SINGLES', 'MIXED DOUBLES'].map(
             (item, index) => {
               return (
                 <p key={index} className={styles.container}>
                   <span>{item}</span>
                 </p>
               );
-            }
+            },
           )}
         </div>
         <div className="h-full w-full flex flex-col gap-4 text-[#B4B4AC]">
           <h1 className="mb-2 text-[20px] font-bold text-white">ABOUT US</h1>
-          {["CONTACT US", "POLICIES", "TERM OF USE", "MEDIA"].map(
+          {['CONTACT US', 'POLICIES', 'TERM OF USE', 'MEDIA'].map(
             (item, index) => {
               return (
                 <p key={index} className={styles.container}>
                   <span>{item}</span>
                 </p>
               );
-            }
+            },
           )}
         </div>
       </div>

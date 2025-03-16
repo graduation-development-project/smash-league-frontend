@@ -6,7 +6,7 @@ import TeamsBanner from '../../molecules/teams/teams-banner';
 import PaginationCard from '../../atoms/pagination/pagination-card';
 import { searchTeamsAPI } from '@/services/team';
 import Spinner from '../../atoms/loaders/spinner';
-import { useTeamsContext } from '@/library/teams.context';
+import { useTeamsContext } from '@/context/teams.context';
 import { useDebounce } from '@/hooks/use-debounce';
 
 const AllTeams = (props: any) => {

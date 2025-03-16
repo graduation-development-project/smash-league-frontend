@@ -9,7 +9,7 @@ import {
   TeamOutlined,
 } from "@ant-design/icons";
 import React, { useContext, useState } from "react";
-import { AdminContext } from "@/library/admin.context";
+import { AdminContext } from "@/context/admin.context";
 import { Avatar, ConfigProvider, type MenuProps } from "antd";
 import Link from "next/link";
 import { TbTournament } from "react-icons/tb";

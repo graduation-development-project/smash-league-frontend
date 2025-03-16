@@ -13,7 +13,7 @@ const AnnouncementsTeamsDetails = () => {
         <div className="flex flex-col gap-5 w-full h-full p-5">
           {Array.from({ length: 3 }).map((_, index) => (
             <div key={index}>
-              <NotificationCard />
+              {/* <NotificationCard /> */}
             </div>
           ))}
         </div>

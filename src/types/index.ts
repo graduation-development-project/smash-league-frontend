@@ -63,8 +63,27 @@ interface PackageCardProps {
 interface PaginationProps {
   total: number;
   currentPage: number;
-  setCurrentPage?:  (page: number) => void;
+  setCurrentPage?: (page: number) => void;
   totalPerPage: number;
   setTotalPerPage?: (perPage: number) => void;
   onChange: (page: number) => void;
+}
+interface UserProps {
+  avatarURL: string;
+  email: string;
+  name: string;
+  id: string;
+  isVerified: boolean;
+  phoneNumber: string;
+}
+
+interface NotificationProps {
+  createdAt: string;
+  id: string;
+  title: string;
+  message: string;
+  typeId: string;
+  teamInvitationId: string;
+  teamRequestId: string;
+  tournamentRegistrationId: string;
 }

@@ -2,7 +2,7 @@
 "use client"
 import TourListBoard from '@/components/general/molecules/tournaments/tour-list.board';
 import OnGoingTournament from '@/components/general/organisms/tournaments/on-going.tournament';
-import { HomeContextProvider } from '@/library/home.context'
+import { HomeContextProvider } from '@/context/home.context'
 import { CalendarOutlined, UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { Breadcrumb, ConfigProvider, Layout, Menu, Tabs, TabsProps } from 'antd'
 import BreadcrumbItem from 'antd/es/breadcrumb/BreadcrumbItem';

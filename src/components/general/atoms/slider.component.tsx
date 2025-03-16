@@ -1,5 +1,5 @@
 import { sliderImages } from "@/assets/data";
-import { useHomeContext } from "@/library/home.context";
+import { useHomeContext } from "@/context/home.context";
 import Image from "next/image";
 import React, { useState } from "react";
 

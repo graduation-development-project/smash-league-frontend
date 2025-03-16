@@ -8,17 +8,13 @@ import { FaRegUser } from 'react-icons/fa';
 import { IoArrowBack } from 'react-icons/io5';
 import { Button } from '@/components/ui/button';
 import TournamentCard from '../../atoms/tournaments/tournament.card';
-import { useTeamsContext } from '@/library/teams.context';
+import { useTeamsContext } from '@/context/teams.context';
 import { useRouter } from 'next/navigation';
 const OverviewTeamDetails = () => {
   const [isSocialMediaVisible, setIsSocialMediaVisible] = useState(true);
   const { setActiveKey, teamDetails } = useTeamsContext();
   // console.log(teamDetails);
   const router = useRouter();
-  const fullName =
-    teamDetails?.teamLeader?.firstName +
-    ' ' +
-    teamDetails?.teamLeader?.lastName;
   return (
     <div className="w-full h-full flex justify-around px-8 py-4 gap-3">
       {/* Tournaments */}
@@ -123,7 +119,10 @@ const OverviewTeamDetails = () => {
               Team Leader
             </h1>
             <p>
-              <Tooltip title={fullName} placement="bottomLeft">
+              <Tooltip
+                title={teamDetails?.teamLeader?.name}
+                placement="bottomLeft"
+              >
                 {' '}
                 <Avatar
                   style={{ backgroundColor: 'gray' }}

@@ -1,5 +1,5 @@
 'use client';
-import { useTeamsContext } from '@/library/teams.context';
+import { useTeamsContext } from '@/context/teams.context';
 import { createTeamAPI, searchTeamsAPI } from '@/services/team';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Form, Input, Modal, notification } from 'antd';

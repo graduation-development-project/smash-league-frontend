@@ -3,7 +3,7 @@ import { Button, ConfigProvider, Form, Image, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react';
 import TeamDetails from '../../../../app/(guest)/teams/details/[name]/page';
-import { useTeamsContext } from '@/library/teams.context';
+import { useTeamsContext } from '@/context/teams.context';
 import { updateTeamDetailsAPI } from '@/services/team';
 import { toast } from 'react-toastify';
 import { TbLoader2 } from 'react-icons/tb';

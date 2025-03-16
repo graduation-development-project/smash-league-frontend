@@ -7,7 +7,7 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 import { Avatar, Rate, Tooltip } from "antd";
 import { FaRegUser } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import { useProfileContext } from "@/library/profile.context";
+import { useProfileContext } from "@/context/profile.context";
 import TournamentCard from "@/components/general/atoms/tournaments/tournament.card";
 
 const OverviewOrganizerProfile = () => {

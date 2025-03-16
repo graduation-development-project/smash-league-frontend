@@ -8,7 +8,7 @@ import {
   LocationIcon,
 } from "@/assets/icons";
 
-import { useHomeContext } from "@/library/home.context";
+import { useHomeContext } from "@/context/home.context";
 import { sliderImages } from "@/assets/data";
 import TourCardSliderMain from "../../atoms/tour.card.slider.main";
 import { Button } from "@/components/ui/button";

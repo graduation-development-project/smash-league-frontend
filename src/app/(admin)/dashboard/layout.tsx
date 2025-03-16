@@ -3,7 +3,7 @@ import AdminContent from "@/components/layout/adminlayout/admin.content";
 import AdminFooter from "@/components/layout/adminlayout/admin.footer";
 import AdminHeader from "@/components/layout/adminlayout/admin.header";
 import AdminSideBar from "@/components/layout/adminlayout/admin.sidebar";
-import { AdminContextProvider } from "@/library/admin.context";
+import { AdminContextProvider } from "@/context/admin.context";
 import { signIn } from "next-auth/react";
 
 const AdminLayout = async ({
