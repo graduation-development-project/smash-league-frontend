@@ -1,12 +1,14 @@
+import { auth } from '@/auth';
 import MainLayout from '@/components/layout/mainlayout/layout'
 import CreateTourPage from '@/components/pages/tournaments/create.tour.page'
 import React from 'react'
 
-const CreateTour1 = () => {
+const CreateTour1 = async () => {
+  const session = await auth();
   return (
-    <MainLayout>
-      <div className='mt-36'>
-        <CreateTourPage />
+    <MainLayout session={session} noHero={true}>
+      <div className=''>
+        <CreateTourPage session = {session}/>
       </div>
     </MainLayout>
   )

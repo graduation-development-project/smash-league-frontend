@@ -1,33 +1,47 @@
 "use client"
 import React, { useState } from 'react'
-import { Button, ConfigProvider, Form, message, Steps, theme } from 'antd';
+import { Button, ConfigProvider, Form, message, Steps, theme, Typography } from 'antd';
 import CreateTourStep1 from '@/components/general/molecules/tournaments/create-step1.step';
 import CreateTourStep2 from '@/components/general/molecules/tournaments/create-step2.step';
+import axios from 'axios';
+import { createTourAPI } from '@/services/tournament';
 
-const steps = [
-    {
-        title: 'Tournament Information',
-        content: <CreateTourStep1 />,
-    },
-    {
-        title: 'Invitations & Additional Options',
-        content: <CreateTourStep2 />,
-    },
-    // {
-    //     title: 'Last',
-    //     content: 'Last-content',
-    // },
-];
-const CreateTourPage = () => {
+
+
+
+const CreateTourPage = ({session}: any) => {
+    const accessToken = session?.user?.access_token;
+    const steps = [
+        {
+            title: 'Tournament Information',
+            content: <CreateTourStep1 />,
+        },
+        {
+            title: 'Invitations & Additional Options',
+            content: <CreateTourStep2 />,
+        },
+        // {
+        //     title: 'Last',
+        //     content: 'Last-content',
+        // },
+    ];
     const { token } = theme.useToken();
     const [form] = Form.useForm();
     const [currentStep, setCurrentStep] = useState(0);
+    const [dataStep1, setDataStep1] = useState({});
+    const [dataStep2, setDataStep2] = useState({});
 
-    const nextStep = () => {
+    const nextStep = async () => {
+        const values = await form.getFieldsValue();
+        console.log('Check values step1', values);
+        setDataStep1(values);
         setCurrentStep(currentStep + 1);
     };
 
-    const prevStep = () => {
+    const prevStep = async () => {
+        const values = await form.validateFields();
+        console.log('Check values step2', values);
+        setDataStep2(values);
         setCurrentStep(currentStep - 1);
     };
 
@@ -55,15 +69,48 @@ const CreateTourPage = () => {
         },
     };
 
-    const handleFinish = (values: any) => {
-        const { street, ward, district, province } = values
-        const { occurDate } = values
-        // const date = occurDate[0]
-        const location = [street, ward, district, province].join(', ')
-        console.log(values);
-        
-        // console.log(occurDate[0].toISOString()    );
+    const fetchCreateTour = async (accessToken: string, values: any) => {
+        try {
+            const response = await createTourAPI(
+                accessToken,
+                values,
+            )
+            console.log(response.data, "response");
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
     }
+
+
+    const handleFinish = async () => {
+        const valuesStep2 = await form.validateFields(); 
+        const finalValues = { ...dataStep1, ...valuesStep2 }
+        console.log("handleFinish", finalValues);
+        
+        const { street, ward, district, province, registrationDate, drawDate, occurDate, checkIn, ...rest } = finalValues
+        const [provinceId, provinceName] = province?.split('|') || ['', ''];
+        const [districtId, districtName] = district?.split('|') || ['', ''];
+        const location = [street, ward, districtName, provinceName].join(', ');
+
+        const registrationOpeningDate = registrationDate? registrationDate[0].toISOString() : null;
+        const registrationClosingDate = registrationDate? registrationDate[1].toISOString() : null;
+        const drawStartDate = drawDate? drawDate[0].toISOString() : null;
+        const startDate = occurDate? occurDate[0].toISOString() : null;
+        const endDate = occurDate? occurDate[1].toISOString() : null;
+        const checkInBeforeStart = checkIn? checkIn.toISOString() : null;
+        console.log("checkIn", checkIn);
+        console.log("checkInStart", checkInBeforeStart);
+        
+  
+        const submitData = { ...rest, location, registrationOpeningDate, registrationClosingDate, drawStartDate, startDate, endDate, checkInBeforeStart };
+
+        await fetchCreateTour(
+            accessToken,
+            submitData,
+        );
+    }
+
 
     return (
         <div className='w-full h-max  py-10 px-10 '>
@@ -99,6 +146,9 @@ const CreateTourPage = () => {
                             Radio: {
                                 // buttonSolidCheckedActiveBg: "#FF8243",
                                 // buttonSolidCheckedBg: "#FF8243",
+                            },
+                            Typography: {
+                                fontFamily: 'inherit',
                             }
                         },
                     }}
@@ -108,7 +158,6 @@ const CreateTourPage = () => {
                         wrapperCol={{ span: 14 }}
                         layout="horizontal"
                         form={form}
-                        onFinish={handleFinish}
 
                         style={{
                             display: 'flex',
@@ -123,6 +172,7 @@ const CreateTourPage = () => {
                     >
                         <div className='w-1/2 flex justify-center items-center'>
                             <Steps current={currentStep} items={items} />
+
                         </div>
 
                         <div style={contentStyle}>{steps[currentStep].content}</div>
@@ -140,17 +190,16 @@ const CreateTourPage = () => {
                                     htmlType='submit'
                                     type="primary"
                                     style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', fontWeight: 'bold' }}
-                                    // onClick={handleFinish}
+                                    onClick={() => handleFinish()}
                                 >
                                     Done
                                 </Button>
                             )}
                             {currentStep < steps.length - 1 && (
                                 <Button
-                                    htmlType='submit'
                                     type="primary"
                                     style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', fontWeight: 'bold' }}
-                                    // onClick={handleFinish}
+                                    onClick={() => nextStep()}
                                 >
                                     Next Step
                                 </Button>
