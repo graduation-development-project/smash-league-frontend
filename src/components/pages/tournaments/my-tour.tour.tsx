@@ -10,6 +10,12 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const MyTournaments = () => {
 
+
+
+    const content ={
+        
+    }
+
     const menu: MenuItem[] = [
         {
             key: 'sub1',
@@ -95,7 +101,8 @@ const MyTournaments = () => {
                                 borderRadius: 8,
                             }}
                         >
-                            <TourListBoard />
+
+                            {/* <TourListBoard /> */}
                         </Content>
                     </Layout>
                 </Layout>

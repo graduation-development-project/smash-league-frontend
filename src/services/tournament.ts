@@ -5,7 +5,7 @@ export const createTourAPI = async (accessToken: string, values: any) => {
   try {
     console.log('Check tour', values);
     console.log('Check token', accessToken);
-    console.log('Check In', values.checkInBeforeStart);
+
 
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/create-tournament`,
@@ -73,19 +73,21 @@ export const createTourAPI = async (accessToken: string, values: any) => {
   }
 };
 
-export const searchTourAPI = async (searchTerm: string) => {
+export const searchTourAPI = async (searchTerm: string, page: number, perPage: number) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/search`,
       {
         params: {
           searchTerm,
-          page: 1,
-          perPage: 12,
+          page,
+          perPage,
         },
       },
     );
-    return response.data.data;
+    console.log('response tour', response);
+    
+    return response.data;
   } catch (error: any) {
     console.error(
       'Error creating team:',

@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { useTeamsContext } from '@/context/teams.context';
+import { useTeamContext } from '@/context/team.context';
 import { AntDesignOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Tooltip } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 
 const TeamCard = (team: any) => {
   const [isFull, setIsFull] = useState(false);
-  const { teamId, setTeamId } = useTeamsContext();
+  const { teamId, setTeamId } = useTeamContext();
   const router = useRouter();
 
   const handleTeamClick = () => {

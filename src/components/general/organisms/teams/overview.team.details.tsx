@@ -8,11 +8,11 @@ import { FaRegUser } from 'react-icons/fa';
 import { IoArrowBack } from 'react-icons/io5';
 import { Button } from '@/components/ui/button';
 import TournamentCard from '../../atoms/tournaments/tournament.card';
-import { useTeamsContext } from '@/context/teams.context';
+import { useTeamContext } from '@/context/team.context';
 import { useRouter } from 'next/navigation';
 const OverviewTeamDetails = () => {
   const [isSocialMediaVisible, setIsSocialMediaVisible] = useState(true);
-  const { setActiveKey, teamDetails } = useTeamsContext();
+  const { setActiveKey, teamDetails } = useTeamContext();
   // console.log(teamDetails);
   const router = useRouter();
   return (
