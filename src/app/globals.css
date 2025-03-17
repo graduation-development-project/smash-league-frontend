@@ -138,14 +138,17 @@ body {
   margin: 0;
   padding: 0;
 }
+.calendar-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
 @layer base {
   * {
     @apply border-border;
- 
   }
   body {
     @apply bg-background text-foreground;
-
   }
 }
