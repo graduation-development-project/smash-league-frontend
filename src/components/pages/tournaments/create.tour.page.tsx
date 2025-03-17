@@ -86,7 +86,6 @@ const CreateTourPage = ({session}: any) => {
     const handleFinish = async () => {
         const valuesStep2 = await form.validateFields(); 
         const finalValues = { ...dataStep1, ...valuesStep2 }
-        console.log("handleFinish", finalValues);
         
         const { street, ward, district, province, registrationDate, drawDate, occurDate, checkIn, ...rest } = finalValues
         const [provinceId, provinceName] = province?.split('|') || ['', ''];
@@ -104,7 +103,8 @@ const CreateTourPage = ({session}: any) => {
         
   
         const submitData = { ...rest, location, registrationOpeningDate, registrationClosingDate, drawStartDate, startDate, endDate, checkInBeforeStart };
-
+        console.log("submitData", submitData);
+        
         await fetchCreateTour(
             accessToken,
             submitData,

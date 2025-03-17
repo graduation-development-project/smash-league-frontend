@@ -54,10 +54,9 @@ const CreateTourStep1 = () => {
     const [provinceList, setProvinceList] = useState([]);
     const [districtList, setDistrictList] = useState([]);
     const [wardList, setWardList] = useState([]);
+    const [location, setLocation] = useState([street, ward, district, province].join(', '));
 
-    const [location, setLocation] = useState('');
-
-    const [sponsorList, setSponsorList] = useState(['Nestlé', 'Pepsi', 'Nike', 'Adidas', 'Sacombank']);
+    // const [sponsorList, setSponsorList] = useState(['Nestlé', 'Pepsi', 'Nike', 'Adidas', 'Sacombank']);
 
 
     const [organizerList, setOrganizerList] = useState(['a10', 'c12', 'h17', 'j19', 'k20']);
@@ -268,7 +267,7 @@ const CreateTourStep1 = () => {
                         required>
                         <Input placeholder="Your tournament's name" required />
                     </Form.Item>
-                    <Form.Item label="Tournament Name" name="shortName"
+                    <Form.Item label="Short name" name="shortName"
                         required>
                         <Input placeholder="Short name" required />
                     </Form.Item>
@@ -391,10 +390,15 @@ const CreateTourStep1 = () => {
 
 
                     </Form.Item>
-
-
-
-
+                    <Form.Item name="intro" label="Introduction">
+                        <TextArea
+                            // value={value}
+                            // onChange={(e) => setValue(e.target.value)}
+                            placeholder="Tournament's introduction"
+                            autoSize={{ minRows: 3, maxRows: 5 }}
+                            required
+                        />
+                    </Form.Item>
                     <Form.Item name="description" label="Description">
                         <TextArea
                             // value={value}
@@ -706,7 +710,7 @@ const CreateTourStep1 = () => {
                             style={{ width: "100%" }}
                         />
                     </Form.Item>
-                    <Form.Item name={"checkIn"} label="Check-in before start time" required>
+                    <Form.Item name={"checkIn"} label="Check-in before start time" initialValue={dayjs('15:00', formatTimeCheckIn)} required>
                         <TimePicker defaultValue={dayjs('15:00', formatTimeCheckIn)} format={formatTimeCheckIn} />
                     </Form.Item>
                     <Divider />

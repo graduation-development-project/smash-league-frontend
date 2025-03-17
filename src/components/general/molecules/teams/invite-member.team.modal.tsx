@@ -5,7 +5,7 @@ import HeadlessTippy from '@tippyjs/react/headless';
 import MemberSearchTeamCard from '../../atoms/teams/member-search.teams.card';
 import { useDebounce } from '@/hooks/use-debounce';
 import { searchUserByEmail } from '@/services/user';
-import { useTeamsContext } from '@/context/teams.context';
+import { useTeamContext } from '@/context/team.context';
 import { inviteMemberAPI } from '@/services/team';
 import { toast } from 'react-toastify';
 
@@ -22,7 +22,7 @@ const InviteMemberTeamModal = ({
   const [userList, setUserList] = useState([]);
   const [searchTerms, setSearchTerms] = useState<string>('');
   const debounceValue = useDebounce(searchTerms, 1000);
-  const { teamDetails, setTeamDetails } = useTeamsContext();
+  const { teamDetails, setTeamDetails } = useTeamContext();
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user') as string) || {};

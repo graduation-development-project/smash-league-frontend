@@ -28,9 +28,9 @@ interface TeamDetailsKeyProps {
   setTotalPerPage: (perPage: number) => void;
 }
 
-const TeamsContext = createContext<TeamDetailsKeyProps | null>(null);
+const TeamContext = createContext<TeamDetailsKeyProps | null>(null);
 
-export const TeamsContextProvider = ({
+export const TeamContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
@@ -111,7 +111,7 @@ export const TeamsContextProvider = ({
   }, [teamId]);
 
   return (
-    <TeamsContext.Provider
+    <TeamContext.Provider
       value={{
         activeKey,
         setActiveKey,
@@ -134,12 +134,12 @@ export const TeamsContextProvider = ({
       }}
     >
       {children}
-    </TeamsContext.Provider>
+    </TeamContext.Provider>
   );
 };
 
-export const useTeamsContext = () => {
-  const context = useContext(TeamsContext);
+export const useTeamContext = () => {
+  const context = useContext(TeamContext);
 
   if (!context) {
     throw new Error(

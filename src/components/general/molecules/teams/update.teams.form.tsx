@@ -3,7 +3,7 @@ import { Button, ConfigProvider, Form, Image, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react';
 import TeamDetails from '../../../../app/(guest)/teams/details/[name]/page';
-import { useTeamsContext } from '@/context/teams.context';
+import { useTeamContext } from '@/context/team.context';
 import { updateTeamDetailsAPI } from '@/services/team';
 import { toast } from 'react-toastify';
 import { TbLoader2 } from 'react-icons/tb';
@@ -12,7 +12,7 @@ const UpdateTeamsForm = (props: any) => {
   const { user } = props;
   const [file, setFile] = useState<File | null>(null);
   const [imageURL, setImageURL] = useState<string>('');
-  const { teamDetails, fetchTeamDetails } = useTeamsContext();
+  const { teamDetails, fetchTeamDetails } = useTeamContext();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // api truyen file => URL 3 anh sau khi up len cloud
