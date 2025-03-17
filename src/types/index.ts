@@ -42,7 +42,7 @@ interface TeamLeadersProps {}
 
 interface TeamDetailsProps {
   description: string;
-  id: string;
+  id: string; 
   logo: string;
   status: string;
   teamLeader: any;
@@ -62,9 +62,9 @@ interface PackageCardProps {
 
 interface PaginationProps {
   total: number;
-  currentPage: number;
+  currentPage?: number;
   setCurrentPage?: (page: number) => void;
-  totalPerPage: number;
+  totalPerPage?: number;
   setTotalPerPage?: (perPage: number) => void;
   onChange: (page: number) => void;
 }
@@ -97,4 +97,14 @@ interface NotificationProps {
   teamInvitationId: string;
   teamRequestId: string;
   tournamentRegistrationId: string;
+}
+
+interface TourDetailsProps {
+  description: string;
+  id: string; 
+  logo: string;
+  status: string;
+  teamLeader: any;
+  teamLeaderId: string;
+  teamName: string;
 }

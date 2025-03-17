@@ -1,5 +1,5 @@
 'use client';
-import { useTeamsContext } from '@/context/teams.context';
+import { useTeamContext } from '@/context/team.context';
 import { createTeamAPI, searchTeamsAPI } from '@/services/team';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Form, Input, Modal, notification } from 'antd';
@@ -17,7 +17,7 @@ const CreateTeamsModal = ({
   const [file, setFile] = useState<File | null>(null);
   const [imageURL, setImageURL] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { getTeams } = useTeamsContext();
+  const { getTeams } = useTeamContext();
 
   const [user, setUser] = useState<any>({});
 

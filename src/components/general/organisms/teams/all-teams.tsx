@@ -6,13 +6,14 @@ import TeamsBanner from '../../molecules/teams/teams-banner';
 import PaginationCard from '../../atoms/pagination/pagination-card';
 import { searchTeamsAPI } from '@/services/team';
 import Spinner from '../../atoms/loaders/spinner';
-import { useTeamsContext } from '@/context/teams.context';
+
 import { useDebounce } from '@/hooks/use-debounce';
+import { useTeamContext } from '@/context/team.context';
 
 const AllTeams = (props: any) => {
   const { session } = props;
   const { teamsList, setTeamsList, isLoading, setIsLoading, getTeams , total, setTotal, currentPage, setCurrentPage, totalPerPage, setTotalPerPage} =
-    useTeamsContext();
+    useTeamContext();
   const [searchTerms, setSearchTerms] = useState<string>('');
 
   const debounceValue = useDebounce(searchTerms, 1000);

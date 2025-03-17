@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { formatMoney } from '@/utils/formatMoney';
+import { formatMoney } from '@/utils/format';
 import { Divider } from 'antd';
 import React from 'react';
 import { IoCheckmarkSharp } from 'react-icons/io5';

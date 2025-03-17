@@ -19,6 +19,8 @@ import {
     Select,
     SelectProps,
     Space,
+    TimePicker,
+    Typography,
 } from 'antd';
 import Image from 'next/image';
 import { Info } from 'lucide-react';
@@ -33,10 +35,9 @@ interface SelectItemProps {
 }
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 dayjs.extend(customParseFormat);
-
+const formatTimeCheckIn = 'mm:ss';
 
 const CreateTourStep1 = () => {
-    const [form] = Form.useForm();
     const { RangePicker } = DatePicker;
     const { TextArea } = Input;
 
@@ -46,19 +47,20 @@ const CreateTourStep1 = () => {
 
     const [provinceId, setProvinceId] = useState('');
     const [districtId, setDistrictId] = useState('');
-    const [province, setProvince] = useState('');
-    const [district, setDistrict] = useState('');
-    const [ward, setWard] = useState('');
+    const [province, setProvince] = useState('_');
+    const [district, setDistrict] = useState('_');
+    const [ward, setWard] = useState('_');
+    const [street, setStreet] = useState('_');
     const [provinceList, setProvinceList] = useState([]);
     const [districtList, setDistrictList] = useState([]);
     const [wardList, setWardList] = useState([]);
-    const [street, setStreet] = useState('');
-    const location = [street, ward, district, province].join(', ')
+    const [location, setLocation] = useState([street, ward, district, province].join(', '));
 
-    const [sponsorList, setSponsorList] = useState(['Nestlé', 'Pepsi', 'Nike', 'Adidas', 'Sacombank']);
+    // const [sponsorList, setSponsorList] = useState(['Nestlé', 'Pepsi', 'Nike', 'Adidas', 'Sacombank']);
 
 
     const [organizerList, setOrganizerList] = useState(['a10', 'c12', 'h17', 'j19', 'k20']);
+    const [attachmentList, setAttachmentList] = useState([]);
 
     const [isRecruit, setIsRecruit] = useState(false);
 
@@ -92,8 +94,6 @@ const CreateTourStep1 = () => {
         const fetchProvince = async () => {
             try {
                 const res = await getProvinceAPI();
-                console.log(res);
-
                 setProvinceList(res)
             } catch (error: any) {
                 console.log(error);
@@ -106,7 +106,6 @@ const CreateTourStep1 = () => {
             const fetchDistrict = async (provinceId: string) => {
                 try {
                     const res = await getDistrictAPI(provinceId);
-                    console.log(res);
                     setDistrictList(res);
                 } catch (error: any) {
                     console.log(error);
@@ -140,9 +139,6 @@ const CreateTourStep1 = () => {
         const [selectedDistrictId, selectedDistrictName] = value.split('|');
         setDistrictId(selectedDistrictId);
         setDistrict(selectedDistrictName);
-    };
-    const handleWardChange = (ward: string) => {
-        setWard(ward);
     };
 
 
@@ -192,12 +188,27 @@ const CreateTourStep1 = () => {
         mode: 'multiple',
         style: { width: '100%' },
         options: selectOrganizers,
-        placeholder: 'Select Organizers...',
+        placeholder: 'Select Organizers',
         maxTagCount: 'responsive',
     };
     const selectOrganizerProps: SelectProps = {
         value: organizerList,
         onChange: setOrganizerList,
+    };
+    const selectAttachments: SelectItemProps[] = [];
+    //get organizer list from DB
+    selectAttachments.push({ label: "Portrait Photo" , value: "PORTRAIT_PHOTO"}, { label: "Identity Card", value: "IDENTIFICATION_CARD"});
+
+    const sharedAttachmentProps: SelectProps = {
+        mode: 'multiple',
+        style: { width: '100%' },
+        options: selectAttachments,
+        placeholder: 'Select required attachments',
+        maxTagCount: 'responsive',
+    };
+    const selectAttachmentProps: SelectProps = {
+        value: attachmentList,
+        onChange: setAttachmentList,
     };
 
     //------ Game Rules ----------
@@ -217,6 +228,8 @@ const CreateTourStep1 = () => {
     };
 
 
+
+
     //Sponsors
 
 
@@ -224,8 +237,12 @@ const CreateTourStep1 = () => {
 
     const [imageURLImgMerchandise, setImageURLImgMerchandise] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    // api truyen file => URL 3 anh sau khi up len cloud
 
+    useEffect(() => {
+
+        const newLocation = [street, ward, district, province].join(', ');
+        setLocation(newLocation);
+    }, [street, ward, district, province]);
 
 
 
@@ -233,12 +250,7 @@ const CreateTourStep1 = () => {
         if (e.target.files && e.target.files[0]) {
             setFileImgMerchandise(e.target.files[0]);
         }
-    };
-
-    const handleSubmit = () => {
-        const values = form.getFieldsValue(); // Get all form values
-        console.log("Form Data:", values);
-    };
+    }
 
 
     return (
@@ -251,12 +263,17 @@ const CreateTourStep1 = () => {
                     </div>
                 </div>
                 <div className='w-full h-max p-10'>
-                    <Form.Item label="Tournament Name" name="name" required>
+                    <Form.Item label="Tournament Name" name="name"
+                        required>
                         <Input placeholder="Your tournament's name" required />
                     </Form.Item>
+                    <Form.Item label="Short name" name="shortName"
+                        required>
+                        <Input placeholder="Short name" required />
+                    </Form.Item>
 
-                    <Form.Item label="Tournament URL" name="url"  required>
-                        <Input addonBefore="https://smashit.com.vn/" placeholder="Your tournament's URL"  required />
+                    <Form.Item label="Tournament URL" name="id" required>
+                        <Input addonBefore="https://smashit.com.vn/" placeholder="Your tournament's URL" required />
                     </Form.Item>
                     <Form.Item name="tourImage" label="Tournament's Image" required>
                         <input
@@ -279,8 +296,8 @@ const CreateTourStep1 = () => {
                         </div>
                     </Form.Item>
 
-                    <Form.Item label="Your Tour Color">
-                        <ColorPicker defaultValue="#ff8243" showText={true} />
+                    <Form.Item name="mainColor" label="Your Tour Color" initialValue={'#ff8243 '}>
+                        <ColorPicker showText={true} />
                     </Form.Item>
                     <Form.Item name={"prizePool"} label="Prize pool" required>
                         <InputNumber<number>
@@ -302,11 +319,12 @@ const CreateTourStep1 = () => {
                                 noStyle
                                 rules={[{ required: true, message: 'Province is required' }]}
                             >
-                                <Select onChange={(e) => handleProvinceChange(e)} placeholder="Select province">
+                                <Select onChange={handleProvinceChange} placeholder="Select province">
                                     {
-                                        provinceList.map((province: any) => {
+                                        provinceList?.map((province: any, index) => {
                                             return (
-                                                <Select.Option key={province.id} value={`${province.id}|${province.name}`}>{province.typeText} {province.name}</Select.Option>
+
+                                                <Select.Option key={index} value={`${province.ProvinceID}|${province.ProvinceName}`}> {province.ProvinceName}</Select.Option>
                                             )
                                         })
                                     }
@@ -317,11 +335,11 @@ const CreateTourStep1 = () => {
                                 noStyle
                                 rules={[{ required: true, message: 'District is required' }]}
                             >
-                                <Select onChange={(e) => handleDistrictChange(e)} placeholder="Select district">
+                                <Select onChange={handleDistrictChange} placeholder="Select district">
                                     {
-                                        districtList.map((district: any) => {
+                                        districtList?.map((district: any, index) => {
                                             return (
-                                                <Select.Option key={district.id} value={`${district.id}|${district.name}`}>{district.typeText} {district.name}</Select.Option>
+                                                <Select.Option key={index} value={`${district.DistrictID}|${district.DistrictName}`}> {district.DistrictName}</Select.Option>
                                             )
                                         })
                                     }
@@ -336,9 +354,9 @@ const CreateTourStep1 = () => {
                             >
                                 <Select onChange={(e) => setWard(e)} placeholder="Select ward" >
                                     {
-                                        wardList.map((ward: any) => {
+                                        wardList?.map((ward: any, index) => {
                                             return (
-                                                <Select.Option key={ward.id} value={ward.name}>{ward.typeText} {ward.name}</Select.Option>
+                                                <Select.Option key={index} value={ward.WardName}>{ward.WardName}</Select.Option>
                                             )
                                         })
 
@@ -361,15 +379,31 @@ const CreateTourStep1 = () => {
                         </Space.Compact>
 
                         <br />
-                        <Input name='location' value={location} disabled />
+
+                        {/* <Form.Item name="location" initialValue={location} label="Location">
+                            <Input defaultValue={location} variant='outlined' disabled />
+                        </Form.Item> */}
+                        <Typography >
+                            <pre >{location}</pre>
+                        </Typography>
+
+
+
                     </Form.Item>
-
-
+                    <Form.Item name="intro" label="Introduction">
+                        <TextArea
+                            // value={value}
+                            // onChange={(e) => setValue(e.target.value)}
+                            placeholder="Tournament's introduction"
+                            autoSize={{ minRows: 3, maxRows: 5 }}
+                            required
+                        />
+                    </Form.Item>
                     <Form.Item name="description" label="Description">
                         <TextArea
                             // value={value}
                             // onChange={(e) => setValue(e.target.value)}
-                            placeholder="Tournament description..."
+                            placeholder="Tournament description"
                             autoSize={{ minRows: 3, maxRows: 5 }}
                             required
                         />
@@ -431,6 +465,15 @@ const CreateTourStep1 = () => {
                 </div>
                 <div className='w-full h-max flex flex-col p-10 justify-center items-center'>
                     <div className='w-full h-max flex flex-col'>
+                        <Form.Item name="maxEventPerPerson" label="Maximum events per athlete can register">
+                            <Select placeholder="Maximum events per athlete can join">
+                                <Select.Option value="1">1</Select.Option>
+                                <Select.Option value="2">2</Select.Option>
+                                <Select.Option value="3">3</Select.Option>
+                                <Select.Option value="4">4</Select.Option>
+                                <Select.Option value="5">5</Select.Option>
+                            </Select>
+                        </Form.Item>
 
                         <Form.Item label="Events" required>
 
@@ -446,7 +489,7 @@ const CreateTourStep1 = () => {
                     {/* <div className='w-full h-max flex justify-center items-center'> */}
 
                     {/* <Form.Item noStyle name={['categories', 'min']}> */}
-                    <Form.List name="categories">
+                    <Form.List name="eventsCustom">
                         {(fields, { add, remove }) => (
                             <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16, width: '90%' }}>
                                 {cateList.map((category, index) => {
@@ -466,7 +509,7 @@ const CreateTourStep1 = () => {
                                                 }} />
                                             }
                                         >
-                                                <Form.List name={[index, 'rangeList']} >
+                                            <Form.List name={[index, 'rangeList']} >
                                                 {(subFields, subOpt) => (
                                                     <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16, width: '100%' }}>
                                                         {subFields.map((subField) => (
@@ -494,7 +537,7 @@ const CreateTourStep1 = () => {
                                                                     <InputNumber min={0} max={1000} style={{ width: '100%' }} placeholder="Maximum athletes" />
                                                                 </Form.Item>
 
-                                                                <Form.Item name={[subField.name, "numberOfSets"]} label="Number of sets">
+                                                                <Form.Item name={[subField.name, "numberOfGames"]} label="Number of games">
                                                                     <Select placeholder="Number of game(s)">
                                                                         <Select.Option value="1">1</Select.Option>
                                                                         <Select.Option value="3">3</Select.Option>
@@ -539,7 +582,7 @@ const CreateTourStep1 = () => {
                                                     </div>
                                                 )}
                                             </Form.List>
-                                            
+
                                         </Card>
                                     );
                                 })}
@@ -567,7 +610,33 @@ const CreateTourStep1 = () => {
                             <Radio value={true}> Host a sign-up tournament — This will allow ahtletes to sign up  </Radio>
                         </Radio.Group>
                     </Form.Item>
+                    <Form.Item name={"registrationFeePair"} label={"Registration Fee Per Pair"} style={isRegister ? { display: 'block' } : { display: 'none' }} initialValue={1000}>
+                        <InputNumber<number>
+                            min={0}
+                            suffix={'VND'}
+                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                            style={{ marginTop: '8px', width: '100%' }}
+                            placeholder="Fee"
+                            changeOnWheel
+                            width={'100%'}
+                        />
+                        {/* <span className='text-[12px] text-textColor2 flex items-center gap-1 mt-2 ml-3'><Info size={15} /> Refund policy <a href="">here</a></span> */}
+                    </Form.Item>
                     <Form.Item name={"registrationFee"} label={"Registration Fee"} style={isRegister ? { display: 'block' } : { display: 'none' }} initialValue={1000}>
+                        <InputNumber<number>
+                            min={0}
+                            suffix={'VND'}
+                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                            style={{ marginTop: '8px', width: '100%' }}
+                            placeholder="Fee"
+                            changeOnWheel
+                            width={'100%'}
+                        />
+                        {/* <span className='text-[12px] text-textColor2 flex items-center gap-1 mt-2 ml-3'><Info size={15} /> Refund policy <a href="">here</a></span> */}
+                    </Form.Item>
+                    <Form.Item name={"protestFeePerTime"} label={"Potest Fee Per Time"} initialValue={1000}>
                         <InputNumber<number>
                             min={0}
                             suffix={'VND'}
@@ -591,7 +660,6 @@ const CreateTourStep1 = () => {
                                 defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('23:59:59', 'HH:mm:ss')],
                             }}
                             onChange={(date: any) => {
-                                console.log(date, "registerDate");
                                 setRegisterDate(date);
                             }}
                             format="YYYY-MM-DD HH:mm:ss"
@@ -599,7 +667,7 @@ const CreateTourStep1 = () => {
                         />
                     </Form.Item>
                     <Form.Item name={"attachments"} label="Required attachments" required>
-                        <Select {...sharedOrganizerProps} {...selectOrganizerProps} />
+                        <Select {...sharedAttachmentProps} {...selectAttachmentProps} />
                     </Form.Item>
 
 
@@ -621,7 +689,6 @@ const CreateTourStep1 = () => {
                                 defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('23:59:59', 'HH:mm:ss')],
                             }}
                             onChange={(date: any) => {
-                                console.log(date, "drawDate");
                                 setDrawDate(date);
                             }}
                             format="YYYY-MM-DD HH:mm:ss"
@@ -637,32 +704,21 @@ const CreateTourStep1 = () => {
                                 defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('23:59:59', 'HH:mm:ss')],
                             }}
                             onChange={(date: any) => {
-                                console.log(date, "occurDate");
                                 setOccurDate(date);
                             }}
                             format="YYYY-MM-DD HH:mm:ss"
                             style={{ width: "100%" }}
                         />
                     </Form.Item>
-                    <Form.Item name={"checkIn"} label="Check-in before start time" required>
-                        {/* opens */}
-                        <Select style={{ width: '100px' }}>
-                            <Select.Option value="onTime">On time</Select.Option>
-                            <Select.Option value="15min">15 min</Select.Option>
-                            <Select.Option value="30min">30 min</Select.Option>
-                            <Select.Option value="45min">45 min</Select.Option>
-                            <Select.Option value="1hour">1 hour</Select.Option>
-                            <Select.Option value="2hours">2 hours</Select.Option>
-                            <Select.Option value="3hours">3 hours</Select.Option>
-                        </Select>
-                        {/* before start time */}
+                    <Form.Item name={"checkIn"} label="Check-in before start time" initialValue={dayjs('15:00', formatTimeCheckIn)} required>
+                        <TimePicker defaultValue={dayjs('15:00', formatTimeCheckIn)} format={formatTimeCheckIn} />
                     </Form.Item>
                     <Divider />
-                    <Form.Item label="Umpires & linesman in a match" required>
+                    <Form.Item name="umpirePerMatch" label="Umpires & linesman in a match" required>
                         <InputNumber min={1} max={3} suffix={'Umpire(s)'} style={{ width: '100%' }} placeholder="Number of umpires" changeOnWheel />
 
                     </Form.Item>
-                    <Form.Item label="Umpires & linesman in a match" required>
+                    <Form.Item name="linemanPerMatch" label="Umpires & linesman in a match" required>
                         <InputNumber min={1} max={5} suffix={'Linesmans'} style={{ width: '100%', marginTop: '8px' }} placeholder="Number of umpires" changeOnWheel />
                     </Form.Item>
                 </div>
@@ -723,4 +779,4 @@ const CreateTourStep1 = () => {
     )
 }
 
-export default CreateTourStep1
+export default CreateTourStep1;

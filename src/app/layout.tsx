@@ -5,7 +5,8 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import NextAuthWrapper from '@/context/next.auth.wrapper';
 import { ToastContainer } from 'react-toastify';
 import { ProfileContextProvider } from '@/context/profile.context';
-import { TeamsContextProvider } from '@/context/teams.context';
+import { TeamContextProvider } from '@/context/team.context';
+import { TourContextProvider } from '@/context/tour.context';
 
 const quicksand = Quicksand({
   subsets: ['latin'],
@@ -31,10 +32,12 @@ export default function RootLayout({
         <AntdRegistry>
           <NextAuthWrapper>
             <ProfileContextProvider>
-              <TeamsContextProvider>
-                {children}
-                <ToastContainer />
-              </TeamsContextProvider>
+              <TourContextProvider>
+                <TeamContextProvider>
+                  {children}
+                  <ToastContainer />
+                </TeamContextProvider>
+              </TourContextProvider>
             </ProfileContextProvider>
           </NextAuthWrapper>
         </AntdRegistry>
