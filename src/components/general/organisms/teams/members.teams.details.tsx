@@ -8,13 +8,13 @@ import EmptyCard from '../../molecules/empty/empty.card';
 import { Button } from '@/components/ui/button';
 import { IoAddCircleSharp } from 'react-icons/io5';
 import InviteMemberTeamModal from '../../molecules/teams/invite-member.team.modal';
-import { useTeamsContext } from '@/context/teams.context';
+import { useTeamContext } from '@/context/team.context';
 
 const MembersTeamsDetails = () => {
   const [isMembers, setIsMembers] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState<any>({});
-  const { teamDetails } = useTeamsContext();
+  const { teamDetails } = useTeamContext();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
