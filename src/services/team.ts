@@ -141,3 +141,31 @@ export const inviteMemberAPI = async (
     return error.response?.data;
   }
 };
+
+export const responseInvitationAPI = async (
+  invitationId: string,
+  accessToken: string,
+  option: boolean,
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/response-team-invitation`,
+      {
+        invitationId: invitationId,
+        option: option,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error response invitation:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

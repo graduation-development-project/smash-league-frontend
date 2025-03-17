@@ -87,11 +87,6 @@ export const TeamContextProvider = ({
     setIsLoading(false);
   };
 
-  // useEffect(() => {
-  //   getTeams(1, 6);
-  // });
-
-  // Fetch team details when teamId changes
 
   const fetchTeamDetails = async (teamId: string) => {
     if (teamId) {

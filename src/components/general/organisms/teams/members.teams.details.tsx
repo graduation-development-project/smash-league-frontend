@@ -1,6 +1,5 @@
 'use client';
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PaginationCard from '../../atoms/pagination/pagination-card';
 import { ConfigProvider, Empty, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
@@ -9,10 +8,24 @@ import EmptyCard from '../../molecules/empty/empty.card';
 import { Button } from '@/components/ui/button';
 import { IoAddCircleSharp } from 'react-icons/io5';
 import InviteMemberTeamModal from '../../molecules/teams/invite-member.team.modal';
+import { useTeamContext } from '@/context/team.context';
 
 const MembersTeamsDetails = () => {
   const [isMembers, setIsMembers] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [user, setUser] = useState<any>({});
+  const { teamDetails } = useTeamContext();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+      setUser(storedUser);
+    }
+  }, []);
+
+  const isTeamLeader =
+    user?.role?.includes('Team Leader') &&
+    user?.id === teamDetails?.teamLeaderId;
 
   const handleChange = () => {};
   return (
@@ -50,10 +63,11 @@ const MembersTeamsDetails = () => {
                 }
               />
             </ConfigProvider>
-
-            <Button size={'sm'} onClick={() => setIsModalOpen(true)}>
-              <IoAddCircleSharp /> Invite Members
-            </Button>
+            {isTeamLeader && (
+              <Button size={'sm'} onClick={() => setIsModalOpen(true)}>
+                <IoAddCircleSharp /> Invite Members
+              </Button>
+            )}
           </div>
 
           <div className="grid grid-cols-4 gap-x-8 gap-y-6 place-items-center justify-items-center">

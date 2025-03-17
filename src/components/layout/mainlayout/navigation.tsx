@@ -23,7 +23,7 @@ const Navigation = (props: any) => {
   const [route, setRoute] = useState('');
   const [user, setUser] = useState<any>({});
   const [notifications, setNotifications] = useState<any>([]);
-  const [unread, setUnread] = useState<boolean>(false);
+  const [unread, setUnread] = useState<boolean>(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -37,17 +37,21 @@ const Navigation = (props: any) => {
   const getNotificationByUser = async () => {
     try {
       const response = await getNotificationAPI(user?.access_token);
-      setUnread(
-        response?.data?.some((notif: any) => {
-          if (notifications.length > 0) {
-            return !notifications.includes(notif);
-          } else {
-            return false;
-          }
-        }),
-      );
+      // setUnread(
+      //   response?.data?.some((notif: any) => {
+      //     if (notifications.length > 0) {
+      //       return !notifications.includes(notif);
+      //     } else {
+      //       return false;
+      //     }
+      //   }),
+      // );
       // console.log('Check noti', response?.data);
-      setNotifications(response?.data);
+      setNotifications(
+        response?.data.filter(
+          (notif: any) => notif?.teamInvitation?.status === 'PENDING',
+        ),
+      );
       // Check if there are unread notifications
     } catch (error: any) {
       console.error('Error fetching notifications:', error.message);
@@ -222,6 +226,9 @@ const Navigation = (props: any) => {
               delay={[500, 500]}
               placement="bottom"
               onClickOutside={markNotificationsAsRead}
+              appendTo={
+                typeof window !== 'undefined' ? document.body : undefined
+              }
               render={(attrs) => (
                 <div
                   tabIndex={-1}
@@ -229,11 +236,14 @@ const Navigation = (props: any) => {
                   className="shadow-shadowComp relative z-60 rounded-[10px]"
                 >
                   <div className="w-full h-full bg-white rounded-[10px] px-4 py-6 flex flex-col justify-center items-center gap-2">
-                    {notifications ? (
-                      <div>
-                        {notifications.map((notification: any) => (
+                    {notifications && notifications.length > 0 ? (
+                      <div className="flex flex-col gap-3">
+                        {notifications.slice(0, 3).map((notification: any) => (
                           <div key={notification.id}>
-                            <NotificationCard notification={notification} />
+                            <NotificationCard
+                              notification={notification}
+                              hiddenBtn={true}
+                            />
                           </div>
                         ))}
                       </div>
@@ -243,7 +253,10 @@ const Navigation = (props: any) => {
                       </div>
                     )}
                     {notifications && notifications?.length > 0 && (
-                      <div className="text-[#2c2c2c] text-[14px] flex justify-center cursor-pointer bg-white mt-2 hover:text-primaryColor border border-gray-400 w-full p-1 rounded-[5px]">
+                      <div
+                        className="text-[#2c2c2c] text-[14px] flex justify-center cursor-pointer bg-white mt-2  border border-gray-400 w-full p-1 rounded-[5px] hover:text-primaryColor hover:border-primaryColor"
+                        onClick={() => router.push('/notifications')}
+                      >
                         View All Notifications
                       </div>
                     )}

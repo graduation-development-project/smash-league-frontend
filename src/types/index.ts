@@ -77,11 +77,22 @@ interface UserProps {
   phoneNumber: string;
 }
 
+interface NotificationsTypeProps {
+  id: string;
+  typeOfNotification: string;
+}
+
+interface TeamInvitationProps {
+  status: string;
+}
+
 interface NotificationProps {
   createdAt: string;
   id: string;
   title: string;
   message: string;
+  teamInvitation: TeamInvitationProps;
+  type: NotificationsTypeProps;
   typeId: string;
   teamInvitationId: string;
   teamRequestId: string;

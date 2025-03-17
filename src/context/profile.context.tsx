@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface ProfileIdProps {
   athleteId: string;
@@ -11,6 +11,7 @@ interface ProfileIdProps {
   setActiveKey: (key: string) => void;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
+  user: any;
 }
 
 const ProfileContext = createContext<ProfileIdProps | null>(null);
@@ -24,6 +25,18 @@ export const ProfileContextProvider = ({
   const [organizerId, setOrganizerId] = useState('');
   const [activeKey, setActiveKey] = useState('1');
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
+
+
   return (
     <ProfileContext.Provider
       value={{
@@ -35,6 +48,7 @@ export const ProfileContextProvider = ({
         setActiveKey,
         isLoading,
         setIsLoading,
+        user,
       }}
     >
       {children}
