@@ -12,7 +12,7 @@ import { useTeamContext } from '@/context/team.context';
 import { useRouter } from 'next/navigation';
 const OverviewTeamDetails = () => {
   const [isSocialMediaVisible, setIsSocialMediaVisible] = useState(true);
-  const { setActiveKey, teamDetails } = useTeamContext();
+  const { setActiveKey, teamDetails} = useTeamContext();
   // console.log(teamDetails);
   const router = useRouter();
   return (

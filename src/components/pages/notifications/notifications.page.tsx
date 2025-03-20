@@ -17,12 +17,20 @@ const NotificationsPage = () => {
 
   const items: MenuProps['items'] = [
     {
+      label: <p className="text-[12px] font-semibold">All</p>,
+      key: 'All',
+    },
+    {
       label: <p className="text-[12px] font-semibold">Pending</p>,
       key: 'Pending',
     },
     {
       label: <p className="text-[12px] font-semibold">Accepted</p>,
       key: 'Accepted',
+    },
+    {
+      label: <p className="text-[12px] font-semibold">Approved</p>,
+      key: 'Approved',
     },
     {
       label: <p className=" text-[12px] font-semibold">Rejected</p>,
@@ -46,21 +54,31 @@ const NotificationsPage = () => {
   const getNotifications = async () => {
     try {
       const response = await getNotificationAPI(user?.access_token);
-      // console.log('Check user', user);
-      console.log(response?.data, 'Check response');
-      setNotifications(
-        response?.data.filter((notif: any) => {
-          if (notiStatus === 'All') {
-            return true;
-          } else {
-            return notif.teamInvitation.status === notiStatus.toUpperCase();
-          }
-        }),
-      );
+      console.log(response?.data);
+      setNotifications(response?.data);
     } catch (error: any) {
       console.error(error);
     }
   };
+
+  const filterStatusNotifications = (status: string) => {
+    if (status === 'All') return notifications && notifications;
+
+    return (
+      notifications &&
+      notifications?.filter((notif: any) => {
+        const hasRequest = notif.teamRequest?.status === status.toUpperCase();
+        const hasInvitation =
+          notif.teamInvitation?.status === status.toUpperCase();
+        // Nếu bất kỳ cái nào khớp, giữ lại thông báo
+        return hasRequest || hasInvitation;
+      })
+    );
+  };
+
+  const filteredNotifications = filterStatusNotifications(notiStatus);
+
+  // console.log(filteredNotifications);
 
   useEffect(() => {
     if (user?.access_token) {
@@ -111,9 +129,9 @@ const NotificationsPage = () => {
         </ConfigProvider>
       </div>
       <div>
-        {notifications && notifications.length > 0 ? (
+        {notifications && filteredNotifications.length > 0 ? (
           <div className="flex flex-col gap-3">
-            {notifications.map((noti: any) => (
+            {filteredNotifications?.map((noti: any) => (
               <div key={noti?.id}>
                 <NotificationCard
                   notification={noti}

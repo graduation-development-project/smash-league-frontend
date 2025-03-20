@@ -47,11 +47,7 @@ const Navigation = (props: any) => {
       //   }),
       // );
       // console.log('Check noti', response?.data);
-      setNotifications(
-        response?.data.filter(
-          (notif: any) => notif?.teamInvitation?.status === 'PENDING',
-        ),
-      );
+      setNotifications(response?.data);
       // Check if there are unread notifications
     } catch (error: any) {
       console.error('Error fetching notifications:', error.message);
@@ -69,6 +65,19 @@ const Navigation = (props: any) => {
     setUnread(false);
     // Optionally, send API request to mark them as read
   };
+  const filterStatusNotifications = () => {
+    return (
+      notifications &&
+      notifications?.filter((notif: any) => {
+        const hasRequest = notif.teamRequest?.status === 'PENDING';
+        const hasInvitation = notif.teamInvitation?.status === 'PENDING';
+        // Nếu bất kỳ cái nào khớp, giữ lại thông báo
+        return hasRequest || hasInvitation;
+      })
+    );
+  };
+
+  const filteredNotifications = filterStatusNotifications();
 
   const items: MenuProps['items'] = [
     {
@@ -236,23 +245,25 @@ const Navigation = (props: any) => {
                   className="shadow-shadowComp relative z-60 rounded-[10px]"
                 >
                   <div className="w-full h-full bg-white rounded-[10px] px-4 py-6 flex flex-col justify-center items-center gap-2">
-                    {notifications && notifications.length > 0 ? (
+                    {notifications && filteredNotifications.length > 0 ? (
                       <div className="flex flex-col gap-3">
-                        {notifications.slice(0, 3).map((notification: any) => (
-                          <div key={notification.id}>
-                            <NotificationCard
-                              notification={notification}
-                              hiddenBtn={true}
-                            />
-                          </div>
-                        ))}
+                        {filteredNotifications
+                          .slice(0, 3)
+                          .map((notification: any) => (
+                            <div key={notification.id}>
+                              <NotificationCard
+                                notification={notification}
+                                hiddenBtn={true}
+                              />
+                            </div>
+                          ))}
                       </div>
                     ) : (
                       <div className="text-[14px] text-gray-400">
                         No notifications found
                       </div>
                     )}
-                    {notifications && notifications?.length > 0 && (
+                    {notifications && filteredNotifications?.length > 0 && (
                       <div
                         className="text-[#2c2c2c] text-[14px] flex justify-center cursor-pointer bg-white mt-2  border border-gray-400 w-full p-1 rounded-[5px] hover:text-primaryColor hover:border-primaryColor"
                         onClick={() => router.push('/notifications')}

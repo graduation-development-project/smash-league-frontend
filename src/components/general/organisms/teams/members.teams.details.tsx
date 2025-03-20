@@ -9,12 +9,45 @@ import { Button } from '@/components/ui/button';
 import { IoAddCircleSharp } from 'react-icons/io5';
 import InviteMemberTeamModal from '../../molecules/teams/invite-member.team.modal';
 import { useTeamContext } from '@/context/team.context';
+import { getTeamMembersAPI } from '@/services/team';
+import { useDebounce } from '@/hooks/use-debounce';
 
 const MembersTeamsDetails = () => {
   const [isMembers, setIsMembers] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState<any>({});
-  const { teamDetails } = useTeamContext();
+  const { teamDetails, teamId } = useTeamContext();
+  const [teamMemberList, setTeamMemberList] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [perPage, setPerPage] = useState(8);
+
+  const debouncedValue = useDebounce(searchTerm, 1000);
+  const fetchTeamMembers = async (
+    teamId: string,
+    searchTerm: string,
+    page: number,
+    perPage: number,
+  ) => {
+    if (teamId) {
+      setIsLoading(true);
+      try {
+        const res = await getTeamMembersAPI(teamId, searchTerm, page, perPage);
+        // console.log(res?.data.data);
+        setTeamMemberList(res?.data?.data?.data || []);
+        setPage(res?.data?.data?.meta?.currentPage);
+        setPerPage(res?.data?.data?.meta?.totalPerPage);
+        setTotal(res?.data?.data?.meta?.total);
+      } catch (error) {
+        console.error('Failed to fetch team members', error);
+      }
+      setIsLoading(false);
+    }
+  };
+
+  // console.log('Check team members list', teamMemberList);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -23,16 +56,24 @@ const MembersTeamsDetails = () => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchTeamMembers(teamId, debouncedValue, page, perPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamId, debouncedValue]);
+
   const isTeamLeader =
     user?.role?.includes('Team Leader') &&
     user?.id === teamDetails?.teamLeaderId;
 
-  const handleChange = () => {};
+  const handleChange = async (page: number) => {
+    await fetchTeamMembers(teamId, debouncedValue, page, perPage);
+  };
+
   return (
     <>
-      {isMembers ? (
+      {teamMemberList.length > 0 ? (
         <div className="w-full h-full flex flex-col items-center gap-5 p-5">
-          <div className="w-full flex justify-between items-center px-3">
+          <div className="w-full flex justify-between items-center px-10">
             <ConfigProvider
               theme={{
                 components: {
@@ -49,6 +90,7 @@ const MembersTeamsDetails = () => {
                 size="large"
                 variant="outlined"
                 placeholder="Find the member"
+                onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
                   width: '40%',
                 }}
@@ -71,17 +113,17 @@ const MembersTeamsDetails = () => {
           </div>
 
           <div className="grid grid-cols-4 gap-x-8 gap-y-6 place-items-center justify-items-center">
-            {Array.from({ length: 8 }).map((_, index) => (
-              <div key={index}>
-                <TeamMemberCard />
+            {teamMemberList?.map((member) => (
+              <div key={member?.id}>
+                <TeamMemberCard member={member} fetchMembers={()=>fetchTeamMembers(teamId, debouncedValue, page, perPage)} />
               </div>
             ))}
           </div>
 
           <PaginationCard
-            total={12}
-            currentPage={1}
-            totalPerPage={6}
+            total={total}
+            currentPage={page}
+            totalPerPage={perPage}
             onChange={handleChange}
           />
         </div>

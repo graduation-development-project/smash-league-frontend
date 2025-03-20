@@ -1,6 +1,10 @@
 'use client';
 
-import { getTeamDetailsAPI, searchTeamsAPI } from '@/services/team';
+import {
+  getTeamDetailsAPI,
+  getTeamMembersAPI,
+  searchTeamsAPI,
+} from '@/services/team';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface TeamDetailsKeyProps {
@@ -26,6 +30,7 @@ interface TeamDetailsKeyProps {
   setCurrentPage: (page: number) => void;
   totalPerPage: number;
   setTotalPerPage: (perPage: number) => void;
+
 }
 
 const TeamContext = createContext<TeamDetailsKeyProps | null>(null);
@@ -45,6 +50,7 @@ export const TeamContextProvider = ({
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPerPage, setTotalPerPage] = useState<number>(6);
+  const [teamMemberList, setTeamMemberList] = useState<any[]>([]);
 
   // Load teamId from localStorage on mount (client-side only)
   useEffect(() => {
@@ -87,7 +93,6 @@ export const TeamContextProvider = ({
     setIsLoading(false);
   };
 
-
   const fetchTeamDetails = async (teamId: string) => {
     if (teamId) {
       setIsLoading(true);
@@ -100,6 +105,8 @@ export const TeamContextProvider = ({
       setIsLoading(false);
     }
   };
+
+
 
   useEffect(() => {
     fetchTeamDetails(teamId);
@@ -126,6 +133,7 @@ export const TeamContextProvider = ({
         setCurrentPage,
         totalPerPage,
         setTotalPerPage,
+
       }}
     >
       {children}

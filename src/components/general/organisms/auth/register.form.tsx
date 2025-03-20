@@ -5,25 +5,33 @@ import {
   Button,
   Col,
   ConfigProvider,
+  DatePicker,
   Divider,
   Form,
   Input,
   notification,
   Row,
+  Select,
 } from 'antd';
 import Link from 'next/link';
 import { sendRequest } from '@/utils/api';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Home } from 'lucide-react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 const RegisterForm = () => {
   const router = useRouter();
   const [isBack, setIsBack] = useState(false);
-
+  const [dateOfBirth, setDateOfBirth] = useState(null);
   const onFinish = async (values: any) => {
-    const { email, password, name, phoneNumber } = values;
+    const { email, password, name, phoneNumber, gender, dateOfBirth } = values;
 
     // console.log(values);
+    const formattedDate = dayjs(dateOfBirth).format('YYYY-MM-DD');
+    // console.log('Check formattedDate', formattedDate);
 
     const res = await sendRequest<IBackendRes<any>>({
       url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/sign-up`,
@@ -33,6 +41,8 @@ const RegisterForm = () => {
         password: password.trim(),
         name: name.trim(),
         phoneNumber: phoneNumber.trim(),
+        gender: gender.trim(),
+        dateOfBirth: formattedDate,
       },
     });
 
@@ -175,6 +185,49 @@ const RegisterForm = () => {
                 <Input.Password style={{ padding: '8px' }} />
               </Form.Item>
             </ConfigProvider>
+
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    /* here is your component tokens */
+                    activeBorderColor: '#74ba74',
+                    activeShadow: '0 0 0 2px #fffff',
+                    hoverBorderColor: '#74ba74',
+                  },
+                },
+              }}
+            >
+              <Form.Item
+                label="Gender"
+                name="gender"
+                rules={[
+                  { required: true, message: 'Please select your gender!' },
+                ]}
+                style={{ fontWeight: '500' }}
+              >
+                <Select
+                  options={[
+                    { value: 'MALE', label: 'Male' },
+                    { value: 'FEMALE', label: 'Female' },
+                  ]}
+                />
+              </Form.Item>
+            </ConfigProvider>
+
+            <Form.Item
+              label="Date Of Birth"
+              name="dateOfBirth"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select your date of birth!',
+                },
+              ]}
+              style={{ fontWeight: '500' }}
+            >
+              <DatePicker format={'YYYY-MM-DD'} />
+            </Form.Item>
 
             <Form.Item>
               <Button
