@@ -9,11 +9,29 @@ import UpdateTeamsForm from '@/components/general/molecules/teams/update.teams.f
 import TournamentsTeamsDetails from '@/components/general/organisms/teams/tournaments.teams.details';
 import MembersTeamsDetails from '@/components/general/organisms/teams/members.teams.details';
 import AnnouncementsTeamsDetails from '../../general/organisms/teams/announcements.teams.details';
+import { getTeamMembersAPI, requestJoinTeamAPI } from '@/services/team';
+import { toast } from 'react-toastify';
 
 const TeamDetailsPage = (props: any) => {
   const { session } = props;
-  const { activeKey, setActiveKey, teamDetails } = useTeamContext();
-  const [user, setUser] = useState<any>(null); // Start with null to check for loading state
+  const { activeKey, setActiveKey, teamDetails, teamId } = useTeamContext();
+  const [user, setUser] = useState<any>(null);
+  const [teamMemberList, setTeamMemberList] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const fetchTeamMembers = async (teamId: string) => {
+    if (teamId) {
+      setIsLoading(true);
+      try {
+        const res = await getTeamMembersAPI(teamId, '', 1, 8);
+        setTeamMemberList(res?.data?.data?.data || []);
+      } catch (error) {
+        console.error('Failed to fetch team members', error);
+      }
+      setIsLoading(false);
+    }
+  };
+
+  // console.log('Check team members list', teamMemberList); // Start with null to check for loading state
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -22,9 +40,48 @@ const TeamDetailsPage = (props: any) => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchTeamMembers(teamId);
+  }, [teamId]);
+
   const isTeamLeader =
     user?.role?.includes('Team Leader') &&
     user?.id === teamDetails?.teamLeaderId;
+
+  // console.log('Check team details', teamDetails);
+
+  const handleRequestJoinTeam = async () => {
+    const response = await requestJoinTeamAPI(
+      teamDetails?.id,
+      user.access_token,
+    );
+
+    console.log('Check response', response);
+
+    if (response?.status === 200 || response?.status === 201) {
+      toast.success(`${response?.data}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    } else {
+      toast.error(`${response?.message}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+  };
 
   const items: TabsProps['items'] = [
     {
@@ -74,9 +131,17 @@ const TeamDetailsPage = (props: any) => {
         <div className="w-1/2 h-full flex justify-between items-center px-6 mt-2">
           <div className="flex flex-col gap-1">
             <h1 className="text-[24px] font-bold">{teamDetails?.teamName}</h1>
-            <p className="text-[14px] text-slate-400 ">100 Team Members</p>
+            <p className="text-[14px] text-slate-400 ">
+              {teamMemberList?.length}
+              <span>
+                {' '}
+                Team {teamMemberList?.length > 1 ? 'Members' : 'Member'}
+              </span>
+            </p>
           </div>
-          <Button size={'sm'}>Join</Button>
+          <Button size={'sm'} onClick={handleRequestJoinTeam}>
+            Join
+          </Button>
         </div>
         <ConfigProvider
           theme={{

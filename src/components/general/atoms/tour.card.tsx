@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import React from "react";
-import images from "@/assets/images";
-import { Button } from "../../ui/button";
-import TextGradientBtn from "./text.gradient.btn";
+import Image from 'next/image';
+import React from 'react';
+import images from '@/assets/images';
+import { Button } from '../../ui/button';
+import TextGradientBtn from './text.gradient.btn';
 
 const TourCard = () => {
   return (
@@ -54,8 +54,12 @@ const TourCard = () => {
           <div className="w-full h-2 bg-gradient-to-r from-primaryColor from-50% to-slate-400 to-50%  outline-none rounded "></div>
         </div>
         <div className="flex flex-col gap-2">
-          <TextGradientBtn textColor="orange" size="sm">More Details</TextGradientBtn>
-          <Button size={"sm"}>Watch Live</Button>
+          <div className="flex justify-center">
+            <TextGradientBtn textColor="orange" size="sm">
+              More Details
+            </TextGradientBtn>
+          </div>
+          <Button size={'sm'}>Watch Live</Button>
         </div>
       </div>
     </div>

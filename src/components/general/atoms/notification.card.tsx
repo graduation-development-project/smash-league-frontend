@@ -2,7 +2,10 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import { Button } from '@/components/ui/button';
-import { responseInvitationAPI } from '@/services/team';
+import {
+  responseInvitationAPI,
+  responseRequestJoinTeamAPI,
+} from '@/services/team';
 import { useProfileContext } from '@/context/profile.context';
 import { toast } from 'react-toastify';
 
@@ -26,6 +29,49 @@ const NotificationCard = ({
         notification?.teamInvitationId,
         user?.access_token,
         option,
+      );
+
+      console.log(response);
+      if (response.status === 200 || response.status === 201) {
+        getNotifications && getNotifications();
+        toast.success(`${response?.data}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        console.log('Error', response);
+        toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const handleResponseRequestJoinTeam = async (option: boolean) => {
+    if (!user?.access_token) return;
+    // console.log('user', user);
+    try {
+      const response = await responseRequestJoinTeamAPI(
+        '',
+        notification?.teamRequest?.teamId,
+        notification?.teamRequestId,
+        option,
+        user?.access_token,
       );
 
       console.log(response);
@@ -86,6 +132,29 @@ const NotificationCard = ({
               shadow={'shadowNone'}
               className="bg-transparent border border-primaryColor text-primaryColor hover:text-white hover:bg-orange-500"
               onClick={() => handleResponseInvitation(false)}
+            >
+              Reject
+            </Button>
+          </div>
+        )}
+
+      {hiddenBtn === false &&
+        notification?.teamRequest?.status === 'PENDING' &&
+        notification?.type?.typeOfNotification === 'Join Team' && (
+          <div className="flex gap-2">
+            <Button
+              size={'sm'}
+              shadow={'shadowNone'}
+              colorBtn={'gradientGreenBtn'}
+              onClick={() => handleResponseRequestJoinTeam(true)}
+            >
+              Accept
+            </Button>
+            <Button
+              size={'sm'}
+              shadow={'shadowNone'}
+              className="bg-transparent border border-primaryColor text-primaryColor hover:text-white hover:bg-orange-500"
+              onClick={() => handleResponseRequestJoinTeam(false)}
             >
               Reject
             </Button>

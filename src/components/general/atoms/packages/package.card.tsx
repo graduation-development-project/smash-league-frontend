@@ -14,6 +14,7 @@ const PackageCard = ({
   advantages,
   credit,
   recommended,
+  isAvailable,
 }: PackageCardProps) => {
   return (
     <div
@@ -23,7 +24,7 @@ const PackageCard = ({
           : ''
       }`}
     >
-      <h1 className="font-bold text-[24px] w-max h-max flex flex-col">
+      <h1 className="font-bold text-[24px] w-full h-full flex flex-col">
         <span>{title}</span>
         <div
           className={`w-14 h-[2px] rounded-[10px] ${
@@ -42,7 +43,7 @@ const PackageCard = ({
           </h4>
         </div>
         <p
-          className={`text-sm italic ${
+          className={`text-[13px] italic w-[300px] trunc${
             recommended ? 'text-white' : 'text-gray-500'
           }`}
         >
