@@ -258,7 +258,7 @@ export const responseRequestJoinTeamAPI = async (
 export const removeMemberAPI = async (
   teamId: string,
   reason: string,
-  teamMemberIds: string[],
+  teamMemberIds: string[] | undefined,
   accessToken: string,
 ) => {
   try {

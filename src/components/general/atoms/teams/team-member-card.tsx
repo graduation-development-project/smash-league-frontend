@@ -14,8 +14,8 @@ const TeamMemberCard = ({
   member,
   fetchMembers,
 }: {
-  member: UserProps;
-  fetchMembers: () => void;
+  member?: UserProps | undefined;
+  fetchMembers?: () => void;
 }) => {
   const [gender, setGender] = useState('Male');
   const { teamDetails, teamId } = useTeamContext();
@@ -47,13 +47,13 @@ const TeamMemberCard = ({
       const response = await await removeMemberAPI(
         teamId,
         'You are not suitable for this team. Sorry for the inconvenience',
-        [member?.id],
+        [member?.id ?? ''],
         user?.access_token,
       );
 
       console.log(response);
       if (response.status === 200 || response.status === 201) {
-        fetchMembers();
+        fetchMembers && fetchMembers();
         toast.success(`${response?.data}`, {
           position: 'top-right',
           autoClose: 5000,
