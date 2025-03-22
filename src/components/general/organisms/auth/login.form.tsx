@@ -11,7 +11,7 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import { authenticate } from '@/utils/actions';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn} from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import ModalReactive from '@/components/general/organisms/auth/modal.reactive';
 import { useState } from 'react';
@@ -22,7 +22,6 @@ import { ArrowLeft, Home } from 'lucide-react';
 import styles from '@/components/general/organisms/auth/auth.module.scss';
 
 const LoginForm = () => {
-  const { data: session } = useSession();
   const [isBack, setIsBack] = useState(false);
 
   //   console.log("Check Session ", session);

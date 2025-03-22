@@ -46,18 +46,19 @@ const RegisterForm = () => {
       },
     });
 
+
     if (res?.status === 200 || res?.status === 201) {
       router.push(`/verify/${encodeURIComponent(email)}`);
     } else {
       notification.error({
         message: 'Register error',
-        description: 'Please try again',
+        description: `${res?.message}`,
       });
     }
   };
 
   return (
-    <Row justify={'center'} style={{ marginTop: '10px' }}>
+    <Row justify={'center'} style={{ marginTop: '30px' }}>
       <Col xs={24} md={16} lg={14}>
         <fieldset
           style={{
