@@ -5,37 +5,50 @@ import CreateTourStep1 from '@/components/general/molecules/tournaments/create-s
 import CreateTourStep2 from '@/components/general/molecules/tournaments/create-step2.step';
 import axios from 'axios';
 import { createTourAPI } from '@/services/tournament';
+import { uploadBgTourImageAPI, uploadMerchandiseImageAPI } from '@/services/create-tour';
+import Loaders from '@/components/general/atoms/loaders/loaders';
+import { useRouter } from 'next/navigation';
 
 
 
 
-const CreateTourPage = ({session}: any) => {
+const CreateTourPage = ({ session }: any) => {
     const accessToken = session?.user?.access_token;
-    const steps = [
-        {
-            title: 'Tournament Information',
-            content: <CreateTourStep1 />,
-        },
-        {
-            title: 'Invitations & Additional Options',
-            content: <CreateTourStep2 />,
-        },
-        // {
-        //     title: 'Last',
-        //     content: 'Last-content',
-        // },
-    ];
+    const router = useRouter();
     const { token } = theme.useToken();
     const [form] = Form.useForm();
     const [currentStep, setCurrentStep] = useState(0);
     const [dataStep1, setDataStep1] = useState({});
     const [dataStep2, setDataStep2] = useState({});
+    const [fileBgTour, setFileBgTour] = useState<File | null>(null);
+    const [fileImgMerchandiseList, setFileImgMerchandiseList] = useState<File[]>([]);
+    const [isLoadingCreateTour, setIsLoadingCreateTour] = useState(false);
+
+    const steps = [
+        {
+            title: 'Tournament Information',
+            content: <CreateTourStep1
+                dataStep1={dataStep1}
+                form={form}
+                accessToken={accessToken}
+                fileBgTour={fileBgTour}
+                setFileBgTour={setFileBgTour}
+                fileImgMerchandiseList={fileImgMerchandiseList}
+                setFileImgMerchandiseList={setFileImgMerchandiseList}
+            />,
+        },
+        {
+            title: 'Invitations & Additional Options',
+            content: <CreateTourStep2 />,
+        },
+    ];
 
     const nextStep = async () => {
         const values = await form.getFieldsValue();
         console.log('Check values step1', values);
         setDataStep1(values);
         setCurrentStep(currentStep + 1);
+        console.log('bg tour', fileBgTour);
     };
 
     const prevStep = async () => {
@@ -69,153 +82,230 @@ const CreateTourPage = ({session}: any) => {
         },
     };
 
-    const fetchCreateTour = async (accessToken: string, values: any) => {
+    const fetchUploadBgTourImage = async (file: File) => {
         try {
+            const response = await uploadBgTourImageAPI(file);
+            return response;
+        } catch (error) {
+            console.error(error, "uploadBgTourImageAPI");
+        }
+    }
+    const fetchUploadMerchandiseTourImage = async (fileList: File[]) => {
+        try {
+            const response = await uploadMerchandiseImageAPI(fileList);
+            return response;
+        } catch (error) {
+            console.error(error, "uploadMerchandiseImageAPI");
+        }
+    }
+
+    const fetchCreateTour = async (accessToken: string, values: any, hasMerchandise: boolean) => {
+        try {
+            if (fileBgTour) {
+                const uploadBgTourImage = await fetchUploadBgTourImage(fileBgTour);
+
+                if (uploadBgTourImage?.statusCode === 200 || uploadBgTourImage?.statusCode === 201) {
+                    if (hasMerchandise) {
+                        const uploadMerchandiseImage = await fetchUploadMerchandiseTourImage(fileImgMerchandiseList);
+                        if (uploadMerchandiseImage.statusCode === 200 || uploadMerchandiseImage.statusCode === 201) {
+                            values = { ...values, backgroundTournament: uploadBgTourImage.data, merchandiseImages: uploadMerchandiseImage.data };
+                            const response = await createTourAPI(
+                                accessToken,
+                                values,
+                            )
+                            console.log(response.data, "create API");
+                            if (response?.statusCode === 200 || response?.statusCode === 201) {
+                                message.success('Created successfully!')
+                                router.push("/tournaments")
+                            } else throw new Error("Failed to create tournament");
+                        } else { message.error('Failed to upload merchandise images'); }
+                    }
+                    values = { ...values, backgroundTournament: uploadBgTourImage.data };
+                    const response = await createTourAPI(
+                        accessToken,
+                        values,
+                    )
+                    console.log(response.data, "response");
+                    if (response?.statusCode === 200 || response?.statusCode === 201) {
+                        message.success('Created successfully!')
+                        router.push("/tournaments")
+                    } else throw new Error("Failed to create tournament");
+
+                } else { message.error("Failed to upload Image") }
+            }
             const response = await createTourAPI(
                 accessToken,
                 values,
             )
-            console.log(response.data, "response");
-            return response.data;
+            console.log(response.data, "create API");
+            if (response?.statusCode === 200 || response?.statusCode === 201) {
+                message.success('Created successfully!')
+                router.push("/tournaments")
+            }
+            throw new Error("Failed to create tournament");
+
         } catch (error) {
-            console.error(error);
+            console.error(error, "createTourAPI");
+            // message.error("Created failed")
+            router.push("/tournaments/create")
         }
     }
 
 
-    const handleFinish = async () => {
-        const valuesStep2 = await form.validateFields(); 
-        const finalValues = { ...dataStep1, ...valuesStep2 }
-        
-        const { street, ward, district, province, registrationDate, drawDate, occurDate, checkIn, ...rest } = finalValues
-        const [provinceId, provinceName] = province?.split('|') || ['', ''];
-        const [districtId, districtName] = district?.split('|') || ['', ''];
-        const location = [street, ward, districtName, provinceName].join(', ');
 
-        const registrationOpeningDate = registrationDate? registrationDate[0].toISOString() : null;
-        const registrationClosingDate = registrationDate? registrationDate[1].toISOString() : null;
-        const drawStartDate = drawDate? drawDate[0].toISOString() : null;
-        const startDate = occurDate? occurDate[0].toISOString() : null;
-        const endDate = occurDate? occurDate[1].toISOString() : null;
-        const checkInBeforeStart = checkIn? checkIn.toISOString() : null;
-        console.log("checkIn", checkIn);
-        console.log("checkInStart", checkInBeforeStart);
-        
-  
-        const submitData = { ...rest, location, registrationOpeningDate, registrationClosingDate, drawStartDate, startDate, endDate, checkInBeforeStart };
+    const handleFinish = async () => {
+        setIsLoadingCreateTour(true);
+        const valuesStep2 = await form.validateFields();
+        console.log(valuesStep2, "valuesStep2");
+
+        const finalValues = { ...dataStep1, ...valuesStep2 }
+
+        const { street, ward, district, province, registrationDate,
+            drawDate, occurDate, checkIn, hasMerchandise,
+            contactEmail, contactPhone, mainColor,
+            ...rest } = finalValues
+
+        const registrationOpeningDate = registrationDate ? registrationDate[0].toISOString() : null;
+        const registrationClosingDate = registrationDate ? registrationDate[1].toISOString() : null;
+        const drawStartDate = drawDate ? drawDate[0].toISOString() : null;
+        const startDate = occurDate ? occurDate[0].toISOString() : null;
+        const endDate = occurDate ? occurDate[1].toISOString() : null;
+        const checkInBeforeStart = checkIn ? checkIn.toISOString() : null;
+
+
+        const submitData = {
+            ...rest,
+            mainColor,
+            contactEmail,
+            contactPhone,
+            hasMerchandise,
+            registrationOpeningDate,
+            registrationClosingDate,
+            drawStartDate,
+            startDate,
+            endDate,
+            checkInBeforeStart,
+        };
+        console.log(contactEmail);
+
         console.log("submitData", submitData);
-        
+
         await fetchCreateTour(
             accessToken,
             submitData,
+            hasMerchandise
         );
+        setIsLoadingCreateTour(false);
+
     }
 
 
     return (
-        <div className='w-full h-max  py-10 px-10 '>
-            <div className='w-full h-max flex flex-col rounded-md shadow-shadowBtn py-10 px-10 gap-5'>
-                <div className='w-max border-b-4 border-primaryColor'>
-                    <h1 className='text-[32px] font-bold leading-normal text-textColor  px-4'>New<span className='text-primaryColor'> Tournaments</span> </h1>
-                </div>
-                <ConfigProvider
-                    theme={{
-                        token: {
-                            // colorBorder: " #FF8243",
-                            fontFamily: 'inherit',
-                            fontWeightStrong: 700,
-                            colorPrimary: "#FF8243",
+        <>
+            {
+                isLoadingCreateTour ? <Loaders isLoading={isLoadingCreateTour} /> : (
 
-                        },
-                        components: {
-                            Form: {
-                                fontFamily: 'inherit',
-                            },
-                            Input: {
-                                fontFamily: 'inherit',
-                                // hoverBorderColor: "#FF8243",
-                                // activeBorderColor: "#FF8243",
-                            },
-                            Select: {
-                                // activeBorderColor: "#FF8243",
-                                // hoverBorderColor: "#FF8243",
-                            },
-                            List: {
-                                lineWidth: 10
-                            },
-                            Radio: {
-                                // buttonSolidCheckedActiveBg: "#FF8243",
-                                // buttonSolidCheckedBg: "#FF8243",
-                            },
-                            Typography: {
-                                fontFamily: 'inherit',
-                            }
-                        },
-                    }}
-                >
-                    <Form
-                        labelCol={{ span: 4 }}
-                        wrapperCol={{ span: 14 }}
-                        layout="horizontal"
-                        form={form}
 
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '50px',
-                            maxWidth: '100%',
-                            fontFamily: 'inherit',
-                            alignItems: 'center',
-                            // justifyContent: 'center'
-                        }}
-                        validateMessages={validateMessages}
-                    >
-                        <div className='w-1/2 flex justify-center items-center'>
-                            <Steps current={currentStep} items={items} />
 
-                        </div>
+                    <div className='w-full h-max  py-10 px-10 '>
+                        <div className='w-full h-max flex flex-col rounded-md shadow-shadowBtn py-10 px-10 gap-5'>
+                            <div className='w-max border-b-4 border-primaryColor'>
+                                <h1 className='text-[32px] font-bold leading-normal text-textColor  px-4'>New<span className='text-primaryColor'> Tournaments</span> </h1>
+                            </div>
+                            <ConfigProvider
+                                theme={{
+                                    token: {
+                                        // colorBorder: " #FF8243",
+                                        fontFamily: 'inherit',
+                                        fontWeightStrong: 700,
+                                        colorPrimary: "#FF8243",
 
-                        <div style={contentStyle}>{steps[currentStep].content}</div>
-                        <div className='w-full flex justify-center items-center gap-5 font-semibold text-primaryColor'>
-                            {currentStep > 0 && (
+                                    },
+                                    components: {
+                                        Form: {
+                                            fontFamily: 'inherit',
+                                        },
+                                        Input: {
+                                            fontFamily: 'inherit',
+                                            // hoverBorderColor: "#FF8243",
+                                            // activeBorderColor: "#FF8243",
+                                        },
+                                        Select: {
+                                            // activeBorderColor: "#FF8243",
+                                            // hoverBorderColor: "#FF8243",
+                                        },
+                                        List: {
+                                            lineWidth: 10
+                                        },
+                                        Radio: {
+                                            // buttonSolidCheckedActiveBg: "#FF8243",
+                                            // buttonSolidCheckedBg: "#FF8243",
+                                        },
+                                        Typography: {
+                                            fontFamily: 'inherit',
+                                        }
+                                    },
+                                }}
+                            >
+                                <Form
+                                    labelCol={{ span: 4 }}
+                                    wrapperCol={{ span: 14 }}
+                                    layout="horizontal"
+                                    form={form}
+
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '50px',
+                                        maxWidth: '100%',
+                                        fontFamily: 'inherit',
+                                        alignItems: 'center',
+                                        // justifyContent: 'center'
+                                    }}
+                                    validateMessages={validateMessages}
+                                >
+                                    <div className='w-1/2 flex justify-center items-center'>
+                                        <Steps current={currentStep} items={items} />
+
+                                    </div>
+
+                                    <div style={contentStyle}>{steps[currentStep].content}</div>
+                                    <div className='w-full flex justify-center items-center gap-5 font-semibold text-primaryColor'>
+                                        {/* {currentStep > 0 && (
                                 <Button
                                     style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', }}
                                     onClick={() => prevStep()}
                                 >
                                     Previous Step
                                 </Button>
-                            )}
-                            {currentStep === steps.length - 1 && (
-                                <Button
-                                    htmlType='submit'
-                                    type="primary"
-                                    style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', fontWeight: 'bold' }}
-                                    onClick={() => handleFinish()}
-                                >
-                                    Done
-                                </Button>
-                            )}
-                            {currentStep < steps.length - 1 && (
-                                <Button
-                                    type="primary"
-                                    style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', fontWeight: 'bold' }}
-                                    onClick={() => nextStep()}
-                                >
-                                    Next Step
-                                </Button>
-                            )}
-
-
+                            )} */}
+                                        {currentStep === steps.length - 1 && (
+                                            <Button
+                                                htmlType='submit'
+                                                type="primary"
+                                                style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', fontWeight: 'bold' }}
+                                                onClick={() => handleFinish()}
+                                            >
+                                                Done
+                                            </Button>
+                                        )}
+                                        {currentStep < steps.length - 1 && (
+                                            <Button
+                                                type="primary"
+                                                style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', fontWeight: 'bold' }}
+                                                onClick={() => nextStep()}
+                                            >
+                                                Next Step
+                                            </Button>
+                                        )}
+                                    </div>
+                                </Form>
+                            </ConfigProvider>
                         </div>
-
-
-
-                    </Form>
-                </ConfigProvider>
-
-
-            </div>
-        </div >
+                    </div >
+                )
+            }
+        </>
     );
 }
 

@@ -1,44 +1,82 @@
 import axios from 'axios';
+const URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments`;
 
-export const createTourAPI = async (districtId: string) => {
+
+export const isExistedUrlAPI = async (url: string) => {
   try {
     const response = await axios.get(
-      `https://api.dev.smashit.com.vn/api/v1/tournaments/create-tournament`,
+      `${URL}/check-exist-tournament-url/${url}`,
     );
-    return response.data.data;
+    console.log(response.data, 'isExistedUrlAPI');
+    return response.data;
   } catch (error: any) {
     console.error(
       'Error creating team:',
       error.response?.data || error.message,
     );
-    throw new Error(error.response?.data?.message || 'Failed to create team');
+    throw new Error(error.response?.data?.message || 'Failed to check exist url');
   }
 };
-export const genUrlAPI = async (districtId: string) => {
+export const generateUrlAPI = async () => {
   try {
-    const response = await axios.get(
-      `https://open.oapi.vn/location/wards/${districtId}`,
-    );
-    return response.data.data;
+    const response = await axios.get(`${URL}/create-random-url`);
+    return response.data;
   } catch (error: any) {
     console.error(
       'Error creating team:',
       error.response?.data || error.message,
     );
-    throw new Error(error.response?.data?.message || 'Failed to create team');
+    throw new Error(error.response?.data?.message || 'Failed to generate url');
   }
 };
-export const isExistedUrlAPI = async (districtId: string) => {
+export const uploadBgTourImageAPI = async (fileBgTour: File) => {
+  const formData = new FormData();
+  formData.append('backgroundImage', fileBgTour);
   try {
-    const response = await axios.get(
-      `https://open.oapi.vn/location/wards/${districtId}`,
+    const response = await axios.post(
+      `${URL}/upload-background-image`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
-    return response.data.data;
+    console.log(response.data, 'uploadBgTourImageAPI');
+    
+    return response.data;
   } catch (error: any) {
     console.error(
       'Error creating team:',
       error.response?.data || error.message,
     );
-    throw new Error(error.response?.data?.message || 'Failed to create team');
+    throw new Error(error.response?.data?.message || 'Failed to upload background image');
+  }
+};
+export const uploadMerchandiseImageAPI = async (
+  filesMerchandiseTour: File[],
+) => {
+  const formData = new FormData();
+  filesMerchandiseTour.forEach((file) => {
+    formData.append('files', file);
+  });
+  try {
+    const response = await axios.post(
+      `${URL}/upload-merchandise-images`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    console.log(response.data, 'uploadMerchandiseImageAPI');
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      'Error creating team:',
+      error.response?.data || error.message,
+    );
+    throw new Error(error.response?.data?.message || 'Failed to upload merchandise images');
   }
 };

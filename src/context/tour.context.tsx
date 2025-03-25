@@ -85,7 +85,7 @@ export const TourContextProvider = ({
             setTotal(res?.data?.meta?.total);
             setCurrentPage(res?.data?.meta?.currentPage);
             setTotalPerPage(res?.data?.meta?.totalPerPage);
-            console.log('Check pagination', res?.data?.meta);
+            // console.log('Check pagination', res?.data?.meta);
         } catch (error) {
             console.error('Error fetching tours:', error);
         }

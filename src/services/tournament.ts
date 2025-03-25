@@ -13,25 +13,26 @@ export const createTourAPI = async (accessToken: string, values: any) => {
         id: values.id,
         name: values.name,
         shortName: values.shortName,
-        backgroundTournament: 'values.backgroundTournament',
+        description: values.description,
+        contactPhone: values.contactPhone,
+        contactEmail: values.contactEmail,
+        backgroundTournament: values.backgroundTournament,
         mainColor: values.mainColor,
         prizePool: values.prizePool,
-        merchandise: values.merchandise,
-        hasMerchandise: values.isMerchandise,
+        // merchandise: values.merchandise,
+        hasMerchandise: values.hasMerchandise,
         numberOfMerchandise: values.numberOfMerchandise,
+        merchandiseImages: values.merchandiseImages,
         location: values.location,
-        tournamentSerieId: null,
-        createTournamentSerie: {
-          tournamentSerieName: 'Serie',
-        },
+        tournamentSerieId: values.tournamentSerieId,
         registrationOpeningDate: values.registrationOpeningDate,
         registrationClosingDate: values.registrationClosingDate,
         drawDate: values.drawStartDate,
         startDate: values.startDate,
         endDate: values.endDate,
-        registrationFeePerPerson: values.registrationFee,
-        registrationFeePerPair: values.registrationFeePair,
-        maxEventPerPerson: 2,
+        registrationFeePerPerson: values.registrationFeePerPerson,
+        registrationFeePerPair: values.registrationFeePerPair,
+        maxEventPerPerson: values.maxEventPerPerson,
         umpirePerMatch: values.umpirePerMatch,
         linemanPerMatch: values.linemanPerMatch,
         createTournamentEvent: [
@@ -54,7 +55,12 @@ export const createTourAPI = async (accessToken: string, values: any) => {
         ],
         protestFeePerTime: values.protestFeePerTime,
         checkInBeforeStart: values.checkInBeforeStart,
-        requiredAttachment: values.attachments,
+        requiredAttachment: values.requiredAttachment,
+        isRecruit: values.isRecruit,
+        isPrivate: values.isPrivate,
+        isRegister: values.isRegister,
+        isLiveDraw: values.isLiveDraw,
+        hasLiveStream: values.hasLiveStream,
       },
       {
         headers: {
@@ -63,7 +69,7 @@ export const createTourAPI = async (accessToken: string, values: any) => {
       },
     );
 
-    return response;
+    return response.data;
   } catch (error: any) {
     console.error(
       'Error creating team:',
