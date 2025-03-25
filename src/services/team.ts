@@ -78,6 +78,33 @@ export const getTeamDetailsAPI = async (teamId: string) => {
   }
 };
 
+export const getTeamMembersAPI = async (
+  teamId: string,
+  searchTerm: string,
+  page: number,
+  perPage: number,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/teams/members/${teamId}`,
+      {
+        params: {
+          page: page,
+          perPage: perPage,
+          searchTerm: searchTerm,
+        },
+      },
+    );
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get members team:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
 export const updateTeamDetailsAPI = async (
   logo: File | null,
   teamName: string,
@@ -136,6 +163,122 @@ export const inviteMemberAPI = async (
   } catch (error: any) {
     console.error(
       'Error inviting member:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const responseInvitationAPI = async (
+  invitationId: string,
+  accessToken: string,
+  option: boolean,
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/response-team-invitation`,
+      {
+        invitationId: invitationId,
+        option: option,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error response invitation:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const requestJoinTeamAPI = async (
+  teamId: string,
+  accessToken: string,
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/request-join-team`,
+      {
+        teamId: teamId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error response invitation:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const responseRequestJoinTeamAPI = async (
+  rejectReason: string,
+  teamId: string,
+  requestId: string,
+  option: boolean,
+  accessToken: string,
+) => {
+  try {
+    const res = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/team-leaders/response-join-team-request`,
+      {
+        rejectReason,
+        teamId,
+        requestId,
+        option,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error response join team:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const removeMemberAPI = async (
+  teamId: string,
+  reason: string,
+  teamMemberIds: string[] | undefined,
+  accessToken: string,
+) => {
+  try {
+    const res = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/team-leaders/remove-team-members`,
+      {
+        teamId,
+        reason,
+        teamMemberIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error response join team:',
       error.response?.data || error.message,
     );
     return error.response?.data;

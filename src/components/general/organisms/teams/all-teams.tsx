@@ -12,14 +12,24 @@ import { useTeamContext } from '@/context/team.context';
 
 const AllTeams = (props: any) => {
   const { session } = props;
-  const { teamsList, setTeamsList, isLoading, setIsLoading, getTeams , total, setTotal, currentPage, setCurrentPage, totalPerPage, setTotalPerPage} =
-    useTeamContext();
+  const {
+    teamsList,
+    setTeamsList,
+    isLoading,
+    setIsLoading,
+    getTeams,
+    total,
+    setTotal,
+    currentPage,
+    setCurrentPage,
+    totalPerPage,
+    setTotalPerPage,
+  } = useTeamContext();
   const [searchTerms, setSearchTerms] = useState<string>('');
 
   const debounceValue = useDebounce(searchTerms, 1000);
 
   // console.log("Check debounce", debounceValue);
-
 
   useEffect(() => {
     getTeams(currentPage, totalPerPage, debounceValue);
@@ -28,7 +38,7 @@ const AllTeams = (props: any) => {
 
   const handlePageChange = async (page: number) => {
     try {
-      const res = await searchTeamsAPI(page, totalPerPage);
+      const res = await searchTeamsAPI(page, totalPerPage, debounceValue);
       setCurrentPage(page);
       setTeamsList(res?.data?.data || []);
     } catch (error) {

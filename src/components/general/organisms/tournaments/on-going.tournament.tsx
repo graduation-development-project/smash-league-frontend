@@ -22,6 +22,7 @@ const OnGoingTournament = () => {
 
     useEffect(() => {
         getTours(currentPage, totalPerPage, debounceValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debounceValue, currentPage, totalPerPage]);
     const handlePageChange = async (currentPage: number) => {
         try {

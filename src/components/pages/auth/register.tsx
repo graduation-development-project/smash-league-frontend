@@ -7,20 +7,17 @@ import React from "react";
 
 const Register = () => {
   return (
-    <div className="flex justify-around w-full h-screen ">
-      <div className="w-[45%] h-full ">
+    <div className="flex justify-around w-full h-screen">
+      <div className="w-[45%] h-screen relative">
         <Image
           src={images.greenBackgroundImage}
-          alt="Greeb Background"
-          // layout="fill" // Makes the image cover the parent div
-          objectFit="cover" // Ensures the image maintains aspect ratio
-          quality={100} // Increases image clarity
-          priority // Loads the image faster
-          className="w-full h-full object-fill "
+          alt="Green Background"
+          quality={100}
+          priority
+          className="object-cover"
         />
       </div>
-      <div className="w-[55%] h-full shadow-shadowComp ">
-        {" "}
+      <div className="w-[55%] h-full">
         <RegisterForm />
       </div>
     </div>

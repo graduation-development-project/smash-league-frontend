@@ -42,7 +42,7 @@ interface TeamLeadersProps {}
 
 interface TeamDetailsProps {
   description: string;
-  id: string; 
+  id: string;
   logo: string;
   status: string;
   teamLeader: any;
@@ -57,7 +57,8 @@ interface PackageCardProps {
   description: string;
   advantages: string[];
   credit: number;
-  recommended?: boolean;
+  recommended: boolean;
+  isAvailable: boolean;
 }
 
 interface PaginationProps {
@@ -70,11 +71,34 @@ interface PaginationProps {
 }
 interface UserProps {
   avatarURL: string;
+  creditsRemain: number;
+  currentRefreshToken: string;
+  dateOfBirth: string;
   email: string;
-  name: string;
+  hands: string;
+  height: number;
   id: string;
   isVerified: boolean;
+  name: string;
+  otp: string | null;
+  otpExpiresTime: string | null;
   phoneNumber: string;
+  teamId: string | null;
+  teamRole: string | '';
+}
+
+interface NotificationsTypeProps {
+  id: string;
+  typeOfNotification: string;
+}
+
+interface TeamInvitationProps {
+  status: string;
+}
+
+interface TeamRequestProps {
+  teamId: string;
+  status: string;
 }
 
 interface NotificationProps {
@@ -82,6 +106,9 @@ interface NotificationProps {
   id: string;
   title: string;
   message: string;
+  teamRequest: TeamRequestProps;
+  teamInvitation: TeamInvitationProps;
+  type: NotificationsTypeProps;
   typeId: string;
   teamInvitationId: string;
   teamRequestId: string;
@@ -90,7 +117,7 @@ interface NotificationProps {
 
 interface TourDetailsProps {
   description: string;
-  id: string; 
+  id: string;
   logo: string;
   status: string;
   teamLeader: any;

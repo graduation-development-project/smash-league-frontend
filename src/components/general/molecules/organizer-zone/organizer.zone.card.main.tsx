@@ -1,8 +1,8 @@
-import Image from "next/image";
-import React from "react";
-import { organizerImage } from "@/assets/data";
-import TextGradientBtn from "../../atoms/text.gradient.btn";
-import { Button } from "@/components/ui/button";
+import Image from 'next/image';
+import React from 'react';
+import { organizerImage } from '@/assets/data';
+import TextGradientBtn from '../../atoms/text.gradient.btn';
+import { Button } from '@/components/ui/button';
 
 const OrganizerZoneCardMain = () => {
   return (
@@ -36,17 +36,19 @@ const OrganizerZoneCardMain = () => {
                   key={item.id}
                   className="flex items-center gap-2 font-semibold truncate "
                 >
-                  <item.icon className=" hover:text-green-400 hover:animate-around transition-all duration-300 cursor-pointer" />{" "}
+                  <item.icon className=" hover:text-green-400 hover:animate-around transition-all duration-300 cursor-pointer" />{' '}
                   {item.content}
                 </li>
               );
             })}
           </ul>
           <div className="flex gap-5 mt-10">
-            <Button size={"lg"} colorBtn={"gradientGreenBtn"}>
+            <Button size={'lg'} colorBtn={'gradientGreenBtn'}>
               Participate now
             </Button>
-            <TextGradientBtn textColor="green">Read more</TextGradientBtn>
+            <TextGradientBtn textColor="green" size="lg">
+              Read more
+            </TextGradientBtn>
           </div>
         </div>
       </div>

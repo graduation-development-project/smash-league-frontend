@@ -33,7 +33,7 @@ const TeamPage = (props: any) => {
           },
           {
             key: '3',
-            label: 'Particaipated Tournaments',
+            label: 'Participated Tournaments',
             children: <ParticipatedTournamentsOfTeams />,
           },
         ]
