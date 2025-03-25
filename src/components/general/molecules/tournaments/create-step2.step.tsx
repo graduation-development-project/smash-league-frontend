@@ -158,15 +158,14 @@ const CreateTourStep2 = () => {
                     </div>
                 </div>
                 <div className='w-full h-max p-8 flex flex-col'>
-                    <Form.Item name={"isPrivate"} valuePropName='checked'>
-                        <Checkbox >Private Tournament - Only who has URL can join</Checkbox>
-
+                    <Form.Item noStyle name="isPrivate" initialValue={false} >
+                        <Checkbox value={true}>Private Tournament - Only who has URL can join</Checkbox>
                     </Form.Item>
-                    <Form.Item name={"isLiveDraw"}>
-                        <Checkbox >Live Streaming Draw</Checkbox>
+                    <Form.Item noStyle name="isLiveDraw" initialValue={false}>
+                        <Checkbox value={true}>Live Streaming Draw</Checkbox>
                     </Form.Item>
-                    <Form.Item name={"isLiveDraw"}>
-                        <Checkbox >Live Streaming Matches</Checkbox>
+                    <Form.Item noStyle name="hasLiveStream" initialValue={false}>
+                        <Checkbox value={true}>Live Streaming Matches</Checkbox>
                     </Form.Item>
                 </div>
             </div>
