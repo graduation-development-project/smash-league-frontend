@@ -9,8 +9,8 @@ import BreadcrumbItem from 'antd/es/breadcrumb/BreadcrumbItem';
 import { SearchProps } from 'antd/es/input';
 import { Content } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
-import { useRouter } from 'next/navigation';
-import React from 'react'
+import { useParams, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
 import MyTournaments from './my-tour.tour';
 import { Button } from '@/components/ui/button';
 import InfoDetailsTour from '@/components/general/organisms/tournaments/info-details.tour';
@@ -20,10 +20,18 @@ import LiveDetailsTour from '@/components/general/organisms/tournaments/live-det
 import PostDetailsTour from '@/components/general/organisms/tournaments/post-details.tour';
 import PlayerDetailTour from '@/components/general/organisms/tournaments/player-detail.tour';
 import MatchDetailsTour from '@/components/general/organisms/tournaments/match-details.tour';
+import { getTourDetailAPI } from '@/services/tournament';
 
 const DetailsTourPage = () => {
+    const param = useParams();
+    const url = param.id;
+    console.log(url);
+
+
+
     const router = useRouter();
     const [activeKey, setActiveKey] = React.useState('details');
+    const [detail, setDetail] = useState<any>();
 
 
     const onChange = (key: string) => {
@@ -31,10 +39,27 @@ const DetailsTourPage = () => {
     };
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
 
+    const handleGetTourDetail = async () => {
+        try {
+            if (typeof url === 'string') {
+                const response = await getTourDetailAPI(url);
+                console.log(response.data);
+                setDetail(response.data)
+            }
+            throw new Error('Failed to get detail tour');
+        } catch (error) {
+            console.log(error, "getTourDetail");
+        }
+    }
+    useEffect(() => {
+        handleGetTourDetail();
+    }, [url])
+
+
     const renderContent = () => {
         switch (activeKey) {
             case 'details':
-                return <InfoDetailsTour />;
+                return <InfoDetailsTour tour={detail} />;
             case 'ms-bracket':
                 return <BracketDetailsTour />;
             case 'ms-player':
@@ -102,17 +127,17 @@ const DetailsTourPage = () => {
                     <div className='w-full h-max shadow-shadowComp rounded-b-lg'>
                         <div className='w-full h-[500px] '>
                             <img className='w-full h-full object-cover'
-                                src="https://t3.ftcdn.net/jpg/03/58/72/12/360_F_358721200_BzECck84Y9wQVddu1c1kSZ2Gb7vRD93E.jpg"
+                                src={detail?.backgroundTournament}
                                 alt="Tournament's Banner Image"
                             />
                         </div>
                         <div className='w-full h-max px-12 py-5 text-sm flex gap-2 justify-between items-center'>
                             <div>
-                                <h1 className='text-4xl font-extrabold'>Ho Chi Minh Open Tournaments 2025</h1>
-                                <h4>@hochiminhfederation</h4>
+                                <h1 className='text-4xl font-extrabold'>{detail?.name}</h1>
+                                {/* <h4>@hochiminhfederation</h4> */}
                             </div>
                             <div>
-                                <Button variant='default' >Register Now</Button>
+                                <Button variant='default'  >Register Now</Button>
                             </div>
                         </div>
 

@@ -24,9 +24,9 @@ const TourListBoard = ({
     <div className='w-full h-max flex flex-col px-5 py-5 gap-5 bg-white shadow-shadowComp rounded-lg'>
       <h1 className='text-[32px] text-start px-5 font-bold leading-normal text-black'><span className='text-primaryColor'>Tournaments</span> List</h1>
       <div className="grid grid-cols-4 gap-x-8 gap-y-8 w-full place-items-center justify-items-center ">
-        {tourList.map((item, index) => (
-          <div key={index}>
-            <TournamentCard tour={item} />
+        {tourList.map((tour) => (
+          <div key={tour.id}>
+            <TournamentCard tour={tour} />
           </div>
         ))}
       </div>
