@@ -6,7 +6,6 @@ import type { InputRef, TableColumnsType, TableColumnType } from "antd";
 import { Button, ConfigProvider, Input, Popconfirm, Space, Table } from "antd";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
-import { Button as CustomButton } from "@/components/ui/button";
 
 import { createStyles } from "antd-style";
 

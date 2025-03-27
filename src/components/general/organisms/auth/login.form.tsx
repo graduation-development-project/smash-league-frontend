@@ -11,7 +11,7 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import { authenticate } from '@/utils/actions';
-import { signIn} from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import ModalReactive from '@/components/general/organisms/auth/modal.reactive';
 import { useState } from 'react';
@@ -20,6 +20,7 @@ import Image from 'next/image';
 import images from '@/assets/images';
 import { ArrowLeft, Home } from 'lucide-react';
 import styles from '@/components/general/organisms/auth/auth.module.scss';
+import { useProfileContext } from '@/context/profile.context';
 
 const LoginForm = () => {
   const [isBack, setIsBack] = useState(false);
@@ -28,8 +29,8 @@ const LoginForm = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-
   const [changePassword, setChangePassword] = useState(false);
+  const { setUser } = useProfileContext();
 
   const onFinish = async (values: any) => {
     const { username, password } = values;
@@ -38,7 +39,7 @@ const LoginForm = () => {
     //trigger sign-in
     const res = await authenticate(username.trim(), password.trim());
 
-    // console.log('Check res', res);
+    console.log('Check res', res);
     // console.log('Check sesion', session?.user);
     if (res?.error) {
       //error
@@ -54,6 +55,7 @@ const LoginForm = () => {
     } else {
       //redirect to /dashboard
       router.push('/');
+      router.refresh();
       // console.log("Success login");
     }
   };

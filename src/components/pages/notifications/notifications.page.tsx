@@ -1,8 +1,10 @@
 'use client';
+import Spinner from '@/components/general/atoms/loaders/spinner';
 import NotificationCard from '@/components/general/atoms/notification.card';
 import { getNotificationAPI } from '@/services/notification';
 import { DownOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Dropdown, MenuProps } from 'antd';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const NotificationsPage = () => {
@@ -10,6 +12,7 @@ const NotificationsPage = () => {
   const [user, setUser] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
   const [notiStatus, setNotiStatus] = useState('All');
+  const router = useRouter();
 
   const handleMenuClick: MenuProps['onClick'] = (e) => {
     setNotiStatus(e.key);
@@ -53,16 +56,18 @@ const NotificationsPage = () => {
   }, []);
   const getNotifications = async () => {
     try {
+      setIsLoading(true);
       const response = await getNotificationAPI(user?.access_token);
       console.log(response?.data);
       setNotifications(response?.data);
+      setIsLoading(false);
     } catch (error: any) {
       console.error(error);
     }
   };
 
   const filterStatusNotifications = (status: string) => {
-    if (status === 'All') return notifications && notifications;
+    if (status === 'All') return notifications;
 
     return (
       notifications &&
@@ -70,6 +75,7 @@ const NotificationsPage = () => {
         const hasRequest = notif.teamRequest?.status === status.toUpperCase();
         const hasInvitation =
           notif.teamInvitation?.status === status.toUpperCase();
+
         // Nếu bất kỳ cái nào khớp, giữ lại thông báo
         return hasRequest || hasInvitation;
       })
@@ -89,63 +95,75 @@ const NotificationsPage = () => {
 
   return (
     <div className="w-full h-full flex flex-col gap-3 shadow-shadowComp rounded-[5px] mt-4 p-4">
-      <div className="w-full h-full flex justify-between items-center">
-        <h1 className="text-[28px] font-bold text-primaryColor underline">
-          NOTIFICATIONS
-        </h1>
-        <ConfigProvider
-          theme={{
-            components: {
-              Button: {
-                /* here is your component tokens */
-                defaultActiveBorderColor: '#FF8243',
-                defaultActiveColor: '#FF8243',
-                defaultHoverBorderColor: '#FF8243',
-                defaultHoverColor: '#FF8243',
-              },
-            },
-          }}
-        >
-          <Dropdown
-            overlayStyle={{
-              fontFamily: 'inherit',
-            }}
-            menu={menuProps}
-          >
-            <Button
-              size="large"
-              style={{
-                width: 'max-content',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                fontFamily: 'inherit',
-                fontSize: '14px',
+      {isLoading ? (
+        <Spinner isLoading={isLoading} />
+      ) : (
+        <>
+          <div className="w-full h-full flex justify-between items-center">
+            <h1 className="text-[28px] font-bold text-primaryColor underline">
+              NOTIFICATIONS
+            </h1>
+            <ConfigProvider
+              theme={{
+                components: {
+                  Button: {
+                    /* here is your component tokens */
+                    defaultActiveBorderColor: '#FF8243',
+                    defaultActiveColor: '#FF8243',
+                    defaultHoverBorderColor: '#FF8243',
+                    defaultHoverColor: '#FF8243',
+                  },
+                },
               }}
             >
-              {notiStatus} <DownOutlined />
-            </Button>
-          </Dropdown>
-        </ConfigProvider>
-      </div>
-      <div>
-        {notifications && filteredNotifications.length > 0 ? (
-          <div className="flex flex-col gap-3">
-            {filteredNotifications?.map((noti: any) => (
-              <div key={noti?.id}>
-                <NotificationCard
-                  notification={noti}
-                  getNotifications={getNotifications}
-                />
+              <Dropdown
+                overlayStyle={{
+                  fontFamily: 'inherit',
+                }}
+                menu={menuProps}
+                trigger={['click']}
+              
+              >
+                <Button
+                  size="large"
+                  style={{
+                    width: 'max-content',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.refresh();
+                  }}
+                >
+                  {notiStatus} <DownOutlined />
+                </Button>
+              </Dropdown>
+            </ConfigProvider>
+          </div>
+          <div>
+            {notifications && filteredNotifications.length > 0 ? (
+              <div className="flex flex-col gap-3">
+                {filteredNotifications?.map((noti: any) => (
+                  <div key={noti?.id}>
+                    <NotificationCard
+                      notification={noti}
+                      setNotifications={setNotifications}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="text-center text-[18px] text-gray-500">
+                No notifications
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="text-center text-[18px] text-gray-500">
-            No notifications
-          </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };

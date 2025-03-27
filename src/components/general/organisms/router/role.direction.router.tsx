@@ -20,6 +20,8 @@ const RoleDirectionRouter = (props: any) => {
 
     if (session?.user?.role.includes('Admin')) {
       router.push('/dashboard');
+    } else if (session?.user?.role.includes('Staff')) {
+      router.push('/dashboard');
     } else if (session?.user?.role.includes('Athlete')) {
       router.push('/home');
     } else if (!session) {

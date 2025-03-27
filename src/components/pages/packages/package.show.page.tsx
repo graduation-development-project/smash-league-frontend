@@ -34,7 +34,7 @@ const PackagePage = () => {
   }, []);
 
   const advantagesList = ['Hehe'];
-  console.log('Check Packages', packages);
+  // console.log('Check Packages', packages);
   return (
     <div className="w-full h-full flex flex-col gap-6 rounded-[10px] shadow-shadowComp p-8">
       <div className="flex flex-col gap-2 w-max">
@@ -45,19 +45,10 @@ const PackagePage = () => {
         <div className="w-24 h-[2px] rounded-[10px] bg-secondColor flex-end" />
       </div>
       <div className="w-full h-full flex justify-between items-center gap-5 ">
-        {packages.map((item: any) => {
+        {packages.map((item: PackageCardProps) => {
           return (
             <div key={item.id}>
-              <PackageCard
-                title={item?.packageName}
-                newPrice={item?.currentDiscountByAmount}
-                oldPrice={item?.price}
-                description={item?.packageDetail}
-                advantages={item?.advantages}
-                credit={item?.credits}
-                recommended={item?.isRecommended}
-                isAvailable={item?.isAvailable}
-              />
+              <PackageCard pack={item} />
             </div>
           );
         })}

@@ -12,6 +12,7 @@ interface ProfileIdProps {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
   user: any;
+  setUser: (user: any) => void;
 }
 
 const ProfileContext = createContext<ProfileIdProps | null>(null);
@@ -36,7 +37,6 @@ export const ProfileContextProvider = ({
     }
   }, []);
 
-
   return (
     <ProfileContext.Provider
       value={{
@@ -49,6 +49,7 @@ export const ProfileContextProvider = ({
         isLoading,
         setIsLoading,
         user,
+        setUser,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { Tooltip } from 'antd';
+import { Popover} from 'antd';
 import React from 'react';
 
 const InfoBox = ({ title, info }: { title: string; info: string }) => {
@@ -8,7 +8,7 @@ const InfoBox = ({ title, info }: { title: string; info: string }) => {
         {title}
       </h2>
       <p className="text-[16px] text-center font-bold w-full overflow-hidden whitespace-nowrap text-ellipsis">
-        <Tooltip title={info}>{info}</Tooltip>
+        <Popover title={info}>{info}</Popover>
       </p>
     </div>
   );

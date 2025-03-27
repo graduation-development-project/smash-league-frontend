@@ -1,4 +1,5 @@
 'use client';
+import { useProfileContext } from '@/context/profile.context';
 import { useTeamContext } from '@/context/team.context';
 import { createTeamAPI, searchTeamsAPI } from '@/services/team';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -18,13 +19,13 @@ const CreateTeamsModal = ({
   const [imageURL, setImageURL] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { getTeams } = useTeamContext();
+  const {user} = useProfileContext()
 
-  const [user, setUser] = useState<any>({});
 
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user') as string) || {};
-    setUser(storedUser);
-  }, []);
+  // useEffect(() => {
+  //   const storedUser = JSON.parse(localStorage.getItem('user') as string) || {};
+  //   setUser(storedUser);
+  // }, []);
 
   // console.log('check', session?.user?.access_token);
   // api truyen file => URL 3 anh sau khi up len cloud
@@ -36,7 +37,7 @@ const CreateTeamsModal = ({
   };
   const handleCreateTeam = async (values: any) => {
     const { teamLeaderId, teamName, teamDescription } = values;
-    const accessToken = session?.user?.access_token;
+    const accessToken = user?.access_token
     setIsLoading(true);
     const response = await createTeamAPI(
       file,
