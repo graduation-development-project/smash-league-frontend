@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 const CreateTeamsModal = ({
   isModalOpen,
   setIsModalOpen,
-  session,
 }: CreateTeamsModalProps) => {
   const [teamLeaderId, setTeamLeaderId] = React.useState<string>('1');
   const [file, setFile] = useState<File | null>(null);
@@ -20,16 +19,6 @@ const CreateTeamsModal = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { getTeams } = useTeamContext();
   const {user} = useProfileContext()
-
-
-  // useEffect(() => {
-  //   const storedUser = JSON.parse(localStorage.getItem('user') as string) || {};
-  //   setUser(storedUser);
-  // }, []);
-
-  // console.log('check', session?.user?.access_token);
-  // api truyen file => URL 3 anh sau khi up len cloud
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
