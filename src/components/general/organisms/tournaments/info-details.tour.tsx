@@ -1,18 +1,22 @@
+"use client"
 import { Button } from '@/components/ui/button'
 import { FaLocationDot, FaRegCalendar } from "react-icons/fa6";
-import { FaUserCircle, FaUsers } from "react-icons/fa";
+import { FaClock, FaUserCircle, FaUsers } from "react-icons/fa";
 import { HiMiniTrophy } from "react-icons/hi2";
 import React from 'react'
+import { formatDate, formatDateTime, formatOccurDate } from '@/utils/format';
 
-const InfoDetailsTour = () => {
+const InfoDetailsTour = ({tour} : any) => {
     const styleCard = 'w-full flex py-5 px-8 border rounded-md'
-    const color = '#60a5fa';
-    const bgColor = 'bg-[#60a5fa]';
+    const color = tour?.mainColor || "#FF8243";
+    const bgColor = `bg-[${tour?.mainColor}]` || "bg-[#FF8243]";
+    console.log(bgColor);
+    
     const titleCard = (title: string) => {
         return (
             <h3 className='text-2xl font-bold '>
                 {title}
-                <div className='w-24 h-1 bg-blue-400 rounded-full' />
+                <div className={`w-24 h-1 ${bgColor} rounded-full`} />
             </h3>
         )
     }
@@ -20,26 +24,32 @@ const InfoDetailsTour = () => {
     return (
         <div className='w-full h-max flex flex-col gap-5 p-3'>
             <div className={`${styleCard} justify-between items-center text-2xl ${bgColor} text-white`}>
-                <h3 className='font-bold '>Summer Open Tournaments</h3>
+                <h3 className='font-bold '>{tour?.tournamentSerie?.tournamentSerieName}</h3>
                 <Button>View series</Button>
             </div>
             <div className={`${styleCard} flex-col gap-4 text-base `}>
                 {titleCard('Basic Info')}
 
                 <div className='flex gap-5'>
-
                     <ul className='flex flex-col gap-2 font-semibold'>
                         <li className='flex gap-2 items-center'><FaLocationDot color={`${color}`} size={18} />Location</li>
-                        <li className='flex gap-2 items-center'><FaRegCalendar color={`${color}`} size={18} />Date</li>
+                        <li className='flex gap-2 items-center'><FaRegCalendar color={`${color}`} size={18} />Registration Date</li>
+                        <li className='flex gap-2 items-center'><FaRegCalendar color={`${color}`} size={18} />Occur Date</li>
+                        <li className='flex gap-2 items-center'><FaClock color={`${color}`} size={18} />Draw Date</li>
+                        
                         <li className='flex gap-2 items-center'><FaUserCircle color={`${color}`} size={18} />Host</li>
                         <li className='flex gap-2 items-center'><FaUsers color={`${color}`} size={18} />Co-orgainzers</li>
+                        <li className='flex gap-2 items-center'><FaClock color={`${color}`} size={18} />Date left</li>
 
                     </ul>
                     <ul className='flex flex-col gap-2'>
-                        <li>123 Le Van Viet Street, Ward Long Thanh My, District 9, HCMC</li>
-                        <li>22 - 24 December, 2024</li>
-                        <li>Ho Chi Minh Federation</li>
-                        <li>None</li>
+                        <li>{tour?.location}</li>
+                        <li>{formatOccurDate(tour?.registrationOpeningDate, tour?.registrationClosingDate)}</li>
+                        <li>{formatOccurDate(tour?.startDate, tour?.endDate)}</li>
+                        <li>{formatDateTime(tour?.drawDate)}</li>
+                        <li>{tour?.organizer?.name}</li>
+                        <li>{tour?.organizers || "None"}</li>
+                        <li className='text-[red] font-semibold'>{tour?.expiredTimeLeft}</li>
                     </ul>
                 </div>
                 <div className='w-max flex py-2 px-8 gap-2 items-center bg-gradient-orange rounded-full text-white font-bold '><HiMiniTrophy color="#f3c900" size={25} />Prize Pool : 1.500.000VND</div>
@@ -56,7 +66,7 @@ const InfoDetailsTour = () => {
                 </p>
             </div>
             <div className={`${styleCard} flex-col gap-4 text-base `}>
-                {titleCard('Game Rules')}
+                {titleCard('Description')}
                 <p>
                     1. Scoring System
                     A match is played best of three games to 21 points.
