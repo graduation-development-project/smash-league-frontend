@@ -2,8 +2,7 @@ import React from 'react'
 import MatchCard from '../../atoms/tournaments/match.card'
 import { match } from 'assert';
 
-const MatchDetailsTour = () => {
-  const mainColor = '#60a5fa';
+const MatchDetailsTour = ({mainColor, matchList} : {mainColor: string, matchList: any}) => {
   const linearBgColor = `bg-[linear-gradient(180deg,_${mainColor}_0%,_#2c2c2c_50%)]`;
   const matchCourt = [
     {
