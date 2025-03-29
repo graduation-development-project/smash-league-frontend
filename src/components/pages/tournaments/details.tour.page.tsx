@@ -21,11 +21,13 @@ import PostDetailsTour from '@/components/general/organisms/tournaments/post-det
 import PlayerDetailTour from '@/components/general/organisms/tournaments/player-detail.tour';
 import MatchDetailsTour from '@/components/general/organisms/tournaments/match-details.tour';
 import { getTourDetailAPI } from '@/services/tournament';
+import { EVENT_ENUM } from '@/utils/enum';
+import EventAgeDetails from '@/components/general/molecules/tournaments/event-age-details.tour';
 
 const DetailsTourPage = () => {
     const param = useParams();
     const url = param.id;
-    console.log(url);
+    const [eventList, setEventList] = useState<any[]>([]);
 
 
 
@@ -43,47 +45,30 @@ const DetailsTourPage = () => {
         try {
             if (typeof url === 'string') {
                 const response = await getTourDetailAPI(url);
-                console.log(response.data);
-                setDetail(response.data)
+                setDetail(response.data);
+                setEventList(Object.entries(response.data.tournamentEvents));
             }
             throw new Error('Failed to get detail tour');
         } catch (error) {
             console.log(error, "getTourDetail");
         }
     }
+
+
     useEffect(() => {
         handleGetTourDetail();
     }, [url])
 
 
     const renderContent = () => {
+        const eventMap = eventList?.flatMap(([name, event]) =>
+            event.map((age: any) => ({ key: age.id, label: `From ${age.fromAge} to ${age.toAge}` }))
+        ) || [];
+        const isEventKey = eventMap.some(event => event.key === activeKey);
+
         switch (activeKey) {
             case 'details':
                 return <InfoDetailsTour tour={detail} />;
-            case 'ms-bracket':
-                return <BracketDetailsTour />;
-            case 'ms-player':
-                return <PlayerDetailTour />;
-            case 'ms-match':
-                return <MatchDetailsTour />;
-            case 'ws-bracket':
-                return <BracketDetailsTour />;
-            case 'ws-player':
-                return <PlayerDetailTour />;
-            case 'ws-match':
-                return <BracketDetailsTour />;
-            case 'wd-bracket':
-                return <BracketDetailsTour />;
-            case 'wd-player':
-                return <PlayerDetailTour />;
-            case 'wd-match':
-                return <BracketDetailsTour />;
-            case 'xd-bracket':
-                return <BracketDetailsTour />;
-            case 'xd-player':
-                return <PlayerDetailTour />;
-            case 'xd-match':
-                return <BracketDetailsTour />;
             case 'live1':
                 return <LiveDetailsTour />;
             case 'live2':
@@ -95,7 +80,7 @@ const DetailsTourPage = () => {
             case 'merchandise':
                 return <MerchandiseDetailsTour />;
             default:
-                return null;
+                return isEventKey ? <EventAgeDetails eventId={activeKey} mainColor={detail?.mainColor || '#FF8243'} /> : null;
         }
     }
 
@@ -132,9 +117,9 @@ const DetailsTourPage = () => {
                             />
                         </div>
                         <div className='w-full h-max px-12 py-5 text-sm flex gap-2 justify-between items-center'>
-                            <div>
+                            <div className='flex flex-col gap-2'>
                                 <h1 className='text-4xl font-extrabold'>{detail?.name}</h1>
-                                {/* <h4>@hochiminhfederation</h4> */}
+                                <h4>@{detail?.shortName}</h4>
                             </div>
                             <div>
                                 <Button variant='default'  >Register Now</Button>
@@ -147,7 +132,7 @@ const DetailsTourPage = () => {
                             <Breadcrumb style={{ cursor: "pointer" }}>
                                 <BreadcrumbItem onClick={() => router.push("/")}>Home</BreadcrumbItem>
                                 <BreadcrumbItem onClick={() => router.push("/tournaments")}>Tournaments</BreadcrumbItem>
-                                <BreadcrumbItem >Ho Chi Minh Open Tournaments 2025</BreadcrumbItem>
+                                <BreadcrumbItem >{detail?.name}</BreadcrumbItem>
                             </Breadcrumb>
                         </div>
                         <div className='w-full'>
@@ -169,118 +154,38 @@ const DetailsTourPage = () => {
                                             {
                                                 key: 'events',
                                                 label: 'Events',
-                                                children: [
-                                                    {
-                                                        key: 'ms',
-                                                        label: 'Men\'s Single',
-                                                        type: 'group',
-                                                        children: [
-                                                            {
-                                                                key: 'ms-bracket',
-                                                                label: 'Bracket',
-
-                                                            },
-                                                            {
-                                                                key: 'ms-player',
-                                                                label: 'Players',
-                                                            },
-                                                            {
-                                                                key: 'ms-match',
-                                                                label: 'Matches',
-                                                            },
-                                                            {
-                                                                key: 'ms-standings',
-                                                                label: 'Standingss',
-                                                            },
-                                                        ]
-                                                    },
-                                                    {
-                                                        key: 'ws',
-                                                        label: 'Women\'s Single',
-                                                        type: 'group',
-                                                        children: [
-                                                            {
-                                                                key: 'ws-bracket',
-                                                                label: 'Bracket',
-
-                                                            },
-                                                            {
-                                                                key: 'ws-player',
-                                                                label: 'Players',
-                                                            },
-                                                            {
-                                                                key: 'ws-standings',
-                                                                label: 'Standingss',
-                                                            },
-                                                        ]
-                                                    },
-                                                    {
-                                                        key: 'wd',
-                                                        label: 'Women\'s Double',
-                                                        type: 'group',
-                                                        children: [
-                                                            {
-                                                                key: 'wd-bracket',
-                                                                label: 'Bracket',
-
-                                                            },
-                                                            {
-                                                                key: 'wd-player',
-                                                                label: 'Players',
-                                                            },
-                                                            {
-                                                                key: 'wd-standings',
-                                                                label: 'Standingss',
-                                                            },
-                                                        ]
-                                                    },
-                                                    {
-                                                        key: 'xd',
-                                                        label: 'Mixed Double',
-                                                        type: 'group',
-                                                        children: [
-                                                            {
-                                                                key: 'xd-bracket',
-                                                                label: 'Bracket',
-
-                                                            },
-                                                            {
-                                                                key: 'xd-player',
-                                                                label: 'Players',
-                                                            },
-                                                            {
-                                                                key: 'xd-standings',
-                                                                label: 'Standings',
-                                                            },
-                                                        ]
-                                                    },
-                                                ]
+                                                children: eventList?.map(([name, event]) => ({
+                                                    key: name,
+                                                    label: EVENT_ENUM[name as keyof typeof EVENT_ENUM],
+                                                    // label: event?.tournamentEvent,
+                                                    type: 'group',
+                                                    children: event?.map((age: any) => ({
+                                                        key: age.id,
+                                                        label: `From ${age?.fromAge} to ${age?.toAge}`,
+                                                    }))
+                                                }))
                                             },
                                             {
                                                 key: 'live',
                                                 label: 'Live Stream',
-                                                children: [
+                                                disabled: !detail?.hasLiveStream,
+                                                children: detail?.liveStreamRooms?.map((room: any) => (
                                                     {
-                                                        key: 'live1',
+
+                                                        key: room.id,
                                                         label: 'Live Court 1',
-                                                    },
-                                                    {
-                                                        key: 'live2',
-                                                        label: 'Live Court 2',
-                                                    },
-                                                    {
-                                                        key: 'live3',
-                                                        label: 'Live Court 3',
-                                                    },
-                                                ]
+                                                    }
+                                                ))
                                             },
                                             {
                                                 key: 'posts',
                                                 label: 'Posts',
+                                                disabled: !detail?.hasPost,
                                             },
                                             {
                                                 key: 'merchandise',
                                                 label: 'Merchandise',
+                                                disabled: !detail?.hasMerchandise,
                                             },
                                         ]}
                                     />

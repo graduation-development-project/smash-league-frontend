@@ -6,26 +6,22 @@ import { teamBrackets } from '@/mock-data/simple-data';
 import React, { useRef } from 'react'
 import { useDraggable } from 'react-use-draggable-scroll';
 
-const BracketDetailsTour = () => {
+const BracketDetailsTour = ({ mainColor, bracket }: { mainColor: string, bracket: any }) => {
     const ref = useRef<HTMLDivElement | null>(null); // Ensure it can be null initially
     const { events } = useDraggable(ref as React.MutableRefObject<HTMLElement>)
-    const color = '#60a5fa';
-    const bgColor = `bg-[${color}]`;
-    const borderColor = `border-[${color}]`;
+    const color = mainColor || "#FF8243";
     return (
         <div className='w-full h-max p-5'>
             <div className='w-full h-max min-h-56 flex flex-col gap-8'>
-                <h3 className='w-max text-4xl font-extrabold '>
+                {/* <h3 className='w-max text-4xl font-extrabold '>
                     Battle&apos;s Bracket
                     <div className={`w-1/2 h-1 rounded-full ${bgColor} mt-1`}/>
-                </h3>
-                <div className='w-full flex flex-row gap-5'>
-                    <Button >Age 10-20</Button>
-                    <Button >Age 21-35</Button>
-                    <Button >Age 36-50</Button>
-                </div>
+                </h3> */}
 
-                <div className={`w-1/2 flex gap-10 text-base text-white p-5 bg-[#2c2c2c] rounded-r-lg border-b-4 border-[#60a5fa] `}>
+                <div
+                    style={{ borderColor: `${color}` }}
+                    className={`w-1/2 flex gap-10 text-base text-white p-5 bg-[#2c2c2c] rounded-r-lg border-b-4 `}
+                >
                     <th className='text-start flex flex-col gap-3'>
                         <li>Players:</li>
                         <li>Format:</li>
