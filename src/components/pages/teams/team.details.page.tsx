@@ -10,7 +10,11 @@ import UpdateTeamsForm from '@/components/general/molecules/teams/update.teams.f
 import TournamentsTeamsDetails from '@/components/general/organisms/teams/tournaments.teams.details';
 import MembersTeamsDetails from '@/components/general/organisms/teams/members.teams.details';
 import AnnouncementsTeamsDetails from '../../general/organisms/teams/announcements.teams.details';
-import { getTeamMembersAPI, requestJoinTeamAPI } from '@/services/team';
+import {
+  getTeamMembersAPI,
+  leaveTeamAPI,
+  requestJoinTeamAPI,
+} from '@/services/team';
 import { toast } from 'react-toastify';
 import Spinner from '@/components/general/atoms/loaders/spinner';
 
@@ -19,7 +23,7 @@ const TeamDetailsPage = (props: any) => {
   const { activeKey, setActiveKey, teamDetails, teamId } = useTeamContext();
   const [user, setUser] = useState<any>(null);
   const [teamMemberList, setTeamMemberList] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // ✅ Mặc định là đang tải
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchTeamMembers = async (teamId: string) => {
     if (teamId) {
@@ -46,8 +50,10 @@ const TeamDetailsPage = (props: any) => {
   }, [teamId]);
 
   const isTeamLeader =
-    user?.role?.includes('Team Leader') &&
+    user?.userRoles?.includes('Team Leader') &&
     user?.id === teamDetails?.teamLeaderId;
+
+  const isTeamMember = teamMemberList.find((member) => member.id === user?.id);
 
   const handleRequestJoinTeam = async () => {
     const response = await requestJoinTeamAPI(
@@ -58,19 +64,49 @@ const TeamDetailsPage = (props: any) => {
     if (response?.status === 200 || response?.status === 201) {
       toast.success(`${response?.data}`, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
       });
     } else {
       toast.error(`${response?.message}`, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const handleRequestLeaveTeam = async () => {
+    const response = await leaveTeamAPI(
+      teamDetails?.id,
+      user.access_token,
+      'I want to leave the team',
+    );
+
+    console.log(response, 'check ');
+    if (response?.status === 200 || response?.status === 201) {
+      toast.success(`${response?.data}`, {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    } else {
+      toast.error(`${response?.message}`, {
+        position: 'top-right',
+        autoClose: 3000,
       });
     }
   };
 
   const items: TabsProps['items'] = [
     { key: '1', label: 'Overview', children: <OverviewTeamDetails /> },
-    { key: '2', label: 'Members', children: <MembersTeamsDetails /> },
+    {
+      key: '2',
+      label: 'Members',
+      children: (
+        <MembersTeamsDetails
+          setTeamMemberList={setTeamMemberList}
+          teamMemberList={teamMemberList}
+        />
+      ),
+    },
     {
       key: '3',
       label: 'Announcements',
@@ -114,9 +150,37 @@ const TeamDetailsPage = (props: any) => {
                 </p>
               </div>
 
-              {!isLoading && (
-                <Button size={'sm'} onClick={handleRequestJoinTeam}>
-                  {isTeamLeader ? 'Leave' : 'Join'}
+              {!isLoading && isTeamLeader ? (
+                <Button
+                  size={'sm'}
+                  onClick={() => {
+                    toast.warning(
+                      'Before you leave, please transfer your position !!!',
+                      {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'light',
+                      },
+                    );
+                  }}
+                >
+                  Leave
+                </Button>
+              ) : (
+                <Button
+                  size={'sm'}
+                  onClick={
+                    isTeamMember
+                      ? handleRequestLeaveTeam
+                      : handleRequestJoinTeam
+                  }
+                >
+                  {isTeamMember ? 'Leave' : 'Join'}
                 </Button>
               )}
             </div>

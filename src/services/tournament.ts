@@ -115,12 +115,90 @@ export const getTourDetailAPI = async (url: string) => {
     if (response.data.statusCode === 200 || response.data.statusCode === 201) {
       return response.data;
     }
-    throw new Error( 'Failed to get Detail tour')
+    throw new Error('Failed to get Detail tour');
   } catch (error: any) {
     console.error(
       'Error creating team:',
       error.response?.data || error.message,
     );
-    throw new Error(error.response?.data?.message || 'Failed to get detail tour');
+    throw new Error(
+      error.response?.data?.message || 'Failed to get detail tour',
+    );
   }
 };
+
+export const getAllTournamentsByUserAPI = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/organizers/owned-tournaments`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all tournaments by user:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+export const getTournamentEventParticipantsAPI = async (
+  accessToken: string,
+  tournamentEventId: string | null,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-participants-of-tournament-event/${tournamentEventId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error getTournamentEventparticipants:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getTournamentEventDetailAPI = async (tournamentId: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-tournament-event/${tournamentId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get Tournament Event Detail:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getMatchesOfTournamentEventAPI = async (tournamentEventId:string) =>{
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-matches-of-tournament-event/${tournamentEventId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get matches of Tournament Event Detail:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+}

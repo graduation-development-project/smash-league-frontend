@@ -67,19 +67,19 @@ const Navigation = (props: any) => {
     setUnread(false);
     // Optionally, send API request to mark them as read
   };
-  const filterStatusNotifications = () => {
-    return (
-      notifications &&
-      notifications?.filter((notif: any) => {
-        const hasRequest = notif.teamRequest?.status === 'PENDING';
-        const hasInvitation = notif.teamInvitation?.status === 'PENDING';
-        // Nếu bất kỳ cái nào khớp, giữ lại thông báo
-        return hasRequest || hasInvitation;
-      })
-    );
-  };
+  // const filterStatusNotifications = () => {
+  //   return (
+  //     notifications &&
+  //     notifications?.filter((notif: any) => {
+  //       const hasRequest = notif.teamRequest?.status === 'PENDING';
+  //       const hasInvitation = notif.teamInvitation?.status === 'PENDING';
+  //       // Nếu bất kỳ cái nào khớp, giữ lại thông báo
+  //       return hasRequest || hasInvitation;
+  //     })
+  //   );
+  // };
 
-  const filteredNotifications = filterStatusNotifications();
+  // const filteredNotifications = filterStatusNotifications();
 
   const items: MenuProps['items'] = [
     {
@@ -87,16 +87,19 @@ const Navigation = (props: any) => {
       label: 'Public Profile',
       icon: <RiProfileFill size={15} />,
       onClick: () => {
-        if (!user || !user.role) return; // Avoid errors
+        if (!user || !user.userRoles) return; // Avoid errors
         localStorage.setItem('page', 'Home');
         setRoute('Profile');
         router.push(
           `/profile/${
-            Array.isArray(user.role)
-              ? user.role[1]?.toLowerCase().replace(/\s+/g, '') ||
-                user.role[0]?.toLowerCase().replace(/\s+/g, '')
-              : user.role.toLowerCase().replace(/\s+/g, '')
-          }/${session?.user?.name.toLowerCase()}`,
+            user?.userRoles.includes('Organizer')
+              ? 'organizer'
+              : user?.userRoles.includes('Umpire')
+              ? 'umpire'
+              : user?.userRoles.includes('Team Leader')
+              ? 'teamleader'
+              : 'athlete'
+          }/${user?.name.toLowerCase()}`,
         );
       },
     },
@@ -107,18 +110,24 @@ const Navigation = (props: any) => {
       key: 'become-organizer',
       label: 'Become The Organizer',
       icon: <IoIosStar size={15} className="text-yellow-400" />,
+      onClick: () => {
+        router.push('/become/organizer');
+      },
     },
     {
       key: 'become-umpire',
       label: 'Become The Umpire',
       icon: <FaAddressCard size={15} />,
+      onClick: () => {
+        router.push('/become/umpire');
+      },
     },
     {
       key: 'buy-package',
       label: 'Buy Packages',
       icon: <LuPackagePlus size={15} />,
       onClick: () => {
-        router.push('/package');
+        router.push('/packages');
       },
     },
     {
@@ -146,9 +155,7 @@ const Navigation = (props: any) => {
           localStorage.setItem('page', 'Home');
           setRoute('Home');
           localStorage.removeItem('user');
-          await signOut();
-          router.push('/home');
-          router.refresh();
+          await signOut({ callbackUrl: '/home' });
         } catch (error) {
           console.error('Logout error:', error);
         }
@@ -255,25 +262,23 @@ const Navigation = (props: any) => {
                   className="shadow-shadowComp relative z-60 rounded-[10px]"
                 >
                   <div className="w-full h-full bg-white rounded-[10px] px-4 py-6 flex flex-col justify-center items-center gap-2">
-                    {notifications && filteredNotifications.length > 0 ? (
+                    {notifications && notifications.length > 0 ? (
                       <div className="flex flex-col gap-3">
-                        {filteredNotifications
-                          .slice(0, 3)
-                          .map((notification: any) => (
-                            <div key={notification.id}>
-                              <NotificationCard
-                                notification={notification}
-                                hiddenBtn={true}
-                              />
-                            </div>
-                          ))}
+                        {notifications.slice(0, 3).map((notification: any) => (
+                          <div key={notification.id}>
+                            <NotificationCard
+                              notification={notification}
+                              hiddenBtn={true}
+                            />
+                          </div>
+                        ))}
                       </div>
                     ) : (
                       <div className="text-[14px] text-gray-400">
                         No notifications found
                       </div>
                     )}
-                    {notifications && filteredNotifications?.length > 0 && (
+                    {notifications && notifications?.length > 0 && (
                       <div
                         className="text-textColor text-[14px] flex justify-center cursor-pointer bg-white mt-2  border border-gray-400 w-full p-1 rounded-[5px] hover:text-primaryColor hover:border-primaryColor"
                         onClick={() => router.push('/notifications')}
@@ -305,7 +310,7 @@ const Navigation = (props: any) => {
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Button size={'sm'}>
-                  Welcome {session?.user?.name}
+                  Welcome {user?.name}
                   <DownOutlined />
                 </Button>
               </a>

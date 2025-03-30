@@ -1,0 +1,50 @@
+.court {
+  display: grid;
+  grid-template-rows: 80px 240px 240px 80px;
+  grid-template-columns: 100px 400px 160px 160px 400px 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 90%;
+  border: solid 2px black;
+  justify-content: center;
+  align-content: center;
+}
+
+.court > div {
+  border: solid #fff;
+  border-width: 2px 0 0 2px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+// .court > div:hover {
+//   background: #ff8243;
+//   font-weight: 600;
+// }
+
+.court > div:nth-child(6),
+.court > div:nth-child(12),
+.court > div:nth-child(16),
+.court > div:nth-child(22) {
+  border-right-width: 2px;
+}
+
+.court > div:nth-last-child(-n + 6) {
+  border-bottom-width: 2px;
+}
+
+.court > div:nth-child(9),
+.court > div:nth-child(10) {
+  grid-row: 2/4;
+}
+
+.court > div:nth-child(9) {
+  grid-column: 3;
+}
+
+.court > div:nth-child(10) {
+  grid-column: 4;
+}

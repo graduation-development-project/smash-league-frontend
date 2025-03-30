@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { Button, ConfigProvider, Form, message, Steps, theme, Typography } from 'antd';
 import CreateTourStep1 from '@/components/general/molecules/tournaments/create-step1.step';
 import CreateTourStep2 from '@/components/general/molecules/tournaments/create-step2.step';
-import axios from 'axios';
 import { createTourAPI } from '@/services/tournament';
 import { uploadBgTourImageAPI, uploadMerchandiseImageAPI } from '@/services/create-tour';
 import Loaders from '@/components/general/atoms/loaders/loaders';

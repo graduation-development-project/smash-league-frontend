@@ -1,20 +1,40 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { useTeamContext } from '@/context/team.context';
+import { getTeamMembersAPI } from '@/services/team';
 import { AntDesignOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Tooltip } from 'antd';
+import { Avatar, Popover } from 'antd';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const TeamCard = (team: any) => {
   const [isFull, setIsFull] = useState(false);
   const { teamId, setTeamId } = useTeamContext();
   const router = useRouter();
-
+  const [teamMemberList, setTeamMemberList] = useState([]);
   const handleTeamClick = () => {
     setTeamId(team.team.id);
     router.push(`/teams/details/${team.team.teamName}`);
   };
+
+  const fetchTeamMembers = async (teamId: string) => {
+    if (teamId) {
+      // setIsLoading(true);
+      try {
+        const res = await getTeamMembersAPI(teamId, '', 1, 100);
+        setTeamMemberList(res?.data?.data?.data || []);
+      } catch (error) {
+        console.error('Failed to fetch team members', error);
+      }
+      // setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTeamMembers(team.team.id);
+  }, [team.team.id]);
+
+  // console.log('Check team', teamMemberList);
 
   return (
     <div
@@ -47,33 +67,30 @@ const TeamCard = (team: any) => {
           max={{
             count: 4,
             style: {
-              color: '#f56a00',
-              backgroundColor: '#fde3cf',
+              color: 'white',
+              backgroundColor: '#DBDBDB',
               cursor: 'pointer',
+              fontFamily: 'inherit',
+              fontWeight: '500',
             },
           }}
         >
-          <Avatar style={{ backgroundColor: 'green' }}>S</Avatar>
-          <Avatar style={{ backgroundColor: '#f56a00' }}>M</Avatar>
-          <Avatar style={{ backgroundColor: 'green' }}>S</Avatar>
-          <Avatar style={{ backgroundColor: '#f56a00' }}>M</Avatar>
-          <Tooltip
-            title="Ant User"
-            placement="top"
-            style={{ cursor: 'pointer' }}
-          >
+          {teamMemberList.map((member: any) => (
             <Avatar
+              key={member.id}
               style={{ backgroundColor: '#87d068' }}
-              icon={<UserOutlined />}
-            />
-          </Tooltip>
-          <Avatar
-            style={{ backgroundColor: '#1677ff' }}
-            icon={<AntDesignOutlined />}
-          />
+              src={member?.avatarURL}
+              alt={member?.name}
+            >
+              {!member?.avatarURL ? member?.name.charAt(0) : ''}
+            </Avatar>
+          ))}
         </Avatar.Group>
         <div className="flex flex-col gap-2 justify-center ">
-          <p className="text-[16px] font-semibold">10 players</p>
+          <p className="text-[16px] font-semibold">
+            {teamMemberList.length}{' '}
+            <span>{teamMemberList.length === 1 ? 'Player' : 'Players'}</span>
+          </p>
           <p className="text-[14px] text-[#6A6A6A]">Joined this group</p>
         </div>
       </div>

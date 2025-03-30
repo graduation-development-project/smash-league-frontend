@@ -1,12 +1,24 @@
 'use client';
 
 import { Button, ConfigProvider, Form, Input } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ModalChangePassword from '../../auth/modal.change.password';
+import { useProfileContext } from '@/context/profile.context';
 
 const UpdateInformationProfile = (props: any) => {
   const { session } = props;
   const [changePassword, setChangePassword] = useState(false);
+
+   const [user, setUser] = useState<any>(null);
+  
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+        }
+      }
+    }, []);
   const handleUpdateInformation = (values: any) => {
     console.log('Check', values);
   };
@@ -34,7 +46,7 @@ const UpdateInformationProfile = (props: any) => {
           <Form.Item
             label="Full Name"
             name="name"
-            initialValue={session?.user?.name}
+            initialValue={user?.name}
             style={{ fontFamily: 'inherit' }}
           >
             <Input placeholder="Enter your full name" />

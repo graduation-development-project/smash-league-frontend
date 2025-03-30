@@ -12,12 +12,12 @@ import { useTeamContext } from '@/context/team.context';
 import { getTeamMembersAPI } from '@/services/team';
 import { useDebounce } from '@/hooks/use-debounce';
 
-const MembersTeamsDetails = () => {
+const MembersTeamsDetails = (props: any) => {
+  const { teamMemberList, setTeamMemberList } = props;
   const [isMembers, setIsMembers] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState<any>({});
   const { teamDetails, teamId } = useTeamContext();
-  const [teamMemberList, setTeamMemberList] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
@@ -62,7 +62,7 @@ const MembersTeamsDetails = () => {
   }, [teamId, debouncedValue]);
 
   const isTeamLeader =
-    user?.role?.includes('Team Leader') &&
+    user?.userRoles?.includes('Team Leader') &&
     user?.id === teamDetails?.teamLeaderId;
 
   const handleChange = async (page: number) => {
@@ -113,9 +113,14 @@ const MembersTeamsDetails = () => {
           </div>
 
           <div className="grid grid-cols-4 gap-x-8 gap-y-6 place-items-center justify-items-center">
-            {teamMemberList?.map((member) => (
+            {teamMemberList?.map((member: UserProps) => (
               <div key={member?.id}>
-                <TeamMemberCard member={member} fetchMembers={()=>fetchTeamMembers(teamId, debouncedValue, page, perPage)} />
+                <TeamMemberCard
+                  member={member}
+                  fetchMembers={() =>
+                    fetchTeamMembers(teamId, debouncedValue, page, perPage)
+                  }
+                />
               </div>
             ))}
           </div>
@@ -125,6 +130,7 @@ const MembersTeamsDetails = () => {
             currentPage={page}
             totalPerPage={perPage}
             onChange={handleChange}
+            itemText="members"
           />
         </div>
       ) : (

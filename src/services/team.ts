@@ -284,3 +284,115 @@ export const removeMemberAPI = async (
     return error.response?.data;
   }
 };
+
+export const leaveTeamAPI = async (
+  teamId: string,
+  accessToken: string,
+  reason: string,
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/leave-team`,
+      {
+        teamId,
+        reason,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error('Error leave team:', error.response?.data || error.message);
+    return error.response?.data;
+  }
+};
+
+export const responseRequestLeaveTeamAPI = async (
+  teamId: string,
+  requestId: string,
+  option: boolean,
+  accessToken: string,
+) => {
+  try {
+    const res = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/team-leaders/response-leave-team-request`,
+      {
+        // rejectReason,
+        teamId,
+        requestId,
+        option,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error response leave team:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const transferTeamLeaderAPI = async (
+  newTeamLeaderId: string,
+  teamId: string,
+  accessToken: string,
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/team-leaders/transfer-team-leader`,
+      {
+        newTeamLeaderId,
+        teamId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error response transfer team:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const responseRequestTransferTeamLeaderAPI = async (
+  requestId: string,
+  option: boolean,
+  accessToken: string,
+) => {
+  try {
+    const res = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/response-transfer-team-leader`,
+      {
+        requestId,
+        option,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error response transfer team leader:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

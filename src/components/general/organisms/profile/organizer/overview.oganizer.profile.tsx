@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
 import { IoLogoDiscord } from "react-icons/io5";
 import { FaSquareXTwitter } from "react-icons/fa6";
-import { Avatar, Rate, Tooltip } from "antd";
+import { Avatar, Rate, Popover } from "antd";
 import { FaRegUser } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useProfileContext } from "@/context/profile.context";
@@ -83,30 +83,30 @@ const OverviewOrganizerProfile = () => {
             </h1>
             {isSocialMediaVisible ? (
               <div className="flex gap-4 items-center">
-                <Tooltip title="Facebook" placement="bottomRight">
+                <Popover title="Facebook" placement="bottomRight">
                   <FaFacebookSquare
                     size={20}
                     className="hover:animate-around hover:text-blue-700 transition-all duration-300"
                   />
-                </Tooltip>
-                <Tooltip title="Instagram" placement="bottomRight">
+                </Popover>
+                <Popover title="Instagram" placement="bottomRight">
                   <FaInstagramSquare
                     size={20}
                     className="hover:animate-around hover:text-[#c4238a] transition-all duration-300"
                   />
-                </Tooltip>
-                <Tooltip title="Discord" placement="bottomRight">
+                </Popover>
+                <Popover title="Discord" placement="bottomRight">
                   <IoLogoDiscord
                     size={20}
                     className="hover:animate-around hover:text-[#4007a2] transition-all duration-300"
                   />
-                </Tooltip>
-                <Tooltip title="Twitter" placement="bottomRight">
+                </Popover>
+                <Popover title="Twitter" placement="bottomRight">
                   <FaSquareXTwitter
                     size={20}
                     className="hover:animate-around hover:text-slate-500 transition-all duration-300"
                   />
-                </Tooltip>
+                </Popover>
               </div>
             ) : (
               <p className=" text-[14px] text-slate-600 text-justify italic">
@@ -119,14 +119,14 @@ const OverviewOrganizerProfile = () => {
               Host
             </h1>
             <p>
-              <Tooltip title="Ho Duong Trung Nguyen" placement="bottomLeft">
+              <Popover title="Ho Duong Trung Nguyen" placement="bottomLeft">
                 {" "}
                 <Avatar
                   style={{ backgroundColor: "gray" }}
                   size={"default"}
                   icon={<FaRegUser size={15} />}
                 />
-              </Tooltip>
+              </Popover>
             </p>
           </div>
         </div>

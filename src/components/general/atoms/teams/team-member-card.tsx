@@ -1,12 +1,12 @@
 'use client';
-import { Avatar, Popover } from 'antd';
+import { Avatar, ConfigProvider, Popconfirm, Popover } from 'antd';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { BsGenderMale, BsGenderFemale } from 'react-icons/bs';
 import { GrLocation } from 'react-icons/gr';
 import React, { useEffect, useMemo, useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { useTeamContext } from '@/context/team.context';
-import { removeMemberAPI } from '@/services/team';
+import { removeMemberAPI, transferTeamLeaderAPI } from '@/services/team';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
@@ -21,8 +21,7 @@ const TeamMemberCard = ({
   const { teamDetails, teamId } = useTeamContext();
   const [user, setUser] = useState<any>({});
   const router = useRouter();
-  // const name = 'Tran Anh Minh';
-  // console.log('Check details', teamDetails);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user');
@@ -34,6 +33,8 @@ const TeamMemberCard = ({
 
   const isLeader = member?.teamRole === 'LEADER';
 
+  const isTeamLeader = teamDetails?.teamLeaderId === user?.id;
+
   // console.log('Check ', isLeader);
   // Generate a random color only once per component instance
   const avatarColor = useMemo(
@@ -44,7 +45,7 @@ const TeamMemberCard = ({
   const handleRemoveMember = async () => {
     if (!user?.access_token) return;
     try {
-      const response = await await removeMemberAPI(
+      const response = await removeMemberAPI(
         teamId,
         'You are not suitable for this team. Sorry for the inconvenience',
         [member?.id ?? ''],
@@ -64,7 +65,6 @@ const TeamMemberCard = ({
           progress: undefined,
           theme: 'light',
         });
-        router.refresh();
       } else {
         console.log('Error', response);
         toast.error(`${response?.message}`, {
@@ -83,18 +83,90 @@ const TeamMemberCard = ({
     }
   };
 
+  const handleTransfer = async () => {
+    if (!user?.access_token) return;
+    try {
+      const response = await transferTeamLeaderAPI(
+        member?.id ?? '',
+        teamId,
+        user?.access_token,
+      );
+
+      console.log(response);
+      if (
+        response?.data?.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
+        fetchMembers && fetchMembers();
+        toast.success(`${response?.data.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        console.log('Error', response);
+        toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const cancel = () => {};
+
   const content = (
-    <div className="w-full h-full flex flex-col gap-2 px-1 justify-self-start font-semibold">
-      <button className="text-secondColor hover:underline w-full">
-        Assign
-      </button>
-      <button
-        className="text-primaryColor hover:underline w-full"
-        onClick={handleRemoveMember}
-      >
-        Remove
-      </button>
-    </div>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#FF8243',
+        },
+      }}
+    >
+      <div className="w-full h-full flex flex-col gap-2 px-1 justify-self-start font-semibold">
+        <Popconfirm
+          title="Transfer Team Leader"
+          description="Are you sure to transfer this member?"
+          onConfirm={handleTransfer}
+          onCancel={cancel}
+          okText="Yes"
+          cancelText="No"
+        >
+          <button className="text-secondColor hover:underline w-full">
+            Transfer
+          </button>
+        </Popconfirm>
+
+        <Popconfirm
+          title="Remove Member"
+          description="Are you sure to remove this member?"
+          onConfirm={handleRemoveMember}
+          onCancel={cancel}
+          okText="Yes"
+          cancelText="No"
+        >
+          <button
+            className="text-primaryColor hover:underline w-full"
+            // onClick={handleRemoveMember}
+          >
+            Remove
+          </button>
+        </Popconfirm>
+      </div>
+    </ConfigProvider>
   );
 
   return (
@@ -137,17 +209,21 @@ const TeamMemberCard = ({
           Leader
         </div>
       ) : (
-        <Popover
-          trigger={'click'}
-          content={content}
-          placement="bottomLeft"
-          arrow={false}
-          style={{ display: 'flex', justifyContent: 'flex-start' }}
-        >
-          <div className="absolute top-3 right-1">
-            <BiDotsVerticalRounded size={20} />
-          </div>
-        </Popover>
+        <>
+          {isTeamLeader && (
+            <Popover
+              trigger={'click'}
+              content={content}
+              placement="bottomLeft"
+              arrow={false}
+              style={{ display: 'flex', justifyContent: 'flex-start' }}
+            >
+              <div className="absolute top-3 right-1">
+                <BiDotsVerticalRounded size={20} />
+              </div>
+            </Popover>
+          )}
+        </>
       )}
     </div>
   );

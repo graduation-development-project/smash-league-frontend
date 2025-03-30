@@ -35,9 +35,12 @@ export const formatDate = (date?: string) => {
 // Format DateTime with Hydration Fix
 export const formatDateTime = (date?: string) => {
   if (!date) return "Invalid Date";
-  return typeof window === "undefined" 
-    ? "Loading..." 
-    : dayjs(date).format('HH:mm MMM DD, YYYY');
+
+  if (typeof window === "undefined") {
+    return dayjs(date).utc().format('YYYY-MM-DD HH:mm'); 
+  }
+
+  return dayjs(date).format('HH:mm MMM DD, YYYY');
 };
 
 export const formatTime = (date?: string) => {

@@ -1,9 +1,15 @@
-import React from 'react'
+import { auth } from '@/auth';
+import MainLayout from '@/components/layout/mainlayout/layout';
+import TransactionHistoryPage from '@/components/pages/transaction/transaction-history.page';
+import React from 'react';
 
-const Transaction = () => {
+const Transaction = async () => {
+  const session = await auth();
   return (
-    <div>Transaction</div>
-  )
-}
+    <MainLayout noHero={true} session={session}>
+      <TransactionHistoryPage />
+    </MainLayout>
+  );
+};
 
-export default Transaction
+export default Transaction;

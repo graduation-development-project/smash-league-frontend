@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Home } from 'lucide-react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { LoadingOutlined } from '@ant-design/icons';
 
 dayjs.extend(utc);
 
@@ -26,13 +27,14 @@ const RegisterForm = () => {
   const router = useRouter();
   const [isBack, setIsBack] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const onFinish = async (values: any) => {
     const { email, password, name, phoneNumber, gender, dateOfBirth } = values;
 
     // console.log(values);
     const formattedDate = dayjs(dateOfBirth).format('YYYY-MM-DD');
     // console.log('Check formattedDate', formattedDate);
-
+    setIsLoading(true);
     const res = await sendRequest<IBackendRes<any>>({
       url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/sign-up`,
       method: 'POST',
@@ -46,10 +48,11 @@ const RegisterForm = () => {
       },
     });
 
-
     if (res?.status === 200 || res?.status === 201) {
+      setIsLoading(false);
       router.push(`/verify/${encodeURIComponent(email)}`);
     } else {
+      setIsLoading(false);
       notification.error({
         message: 'Register error',
         description: `${res?.message}`,
@@ -225,9 +228,9 @@ const RegisterForm = () => {
                   message: 'Please select your date of birth!',
                 },
               ]}
-              style={{ fontWeight: '500' }}
+              style={{ fontWeight: '500', width: '100%' }}
             >
-              <DatePicker format={'YYYY-MM-DD'} />
+              <DatePicker format={'YYYY-MM-DD'} style={{ width: '100%' }} />
             </Form.Item>
 
             <Form.Item>
@@ -244,6 +247,11 @@ const RegisterForm = () => {
                 }}
               >
                 Sign Up
+                {isLoading && (
+                  <LoadingOutlined
+                    style={{ marginLeft: '5px', fontSize: '20px' }}
+                  />
+                )}
               </Button>
             </Form.Item>
           </Form>

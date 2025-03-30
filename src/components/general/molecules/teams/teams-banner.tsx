@@ -2,19 +2,29 @@
 import images from '@/assets/images';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CreateTeamsModal from './create-teams-modal';
 import AlertCreateTeamsModal from './alert-create-teams-modal';
+import { useProfileContext } from '@/context/profile.context';
 
 const TeamsBanner = (props: any) => {
   const { session } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
+   const [user, setUser] = useState<any>(null);
+  
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+        }
+      }
+    }, []);
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const [role, setRole] = useState(session?.user?.role || []);
   // console.log(role);
 
   return (
@@ -46,7 +56,7 @@ const TeamsBanner = (props: any) => {
             Create Your Team
           </Button>
 
-          {role && role.includes('Athlete') ? (
+          {user?.userRoles && user?.userRoles.includes('Athlete') ? (
             <CreateTeamsModal
               isModalOpen={isModalOpen}
               session={session}

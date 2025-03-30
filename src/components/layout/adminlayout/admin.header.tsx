@@ -7,9 +7,10 @@ import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { MdLogout } from 'react-icons/md';
+import { red } from '@mui/material/colors';
 
 const AdminHeader = (props: any) => {
   // const { data: session, status } = useSession();
@@ -33,10 +34,13 @@ const AdminHeader = (props: any) => {
       danger: true,
       label: <span>Log Out</span>,
       icon: <MdLogout size={15} />,
-      onClick: () => {
-        // console.log('Check Signout');
-        signOut({ redirect: false });
-        router.push('/auth/login');
+      onClick: async () => {
+        try {
+          localStorage.removeItem('user');
+          await signOut({ callbackUrl: '/auth/login' });
+        } catch (error) {
+          console.error('Logout error:', error);
+        }
       },
     },
   ];

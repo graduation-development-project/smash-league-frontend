@@ -34,7 +34,7 @@ const AllTeams = (props: any) => {
   useEffect(() => {
     getTeams(currentPage, totalPerPage, debounceValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounceValue, currentPage, totalPerPage]);
+  }, [debounceValue]);
 
   const handlePageChange = async (page: number) => {
     try {

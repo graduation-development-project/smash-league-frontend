@@ -1,4 +1,5 @@
 'use client';
+import { useProfileContext } from '@/context/profile.context';
 import { useTeamContext } from '@/context/team.context';
 import { createTeamAPI, searchTeamsAPI } from '@/services/team';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -11,24 +12,22 @@ import { toast } from 'react-toastify';
 const CreateTeamsModal = ({
   isModalOpen,
   setIsModalOpen,
-  session,
 }: CreateTeamsModalProps) => {
   const [teamLeaderId, setTeamLeaderId] = React.useState<string>('1');
   const [file, setFile] = useState<File | null>(null);
   const [imageURL, setImageURL] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { getTeams } = useTeamContext();
-
-  const [user, setUser] = useState<any>({});
-
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user') as string) || {};
-    setUser(storedUser);
-  }, []);
-
-  // console.log('check', session?.user?.access_token);
-  // api truyen file => URL 3 anh sau khi up len cloud
-
+  const [user, setUser] = useState<any>(null);
+ 
+   useEffect(() => {
+     if (typeof window !== 'undefined') {
+       const storedUser = localStorage.getItem('user');
+       if (storedUser) {
+         setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+       }
+     }
+   }, []);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
@@ -36,7 +35,7 @@ const CreateTeamsModal = ({
   };
   const handleCreateTeam = async (values: any) => {
     const { teamLeaderId, teamName, teamDescription } = values;
-    const accessToken = session?.user?.access_token;
+    const accessToken = user?.access_token
     setIsLoading(true);
     const response = await createTeamAPI(
       file,
@@ -50,10 +49,10 @@ const CreateTeamsModal = ({
     if (response?.status === 200 || response?.status === 201) {
       await getTeams(1, 6, '');
       setIsModalOpen(false);
-      if (!user?.role.includes('Team Leader')) {
+      if (!user?.userRoles.includes('Team Leader')) {
         const newUser = {
           ...user,
-          role: [...user.role, 'Team Leader'],
+          userRoles: [...user.userRoles, 'Team Leader'],
         };
         localStorage.setItem('user', JSON.stringify(newUser));
       }

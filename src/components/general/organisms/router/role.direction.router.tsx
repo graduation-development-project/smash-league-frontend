@@ -2,10 +2,14 @@
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import Loaders from '../../atoms/loaders/loaders';
+import { getProfileAPI } from '@/services/user';
+import { data } from 'react-router-dom';
 
 const RoleDirectionRouter = (props: any) => {
   const { session } = props;
   const router = useRouter();
+
+  // console.log('session', session);
 
   useEffect(() => {
     if (!session?.user) {
@@ -13,14 +17,25 @@ const RoleDirectionRouter = (props: any) => {
       return;
     }
 
-    // Store user data only if session.user exists
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('user', JSON.stringify(session.user));
-    }
+    const getProfile = async () => {
+      try {
+        const res = await getProfileAPI(session.user?.access_token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('user', JSON.stringify({...res.data, access_token: session.user?.access_token}));
+        }
+      } catch (error: any) {
+        console.log('error', error);
+      }
+    };
 
-    if (session?.user?.role.includes('Admin')) {
+    getProfile();
+    // Store user data only if session.user exists
+
+    if (session?.user?.userRoles.includes('Admin')) {
       router.push('/dashboard');
-    } else if (session?.user?.role.includes('Athlete')) {
+    } else if (session?.user?.userRoles.includes('Staff')) {
+      router.push('/dashboard');
+    } else if (session?.user?.userRoles.includes('Athlete')) {
       router.push('/home');
     } else if (!session) {
       router.push('/home');

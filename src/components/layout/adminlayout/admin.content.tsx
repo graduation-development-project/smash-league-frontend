@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { ConfigProvider, Layout } from "antd";
+import { ConfigProvider, Layout } from 'antd';
 
 const AdminContent = ({
   children,
@@ -14,7 +14,7 @@ const AdminContent = ({
       theme={{
         token: {
           /* here is your global tokens */
-          colorPrimary: "#FF8243",
+          colorPrimary: '#FF8243',
         },
       }}
     >
@@ -22,10 +22,11 @@ const AdminContent = ({
         <div
           style={{
             padding: 24,
-            minHeight: "calc(100vh - 180px)",
+            marginBottom: '50px',
+            minHeight: 'calc(100vh - 180px)',
             // background: "#ccc",
             // borderRadius: "#ccc",
-            fontFamily: "inherit"
+            fontFamily: 'inherit',
           }}
         >
           {children}

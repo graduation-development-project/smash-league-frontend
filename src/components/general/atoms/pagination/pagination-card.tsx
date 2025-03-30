@@ -6,6 +6,7 @@ const PaginationCard = ({
   currentPage,
   totalPerPage,
   onChange,
+  itemText,
 }: PaginationProps) => {
   return (
     <div className="flex justify-center items-center bg-white w-max py-3 px-6 shadow-shadowBtn rounded-[10px]">
@@ -24,7 +25,9 @@ const PaginationCard = ({
           style={{ fontWeight: 600 }}
           size="default"
           total={total}
-          showTotal={(total) => `Total ${total} items`}
+          showTotal={(total) =>
+            `Total ${total} ${itemText ? itemText : 'items'}`
+          }
           pageSize={totalPerPage}
           current={currentPage}
           onChange={(page) => {

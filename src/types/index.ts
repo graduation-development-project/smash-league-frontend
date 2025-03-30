@@ -51,14 +51,15 @@ interface TeamDetailsProps {
 }
 
 interface PackageCardProps {
-  title: string;
-  newPrice: number;
-  oldPrice: number;
-  description: string;
+  id: string;
   advantages: string[];
   credit: number;
-  recommended: boolean;
+  currentDiscountByAmount: number;
   isAvailable: boolean;
+  isRecommended: boolean;
+  packageDetail: string;
+  packageName: string;
+  price: number;
 }
 
 interface PaginationProps {
@@ -68,6 +69,7 @@ interface PaginationProps {
   totalPerPage?: number;
   setTotalPerPage?: (perPage: number) => void;
   onChange: (page: number) => void;
+  itemText?: string;
 }
 interface UserProps {
   avatarURL: string;
@@ -93,11 +95,18 @@ interface NotificationsTypeProps {
 }
 
 interface TeamInvitationProps {
+  team: {
+    id: string;
+    logo: string;
+  };
   status: string;
 }
 
 interface TeamRequestProps {
-  teamId: string;
+  team: {
+    id: string;
+    logo: string;
+  };
   status: string;
 }
 
