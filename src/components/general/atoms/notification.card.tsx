@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,7 +23,16 @@ const NotificationCard = ({
   hiddenBtn?: boolean;
   setNotifications?: (notifications: any) => void;
 }) => {
-  const { user } = useProfileContext();
+  const [user, setUser] = useState<any>(null);
+ 
+   useEffect(() => {
+     if (typeof window !== 'undefined') {
+       const storedUser = localStorage.getItem('user');
+       if (storedUser) {
+         setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+       }
+     }
+   }, []);
 
   const getNotifications = async () => {
     try {
@@ -111,10 +120,10 @@ const NotificationCard = ({
       if (response.status === 200 || response.status === 201) {
         getNotifications && getNotifications();
         if (notification?.type?.typeOfNotification === 'Transfer Team Leader') {
-          if (!user?.role.includes('Team Leader')) {
+          if (!user?.userRoles.includes('Team Leader')) {
             const newUser = {
               ...user,
-              role: [...user.role, 'Team Leader'],
+              userRoles: [...user.userRoles, 'Team Leader'],
             };
             localStorage.setItem('user', JSON.stringify(newUser));
           }

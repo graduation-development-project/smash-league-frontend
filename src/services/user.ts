@@ -56,3 +56,25 @@ export const registerNewRoleAPI = async (
     return error.response?.data;
   }
 };
+
+export const getProfileAPI = async (accessToken: string) => {
+  try {
+   
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/profile`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      'Error register new role:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

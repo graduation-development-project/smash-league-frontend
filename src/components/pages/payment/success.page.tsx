@@ -1,12 +1,41 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, ConfigProvider, Result } from 'antd';
 import { FaRegCheckCircle } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { acceptPaymentAPI } from '@/services/payment';
 
 const SuccessPage = () => {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const transactionId = searchParams.get('transactionId');
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
+
+  const acceptPayment = async () => {
+    if (!user) return;
+    try {
+      const response = await acceptPaymentAPI(transactionId, user.access_token);
+      console.log(response, 'accept payment');
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    acceptPayment();
+  }, [user]);
+
   return (
     <>
       <ConfigProvider
@@ -46,7 +75,7 @@ const SuccessPage = () => {
                 }}
               >
                 Buy Again
-              </Button>
+              </Button>,
             ]}
           />
         </div>

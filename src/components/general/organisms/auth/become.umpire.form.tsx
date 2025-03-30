@@ -11,8 +11,8 @@ const BecomeUmpireForm = () => {
   >([]);
   const [file, setFile] = useState<File>();
 
-  const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

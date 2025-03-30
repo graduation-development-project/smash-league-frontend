@@ -85,16 +85,19 @@ const Navigation = (props: any) => {
       label: 'Public Profile',
       icon: <RiProfileFill size={15} />,
       onClick: () => {
-        if (!user || !user.role) return; // Avoid errors
+        if (!user || !user.userRoles) return; // Avoid errors
         localStorage.setItem('page', 'Home');
         setRoute('Profile');
         router.push(
           `/profile/${
-            Array.isArray(user.role)
-              ? user.role[1]?.toLowerCase().replace(/\s+/g, '') ||
-                user.role[0]?.toLowerCase().replace(/\s+/g, '')
-              : user.role.toLowerCase().replace(/\s+/g, '')
-          }/${session?.user?.name.toLowerCase()}`,
+            user?.userRoles.includes('Organizer')
+              ? 'organizer'
+              : user?.userRoles.includes('Umpire')
+              ? 'umpire'
+              : user?.userRoles.includes('Team Leader')
+              ? 'teamleader'
+              : 'athlete'
+          }/${user?.name.toLowerCase()}`,
         );
       },
     },

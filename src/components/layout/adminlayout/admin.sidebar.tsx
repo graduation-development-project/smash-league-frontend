@@ -42,7 +42,7 @@ const AdminSideBar = () => {
 
   let children: MenuItem[] = [];
 
-  if (!isLoading && user?.role?.includes('Staff')) {
+  if (!isLoading && user?.userRoles?.includes('Staff')) {
     children = [
       {
         key: 'staffdashboard',

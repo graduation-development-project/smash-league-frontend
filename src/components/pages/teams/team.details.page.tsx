@@ -50,7 +50,7 @@ const TeamDetailsPage = (props: any) => {
   }, [teamId]);
 
   const isTeamLeader =
-    user?.role?.includes('Team Leader') &&
+    user?.userRoles?.includes('Team Leader') &&
     user?.id === teamDetails?.teamLeaderId;
 
   const isTeamMember = teamMemberList.find((member) => member.id === user?.id);

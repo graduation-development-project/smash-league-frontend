@@ -62,7 +62,7 @@ const MembersTeamsDetails = (props: any) => {
   }, [teamId, debouncedValue]);
 
   const isTeamLeader =
-    user?.role?.includes('Team Leader') &&
+    user?.userRoles?.includes('Team Leader') &&
     user?.id === teamDetails?.teamLeaderId;
 
   const handleChange = async (page: number) => {

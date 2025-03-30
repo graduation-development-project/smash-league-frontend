@@ -1,16 +1,24 @@
 'use client';
-
 import { Button } from '@/components/ui/button';
 import { useProfileContext } from '@/context/profile.context';
 import { buyPackageAPI } from '@/services/package';
 import { formatMoney } from '@/utils/format';
 import { Divider } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoCheckmarkSharp } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 
 const PackageCard = ({ pack }: { pack: PackageCardProps }) => {
-  const { user } = useProfileContext();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
 
   // console.log('check user', user);
   const handleBuyPackage = async (packageId: string) => {
@@ -19,7 +27,7 @@ const PackageCard = ({ pack }: { pack: PackageCardProps }) => {
       const response = await buyPackageAPI(packageId, user.access_token);
       // console.log('Package ID', packageId);
       // console.log('Access Token', user.access_token);
-      console.log(response);
+      console.log(response, 'check payment');
       if (response.statusCode === 200 || response.statusCode === 201) {
         toast.success(`${response?.message}`, {
           position: 'top-right',

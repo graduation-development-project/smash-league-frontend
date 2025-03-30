@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button,
   ConfigProvider,
@@ -8,14 +8,24 @@ import {
   Tag,
   Image,
   Popconfirm,
-} from "antd";
-import type { TableProps } from "antd";
-import { createStyles } from "antd-style";
-import Highlighter from "react-highlight-words";
-import { SearchOutlined } from "@ant-design/icons";
-import type { FilterDropdownProps } from "antd/es/table/interface";
-import type { InputRef, TableColumnsType, TableColumnType } from "antd";
-import { Button as CustomButton } from "@/components/ui/button";
+} from 'antd';
+import type { TableProps } from 'antd';
+import { createStyles } from 'antd-style';
+import Highlighter from 'react-highlight-words';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+import type { FilterDropdownProps } from 'antd/es/table/interface';
+import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
+import { getTournamentEventParticipantsAPI } from '@/services/tournament';
+import {
+  getTournamentRegistrationAPI,
+  responseTournamentRegistrationAPI,
+} from '@/services/tour-registration';
+import { toast } from 'react-toastify';
+import { calculateAge } from '@/utils/calculateAge';
 
 const useStyle = createStyles(({ css }) => ({
   customTable: css`
@@ -34,80 +44,198 @@ const useStyle = createStyles(({ css }) => ({
   `,
 }));
 
-interface DataType {
-  key: string;
-  name: string[];
-  age: number;
-  address: string;
-  image: string[];
-  tournaments: string[];
-  tags: string[];
-}
+const MixedDoublesAthleteTable = ({
+  eventId,
+  isVerification,
+}: {
+  eventId: string | null;
+  isVerification: boolean;
+}) => {
+  // const { styles } = useStyle();
 
-const data: DataType[] = [
-  {
-    key: "1",
-    name: ["Tran Anh Minh", "Vo Nguyen Trung Son"],
-    age: 32,
-    image: [
-      "https://extranet.bwf.sport/docs/players/18228/gallery/20190126_1858_IndonesiaMasters2019_RAPL6472.jpg",
-      "https://extranet.bwf.sport/docs/players/25831/gallery/20210729_1714_OlympicGames2020_BPST05206.jpg",
-    ],
-    tournaments: ["2020 Olympics", "2021 Olympics", "2022 Olympics"],
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: ["Tran Anh Minh", "Vo Nguyen Trung Son"],
-    age: 42,
-    image: [
-      "https://extranet.bwf.sport/docs/players/18228/gallery/20190126_1858_IndonesiaMasters2019_RAPL6472.jpg",
-      "https://extranet.bwf.sport/docs/players/25831/gallery/20210729_1714_OlympicGames2020_BPST05206.jpg",
-    ],
-    tournaments: ["2020 Olympics", "2021 Olympics", "2022 Olympics"],
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: ["Tran Anh Minh", "Vo Nguyen Trung Trung"],
-    age: 32,
-    image: [
-      "https://extranet.bwf.sport/docs/players/18228/gallery/20190126_1858_IndonesiaMasters2019_RAPL6472.jpg",
-      "https://extranet.bwf.sport/docs/players/25831/gallery/20210729_1714_OlympicGames2020_BPST05206.jpg",
-    ],
-    tournaments: ["2020 Olympics", "2021 Olympics", "2022 Olympics"],
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
+  interface ParticipantInfo {
+    avatarURL: string;
+    dateOfBirth: Date;
+    email: string;
+    gender: string;
+    hands: string;
+    height: number;
+    id: string;
+    name: string;
+    phoneNumber: string;
+  }
 
-const MixedDoublesAthleteTable = () => {
-  const { styles } = useStyle();
+  interface BaseDataType {
+    user: ParticipantInfo;
+    partner: ParticipantInfo;
+  }
 
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
+  interface VerificationDataType {
+    id: string;
+    user: ParticipantInfo;
+    partner: ParticipantInfo;
+    registrationDocumentCreator: string[];
+    registrationDocumentPartner: string[];
+    isPayForTheRegistrationFee: boolean;
+    status: string;
+  }
+
+  type DataType<T extends boolean> = T extends true
+    ? VerificationDataType
+    : BaseDataType;
+
+  // console.log(eventId);
+
+  type TableDataType = DataType<typeof isVerification>;
+
+  // console.log('check', isVerification);
+
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
+  const [user, setUser] = useState<any>(null);
+  const [checkVerification, setCheckVerification] = useState<boolean>(
+    Boolean(isVerification),
+  );
+
+  const [participantList, setParticipantList] = useState([]);
+  const [verificationList, setVetificationList] = useState([]);
 
   const handleSearch = (
     selectedKeys: string[],
-    confirm: FilterDropdownProps["confirm"],
-    dataIndex: string
+    confirm: FilterDropdownProps['confirm'],
+    dataIndex: string,
   ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex as string);
   };
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }
+  }, []); // Run only once on mount
+
+  const getTournamentEventParticipants = async () => {
+    const res = await getTournamentEventParticipantsAPI(
+      user?.access_token,
+      eventId,
+    );
+    // console.log('Check ---------', res.data.data.listParticipants);
+    if (res?.data?.data?.listParticipants) {
+      // Transform data into correct format
+      // const formattedData = res.data.data.listParticipants.map(
+      //   (participant: any) => ({
+      //     key: participant.user.id, // Use unique ID as key
+      //     name: participant.user.name,
+      //     age: participant.user.dateOfBirth
+      //       ? new Date().getFullYear() -
+      //         new Date(participant.user.dateOfBirth).getFullYear()
+      //       : 'N/A',
+      //     address: participant.user.phoneNumber || 'Unknown',
+      //     image: 'https://via.placeholder.com/100', // Replace with actual image if available
+      //     tags: participant.user.gender ? [participant.user.gender] : [],
+      //   }),
+      // );
+
+      setParticipantList(res.data.data.listParticipants);
+    } else {
+      setParticipantList([]);
+    }
+  };
+
+  const getTournamentRegistration = async () => {
+    if (!user) return;
+    try {
+      // console.log('API RUN');
+
+      const response = await getTournamentRegistrationAPI(
+        user?.access_token,
+        eventId,
+      );
+      // console.log(response?.data, 'check');
+
+      if (
+        response?.data?.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
+        const formatData = response.data.data.map((regis: any) => ({
+          id: regis.id,
+          user: regis.user,
+          partner: regis.partner,
+          registrationDocumentCreator: regis.registrationDocumentCreator,
+          registrationDocumentPartner: regis.registrationDocumentPartner,
+          isPayForTheRegistrationFee: regis.isPayForTheRegistrationFee,
+          status: regis.status,
+        }));
+        // console.log(response?.data, 'check');
+        setVetificationList(formatData);
+      } else {
+        setVetificationList([]);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  useEffect(() => {
+    getTournamentRegistration();
+    getTournamentEventParticipants();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventId, isVerification, checkVerification, user]);
+
+  // console.log('check registration', participantList);
 
   const handleReset = (clearFilters?: () => void) => {
     clearFilters?.();
-    setSearchText("");
+    setSearchText('');
+  };
+
+  const handleVerify = async (id: string, option: boolean, reason: string) => {
+    if (!user?.access_token) return;
+    try {
+      const response = await responseTournamentRegistrationAPI(
+        user?.access_token,
+        id,
+        option,
+        reason,
+      );
+      // console.log('Check response', response);
+      if (response?.status === 200 || response?.status === 201) {
+        getTournamentRegistration();
+        toast.success(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   const getColumnSearchProps = (
-    dataIndex: string
-  ): TableColumnType<DataType> => ({
+    dataIndex: string,
+  ): TableColumnType<BaseDataType> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -116,7 +244,7 @@ const MixedDoublesAthleteTable = () => {
       close,
     }) => (
       <div
-        style={{ padding: 8, fontFamily: "inherit" }}
+        style={{ padding: 8, fontFamily: 'inherit' }}
         onKeyDown={(e) => e.stopPropagation()}
       >
         <Input
@@ -129,7 +257,7 @@ const MixedDoublesAthleteTable = () => {
           onPressEnter={() =>
             handleSearch(selectedKeys as string[], confirm, dataIndex)
           }
-          style={{ marginBottom: 8, display: "block", width: "100%" }}
+          style={{ marginBottom: 8, display: 'block', width: '100%' }}
         />
         <Space>
           <Button
@@ -139,21 +267,21 @@ const MixedDoublesAthleteTable = () => {
             }
             icon={<SearchOutlined />}
             size="small"
-            style={{ width: 90, fontFamily: "inherit" }}
+            style={{ width: 90, fontFamily: 'inherit' }}
           >
             Search
           </Button>
           <Button
             onClick={() => handleReset(clearFilters)}
             size="small"
-            style={{ width: 90, color: "#2c2c2c", fontFamily: "inherit" }}
+            style={{ width: 90, color: '#2c2c2c', fontFamily: 'inherit' }}
           >
             Reset
           </Button>
           <Button
             type="link"
             size="small"
-            style={{ color: "#2c2c2c", fontFamily: "inherit" }}
+            style={{ color: '#2c2c2c', fontFamily: 'inherit' }}
             onClick={() => {
               confirm({ closeDropdown: false });
               setSearchText((selectedKeys as string[])[0]);
@@ -169,7 +297,7 @@ const MixedDoublesAthleteTable = () => {
       </div>
     ),
     filterIcon: (filtered: any) => (
-      <SearchOutlined style={{ color: filtered ? "#FF8243 " : undefined }} />
+      <SearchOutlined style={{ color: filtered ? '#FF8243 ' : undefined }} />
     ),
     onFilter: (value: any, record: any) =>
       record[dataIndex]
@@ -181,144 +309,406 @@ const MixedDoublesAthleteTable = () => {
     render: (text: any) =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text?.toString() || ""}
+          textToHighlight={text?.toString() || ''}
         />
       ) : (
         text
       ),
   });
 
-  const columns: TableProps<DataType>["columns"] = [
+  const columns: TableProps<BaseDataType>['columns'] = [
     {
-      title: "",
-      dataIndex: "image",
-      key: "image",
-      fixed: "left",
+      title: '',
+      dataIndex: ['user', 'partner'],
+      key: 'image',
+      fixed: 'left',
       width: 150,
-      render: (_, { image }) => (
+      render: (_, { user, partner }) => (
         <div className="flex flex-col gap-3">
-          {image.map((item, index) => (
-            <div key={index}>
-              <Image
-                style={{
-                  borderRadius: "50%",
-                  border: "1px solid #FF8243",
-                  padding: "2px",
-                }}
-                src={item}
-                width={80}
-                height={80}
-                alt="Athlete Image"
-              />
-            </div>
-          ))}
+          <Image
+            style={{
+              borderRadius: '50%',
+              border: '1px solid #FF8243',
+              padding: '2px',
+            }}
+            src={user?.avatarURL}
+            width={50}
+            height={50}
+            alt="Athlete Image"
+          />
+          <Image
+            style={{
+              borderRadius: '50%',
+              border: '1px solid #FF8243',
+              padding: '2px',
+            }}
+            src={partner?.avatarURL}
+            width={50}
+            height={50}
+            alt="Athlete Image"
+          />
         </div>
       ),
     },
 
     {
-      title: "Full Name",
+      title: 'Full Name',
       width: 250,
-      dataIndex: "name",
-      key: "name",
-      fixed: "left",
-      ...getColumnSearchProps("name"),
-      render: (_, { name }) => (
+      dataIndex: ['user', 'partner'],
+      key: 'name',
+      fixed: 'left',
+      // ...getColumnSearchProps('name'),
+      render: (_, { user, partner }) => (
         <div className="flex flex-col gap-3">
-          {name.map((item, index) => (
-            <p className="font-semibold text-[14px]" key={index}>
-              {item}
-            </p>
-          ))}
+          <h1 className="font-semibold text-[16px]">{user?.name}</h1>
+          <h1 className="font-semibold text-[16px]">{partner?.name}</h1>
         </div>
       ),
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: 'Age',
+      dataIndex: 'age',
+      align: 'center',
+      key: 'age',
       width: 100,
-      ...getColumnSearchProps("age"),
+      // ...getColumnSearchProps('age'),
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <h1 className="font-semibold text-[16px]">
+            {calculateAge(user?.dateOfBirth)}
+          </h1>
+          <h1 className="font-semibold text-[16px]">
+            {calculateAge(partner?.dateOfBirth)}
+          </h1>
+        </div>
+      ),
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
-    {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
-              color = "volcano";
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
+      title: 'Email',
+      dataIndex: ['user', 'partner'],
+      key: 'email',
+      align: 'center',
+      width: 100,
+      // ...getColumnSearchProps('phoneNumber'),
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <h1 className="font-semibold text-[16px]">{user?.email}</h1>
+          <h1 className="font-semibold text-[16px]">{partner?.email}</h1>
+        </div>
       ),
     },
 
     {
-      title: "Tournaments",
-      dataIndex: "tournaments",
-      key: "tournaments",
-      width: 200,
-      fixed: "left",
-      render: (_, { tournaments }) =>
-        tournaments.map((tournament, index) => <p key={index}>{tournament}</p>),
-    },
-    {
-      title: "Actions",
-      key: "action",
-      align: "center",
-      render: () => (
-        <div className="flex gap-5">
-          <button className="w-max p-0 font-quicksand border-none outline-none bg-transparent text-secondColor font-semibold hover:bg-transparent hover:underline">
-            Edit
-          </button>
-          <Popconfirm title="Are you sure?">
-            <button className="w-max p-0 font-quicksand border-none outline-none bg-transparent text-primaryColor font-semibold hover:bg-transparent hover:underline">
-              Delete
-            </button>
-          </Popconfirm>
+      title: 'Hand',
+      dataIndex: ['user', 'partner'],
+      key: 'hand',
+      align: 'center',
+      width: 100,
+      // ...getColumnSearchProps('phoneNumber'),
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <h1 className="font-semibold text-[16px]">
+            {user?.hands ? user?.hands : 'No Infomation'}
+          </h1>
+          <h1 className="font-semibold text-[16px]">
+            {partner?.hands ? partner?.hands : 'No Infomation'}
+          </h1>
         </div>
       ),
+    },
+  ];
+  const columnsVerification: TableProps<VerificationDataType>['columns'] = [
+    {
+      title: 'Full Name',
+      width: 300,
+      dataIndex: ['user', 'partner'],
+      key: 'name',
+      // fixed: 'left',
+      // ...getColumnSearchProps('name'),
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <h1 className="font-semibold text-[16px]">{user?.name}</h1>
+          {/* <h1 className="font-semibold text-[16px]">{partner?.name}</h1> */}
+        </div>
+      ),
+    },
+
+    {
+      title: 'Partner Full Name',
+      width: 300,
+      dataIndex: ['user', 'partner'],
+      key: 'name',
+      // fixed: 'left',
+      // ...getColumnSearchProps('name'),
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          {/* <h1 className="font-semibold text-[16px]">{user?.name}</h1> */}
+          <h1 className="font-semibold text-[16px]">{partner?.name}</h1>
+        </div>
+      ),
+    },
+    {
+      title: 'Front ID Card',
+      dataIndex: 'registrationDocumentCreator',
+      key: 'registrationDocumentCreator',
+      width: 100,
+      fixed: 'left',
+      render: (_, record) => {
+        const verificationRecord = record as VerificationDataType;
+        // console.log('Check record', verificationRecord);
+        return (
+          <Image
+            src={
+              verificationRecord?.registrationDocumentCreator[0]
+                ? verificationRecord?.registrationDocumentCreator[0]
+                : ''
+            }
+            alt="Front ID Card"
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover' }}
+          />
+        );
+      },
+    },
+
+    {
+      title: 'Back ID Card',
+      dataIndex: 'registrationDocumentCreator',
+      key: 'registrationDocumentCreator1',
+      width: 100,
+      fixed: 'left',
+      render: (_, record) => {
+        // console.log('check record', record);
+        const verificationRecord = record as VerificationDataType;
+
+        return (
+          <Image
+            src={
+              verificationRecord?.registrationDocumentCreator[1]
+                ? verificationRecord?.registrationDocumentCreator[1]
+                : ''
+            }
+            alt="Back ID Card"
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover' }}
+          />
+        );
+      },
+    },
+    {
+      title: 'ID Photo',
+      dataIndex: 'registrationDocumentCreator',
+      key: 'registrationDocumentCreator2',
+      width: 100,
+      fixed: 'left',
+      render: (_, record) => {
+        const verificationRecord = record as VerificationDataType;
+        return (
+          <Image
+            src={
+              verificationRecord?.registrationDocumentCreator[2]
+                ? verificationRecord?.registrationDocumentCreator[2]
+                : ''
+            }
+            alt="ID Photo"
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover' }}
+          />
+        );
+      },
+    },
+
+    {
+      title: 'Partner Front ID Card',
+      dataIndex: 'registrationDocumentPartner',
+      key: 'registrationDocumentPartner',
+      width: 100,
+      fixed: 'left',
+      render: (_, record) => {
+        const verificationRecord = record as VerificationDataType;
+        // console.log('Check record', verificationRecord);
+        return (
+          <Image
+            src={
+              verificationRecord?.registrationDocumentPartner[0]
+                ? verificationRecord?.registrationDocumentPartner[0]
+                : ''
+            }
+            alt="Partner Front ID Card"
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover' }}
+          />
+        );
+      },
+    },
+
+    {
+      title: 'Partner Back ID Card',
+      dataIndex: 'registrationDocumentPartner',
+      key: 'registrationDocumentPartner1',
+      width: 200,
+      fixed: 'left',
+      render: (_, record) => {
+        // console.log('check record', record);
+        const verificationRecord = record as VerificationDataType;
+
+        return (
+          <Image
+            src={
+              verificationRecord?.registrationDocumentPartner[1]
+                ? verificationRecord?.registrationDocumentPartner[1]
+                : ''
+            }
+            alt="Partner Back ID Card"
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover' }}
+          />
+        );
+      },
+    },
+    {
+      title: 'Partner ID Photo',
+      dataIndex: 'registrationDocumentPartner',
+      key: 'registrationDocumentPartner2',
+      width: 200,
+      fixed: 'left',
+      render: (_, record) => {
+        const verificationRecord = record as VerificationDataType;
+        return (
+          <Image
+            src={
+              verificationRecord?.registrationDocumentPartner[2]
+                ? verificationRecord?.registrationDocumentPartner[2]
+                : ''
+            }
+            alt="PartnerID Photo"
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover' }}
+          />
+        );
+      },
+    },
+
+    {
+      title: 'Actions',
+      align: 'center',
+      dataIndex: ['id', 'status'],
+      key: 'operation',
+      fixed: 'left',
+      width: 80,
+      render: (_, record) => {
+        const verificationRecord = record as VerificationDataType;
+        return (
+          <div className="flex gap-2 p-1 justify-center items-center">
+            {verificationRecord?.status === 'PENDING' ? (
+              <>
+                <Button
+                  type="link"
+                  icon={<EditOutlined />}
+                  onClick={() => {
+                    // console.log(id);
+                    handleVerify(verificationRecord?.id, true, '');
+                  }}
+                >
+                  Accept
+                </Button>
+                <Popconfirm
+                  title="Are you sure?"
+                  onConfirm={() => {
+                    handleVerify(verificationRecord?.id, false, 'Khong thich');
+                  }}
+                >
+                  <Button type="link" danger icon={<DeleteOutlined />}>
+                    Reject
+                  </Button>
+                </Popconfirm>
+              </>
+            ) : verificationRecord.status === 'APPROVED' ? (
+              <>
+                <Tag
+                  style={{
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    padding: '8px',
+                  }}
+                  color="green"
+                >
+                  Approved
+                </Tag>
+              </>
+            ) : (
+              <>
+                <Tag
+                  style={{
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    padding: '8px',
+                  }}
+                  color="red"
+                >
+                  Rejected
+                </Tag>
+              </>
+            )}
+          </div>
+        );
+      },
     },
   ];
 
   return (
     <div className="w-full h-full flex flex-col gap-5">
-      <h1 className="text-[32px] font-bold">Mixed&apos;s Doubles Athlete List</h1>
+      <h1 className="text-[32px] font-bold">
+        Mixed&apos;s Double Athlete List
+      </h1>
       <div className="w-full h-full p-5 rounded-[10px] border border-solid border-gray-200">
         <ConfigProvider
           theme={{
             token: {
               /* here is your global tokens */
-              colorPrimary: "#FF8243",
+              colorPrimary: '#FF8243',
             },
           }}
         >
-          <Table<DataType>
-            className={styles.customTable}
-            columns={columns}
-            dataSource={data}
-            style={{
-              width: "100%",
-              height: "100%",
-              fontFamily: "inherit",
-            }}
-          />
+          {isVerification ? (
+            <div className="overflow-hidden">
+              <Table<VerificationDataType>
+                // className={styles.customTable}
+                // scroll={{ x: 'max-content', y: 500 }}
+                columns={columnsVerification}
+                dataSource={verificationList}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  fontFamily: 'inherit',
+                  overflowX: 'scroll',
+                }}
+              />
+            </div>
+          ) : (
+            <div className="overflow-hidden">
+              <Table<BaseDataType>
+                // className={styles.customTable}
+                columns={columns}
+                dataSource={participantList}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  fontFamily: 'inherit',
+                  overflowX: 'scroll',
+                }}
+              />
+            </div>
+          )}
         </ConfigProvider>
       </div>
     </div>

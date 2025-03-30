@@ -25,7 +25,6 @@ import {
   getAllVerificationsAPI,
   verifyInformationAPI,
 } from '@/services/verification';
-import { useProfileContext } from '@/context/profile.context';
 import { toast } from 'react-toastify';
 
 const useStyle = createStyles(({ css }) => ({

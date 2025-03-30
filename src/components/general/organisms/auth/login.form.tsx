@@ -30,7 +30,6 @@ const LoginForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [changePassword, setChangePassword] = useState(false);
-  const { setUser } = useProfileContext();
 
   const onFinish = async (values: any) => {
     const { username, password } = values;

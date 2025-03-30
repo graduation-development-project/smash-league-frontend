@@ -35,3 +35,4 @@ export const buyPackageAPI = async (packageId: string, accessToken: string) => {
     return error.response?.data;
   }
 };
+

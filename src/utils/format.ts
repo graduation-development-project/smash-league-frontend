@@ -14,23 +14,29 @@ export const formatMoney = (value: number) => {
   return formatted;
 };
 
-export const formatOccurDate = (startDate: string, endDate: string) => {
-  let start = '';
-  let end = '';
-  if (dayjs(startDate).format('YYYY') === dayjs(endDate).format('YYYY')) {
-     start = dayjs(startDate).format('MMM DD');
-     end = dayjs(endDate).format('MMM DD, YYYY');
-  } else {
-    start = dayjs(startDate).format('MMM DD, YYYY');
-    end = dayjs(endDate).format('MMM DD, YYYY');
-  }
+export const formatOccurDate = (startDate?: string, endDate?: string) => {
+  console.log(startDate, endDate);
+  
+  if (!startDate || !endDate) return "Invalid Date";
+
+  const startYear = dayjs(startDate).format('YYYY');
+  const endYear = dayjs(endDate).format('YYYY');
+
+  const start = dayjs(startDate).format(startYear === endYear ? 'MMM DD' : 'MMM DD, YYYY');
+  const end = dayjs(endDate).format('MMM DD, YYYY');
 
   return `${start} - ${end}`;
 };
 
-export const formatDate = (date: string) => {
-  return dayjs(date).format('DD-MM-YYYY');
+// Format Date (Check if date exists)
+export const formatDate = (date?: string) => {
+  return date ? dayjs(date).format('DD-MM-YYYY') : "Invalid Date";
 };
-export const formatDateTime = (date: string) => {
-  return dayjs(date).format('DD-MM-YYYY HH:mm:ss');
+
+// Format DateTime with Hydration Fix
+export const formatDateTime = (date?: string) => {
+  if (!date) return "Invalid Date";
+  return typeof window === "undefined" 
+    ? "Loading..." 
+    : dayjs(date).format('HH:mm MMM DD, YYYY');
 };

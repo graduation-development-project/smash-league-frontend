@@ -25,7 +25,9 @@ const PaginationCard = ({
           style={{ fontWeight: 600 }}
           size="default"
           total={total}
-          showTotal={(total) => `Total ${total} ${itemText}`}
+          showTotal={(total) =>
+            `Total ${total} ${itemText ? itemText : 'items'}`
+          }
           pageSize={totalPerPage}
           current={currentPage}
           onChange={(page) => {

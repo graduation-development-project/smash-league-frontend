@@ -396,7 +396,7 @@ const TournamentsListTable = () => {
     },
     {
       title: "Age",
-      width: 10,
+      width: 40,
       align: "center",
       dataIndex: "age",
       key: "age",

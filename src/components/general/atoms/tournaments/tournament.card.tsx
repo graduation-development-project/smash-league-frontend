@@ -21,7 +21,7 @@ const TournamentCard = ({ tour }: any) => {
   return (
     <div
       className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-2 border cursor-pointer "
-      onClick={() => router.push('/tournaments/details')}
+      onClick={() => router.push(`/tournaments/details/${tour.id}`)}
     >
       <div className="w-full h-[200px]">
         <Image

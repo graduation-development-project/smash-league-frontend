@@ -45,6 +45,8 @@ const CreateTourPage = ({ session }: any) => {
     const nextStep = async () => {
         const values = await form.getFieldsValue();
         console.log('Check values step1', values);
+        const { createTournamentEvent } = values
+        console.log(createTournamentEvent, "createTournamentEvent");
         setDataStep1(values);
         setCurrentStep(currentStep + 1);
         console.log('bg tour', fileBgTour);
@@ -102,44 +104,31 @@ const CreateTourPage = ({ session }: any) => {
         try {
             if (fileBgTour) {
                 const uploadBgTourImage = await fetchUploadBgTourImage(fileBgTour);
-
                 if (uploadBgTourImage?.statusCode === 200 || uploadBgTourImage?.statusCode === 201) {
-                    if (hasMerchandise) {
-                        const uploadMerchandiseImage = await fetchUploadMerchandiseTourImage(fileImgMerchandiseList);
-                        if (uploadMerchandiseImage.statusCode === 200 || uploadMerchandiseImage.statusCode === 201) {
-                            values = { ...values, backgroundTournament: uploadBgTourImage.data, merchandiseImages: uploadMerchandiseImage.data };
-                            const response = await createTourAPI(
-                                accessToken,
-                                values,
-                            )
-                            console.log(response.data, "create API");
-                            if (response?.statusCode === 200 || response?.statusCode === 201) {
-                                message.success('Created successfully!')
-                                router.push("/tournaments")
-                            } else throw new Error("Failed to create tournament");
-                        } else { message.error('Failed to upload merchandise images'); }
-                    }
                     values = { ...values, backgroundTournament: uploadBgTourImage.data };
-                    const response = await createTourAPI(
-                        accessToken,
-                        values,
-                    )
-                    console.log(response.data, "response");
-                    if (response?.statusCode === 200 || response?.statusCode === 201) {
-                        message.success('Created successfully!')
-                        router.push("/tournaments")
-                    } else throw new Error("Failed to create tournament");
-
-                } else { message.error("Failed to upload Image") }
+                } else {
+                    values = { ...values, backgroundTournament: "" }
+                    message.error("Failed to upload Image");
+                }
+            }
+            if (hasMerchandise) {
+                const uploadMerchandiseImage = await fetchUploadMerchandiseTourImage(fileImgMerchandiseList);
+                if (uploadMerchandiseImage.statusCode === 200 || uploadMerchandiseImage.statusCode === 201) {
+                    values = { ...values, merchandiseImages: uploadMerchandiseImage.data };
+                } else {
+                    values = { ...values, merchandiseImages: [] }
+                    message.error('Failed to upload merchandise images');
+                }
             }
             const response = await createTourAPI(
                 accessToken,
                 values,
             )
-            console.log(response.data, "create API");
+            console.log(response, "create API");
             if (response?.statusCode === 200 || response?.statusCode === 201) {
                 message.success('Created successfully!')
                 router.push("/tournaments")
+                return true;
             }
             throw new Error("Failed to create tournament");
 
@@ -161,8 +150,10 @@ const CreateTourPage = ({ session }: any) => {
 
         const { street, ward, district, province, registrationDate,
             drawDate, occurDate, checkIn, hasMerchandise,
-            contactEmail, contactPhone, mainColor,
+            createTournamentEvent,
             ...rest } = finalValues
+        console.log(createTournamentEvent, "createTournamentEvent");
+
 
         const registrationOpeningDate = registrationDate ? registrationDate[0].toISOString() : null;
         const registrationClosingDate = registrationDate ? registrationDate[1].toISOString() : null;
@@ -174,9 +165,7 @@ const CreateTourPage = ({ session }: any) => {
 
         const submitData = {
             ...rest,
-            mainColor,
-            contactEmail,
-            contactPhone,
+            createTournamentEvent,
             hasMerchandise,
             registrationOpeningDate,
             registrationClosingDate,
@@ -185,7 +174,6 @@ const CreateTourPage = ({ session }: any) => {
             endDate,
             checkInBeforeStart,
         };
-        console.log(contactEmail);
 
         console.log("submitData", submitData);
 
@@ -270,14 +258,14 @@ const CreateTourPage = ({ session }: any) => {
 
                                     <div style={contentStyle}>{steps[currentStep].content}</div>
                                     <div className='w-full flex justify-center items-center gap-5 font-semibold text-primaryColor'>
-                                        {/* {currentStep > 0 && (
-                                <Button
-                                    style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', }}
-                                    onClick={() => prevStep()}
-                                >
-                                    Previous Step
-                                </Button>
-                            )} */}
+                                        {currentStep > 0 && (
+                                            <Button
+                                                style={{ width: '20%', fontSize: '18px', padding: '25px', borderRadius: '10px', }}
+                                                onClick={() => prevStep()}
+                                            >
+                                                Previous Step
+                                            </Button>
+                                        )}
                                         {currentStep === steps.length - 1 && (
                                             <Button
                                                 htmlType='submit'

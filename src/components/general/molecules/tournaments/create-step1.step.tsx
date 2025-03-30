@@ -113,7 +113,7 @@ const CreateTourStep1 = ({
 
     const handleColorChange = (value: Color) => {
         console.log(value, "mainColorValue");
-        
+
         const hexValue = typeof value === 'string' ? value : value?.toHexString();
         console.log(hexValue, "mainColor");
         if (hexValue) setColorHex(hexValue);
@@ -627,9 +627,9 @@ const CreateTourStep1 = ({
                     <Form.Item name="host" label="Host" initialValue={"Ho Chi Minh Federation"} required>
                         <Input value={"Ho Chi Minh Federation"} disabled />
                     </Form.Item>
-                    <Form.Item name="organizers" label="Co-Organizers">
+                    {/* <Form.Item name="organizers" label="Co-Organizers">
                         <Select {...sharedOrganizerProps} {...selectOrganizerProps} />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item name="contactEmail" label="Contact Email" required>
                         <Input placeholder='Your email here' />
                     </Form.Item>
@@ -764,12 +764,12 @@ const CreateTourStep1 = ({
                                                                         <InputNumber min={15} max={51} style={{ width: '100%' }} placeholder="Last points" />
                                                                     </Form.Item>
 
-                                                                    <Form.Item name={[subField.name, "ruleOfEventExtension"]} label="Rules" required>
+                                                                    <Form.Item name={[subField.name, "ruleOfEventExtension"]} label="Rules">
                                                                         <TextArea placeholder="Enter rules" autoSize={{ minRows: 3, maxRows: 5 }} />
                                                                     </Form.Item>
 
                                                                     <Divider />
-                                                                    <Form.Item name={[subField.name, "championshipPrize"]} label="Champion Rewards" required>
+                                                                    <Form.Item name={[subField.name, "championshipPrize"]} label="Champion Rewards" required >
                                                                         <Input style={{ width: '100%' }} />
                                                                     </Form.Item>
 
