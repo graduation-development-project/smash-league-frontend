@@ -56,15 +56,14 @@ const DashboardOrganizerProfile = () => {
     }
   };
 
-  console.log('Check tournaments', tournamentList);
+  // console.log('Check tournaments', tournamentList);
 
   useEffect(() => {
     if (user) {
       getAllTournamentByUser();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-
 
   const items: MenuItem[] = [
     getItem('Dashboard', 'dashboard', <TfiBarChartAlt size={15} />),
@@ -120,7 +119,14 @@ const DashboardOrganizerProfile = () => {
         ),
       ) || [],
     ),
-    getItem('Umpires', 'umpires', <HiOutlineUserGroup size={15} />),
+    getItem(
+      'Umpires',
+      'umpires',
+      <HiOutlineUserGroup size={15} />,
+      tournamentList?.flatMap((item: any) =>
+        getItem(item?.name, `${item?.id}_umpires`, <TbTournament size={15} />),
+      ) || [],
+    ),
   ];
 
   return (
