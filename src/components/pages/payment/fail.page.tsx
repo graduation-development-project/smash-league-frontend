@@ -32,6 +32,7 @@ const FailPage = () => {
 
   useEffect(() => {
     rejectPayment();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   return (
     <>

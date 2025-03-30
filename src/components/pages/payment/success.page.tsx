@@ -34,6 +34,7 @@ const SuccessPage = () => {
 
   useEffect(() => {
     acceptPayment();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (

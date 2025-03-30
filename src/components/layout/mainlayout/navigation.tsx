@@ -8,6 +8,7 @@ import { Dropdown, MenuProps } from 'antd';
 import { RiProfileFill } from 'react-icons/ri';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { MdLogout } from 'react-icons/md';
+import { LiaMoneyCheckAltSolid } from "react-icons/lia";
 import { signOut } from 'next-auth/react';
 import { IoNotifications } from 'react-icons/io5';
 import { IoIosStar } from 'react-icons/io';
@@ -16,6 +17,7 @@ import NotificationCard from '@/components/general/atoms/notification.card';
 import { FaAddressCard } from 'react-icons/fa';
 import { LuPackagePlus } from 'react-icons/lu';
 import { getNotificationAPI } from '../../../services/notification';
+import { FaMoneyCheckDollar } from 'react-icons/fa6';
 
 const Navigation = (props: any) => {
   const router = useRouter();
@@ -81,7 +83,7 @@ const Navigation = (props: any) => {
 
   const items: MenuProps['items'] = [
     {
-      key: '1',
+      key: 'public-profile',
       label: 'Public Profile',
       icon: <RiProfileFill size={15} />,
       onClick: () => {
@@ -105,7 +107,7 @@ const Navigation = (props: any) => {
       type: 'divider',
     },
     {
-      key: '2',
+      key: 'become-organizer',
       label: 'Become The Organizer',
       icon: <IoIosStar size={15} className="text-yellow-400" />,
       onClick: () => {
@@ -113,7 +115,7 @@ const Navigation = (props: any) => {
       },
     },
     {
-      key: '3',
+      key: 'become-umpire',
       label: 'Become The Umpire',
       icon: <FaAddressCard size={15} />,
       onClick: () => {
@@ -121,7 +123,7 @@ const Navigation = (props: any) => {
       },
     },
     {
-      key: '4',
+      key: 'buy-package',
       label: 'Buy Packages',
       icon: <LuPackagePlus size={15} />,
       onClick: () => {
@@ -129,7 +131,15 @@ const Navigation = (props: any) => {
       },
     },
     {
-      key: '5',
+      key: 'transaction-history',
+      label: 'Transaction History',
+      icon: <FaMoneyCheckDollar size={18} />,
+      onClick: () => {
+        router.push('/package');
+      },
+    },
+    {
+      key: 'settings',
       label: 'Settings',
       icon: <IoSettingsSharp size={15} />,
     },
@@ -137,7 +147,7 @@ const Navigation = (props: any) => {
       type: 'divider',
     },
     {
-      key: '10',
+      key: 'logout',
       label: 'Log Out',
       icon: <MdLogout size={15} />,
       onClick: async () => {
@@ -270,11 +280,8 @@ const Navigation = (props: any) => {
                     )}
                     {notifications && notifications?.length > 0 && (
                       <div
-                        className="text-[#2c2c2c] text-[14px] flex justify-center cursor-pointer bg-white mt-2  border border-gray-400 w-full p-1 rounded-[5px] hover:text-primaryColor hover:border-primaryColor"
-                        onClick={() => {
-                          router.push('/notifications');
-                          router.refresh();
-                        }}
+                        className="text-textColor text-[14px] flex justify-center cursor-pointer bg-white mt-2  border border-gray-400 w-full p-1 rounded-[5px] hover:text-primaryColor hover:border-primaryColor"
+                        onClick={() => router.push('/notifications')}
                       >
                         View All Notifications
                       </div>
@@ -303,7 +310,7 @@ const Navigation = (props: any) => {
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Button size={'sm'}>
-                  Welcome {session?.user?.name}
+                  Welcome {user?.name}
                   <DownOutlined />
                 </Button>
               </a>

@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
 
-const PlayerDetailTour = () => {
-  const bgColor = "bg-[#60a5fa]";
+const PlayerDetailTour = ({ mainColor, playerList }: { mainColor: string, playerList: any }) => {
   const textColor = "text-white"
 
 
@@ -27,9 +26,11 @@ const PlayerDetailTour = () => {
   return (
     <div>
       <div>
-        <table className="table-auto w-full ">
-          <thead className={`font-bold text-2xl ${bgColor} ${textColor}`} >
-            <tr  className=''>
+        <table className="table-auto w-full rounded-lg">
+          <thead className={`font-bold text-xl rounded-lg ${textColor}`}
+            style={{ background: mainColor }}
+          >
+            <tr className='rounded-lg'>
               <th>No.</th>
               <th>Avatar</th>
               <th>Name</th>

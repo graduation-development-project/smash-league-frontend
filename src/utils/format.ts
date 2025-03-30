@@ -15,7 +15,6 @@ export const formatMoney = (value: number) => {
 };
 
 export const formatOccurDate = (startDate?: string, endDate?: string) => {
-  console.log(startDate, endDate);
   
   if (!startDate || !endDate) return "Invalid Date";
 
@@ -36,7 +35,22 @@ export const formatDate = (date?: string) => {
 // Format DateTime with Hydration Fix
 export const formatDateTime = (date?: string) => {
   if (!date) return "Invalid Date";
+
+  if (typeof window === "undefined") {
+    return dayjs(date).utc().format('YYYY-MM-DD HH:mm'); 
+  }
+
+  return dayjs(date).format('HH:mm MMM DD, YYYY');
+};
+
+export const formatTime = (date?: string) => {
+  if (!date) return "Invalid Date";
+
+  const hourTime = dayjs(date).format('HH');
+
+  const time = dayjs(date).format( Number(hourTime) > 0 ? 'HH:mm:ss' : 'mm:ss');
+
   return typeof window === "undefined" 
     ? "Loading..." 
-    : dayjs(date).format('HH:mm MMM DD, YYYY');
+    : time;
 };

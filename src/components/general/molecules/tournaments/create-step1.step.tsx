@@ -815,6 +815,7 @@ const CreateTourStep1 = ({
                     <Form.Item name="isRegister"
                         label="Registration"
                         style={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', }}
+                        initialValue={false}
                         required
                     >
                         <Radio.Group onChange={(e) => { setIsRegister(e.target.value) }} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', flexDirection: 'column', rowGap: '8px' }}>

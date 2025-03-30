@@ -8,7 +8,7 @@ export const createTourAPI = async (accessToken: string, values: any) => {
     console.log('Check token', accessToken);
 
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/create-tournament`,
+      `${URL}/create-tournament`,
       {
         id: values.id,
         name: values.name,
@@ -88,7 +88,7 @@ export const searchTourAPI = async (
 ) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/search`,
+      `${URL}/search`,
       {
         params: {
           searchTerm,
