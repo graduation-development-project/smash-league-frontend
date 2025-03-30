@@ -17,14 +17,22 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ selectedKey }) => {
 
   let eventId = null;
   let verifications = false;
+  let tourId = null;
 
   if (selectedKey.includes('_')) {
     eventName = selectedKey.split('_').slice(0, 2).join('_');
     eventId = selectedKey.split('_')[4] || '';
     verifications = selectedKey.includes('verifications');
+    tourId =
+      selectedKey
+        .split('_')
+        .filter((part) => part !== 'umpires')
+        .join('_') || '';
   }
 
-  // console.log(eventName);
+  if (selectedKey.includes('umpires')) {
+    return <UmpiresListTable tourId={tourId} />;
+  }
 
   switch (eventName) {
     case 'dashboard':
@@ -66,8 +74,6 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ selectedKey }) => {
           isVerification={verifications}
         />
       );
-    case 'umpires':
-      return <UmpiresListTable />;
     default:
       return <DashboardOrganizer />;
   }

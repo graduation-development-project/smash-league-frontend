@@ -105,6 +105,30 @@ export const getTournamentRegistrationAPI = async (
   }
 };
 
+export const getUmpireRegistrationAPI = async (
+  accessToken: string,
+  tournamentEventId: string | null,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/organizers/umpire-registration/${tournamentEventId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get umpire tournament registration:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
 export const responseTournamentRegistrationAPI = async (
   accessToken: string,
   tournamentRegistrationId: string,
@@ -136,7 +160,9 @@ export const responseTournamentRegistrationAPI = async (
   }
 };
 
-export const getTournamentRegistrationByAthleteAPI = async (accessToken: string) => {
+export const getTournamentRegistrationByAthleteAPI = async (
+  accessToken: string,
+) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/tournament-registration`,
@@ -155,4 +181,4 @@ export const getTournamentRegistrationByAthleteAPI = async (accessToken: string)
     );
     return error.response?.data;
   }
-}
+};

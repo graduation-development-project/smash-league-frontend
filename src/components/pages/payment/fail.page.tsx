@@ -32,7 +32,7 @@ const FailPage = () => {
 
   useEffect(() => {
     rejectPayment();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   return (
     <>
@@ -43,7 +43,7 @@ const FailPage = () => {
           },
         }}
       >
-<div >
+        <div className="animate-fadeInBottom">
           <Result
             status="error"
             title="Submission Failed"
@@ -69,9 +69,8 @@ const FailPage = () => {
                 Buy Again
               </Button>,
             ]}
-          >
-          </Result>
-</div>
+          ></Result>
+        </div>
       </ConfigProvider>
     </>
   );

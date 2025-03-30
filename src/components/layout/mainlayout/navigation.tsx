@@ -8,7 +8,7 @@ import { Dropdown, MenuProps } from 'antd';
 import { RiProfileFill } from 'react-icons/ri';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { MdLogout } from 'react-icons/md';
-import { LiaMoneyCheckAltSolid } from "react-icons/lia";
+import { LiaMoneyCheckAltSolid } from 'react-icons/lia';
 import { signOut } from 'next-auth/react';
 import { IoNotifications } from 'react-icons/io5';
 import { IoIosStar } from 'react-icons/io';
@@ -106,22 +106,30 @@ const Navigation = (props: any) => {
     {
       type: 'divider',
     },
-    {
-      key: 'become-organizer',
-      label: 'Become The Organizer',
-      icon: <IoIosStar size={15} className="text-yellow-400" />,
-      onClick: () => {
-        router.push('/become/organizer');
-      },
-    },
-    {
-      key: 'become-umpire',
-      label: 'Become The Umpire',
-      icon: <FaAddressCard size={15} />,
-      onClick: () => {
-        router.push('/become/umpire');
-      },
-    },
+    ...(!user?.userRoles?.includes('Organizer')
+      ? [
+          {
+            key: 'become-organizer',
+            label: 'Become The Organizer',
+            icon: <IoIosStar size={15} className="text-yellow-400" />,
+            onClick: () => router.push('/become/organizer'),
+          },
+        ]
+      : []),
+
+    ...(!user?.userRoles?.includes('Umpire')
+      ? [
+          {
+            key: 'become-umpire',
+            label: 'Become The Umpire',
+            icon: <FaAddressCard size={15} />,
+            onClick: () => {
+              router.push('/become/umpire');
+            },
+          },
+        ]
+      : []),
+
     {
       key: 'buy-package',
       label: 'Buy Packages',
@@ -135,7 +143,7 @@ const Navigation = (props: any) => {
       label: 'Transaction History',
       icon: <FaMoneyCheckDollar size={18} />,
       onClick: () => {
-        router.push('/package');
+        router.push('/transaction');
       },
     },
     {
@@ -310,7 +318,7 @@ const Navigation = (props: any) => {
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Button size={'sm'}>
-                  Welcome {user?.name}
+                  Welcome {user?.name ? user.name : session.user.name}
                   <DownOutlined />
                 </Button>
               </a>

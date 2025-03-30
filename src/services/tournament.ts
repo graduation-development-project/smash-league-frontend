@@ -87,16 +87,13 @@ export const searchTourAPI = async (
   perPage: number,
 ) => {
   try {
-    const response = await axios.get(
-      `${URL}/search`,
-      {
-        params: {
-          searchTerm,
-          page,
-          perPage,
-        },
+    const response = await axios.get(`${URL}/search`, {
+      params: {
+        searchTerm,
+        page,
+        perPage,
       },
-    );
+    });
     console.log('response tour', response);
 
     return response.data;
@@ -171,6 +168,25 @@ export const getTournamentEventParticipantsAPI = async (
   }
 };
 
+export const getTournamentUmpiresParticipantsAPI = async (
+  accessToken: string,
+  tournamentId: string | null,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-tournament-umpires/${tournamentId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get Tournament Umpires participants:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
 export const getTournamentEventDetailAPI = async (tournamentId: string) => {
   try {
     const response = await axios.get(
@@ -187,7 +203,9 @@ export const getTournamentEventDetailAPI = async (tournamentId: string) => {
   }
 };
 
-export const getMatchesOfTournamentEventAPI = async (tournamentEventId:string) =>{
+export const getMatchesOfTournamentEventAPI = async (
+  tournamentEventId: string,
+) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-matches-of-tournament-event/${tournamentEventId}`,
@@ -201,4 +219,4 @@ export const getMatchesOfTournamentEventAPI = async (tournamentEventId:string) =
     );
     return error.response?.data;
   }
-}
+};
