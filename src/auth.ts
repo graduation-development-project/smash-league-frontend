@@ -37,7 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           );
 
-          console.log('Check res in authorize', res);
+          // console.log('Check res in authorize', res);
 
           if (+res.status === 201) {
             return {

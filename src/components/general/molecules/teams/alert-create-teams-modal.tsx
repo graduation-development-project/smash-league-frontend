@@ -7,7 +7,18 @@ import React from 'react';
 const AlertCreateTeamsModal = ({
   isModalOpen,
   setIsModalOpen,
-}: CreateTeamsModalProps) => {
+  message,
+  description,
+  linkText,
+  path,
+}: {
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  message?: string;
+  description?: string;
+  linkText?: string;
+  path?: string;
+}) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -33,23 +44,24 @@ const AlertCreateTeamsModal = ({
         }}
       >
         <Alert
-          message="Do you want to create a new team?"
+          message={message}
           description={
             <>
-              You have not sign up yet.{'\t'}
+              {description}
+              {'\t'}
               <span
                 className=" hover:underline hover:text-primaryColor cursor-pointer transition-all duration-200"
                 onClick={() => {
-                  router.push('/auth/register');
+                  router.push(`${path}`);
                 }}
               >
-                Sign Up here
+                {linkText}
               </span>
             </>
           }
           type="info"
           showIcon
-          style={{ marginTop: 30, width: "100%" }}
+          style={{ marginTop: 30, width: '100%' }}
         />
       </ConfigProvider>
     </Modal>

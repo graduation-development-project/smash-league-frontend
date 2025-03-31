@@ -83,26 +83,64 @@ const Navigation = (props: any) => {
 
   const items: MenuProps['items'] = [
     {
-      key: 'public-profile',
-      label: 'Public Profile',
+      key: 'athlete-profile',
+      label: 'Athlete Profile',
       icon: <RiProfileFill size={15} />,
       onClick: () => {
         if (!user || !user.userRoles) return; // Avoid errors
         localStorage.setItem('page', 'Home');
         setRoute('Profile');
-        router.push(
-          `/profile/${
-            user?.userRoles.includes('Organizer')
-              ? 'organizer'
-              : user?.userRoles.includes('Umpire')
-              ? 'umpire'
-              : user?.userRoles.includes('Team Leader')
-              ? 'teamleader'
-              : 'athlete'
-          }/${user?.name.toLowerCase()}`,
-        );
+        router.push(`/profile/athlete/${user?.name.toLowerCase()}`);
       },
     },
+    ...(user?.userRoles?.includes('Organizer')
+      ? [
+          {
+            key: 'organizer-profile',
+            label: 'Organizer Profile',
+            icon: <RiProfileFill size={15} />,
+            onClick: () => {
+              if (!user || !user.userRoles) return; // Avoid errors
+              localStorage.setItem('page', 'Home');
+              setRoute('Profile');
+              router.push(`/profile/organizer/${user?.name.toLowerCase()}`);
+            },
+          },
+        ]
+      : []),
+
+    ...(user?.userRoles?.includes('Team Leader')
+      ? [
+          {
+            key: 'team-leader-profile',
+            label: 'Team Leader Profile',
+            icon: <RiProfileFill size={15} />,
+            onClick: () => {
+              if (!user || !user.userRoles) return; // Avoid errors
+              localStorage.setItem('page', 'Home');
+              setRoute('Profile');
+              router.push(`/profile/teamleader/${user?.name.toLowerCase()}`);
+            },
+          },
+        ]
+      : []),
+
+    ...(user?.userRoles?.includes('Umpire')
+      ? [
+          {
+            key: 'umpire-profile',
+            label: 'Umpire Profile',
+            icon: <RiProfileFill size={15} />,
+            onClick: () => {
+              if (!user || !user.userRoles) return; // Avoid errors
+              localStorage.setItem('page', 'Home');
+              setRoute('Profile');
+              router.push(`/profile/umpire/${user?.name.toLowerCase()}`);
+            },
+          },
+        ]
+      : []),
+
     {
       type: 'divider',
     },
@@ -130,14 +168,18 @@ const Navigation = (props: any) => {
         ]
       : []),
 
-    {
-      key: 'buy-package',
-      label: 'Buy Packages',
-      icon: <LuPackagePlus size={15} />,
-      onClick: () => {
-        router.push('/packages');
-      },
-    },
+    ...(user?.userRoles?.includes('Organizer')
+      ? [
+          {
+            key: 'buy-package',
+            label: 'Buy Packages',
+            icon: <LuPackagePlus size={15} />,
+            onClick: () => {
+              router.push('/packages');
+            },
+          },
+        ]
+      : []),
     {
       key: 'transaction-history',
       label: 'Transaction History',
