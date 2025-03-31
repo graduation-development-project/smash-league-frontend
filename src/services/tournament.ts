@@ -203,6 +203,22 @@ export const getTournamentEventDetailAPI = async (tournamentId: string) => {
   }
 };
 
+export const generateBracketsAPI = async (tournamentId: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/generate-brackets/${tournamentId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error generate brackets:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
 export const getMatchesOfTournamentEventAPI = async (
   tournamentEventId: string,
 ) => {

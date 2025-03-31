@@ -74,7 +74,7 @@ export default function RoundHeader({
           'Quarter Final'}
         {!roundHeader?.roundTextGenerator &&
           columnIndex + 1 < numOfRounds - 2 &&
-          `Round ${tournamentRoundText}`}
+          `${tournamentRoundText}`}
         {roundHeader?.roundTextGenerator &&
           roundHeader?.roundTextGenerator(columnIndex + 1, numOfRounds)}
       </Text>

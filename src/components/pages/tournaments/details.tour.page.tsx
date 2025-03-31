@@ -83,10 +83,13 @@ const DetailsTourPage = () => {
   const renderContent = () => {
     const eventMap =
       eventList?.flatMap(([name, event]) =>
-        event.map((age: any) => ({
-          key: age.id,
-          label: `From ${age.fromAge} to ${age.toAge}`,
-        })),
+        event.map((age: any) => {
+          // console.log('Check tournamentEvent', event);
+          return {
+            key: `${name}-${age.id}`,
+            label: `From ${age.fromAge} to ${age.toAge}`,
+          };
+        }),
       ) || [];
     const isEventKey = eventMap.some((event) => event.key === activeKey);
 
@@ -219,7 +222,7 @@ const DetailsTourPage = () => {
                           // label: event?.tournamentEvent,
                           type: 'group',
                           children: event?.map((age: any) => ({
-                            key: age.id,
+                            key: `${name}-${age.id}`,
                             label: `From ${age?.fromAge} to ${age?.toAge}`,
                           })),
                         })),

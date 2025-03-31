@@ -15,12 +15,13 @@ const EventAgeDetails = ({
 }) => {
   const [bracket, setBracket] = useState({});
   const [matchList, setMatchList] = useState([]);
+  // console.log('check ', eventId);
 
   const [tabs, setTabs] = useState<TabsProps['items']>([
     {
       label: 'Bracket',
       key: 'bracket',
-      children: <BracketDetailsTour mainColor={mainColor} bracket={bracket} />,
+      children: <BracketDetailsTour mainColor={mainColor} bracket={bracket} eventId={eventId}/>,
     },
     {
       label: 'Matches',
@@ -43,7 +44,7 @@ const EventAgeDetails = ({
     },
   ]);
   return (
-    <div className="px-3">
+    <div className="px-3 w-full h-full">
       <Tabs
         defaultActiveKey="1"
         // type="card"

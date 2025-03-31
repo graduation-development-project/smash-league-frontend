@@ -1,9 +1,7 @@
 'use client';
-
 import SingleTeamEliminationBracket from '@/bracket-single/single-team-elim-bracket';
 import TeamMatch from '@/components/team-match';
 import Match from '@/core/match-wrapper';
-import { simpleTeamBracket, teamBrackets } from '@/mock-data/simple-data';
 import React, { useEffect, useState } from 'react';
 import { getMatchesOfTournamentEventAPI } from '../../services/tournament';
 

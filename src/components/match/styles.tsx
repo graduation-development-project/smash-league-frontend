@@ -34,7 +34,7 @@ export const StyledMatch = styled.div`
 
 export const Team = styled.div`
   font-size: 20px;
-  color: white;
+  color: #ffffff;
   &:hover {
     cursor: pointer;
   }
@@ -64,12 +64,13 @@ export const Side = styled.div<SideProps>`
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
-  background: ${({ theme, $won }) => ($won ? '#ffffff' : '#ffffff')};
+  background: ${({ theme, $won }) => ($won ? '#000000' : '#000000')};
 
   transition: border-color 0.5s ${({ theme }) => theme.transitionTimingFunction};
+  border-color: '#FF8243';
 
   ${Team} {
-    font-weight: ${({ theme, $won }) => ($won ? 'bold' : 500)};
+    font-weight: ${({ theme, $won }) => ($won ? 500 : 500)};
   }
 
   ${({ $hovered, theme, $won }) =>
@@ -82,7 +83,9 @@ export const Side = styled.div<SideProps>`
       }
 
       ${Score} {
-        color: ${$won ? theme.score.text.highlightedWonColor : theme.score.text.highlightedLostColor};
+        color: ${$won
+          ? theme.score.text.highlightedWonColor
+          : theme.score.text.highlightedLostColor};
       }
     `}
 `;

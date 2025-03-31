@@ -18,7 +18,7 @@ const TournamentsTeamsDetails = () => {
           <div className="flex flex-col gap-5">
             {Array.from({ length: 6 }).map((_, index) => (
               <div key={index}>
-                <TeamsTournamentsCard />
+                {/* <TeamsTournamentsCard /> */}
               </div>
             ))}
           </div>

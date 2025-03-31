@@ -10,7 +10,7 @@ const ParticipatedTournamentsOfTeams = () => {
     <div className="w-full h-full flex flex-col justify-center items-center gap-5">
       {Array.from({ length: 3 }).map((_, index) => (
         <div key={index} className="w-full h-full">
-          <TeamsTournamentsCard />
+          {/* <TeamsTournamentsCard /> */}
         </div>
       ))}
     </div>

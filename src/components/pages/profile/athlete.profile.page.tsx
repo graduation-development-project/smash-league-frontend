@@ -4,24 +4,40 @@
 import Loaders from '@/components/general/atoms/loaders/loaders';
 import OverviewAthleteProfile from '@/components/general/organisms/profile/athlete/overview.athlete.profile';
 import { Avatar, ConfigProvider, Tabs, TabsProps } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
 import TournamentsAthleteProfile from '../../general/organisms/profile/athlete/tournaments.athlete.profile';
 import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
+import { getProfileAPI } from '@/services/user';
 
 const AthleteProfilePage = (props: any) => {
   const { session } = props;
-  const user = {
-    accessToken:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0MTkxNzd9.fvQaEsYcX956KnXmI5HpGtTosAfxrYgtsg1SdgjxHlA',
-    refreshToken:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0NDI1Nzd9.mlxCTkI_ujgJh5Hx-JJpV1rKsZmCrsp1OaozJETWyNk',
-    email: 'smount273@gmail.com',
-    name: 'Tran Anh Minh',
-    roles: ['Athlete'],
-    id: 'dc033ba7-de1a-4fcc-b1f7-d9901388594b',
-  };
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
+
+  const getProfile = async () => {
+    if (!user) return;
+    try {
+      const response = await getProfileAPI(user?.access_token);
+      console.log('Check profile', response);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  });
   const onChange = (key: string) => {
     console.log(key);
   };
