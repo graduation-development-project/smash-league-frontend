@@ -77,7 +77,7 @@ const DetailsTourPage = () => {
 
   useEffect(() => {
     handleGetTourDetail();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
 
   const renderContent = () => {
@@ -158,12 +158,15 @@ const DetailsTourPage = () => {
                   Register As Umpire
                 </Button>
               </div>
+              {/* Athlete Form */}
               <RegisterAthleteTournamentForm
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 detail={detail}
                 detailId={detail?.id}
               />
+
+              {/* Umpire Form */}
               <RegisterUmpireTournamentForm
                 isRegisterModalOpen={isRegisterModalOpen}
                 setIsRegisterModalOpen={setIsRegisterModalOpen}
