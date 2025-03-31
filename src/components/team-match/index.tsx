@@ -9,7 +9,7 @@ import {
   BottomText,
   Wrapper,
   Anchor,
-} from "./styles";
+} from "../match/styles";
 
 function TeamMatch({
   bottomHovered,
@@ -62,10 +62,10 @@ function TeamMatch({
           <Score $won={topWon}>
             {topWon && <div className="rounded-full w-3 h-3 bg-green-400 mr-2"></div>}
             <p className={topParty?.set1 > (bottomParty?.set1 || 0) ? "text-green-400" : "text-red-600"}>
-              {topParty?.set1 ?? "-"}
+              {topParty?.set1 ?? ""}
             </p>
             <p className={topParty?.set2 > (bottomParty?.set2 || 0) ? "text-green-400" : "text-red-600"}>
-              {topParty?.set2 ?? "-"}
+              {topParty?.set2 ?? ""}
             </p>
             <p className={topParty?.set3 > (bottomParty?.set3 || 0) ? "text-green-400" : "text-red-600"}>
               {topParty?.set3 ?? ""}
@@ -90,10 +90,10 @@ function TeamMatch({
           <Score $won={bottomWon}>
             {bottomWon && <div className="rounded-full w-3 h-3 bg-green-400 mr-2"></div>}
             <p className={topParty?.set1 < (bottomParty?.set1 || 0) ? "text-green-400" : "text-red-600"}>
-              {bottomParty?.set1 ?? "-"}
+              {bottomParty?.set1 ?? ""}
             </p>
             <p className={topParty?.set2 < (bottomParty?.set2 || 0) ? "text-green-400" : "text-red-600"}>
-              {bottomParty?.set2 ?? "-"}
+              {bottomParty?.set2 ?? ""}
             </p>
             <p className={topParty?.set3 < (bottomParty?.set3 || 0) ? "text-green-400" : "text-red-600"}>
               {bottomParty?.set3 ?? ""}

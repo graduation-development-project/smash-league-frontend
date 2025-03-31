@@ -2,24 +2,72 @@ import React from 'react';
 import styles from './score.module.scss';
 import { RiArrowGoBackFill } from 'react-icons/ri';
 const ScorePage = () => {
-  let score1 = 11;
+  let set1ofPlayer1 = 11;
+  let set2ofPlayer1 = 13;
+  let set3ofPlayer1 = 11;
+  let set1ofPlayer2 = 12;
+  let set2ofPlayer2 = 12;
+  let set3ofPlayer2 = 12;
+
   let score2 = 12;
-  let active = false;
+  let active = true;
   return (
-    <div className="bg-black p-6">
-      <div className="w-full h-full flex justify-between items-center text-white px-6">
+    <div className="bg-black w-full h-full ">
+      <div className="w-full h-full flex justify-between items-center text-white px-6 pt-3">
         <div className="text-[28px] text-primaryColor font-bold">Game 1</div>
         <div className="flex flex-col justify-center items-center gap-1 text-[20px] font-semibold">
           <div>Trung Son</div>
           <div>Tran Anh Minh</div>
         </div>
         <div className="flex flex-col justify-center items-center gap-1 text-[20px] font-semibold">
-          <p className={`${score1 >= score2 ? 'text-secondColor' : ''}`}>
-            {score1}
-          </p>
-          <p className={`${score2 >= score1 ? 'text-secondColor' : ''}`}>
-            {score2}
-          </p>
+          <div className="flex gap-4">
+            <p
+              className={`${
+                set1ofPlayer1 >= set1ofPlayer2 ? 'text-secondColor' : ''
+              }`}
+            >
+              {set1ofPlayer1}
+            </p>
+            <p
+              className={`${
+                set2ofPlayer1 >= set2ofPlayer2 ? 'text-secondColor' : ''
+              }`}
+            >
+              {set2ofPlayer1}
+            </p>
+            <p
+              className={`${
+                set3ofPlayer1 >= set3ofPlayer2 ? 'text-secondColor' : ''
+              }`}
+            >
+              {set3ofPlayer1}
+            </p>
+          </div>
+          <div className="flex gap-4">
+            <p
+              className={`${
+                set1ofPlayer2 >= set1ofPlayer1 ? 'text-secondColor' : ''
+              }`}
+            >
+              {set1ofPlayer2}
+            </p>
+
+            <p
+              className={`${
+                set2ofPlayer2 >= set2ofPlayer1 ? 'text-secondColor' : ''
+              }`}
+            >
+              {set2ofPlayer2}
+            </p>
+
+            <p
+              className={`${
+                set3ofPlayer2 >= set3ofPlayer1 ? 'text-secondColor' : ''
+              }`}
+            >
+              {set3ofPlayer2}
+            </p>
+          </div>
         </div>
       </div>
       <div className="flex w-full h-screen justify-between items-center p-5">

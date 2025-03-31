@@ -32,9 +32,9 @@ function getItem(
 const DashboardOrganizerProfile = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState('dashboard');
-  const [user, setUser] = useState<any>(null);
   const [tournamentList, setTournamentList] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
