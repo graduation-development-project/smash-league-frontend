@@ -36,12 +36,12 @@ import { EVENT_ENUM } from '@/utils/enum';
 import EventAgeDetails from '@/components/general/molecules/tournaments/event-age-details.tour';
 import RegisterAthleteTournamentForm from '@/components/general/molecules/tournaments/register-athlete.tournament.form';
 import RegisterUmpireTournamentForm from '@/components/general/molecules/tournaments/register-umpire.tournament.form';
+import AttendantsCheck from '@/components/general/molecules/tournaments/attendants-check.tour';
 
 const DetailsTourPage = () => {
   const param = useParams();
   const url = param.id;
   const [eventList, setEventList] = useState<any[]>([]);
-
   const router = useRouter();
   const [activeKey, setActiveKey] = React.useState('details');
   const [isModalOpen, setIsModalOpen] = useState(false);
