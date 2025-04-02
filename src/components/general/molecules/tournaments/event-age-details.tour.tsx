@@ -7,9 +7,11 @@ import PlayerDetailTour from '../../organisms/tournaments/player-detail.tour';
 import AttendantsCheck from './attendants-check.tour';
 
 const EventAgeDetails = ({
+  tournamentId,
   eventId,
   mainColor,
 }: {
+  tournamentId: string | string[];
   eventId: string;
   mainColor: string;
 }) => {
@@ -27,7 +29,7 @@ const EventAgeDetails = ({
       label: 'Matches',
       key: 'matches',
       children: (
-        <MatchDetailsTour mainColor={mainColor} matchList={matchList} />
+        <MatchDetailsTour mainColor={mainColor} matchList={matchList} eventId={eventId} tournamentId={tournamentId}/>
       ),
     },
     {

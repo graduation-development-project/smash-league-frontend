@@ -14,6 +14,7 @@ import defaultTheme from '../themes/themes';
 import RoundHeader from '../components/round-header';
 import { ThemeProvider } from 'styled-components';
 import { ConsoleSqlOutlined } from '@ant-design/icons';
+import { formatDateTime } from '../utils/format';
 
 const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
   matches,
@@ -95,7 +96,6 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
           <MatchContextProvider>
             <g>
               {columns.map((matchesColumn, columnIndex) =>
-      
                 matchesColumn.map((match, rowIndex) => {
                   const { x, y } = calculatePositionOfMatch(
                     rowIndex,
@@ -156,7 +156,7 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
                           columnIndex={columnIndex}
                           match={match}
                           previousBottomMatch={previousBottomMatch}
-                          topText={match.startTime}
+                          topText={formatDateTime(match.startTime)}
                           bottomText={match.name}
                           teams={match.participants}
                           onMatchClick={onMatchClick}

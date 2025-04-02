@@ -1,12 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
-
 import images from '@/assets/images';
 import { formatDate } from '@/utils/format';
 import { Avatar, Image, Popover } from 'antd';
 import { CalendarDays, MapPin, UsersRound } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const TeamsTournamentsCard = ({ tour }: { tour?: any }) => {
+  const router = useRouter();
   // console.log('Check tour', tour);
   const membersRelated = (
     <div className="flex gap-2">
@@ -16,7 +18,10 @@ const TeamsTournamentsCard = ({ tour }: { tour?: any }) => {
   );
 
   return (
-    <div className="relative w-full h-full rounded-[15px] cursor-pointer">
+    <div
+      className="relative w-full h-full rounded-[15px] cursor-pointer"
+      onClick={() => router.push(`/tournaments/details/${tour.id}`)}
+    >
       <div className="absolute w-full h-full rounded-[15px]">
         <img
           className="w-full h-full object-cover rounded-[15px]"
@@ -24,10 +29,10 @@ const TeamsTournamentsCard = ({ tour }: { tour?: any }) => {
           alt="Background Tournament"
         />
 
-        <div className="w-full h-full absolute inset-0 bg-slate-500 bg-opacity-50 rounded-[15px]" />
+        <div className="w-full h-full absolute inset-0 bg-gray-500 hover:bg-gray-700 bg-opacity-50 rounded-[15px]" />
       </div>
       <div className="relative z-20 flex flex-col justify-center p-5 w-full h-full gap-7 ">
-        <h1 className="text-white text-[24px] font-bold flex items-center max-w-[350px] break-words">
+        <h1 className="text-white text-[24px] font-bold flex items-center max-w-[500px] break-words">
           {tour.name}
         </h1>
         <div className="flex justify-between items-center w-[80%] text-white font-semibold">
