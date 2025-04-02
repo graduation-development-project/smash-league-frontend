@@ -9,9 +9,13 @@ import { CiLocationOn } from 'react-icons/ci';
 import TournamentsAthleteProfile from '../../general/organisms/profile/athlete/tournaments.athlete.profile';
 import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 import { getProfileAPI } from '@/services/user';
+import { useProfileContext } from '@/context/profile.context';
 
 const AthleteProfilePage = (props: any) => {
   const { session } = props;
+  const {athleteId, setAthleteId} = useProfileContext();
+  console.log('athleteId', athleteId);
+  
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);

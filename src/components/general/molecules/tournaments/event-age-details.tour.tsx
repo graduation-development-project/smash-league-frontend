@@ -1,10 +1,9 @@
 'use client';
 import { Tabs, TabsProps } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BracketDetailsTour from '../../organisms/tournaments/bracket-details.tour';
 import MatchDetailsTour from '../../organisms/tournaments/match-details.tour';
 import PlayerDetailTour from '../../organisms/tournaments/player-detail.tour';
-import AttendantsCheck from './attendants-check.tour';
 
 const EventAgeDetails = ({
   tournamentId,
@@ -16,8 +15,13 @@ const EventAgeDetails = ({
   mainColor: string;
 }) => {
   const [bracket, setBracket] = useState({});
+  const [playerList, setPlayerList] = useState([]);
   const [matchList, setMatchList] = useState([]);
   // console.log('check ', eventId);
+
+
+
+
 
   const [tabs, setTabs] = useState<TabsProps['items']>([
     {
@@ -36,14 +40,14 @@ const EventAgeDetails = ({
       label: 'Players',
       key: 'players',
       children: (
-        <PlayerDetailTour mainColor={mainColor} playerList={matchList} />
+        <PlayerDetailTour mainColor={mainColor} eventId={eventId} />
       ),
     },
-    {
-      label: 'Check List',
-      key: 'attendants-check-list',
-      children: <AttendantsCheck />,
-    },
+    // {
+    //   label: 'Check List',
+    //   key: 'attendants-check-list',
+    //   children: <AttendantsCheck />,
+    // },
   ]);
   return (
     <div className="px-3 w-full h-full">
@@ -53,6 +57,7 @@ const EventAgeDetails = ({
         size={'large'}
         style={{ marginBottom: 32 }}
         items={tabs}
+        // onClick={}
       />
     </div>
   );

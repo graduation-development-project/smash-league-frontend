@@ -153,29 +153,27 @@ const DetailsTourPage = () => {
                 <h1 className="text-4xl font-extrabold">{detail?.name}</h1>
                 <h4>@{detail?.shortName}</h4>
               </div>
-              <div className="flex gap-2">
-                <Button variant={'default'} size={'sm'} onClick={showModal}>
+              <div className="flex gap-3">
+                <Button variant={'default'} size={'lg'} onClick={showModal}>
                   Register Now
                 </Button>
-
-                <Button variant="default" size={'sm'} onClick={showUmpire}>
+                {/* Athlete Form */}
+                <RegisterAthleteTournamentForm
+                  isModalOpen={isModalOpen}
+                  setIsModalOpen={setIsModalOpen}
+                  detail={detail}
+                  detailId={detail?.id}
+                />
+                <Button variant="default" size={'lg'} onClick={showUmpire}>
                   Register As Umpire
                 </Button>
+                {/* Umpire Form */}
+                <RegisterUmpireTournamentForm
+                  isRegisterModalOpen={isRegisterModalOpen}
+                  setIsRegisterModalOpen={setIsRegisterModalOpen}
+                  detail={detail}
+                />
               </div>
-              {/* Athlete Form */}
-              <RegisterAthleteTournamentForm
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-                detail={detail}
-                detailId={detail?.id}
-              />
-
-              {/* Umpire Form */}
-              <RegisterUmpireTournamentForm
-                isRegisterModalOpen={isRegisterModalOpen}
-                setIsRegisterModalOpen={setIsRegisterModalOpen}
-                detail={detail}
-              />
             </div>
           </div>
           <div className="w-full h-max flex flex-col py-8 px-5 gap-5 justify-center items-center shadow-shadowComp rounded-lg">

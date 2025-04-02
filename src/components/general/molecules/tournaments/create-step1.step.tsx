@@ -685,7 +685,7 @@ const CreateTourStep1 = ({
                         {(fields, { add, remove }) => (
                             <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16, width: '90%' }}>
                                 {eventList.map((event, index) => {
-
+  
                                     const field = fields.find((f) => f.name === index);
                                     if (!field) add()
 
