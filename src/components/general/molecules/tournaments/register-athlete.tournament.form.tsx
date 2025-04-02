@@ -53,14 +53,14 @@ const RegisterAthleteTournamentForm = ({
   }, []);
 
   // console.log('Check user', user);
-  console.log('Check detail', detail?.id);
+  // console.log('Check detail', detail?.id);
 
   // console.log('Check detail', detail.tournamentEvents);
 
   const tournamentEventReal = async () => {
     // if (detail) return;
     try {
-      console.log('Check detail id', detail?.id);
+      // console.log('Check detail id', detail?.id); 
       const response = await getTournamentEventDetailAPI(detailId);
       setTournamentEvent(response.data.data);
     } catch (error: any) {

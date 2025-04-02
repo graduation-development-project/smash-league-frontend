@@ -109,6 +109,7 @@ const DetailsTourPage = () => {
       default:
         return isEventKey ? (
           <EventAgeDetails
+            tournamentId={url}
             eventId={activeKey}
             mainColor={detail?.mainColor || '#FF8243'}
           />
@@ -205,7 +206,7 @@ const DetailsTourPage = () => {
                     // theme="dark"
                     style={{}}
                     mode="inline"
-                    defaultSelectedKeys={['1']}
+                    defaultSelectedKeys={[activeKey]}
                     onClick={({ key }) => setActiveKey(key)}
                     items={[
                       {

@@ -95,7 +95,7 @@ const UmpiresListTable = ({
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
   const [user, setUser] = useState<any>(null);
-  const [isVerification, setIsVerification] = useState(true);
+  const [isVerification, setIsVerification] = useState('verify');
 
   const [participantList, setParticipantList] = useState([]);
   const [verificationList, setVetificationList] = useState([]);
@@ -184,7 +184,7 @@ const UmpiresListTable = ({
     setSearchText('');
   };
 
-  const handleChange = (value: boolean) => {
+  const handleChange = (value: string) => {
     // console.log('check', value);
     setIsVerification(value);
   };
@@ -200,6 +200,7 @@ const UmpiresListTable = ({
       );
       if (response?.status === 200 || response?.status === 201) {
         getTournamentRegistration();
+        getTournamentUmpiresParticipants();
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,
@@ -327,7 +328,7 @@ const UmpiresListTable = ({
           src={user?.avatarURL}
           width={100}
           height={100}
-          alt="Athlete Image"
+          alt="Umpire Image"
         />
       ),
     },
@@ -534,23 +535,26 @@ const UmpiresListTable = ({
 
   return (
     <div className="w-full h-full flex flex-col gap-5">
-      <div className="w-full h-full flex justify-between">
+      <div className="w-full h-max flex justify-between">
         <h1 className="text-[32px] font-bold">
-          {isVerification ? 'Umpires Verification List' : 'Umpire List'}
+          {isVerification === 'verify'
+            ? 'Umpires Verification List'
+            : 'Umpires Participant List'}
         </h1>
 
         <Select
-          defaultValue={true}
+          defaultValue={'verify'}
           style={{ width: 120, fontFamily: 'inherit', marginTop: '10px' }}
           onChange={handleChange}
           options={[
-            { value: true, label: 'Verifications' },
-            { value: false, label: 'Participants' },
+            { value: 'verify', label: 'Verifications' },
+            { value: 'participant', label: 'Participants' },
+            // { value: 'assign', label: 'Assign' },
           ]}
         />
       </div>
 
-      <div className="w-full h-full p-5 rounded-[10px] border border-solid border-gray-200">
+      <div className="w-full h-full rounded-[10px] border border-solid border-gray-200">
         <ConfigProvider
           theme={{
             token: {
@@ -559,7 +563,7 @@ const UmpiresListTable = ({
             },
           }}
         >
-          {isVerification ? (
+          {isVerification === 'verify' ? (
             <Table<VerificationDataType>
               // className={styles.customTable}
               columns={columnsVerification}

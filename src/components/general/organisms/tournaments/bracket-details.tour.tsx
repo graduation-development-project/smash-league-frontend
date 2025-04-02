@@ -26,12 +26,12 @@ const BracketDetailsTour = ({
   const eventName = eventId.split('-')[0];
   const eventUUID = eventId.slice(eventId.indexOf('-') + 1);
 
-  console.log('Check event', eventUUID);
+  // console.log('Check event', eventUUID);
 
   const getMatchesOfTournamentEvent = async () => {
     try {
       const res = await getMatchesOfTournamentEventAPI(eventUUID);
-      console.log('Cgheck res', res);
+      // console.log('Cgheck res', res);
       setBrackets(res?.data?.data);
     } catch (error: any) {
       console.log('error', error);
@@ -40,9 +40,10 @@ const BracketDetailsTour = ({
 
   useEffect(() => {
     getMatchesOfTournamentEvent();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventId]);
 
-  console.log('Check brackets', brackets);
+  // console.log('Check brackets', brackets);
 
   return (
     <div className="w-full h-max p-5">

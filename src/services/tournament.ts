@@ -170,7 +170,7 @@ export const getTournamentEventParticipantsAPI = async (
 
 export const getTournamentUmpiresParticipantsAPI = async (
   accessToken: string,
-  tournamentId: string | null,
+  tournamentId: string | string[] | null,
 ) => {
   try {
     const response = await axios.get(
@@ -231,6 +231,66 @@ export const getMatchesOfTournamentEventAPI = async (
   } catch (error: any) {
     console.error(
       'Error get matches of Tournament Event Detail:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getTournamentsOfOrganizerAPI = async (
+  accessToken: string,
+  page: number,
+  perPage: number,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-tournaments-by-organizer`,
+      {
+        params: {
+          page: page,
+          perPage: perPage,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get Tournament List of Organizer:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const assignUmpireToMatchAPI = async (
+  accessToken: string,
+  tournamentId: string | string[] | null,
+  matchId: string,
+  umpireId: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/organizers/assign-umpire`,
+      {
+        tournamentId,
+        umpireId,
+        matchId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error assign umpire to match:',
       error.response?.data || error.message,
     );
     return error.response?.data;
