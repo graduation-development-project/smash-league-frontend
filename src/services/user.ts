@@ -57,18 +57,18 @@ export const registerNewRoleAPI = async (
   }
 };
 
-export const getProfileAPI = async (accessToken: string) => {
+export const getProfileAPI = async (id : string) => {
   try {
+   console.log("id", id);
    
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/profile`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/id/${id}`,
     );
-
+    console.log( "getProfile", response);
+    
+    // if(response.data.statusCode === 200 || response.data.statusCode === 201){
+    //   return response.data;
+    // }
     return response.data;
   } catch (error: any) {
     console.error(

@@ -30,7 +30,7 @@ const TeamLeaderProfilePage = (props: any) => {
     {
       key: '1',
       label: 'Overview',
-      children: <OverviewAthleteProfile />,
+      children: <OverviewAthleteProfile info={user} />,
     },
     {
       key: '2',
