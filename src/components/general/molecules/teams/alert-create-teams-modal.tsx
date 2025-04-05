@@ -14,10 +14,10 @@ const AlertCreateTeamsModal = ({
 }: {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  message?: string;
-  description?: string;
-  linkText?: string;
-  path?: string;
+  message: string;
+  description: string;
+  linkText: string;
+  path: string;
 }) => {
   const handleCancel = () => {
     setIsModalOpen(false);

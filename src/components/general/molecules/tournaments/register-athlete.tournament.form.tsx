@@ -70,6 +70,7 @@ const RegisterAthleteTournamentForm = ({
 
   useEffect(() => {
     tournamentEventReal();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailId]);
 
   const tournamentEventsOptions = tournamentEvent
