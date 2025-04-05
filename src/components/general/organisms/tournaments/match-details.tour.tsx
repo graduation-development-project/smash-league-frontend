@@ -51,7 +51,8 @@ const MatchDetailsTour = ({
 
   useEffect(() => {
     getMatchesOfTournamentEvent();
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventId]);
   // console.log('matches', matches);
 
   return (
@@ -68,7 +69,7 @@ const MatchDetailsTour = ({
                   {item.court}
                 </h2>
                 <div className="w-full h-max flex flex-col justify-between items-center gap-16">
-                  {matches.map((match: any, index) => {
+                  {matches.map((match: any) => {
                     return (
                       <div key={match.id} className="w-full h-max">
                         <MatchCard match={match} tournamentId={tournamentId}/>

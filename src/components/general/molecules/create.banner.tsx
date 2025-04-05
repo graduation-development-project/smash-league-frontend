@@ -1,30 +1,33 @@
-"use client";
+'use client';
 
-import images from "@/assets/images";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import React, { useState } from "react";
-import CreateTeamsModal from "./teams/create-teams-modal";
-import AlertCreateTeamsModal from "./teams/alert-create-teams-modal";
-import { useRouter } from "next/navigation";
+import images from '@/assets/images';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import React, { useState } from 'react';
+import CreateTeamsModal from './teams/create-teams-modal';
+import AlertCreateTeamsModal from './teams/alert-create-teams-modal';
+import { useRouter } from 'next/navigation';
 
 const CreateBanner = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
-  const [role, setRole] = useState("Organizer");
+  const [role, setRole] = useState('Organizer');
 
   const onClickCreateTour = () => {
-    role === "Organizer" ?
-      router.push("/tournaments/create")
-      :
+    role === 'Organizer' ? (
+      router.push('/tournaments/create')
+    ) : (
       <AlertCreateTeamsModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-      />;
+        message="You are not authorized to register as organizer"
+        description="Please register as an organizer."
+        linkText="Become an Organizer"
+        path="/become/organizer"
+      />
+    );
   };
-
-
 
   return (
     <div className="w-full h-full relative">

@@ -155,39 +155,6 @@ const TourRegistrationOfAthleteTable = () => {
     },
   ];
 
-  // const data: DataType[] = [
-  //   {
-  //     key: '1',
-  //     tourName: 'Tournament 1',
-  //     event: "Men's Singles",
-  //     startDate: '2024-03-01T10:00:00.000Z',
-  //     endDate: '2024-03-01T10:00:00.000Z',
-
-  //     location: 'Location 1',
-  //     isPayForTheRegistrationFee: true,
-  //     status: 'Pending',
-  //   },
-  //   {
-  //     key: '2',
-  //     tourName: 'Tournament 2',
-  //     event: "Women's Singles",
-  //     startDate: '2024-03-01T10:00:00.000Z',
-  //     endDate: '2024-03-01T10:00:00.000Z',
-  //     location: 'Location 2',
-  //     isPayForTheRegistrationFee: false,
-  //     status: 'Approved',
-  //   },
-  //   {
-  //     key: '3',
-  //     tourName: 'Tournament 3',
-  //     event: "Men's Doubles",
-  //     startDate: '2024-03-01T10:00:00.000Z',
-  //     endDate: '2024-03-01T10:00:00.000Z',
-  //     location: 'Location 3',
-  //     isPayForTheRegistrationFee: true,
-  //     status: 'Rejected',
-  //   },
-  // ];
 
   return (
     <div className="flex flex-col gap-3 p-3">

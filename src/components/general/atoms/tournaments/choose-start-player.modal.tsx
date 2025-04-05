@@ -1,88 +1,100 @@
 'use client';
-import {
-  assignUmpireToMatchAPI,
-  getTournamentUmpiresParticipantsAPI,
-} from '@/services/tournament';
+
+import { getMatchByIdAPI, startMatchAPI } from '@/services/match';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Button, ConfigProvider, Form, Modal, Select } from 'antd';
+import {
+  Button,
+  Checkbox,
+  ConfigProvider,
+  Form,
+  GetProp,
+  Modal,
+  Radio,
+  RadioChangeEvent,
+} from 'antd';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const UmpireAssignModal = ({
+const ChooseStartPlayerModal = ({
   isModalOpen,
   setIsModalOpen,
-  tournamentId,
   matchId,
 }: {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  tournamentId: string | string[];
   matchId: string;
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [umpiresList, setUmpiresList] = useState([]);
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
-      }
-    }
-  }, []);
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const style: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
   };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
   const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
+  const [value, setValue] = useState('');
+  const router = useRouter();
+  const [attendance, setAttendance] = useState<
+    { label: string; value: string }[]
+  >([]);
 
-  const getTournamentUmpiresParticipants = async () => {
-    const res = await getTournamentUmpiresParticipantsAPI(
-      user?.access_token,
-      tournamentId,
-    );
-
-    // console.log(res?.data.data, 'check umpires');
-    if (res?.data?.statusCode === 200 || res?.data?.statusCode === 201) {
-      // Transform data into correct format
-      const formatData = res.data.data.map((umpire: any) => ({
-        value: umpire.userId,
-        label: umpire.user.name,
-        disabled: umpire.isAvailable ? false : true,
-      }));
-
-      setUmpiresList(formatData);
-    } else {
-      setUmpiresList([]);
+  const getMatchById = async () => {
+    try {
+      //   setIsLoading(true);
+      const response = await getMatchByIdAPI(matchId);
+      // console.log('Check ', response.data.data);
+      if (
+        response?.data?.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
+        const formatData = [
+          {
+            label:
+              response.data.data.leftCompetitor.partner !== null
+                ? response.data.data.leftCompetitor.user.name +
+                  " / " +
+                  response.data.data.leftCompetitor.partner.name
+                : response.data.data.leftCompetitor.user.name,
+            value: response.data.data.leftCompetitor.id,
+          },
+          {
+            label:
+              response.data.data.rightCompetitor.partner !== null
+                ? response.data.data.rightCompetitor.user.name +
+                  ' / ' +
+                  response.data.data.rightCompetitor.partner.name
+                : response.data.data.rightCompetitor.user.name,
+            value: response.data.data.rightCompetitor.id,
+          },
+        ];
+        setAttendance(formatData);
+      }
+    } catch (error: any) {
+      console.log('check error', error);
     }
   };
 
-  useEffect(() => {
-    getTournamentUmpiresParticipants();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalOpen]);
+  const onChange = (e: RadioChangeEvent) => {
+    setValue(e.target.value);
+    // console.log('radio checked', e.target.value);
+  };
 
-  const handleAssignUmpire = async (values: any) => {
-    const { umpireId } = values;
+  const handleSubmit = async (values: any) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      const response = await assignUmpireToMatchAPI(
-        user?.access_token,
-        tournamentId,
-        matchId,
-        umpireId,
-      );
-      console.log('check res', response);
-      if (response?.data.statusCode === 200 || response?.data?.statusCode === 201) {
-        setIsModalOpen(false);
-        setIsLoading(false);
+      const response = await startMatchAPI(matchId, value);
+      // console.log('check response', response.data);
+      if (
+        response?.data?.statusCode === 204 ||
+        response?.data?.statusCode === 200
+      ) {
+        localStorage.setItem('game', JSON.stringify(response.data.data));
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -90,12 +102,15 @@ const UmpireAssignModal = ({
           progress: undefined,
           theme: 'light',
         });
-      } else {
+
+        router.push('/score');
+        setIsLoading(false);
         setIsModalOpen(false);
+      } else {
         setIsLoading(false);
         toast.error(`${response?.message}`, {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -105,10 +120,18 @@ const UmpireAssignModal = ({
         });
       }
     } catch (error: any) {
-      console.log('Error', error);
+      console.log('check error', error);
     }
   };
 
+  //   console.log('Check attendance', attendance);
+
+  useEffect(() => {
+    getMatchById();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchId]);
+
+  // console.log('Check', attendance);
   return (
     <div>
       <ConfigProvider
@@ -125,7 +148,7 @@ const UmpireAssignModal = ({
         }}
       >
         <Modal
-          title="Umpire Assign Form"
+          title="Choose the first one to start"
           width={500}
           open={isModalOpen}
           //   onOk={handleOk}
@@ -141,8 +164,8 @@ const UmpireAssignModal = ({
         >
           <Form
             autoComplete="off"
-            onFinish={handleAssignUmpire}
-            layout="horizontal"
+            onFinish={handleSubmit}
+            layout="vertical"
             form={form}
           >
             <ConfigProvider
@@ -157,12 +180,12 @@ const UmpireAssignModal = ({
                 },
               }}
             >
-              <Form.Item label="Umpire" name="umpireId">
-                <Select
-                  //   defaultValue="lucy"
-                  style={{ width: '100%' }}
-                  //   onChange={handleChange}
-                  options={umpiresList}
+              <Form.Item name={'first'} label="The first player">
+                <Radio.Group
+                  style={style}
+                  onChange={onChange}
+                  value={value}
+                  options={attendance}
                 />
               </Form.Item>
               <Form.Item>
@@ -187,7 +210,7 @@ const UmpireAssignModal = ({
                       type="primary"
                       htmlType="submit"
                     >
-                      Register
+                      Submit
                       {isLoading && (
                         <LoadingOutlined
                           style={{ marginLeft: '5px', fontSize: '20px' }}
@@ -205,4 +228,4 @@ const UmpireAssignModal = ({
   );
 };
 
-export default UmpireAssignModal;
+export default ChooseStartPlayerModal;

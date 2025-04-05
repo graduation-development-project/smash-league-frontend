@@ -1,5 +1,6 @@
 import TourListBoard from '@/components/general/molecules/tournaments/tour-list.board';
 import MyTourListBoard from '@/components/general/organisms/tournaments/my-tour-list-board.tour';
+import { getParticipatedTournamentsAPI } from '@/services/tournament';
 import {
   AppstoreOutlined,
   CalendarOutlined,
@@ -21,7 +22,7 @@ import {
 } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TbTournament } from 'react-icons/tb';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -56,10 +57,46 @@ const MyTournaments = () => {
   };
 
   const [collapsed, setCollapsed] = useState(false);
+  const [participatedTournaments, setParticipatedTournaments] = useState<any>(
+    [],
+  );
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
+
+  const getParticipatedTournaments = async () => {
+    try {
+      const response = await getParticipatedTournamentsAPI(user.access_token);
+      console.log('Check res', response.data);
+      if (
+        response?.data?.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
+        const formatData = response.data.data.map((tour: any) => ({
+          key: `umpires_${tour.id}`,
+          label: tour.name,
+        }));
+        setParticipatedTournaments(formatData);
+      }
+    } catch (error: any) {
+      console.log('Error', error);
+    }
+  };
+
+  useEffect(() => {
+    getParticipatedTournaments();
+  }, [user]);
 
   return (
     <div className="w-full h-max flex flex-col px-10 py-3 gap-5">
@@ -108,6 +145,13 @@ const MyTournaments = () => {
                   key: 'tour-registration',
                   label: 'Tour Registration',
                   icon: <TbTournament size={15} />,
+                },
+
+                {
+                  key: 'matches-umpires',
+                  label: 'Matches',
+                  icon: <TbTournament size={15} />,
+                  children: [...participatedTournaments],
                 },
               ]}
             />
