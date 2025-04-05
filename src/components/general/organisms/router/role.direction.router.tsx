@@ -19,7 +19,7 @@ const RoleDirectionRouter = (props: any) => {
 
     const getProfile = async () => {
       try {
-        const res = await getProfileAPI(session.user?.access_token);
+        const res = await getProfileAPI(session.user?.id);
         if (typeof window !== 'undefined') {
           localStorage.setItem('user', JSON.stringify({...res.data, access_token: session.user?.access_token}));
         }

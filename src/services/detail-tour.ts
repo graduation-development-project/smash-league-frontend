@@ -38,3 +38,17 @@ export const getMerchandiseListAPI = async (id: string) => {
     );
   }
 };
+export const getParticipantListAPI = async (id: string) => {
+  try {
+    const response = await axios.get(`${URL}/get-participants-of-tournament-event/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      'Error creating team:',
+      error.response?.data || error.message,
+    );
+    throw new Error(
+      error.response?.data?.message || 'Failed to upload background image',
+    );
+  }
+};

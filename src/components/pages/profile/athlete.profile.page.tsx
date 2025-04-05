@@ -9,27 +9,40 @@ import { CiLocationOn } from 'react-icons/ci';
 import TournamentsAthleteProfile from '../../general/organisms/profile/athlete/tournaments.athlete.profile';
 import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 import { getProfileAPI } from '@/services/user';
+import { useProfileContext } from '@/context/profile.context';
 
 const AthleteProfilePage = (props: any) => {
   const { session } = props;
+  const { athleteId, setAthleteId } = useProfileContext();
+  console.log('athleteId', athleteId);
+  console.log('session', session);
+
+
+
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
+  console.log("user", user);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
-      }
-    }
-  }, []);
+
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined') {
+  //     const storedUser = localStorage.getItem('user');
+  //     if (storedUser) {
+  //       setUser(storedUser ? JSON.parse(storedUser) : {}); 
+  //     }
+  //   }
+  // }, []);
 
   const getProfile = async () => {
-    if (!user) return;
+    // if (!user) return;
+    console.log("check getProfile");
+    console.log('athleteId', athleteId);
     try {
-      const response = await getProfileAPI(user?.access_token);
+      const response = await getProfileAPI(athleteId);
       console.log('Check profile', response);
+      setProfile(response);
     } catch (error: any) {
       console.log(error);
     }
@@ -37,7 +50,7 @@ const AthleteProfilePage = (props: any) => {
 
   useEffect(() => {
     getProfile();
-  });
+  }, [athleteId]);
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -46,7 +59,7 @@ const AthleteProfilePage = (props: any) => {
     {
       key: '1',
       label: 'Overview',
-      children: <OverviewAthleteProfile />,
+      children: <OverviewAthleteProfile info={profile} />,
     },
     {
       key: '2',
@@ -55,12 +68,12 @@ const AthleteProfilePage = (props: any) => {
     },
     ...(session?.user?.id === session?.user?.id
       ? [
-          {
-            key: '3',
-            label: 'Update Information',
-            children: <UpdateInformationProfile session={session} />,
-          },
-        ]
+        {
+          key: '3',
+          label: 'Update Information',
+          children: <UpdateInformationProfile session={session} />,
+        },
+      ]
       : []),
   ];
 
@@ -84,14 +97,21 @@ const AthleteProfilePage = (props: any) => {
               />
               <div className="flex flex-col gap-2">
                 <h1 className="text-white text-[32px] font-bold">
-                  HO DUONG TRUNG NGUYEN
+                  {profile?.name}
                 </h1>
                 <div className="text-white text-[14px] italic ">
-                  trungnguyen2734@gmail.com
+                  {profile?.email}
                 </div>
-                <div className="text-white text-[14px] font-semibold flex gap-1">
-                  <CiLocationOn size={20} /> <span>Thu Duc, Ho Chi Minh</span>
-                </div>
+                {
+                  profile?.address ?
+                    <div className="text-white text-[14px] font-semibold flex gap-1">
+                      <CiLocationOn size={20} /> <span>Thu Duc, Ho Chi Minh</span>
+                    </div>
+                      :
+                    <></>
+                }
+
+
               </div>
             </div>
           </div>

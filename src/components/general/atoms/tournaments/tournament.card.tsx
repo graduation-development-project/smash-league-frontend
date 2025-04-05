@@ -1,6 +1,6 @@
 'use client';
 import images from '@/assets/images';
-import { formatDate, formatOccurDate } from '@/utils/format';
+import { formatDate, formatMoney, formatOccurDate } from '@/utils/format';
 import {
   CalendarClock,
   CalendarX,
@@ -34,7 +34,7 @@ const TournamentCard = ({ tour }: any) => {
         <h3 className="text-base font-bold text-textColor">{tour?.name}</h3>
         <div className=" flex w-max py-1 px-2 bg-gradient-orange bg-opacity-20 rounded-full text-center items-center">
           <span className="text-xs text-white font-semibold ">
-            Price pool: {tour?.prizePool}VND
+            Price pool: {formatMoney(tour?.prizePool)}
           </span>
         </div>
         <ul className="flex flex-col gap-1">

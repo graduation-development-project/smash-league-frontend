@@ -170,7 +170,7 @@ const DetailsTourPage = () => {
                 {user?.id === detail?.organizer?.id ? (
                   <div></div>
                 ) : (
-                  <div className="flex gap-2 justify-center items-center">
+                  <div className="flex gap-3 justify-center items-center">
                     <Button variant={'default'} size={'sm'} onClick={showModal}>
                       Register Now
                     </Button>
@@ -201,7 +201,7 @@ const DetailsTourPage = () => {
                   isModalOpen={isRegisterModalOpen}
                   setIsModalOpen={setIsRegisterModalOpen}
                   message="You are not authorized to register as umpire"
-                  description="Please contact the tournament organizer to register as umpire"
+                  description="Please register as an umpire"
                   linkText="Become an Umpire"
                   path="/become/umpire"
                 />
