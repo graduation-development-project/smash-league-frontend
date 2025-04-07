@@ -14,15 +14,15 @@ export interface RoundHeaderProps {
 }
 
 const Text = styled.text`
-  font-family: ${({ theme }) => theme.fontFamily};
-  color: ${({ theme }) => theme.textColor.highlighted};
+  font-family: '"Poppins", "Arial", "Helvetica", "sans-serif"';
+  color: '#E9EAEC';
   cursor: default;
   &:hover {
     cursor: pointer;
   }
 `;
 const Rect = styled.rect.attrs(({ theme }) => ({
-  fill: theme.roundHeaders.background,
+  fill:'#2F3648',
 }))``;
 
 export default function RoundHeader({
