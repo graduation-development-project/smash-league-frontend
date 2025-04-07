@@ -66,7 +66,7 @@ export const Side = styled.div<SideProps>`
   padding: 0 1rem;
   background: ${({ theme, $won }) => ($won ? '#000000' : '#000000')};
 
-  transition: border-color 0.5s ${({ theme }) => theme.transitionTimingFunction};
+  transition: border-color 0.5s cubic-bezier(0, 0.92, 0.77, 0.99);
   border-color: '#FF8243';
 
   ${Team} {
@@ -92,8 +92,7 @@ interface LineProps {
 
 export const Line = styled.div<LineProps>`
   height: 1px;
-  transition: border-color 0.5s ${({ theme }) => theme.smooth};
-
+  transition: border-color 0.5s cubic-bezier(0, 0.92, 0.77, 0.99);
   border-width: 1px;
   border-style: solid;
   border-color: ${({ highlighted, theme }) =>
