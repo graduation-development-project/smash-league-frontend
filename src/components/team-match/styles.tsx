@@ -6,17 +6,17 @@ export const Wrapper = styled.div`
   justify-content: space-between;
   align-items: stretch;
   height: 100%;
-  font-family: ${({ theme }) => theme.fontFamily};
+  font-family: 'Poppins, sans-serif';
 `;
 
 export const TopText = styled.p`
-  color: ${({ theme }) => theme.textColor.dark};
+  color: black;
   margin-bottom: 0.2rem;
   min-height: 1.25rem;
 `;
 
 export const BottomText = styled.p`
-  color: ${({ theme }) => theme.textColor.dark};
+  color: black;
   flex: 0 0 none;
   text-align: center;
   margin-top: 0.2rem;
@@ -76,16 +76,12 @@ export const Side = styled.div<SideProps>`
   ${({ $hovered, theme, $won }) =>
     $hovered &&
     css`
-      border-color: ${theme.border.highlightedColor};
-
-      ${Team} {
-        color: ${theme.textColor.highlighted};
+      border-color: '#707582' ${Team} {
+        color: '#E9EAEC';
       }
 
       ${Score} {
-        color: ${$won
-          ? theme.score.text.highlightedWonColor
-          : theme.score.text.highlightedLostColor};
+        color: ${$won ? 'green' : '#FF8243'};
       }
     `}
 `;
@@ -101,7 +97,7 @@ export const Line = styled.div<LineProps>`
   border-width: 1px;
   border-style: solid;
   border-color: ${({ highlighted, theme }) =>
-    highlighted ? theme.border.highlightedColor : theme.border.color};
+    highlighted ? '#707582' : '#22293B'};
 `;
 
 interface AnchorProps {
@@ -111,9 +107,9 @@ interface AnchorProps {
 }
 
 export const Anchor = styled.a<AnchorProps>`
-  font-family: ${({ font, theme }) => font || theme.fontFamily};
+  font-family: '"Poppins", "Arial", "Helvetica", "sans-serif"';
   font-weight: ${({ bold }) => (bold ? '700' : '400')};
-  color: ${({ theme }) => theme.textColor.main};
+  color: '#BEC0C6'
   font-size: ${({ size }) => size || '1rem'};
   line-height: 1.375rem;
   text-decoration: none;
