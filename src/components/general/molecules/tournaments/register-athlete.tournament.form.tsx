@@ -11,10 +11,8 @@ import {
   Modal,
   Select,
 } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import TournamentBar from '@/components/general/atoms/profile/athlete/tournament.bar';
 import { getTournamentEventDetailAPI } from '@/services/tournament';
 
 const RegisterAthleteTournamentForm = ({
@@ -55,7 +53,7 @@ const RegisterAthleteTournamentForm = ({
   // console.log('Check user', user);
   // console.log('Check detail', detail?.id);
 
-  // console.log('Check detail', detail.tournamentEvents);
+  console.log('Check detail', tournamentEvent);
 
   const tournamentEventReal = async () => {
     // if (detail) return;
