@@ -190,7 +190,7 @@ const DetailsTourPage = () => {
               />
 
               {/* Umpire Form */}
-              {user?.userRoles.includes('Umpire') ? (
+              {user?.userRoles?.includes('Umpire') ? (
                 <RegisterUmpireTournamentForm
                   isRegisterModalOpen={isRegisterModalOpen}
                   setIsRegisterModalOpen={setIsRegisterModalOpen}

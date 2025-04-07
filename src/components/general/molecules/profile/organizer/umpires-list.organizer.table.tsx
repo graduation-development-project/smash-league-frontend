@@ -560,6 +560,7 @@ const UmpiresListTable = ({
             token: {
               /* here is your global tokens */
               colorPrimary: '#FF8243',
+              fontFamily: "inherit",
             },
           }}
         >

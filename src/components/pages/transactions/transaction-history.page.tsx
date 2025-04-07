@@ -4,6 +4,7 @@ import { ConfigProvider, Popconfirm, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import { formatDateTime } from '@/utils/format';
 import { getTransactionHistoryAPI } from '@/services/payment';
+import { GrView } from 'react-icons/gr';
 
 interface DataType {
   id: string;
@@ -51,7 +52,7 @@ const TransactionHistoryPage = () => {
   };
   useEffect(() => {
     getTransactionHistory();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const columns: TableProps<DataType>['columns'] = [
@@ -59,7 +60,7 @@ const TransactionHistoryPage = () => {
       title: 'Invoice ID',
       dataIndex: 'orderId',
       key: 'orderId',
-      render: (text) => <p className="font-bold text-textColor">{text}</p>,
+      render: (text) => <p className="font-semibold text-textColor">{text}</p>,
     },
 
     // {
@@ -114,13 +115,8 @@ const TransactionHistoryPage = () => {
       render: (_, record) => (
         <Space size="middle">
           <p className="text-secondColor hover:underline  cursor-pointer text-[14px] transition-all duration-200">
-            View
+            <GrView size={20} />
           </p>
-          <Popconfirm title="Are you sure to delete this transaction?">
-            <p className="text-primaryColor hover:underline cursor-pointer text-[14px] transition-all duration-200">
-              Delete
-            </p>
-          </Popconfirm>
         </Space>
       ),
     },
@@ -158,7 +154,9 @@ const TransactionHistoryPage = () => {
   return (
     <div className="w-full h-full flex flex-col p-8 gap-3">
       <h1 className="text-[24px] font-bold">Transaction History</h1>
-      <ConfigProvider theme={{ token: { colorPrimary: '#FF8243' } }}>
+      <ConfigProvider
+        theme={{ token: { colorPrimary: '#FF8243', fontFamily: 'inherit' } }}
+      >
         {' '}
         <Table<DataType> columns={columns} dataSource={transactionList} />
       </ConfigProvider>

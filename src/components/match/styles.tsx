@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   justify-content: space-between;
   align-items: stretch;
   height: 100%;
-  font-family: ${({ theme }) => theme.fontFamily};
+  font-family: 'Poppins, sans-serif';
 `;
 
 export const TopText = styled.p`

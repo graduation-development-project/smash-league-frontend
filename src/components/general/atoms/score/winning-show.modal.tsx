@@ -43,7 +43,7 @@ const WinningShowModal = ({
               display: 'none',
             },
           }}
-          onCancel={handleCancel}
+        //   onCancel={handleCancel}
           cancelButtonProps={{
             style: { fontWeight: '600', display: 'none' },
           }}
