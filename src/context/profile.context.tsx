@@ -23,7 +23,7 @@ export const ProfileContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [athleteId, setAthleteId] = useState('');
-  const [organizerId, setOrganizerId] = useState('');
+  const [organizerId, setOrganizerIdState] = useState('');
   const [activeKey, setActiveKey] = useState('1');
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -36,6 +36,23 @@ export const ProfileContextProvider = ({
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedTeamId = localStorage.getItem('organizerId');
+      if (storedTeamId) {
+        setOrganizerIdState(storedTeamId);
+      }
+    }
+  }, []);
+
+  // Function to update teamId and store it in localStorage
+  const setOrganizerId = (id: string) => {
+    setOrganizerIdState(id);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('teamId', id);
+    }
+  };
 
   return (
     <ProfileContext.Provider

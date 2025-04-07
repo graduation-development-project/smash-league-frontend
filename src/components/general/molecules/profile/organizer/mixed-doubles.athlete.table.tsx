@@ -20,7 +20,7 @@ import {
 } from '@ant-design/icons';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
-import { getTournamentEventParticipantsAPI } from '@/services/tournament';
+import { generateBracketsAPI, getTournamentEventParticipantsAPI } from '@/services/tournament';
 import {
   getTournamentRegistrationAPI,
   responseTournamentRegistrationAPI,
@@ -86,10 +86,10 @@ const MixedDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
   const [user, setUser] = useState<any>(null);
-  const [isVerification, setIsVerification] = useState('');
+  const [isVerification, setIsVerification] = useState('verify');
   const [participantList, setParticipantList] = useState([]);
   const [verificationList, setVetificationList] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
@@ -172,7 +172,7 @@ const MixedDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
     setSearchText('');
   };
 
-  console.log('Check verification', verificationList);
+  // console.log('Check verification', verificationList);
 
   const handleVerify = async (id: string, option: boolean, reason: string) => {
     if (!user?.access_token) return;
@@ -211,6 +211,40 @@ const MixedDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       console.log(error);
     }
   };
+
+  const handleGenerateBrackets = async () => {
+    try {
+     const response = await generateBracketsAPI(eventId);
+     if (response?.data.statusCode === 200 || response?.data?.statusCode === 201) {
+   
+             setIsLoading(false);
+             toast.success(`${response?.data?.message}`, {
+               position: 'top-right',
+               autoClose: 5000,
+               hideProgressBar: false,
+               closeOnClick: true,
+               pauseOnHover: true,
+               draggable: true,
+               progress: undefined,
+               theme: 'light',
+             });
+           } else {
+             setIsLoading(false);
+             toast.error(`${response?.message}`, {
+               position: 'top-right',
+               autoClose: 5000,
+               hideProgressBar: false,
+               closeOnClick: true,
+               pauseOnHover: true,
+               draggable: true,
+               progress: undefined,
+               theme: 'light',
+             });
+           }
+    } catch (error:any) {
+     console.log("Check error", error);
+    } 
+   }
 
   const getColumnSearchProps = (
     dataIndex: string,
@@ -539,16 +573,40 @@ const MixedDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
             : 'Mixed Doubles Participants List'}
         </h1>
 
-        <Select
-          defaultValue={'verify'}
-          style={{ width: 120, fontFamily: 'inherit', marginTop: '10px' }}
-          onChange={handleChange}
-          options={[
-            { value: 'verify', label: 'Verifications' },
-            { value: 'participant', label: 'Participants' },
-            // { value: 'assign', label: 'Assign' },
-          ]}
-        />
+        <div className="flex gap-4">
+          <ConfigProvider
+            theme={{
+              token: {
+                /* here is your global tokens */
+                colorPrimary: '#FF8243',
+                fontFamily: 'inherit',
+              },
+            }}
+          >
+            <Button
+              style={{
+                fontFamily: 'inherit',
+                marginTop: '10px',
+                fontWeight: 500,
+              }}
+              type="primary"
+              variant="solid"
+            >
+              Generate Brackets
+            </Button>
+
+            <Select
+              defaultValue={'verify'}
+              style={{ width: 120, fontFamily: 'inherit', marginTop: '10px' }}
+              onChange={handleChange}
+              options={[
+                { value: 'verify', label: 'Verifications' },
+                { value: 'participant', label: 'Participants' },
+                // { value: 'assign', label: 'Assign' },
+              ]}
+            />
+          </ConfigProvider>
+        </div>
       </div>
 
       <div className="w-full h-full p-5 rounded-[10px] border border-solid border-gray-200">

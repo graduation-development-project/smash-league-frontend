@@ -18,6 +18,7 @@ import { FaAddressCard } from 'react-icons/fa';
 import { LuPackagePlus } from 'react-icons/lu';
 import { getNotificationAPI } from '../../../services/notification';
 import { FaMoneyCheckDollar } from 'react-icons/fa6';
+import { useProfileContext } from '@/context/profile.context';
 
 const Navigation = (props: any) => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const Navigation = (props: any) => {
   const [user, setUser] = useState<any>({});
   const [notifications, setNotifications] = useState<any>([]);
   const [unread, setUnread] = useState<boolean>(true);
-
+  const { setOrganizerId } = useProfileContext();
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user');
@@ -93,7 +94,8 @@ const Navigation = (props: any) => {
         router.push(`/profile/athlete/${user?.name.toLowerCase()}`);
       },
     },
-    ...(user?.userRoles?.includes('Organizer')
+    ...(user?.userRoles?.includes('Organizer') ||
+    session?.user?.userRoles?.includes('Organizer')
       ? [
           {
             key: 'organizer-profile',
@@ -102,14 +104,17 @@ const Navigation = (props: any) => {
             onClick: () => {
               if (!user || !user.userRoles) return; // Avoid errors
               localStorage.setItem('page', 'Home');
+              localStorage.setItem('organizerId', user?.id);
               setRoute('Profile');
+              setOrganizerId(user?.id);
               router.push(`/profile/organizer/${user?.name.toLowerCase()}`);
             },
           },
         ]
       : []),
 
-    ...(user?.userRoles?.includes('Team Leader')
+    ...(user?.userRoles?.includes('Team Leader') ||
+    session?.user?.userRoles?.includes('Team Leader')
       ? [
           {
             key: 'team-leader-profile',
@@ -125,7 +130,8 @@ const Navigation = (props: any) => {
         ]
       : []),
 
-    ...(user?.userRoles?.includes('Umpire')
+    ...(user?.userRoles?.includes('Umpire') ||
+    session?.user?.userRoles?.includes('Umpire')
       ? [
           {
             key: 'umpire-profile',
@@ -144,7 +150,8 @@ const Navigation = (props: any) => {
     {
       type: 'divider',
     },
-    ...(!user?.userRoles?.includes('Organizer')
+    ...(!user.userRoles?.includes('Organizer') ||
+    !session?.user?.userRoles?.includes('Organizer')
       ? [
           {
             key: 'become-organizer',
@@ -155,7 +162,8 @@ const Navigation = (props: any) => {
         ]
       : []),
 
-    ...(!user?.userRoles?.includes('Umpire')
+    ...(!user.userRoles?.includes('Umpire') ||
+    !session?.user?.userRoles?.includes('Umpire')
       ? [
           {
             key: 'become-umpire',
@@ -168,7 +176,8 @@ const Navigation = (props: any) => {
         ]
       : []),
 
-    ...(user?.userRoles?.includes('Organizer')
+    ...(user?.userRoles?.includes('Organizer') ||
+    session?.user?.userRoles?.includes('Organizer')
       ? [
           {
             key: 'buy-package',

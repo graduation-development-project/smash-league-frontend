@@ -43,7 +43,7 @@ const FailPage = () => {
           },
         }}
       >
-        <div className="animate-fadeInBottom">
+        <div className="animate-fadeInBottom p-20">
           <Result
             status="error"
             title="Submission Failed"
@@ -59,15 +59,15 @@ const FailPage = () => {
               >
                 Go Home
               </Button>,
-              <Button
-                style={{ fontFamily: 'inherit', fontWeight: '500' }}
-                key="buy"
-                onClick={() => {
-                  router.push('/packages');
-                }}
-              >
-                Buy Again
-              </Button>,
+              // <Button
+              //   style={{ fontFamily: 'inherit', fontWeight: '500' }}
+              //   key="buy"
+              //   onClick={() => {
+              //     router.push('/packages');
+              //   }}
+              // >
+              //   Buy Again
+              // </Button>,
             ]}
           ></Result>
         </div>

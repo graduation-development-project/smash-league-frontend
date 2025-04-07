@@ -34,7 +34,7 @@ const SuccessPage = () => {
 
   useEffect(() => {
     acceptPayment();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
@@ -46,7 +46,7 @@ const SuccessPage = () => {
           },
         }}
       >
-        <div className="animate-fadeInBottom">
+        <div className="animate-fadeInBottom p-20">
           <Result
             status="success"
             icon={
@@ -68,15 +68,15 @@ const SuccessPage = () => {
               >
                 Go Home
               </Button>,
-              <Button
-                style={{ fontFamily: 'inherit', fontWeight: '500' }}
-                key="buy"
-                onClick={() => {
-                  router.push('/packages');
-                }}
-              >
-                Buy Again
-              </Button>,
+              // <Button
+              //   style={{ fontFamily: 'inherit', fontWeight: '500' }}
+              //   key="buy"
+              //   onClick={() => {
+              //     router.push('/packages');
+              //   }}
+              // >
+              //   Buy Again
+              // </Button>,
             ]}
           />
         </div>
