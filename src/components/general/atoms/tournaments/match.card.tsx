@@ -1,6 +1,6 @@
 'use client';
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar } from 'antd';
+import { Avatar, ConfigProvider, Popconfirm, Popover } from 'antd';
 import React, { useState } from 'react';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import UmpireAssignModal from './umpire-assign.tour.modal';
@@ -43,6 +43,7 @@ const MatchCard = ({
   const showModal = () => {
     setIsModalOpen(true);
   };
+
   const player = (hasPlayer: boolean, players?: any) => {
     console.log('Check player', players);
     return (
@@ -68,7 +69,7 @@ const MatchCard = ({
                     }
                   />
                 </div>
-                <div className="w-2/3 flex flex-col">
+                <div className="w-2/3 flex flex-col gap-3">
                   <b
                     className={hasPlayer ? 'text-[#93e093]' : 'text-[#8e8e8e]'}
                   >
@@ -104,7 +105,7 @@ const MatchCard = ({
             )}
           </div>
         ) : (
-          <div>N/A</div>
+          <div>No information</div>
         )}
       </div>
     );
@@ -142,6 +143,42 @@ const MatchCard = ({
     );
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const content = (
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#FF8243',
+        },
+      }}
+    >
+      <div className="w-full h-full flex flex-col gap-2 px-1 justify-self-start font-semibold">
+        <button
+          className="text-secondColor text-[14px] font-semibold hover:underline w-full"
+          onClick={showModal}
+        >
+          Assign Umpire
+        </button>
+
+        {/* <Popconfirm
+          title="Are you sure to assign this athlete"
+          description="Are you sure to remove this member?"
+          onConfirm={() => {}}
+          onCancel={() => {}}
+          okText="Yes"
+          cancelText="No"
+        > */}
+        <button
+          className="text-primaryColor text-[14px] font-semibold hover:underline w-full"
+          // onClick={handleRemoveMember}
+          // onClick={() => setIsModalOpen(true)}
+        >
+          Assign Athlete
+        </button>
+        {/* </Popconfirm> */}
+      </div>
+    </ConfigProvider>
+  );
   return (
     <div className="relative w-full h-max flex flex-col items-center ">
       <div className="relative w-full h-[300px]  bg-[#2c2c2c] rounded-xl text-white shadow-shadowBtn">
@@ -167,8 +204,17 @@ const MatchCard = ({
           <div className={`w-1/2 h-1 rounded-full ${bgColor}`} />
         </div>
 
-        <div className="text-white absolute top-4 right-2" onClick={showModal}>
-          <HiOutlineDotsVertical size={25} />
+        <div className="text-white absolute top-4 right-2">
+          <Popover
+            trigger={'click'}
+            content={content}
+            placement="bottomLeft"
+            arrow={false}
+            style={{ display: 'flex', justifyContent: 'flex-start' }}
+          >
+            {' '}
+            <HiOutlineDotsVertical size={25} />
+          </Popover>
         </div>
       </div>
       <div

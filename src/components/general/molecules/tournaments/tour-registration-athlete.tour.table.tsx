@@ -4,9 +4,14 @@ import React, { useEffect, useState } from 'react';
 import { Button, ConfigProvider, Popconfirm, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import { formatDateTime } from '@/utils/format';
-import { getTournamentRegistrationByAthleteAPI } from '@/services/tour-registration';
+import {
+  getTournamentRegistrationByAthleteAPI,
+  payRegistrationFeeAPI,
+} from '@/services/tour-registration';
 import { GrView } from 'react-icons/gr';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
+import { toast } from 'react-toastify';
+import { LoadingOutlined } from '@ant-design/icons';
 
 interface DataType {
   key: string;
@@ -24,6 +29,7 @@ const TourRegistrationOfAthleteTable = () => {
     [],
   );
   const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -40,6 +46,7 @@ const TourRegistrationOfAthleteTable = () => {
       const response = await getTournamentRegistrationByAthleteAPI(
         user?.access_token,
       );
+      console.log('Check response', response.data.data);
       if (
         response?.data?.statusCode === 200 ||
         response?.data?.statusCode === 201
@@ -64,8 +71,51 @@ const TourRegistrationOfAthleteTable = () => {
     }
   };
 
+  const handlePayFee = async (tourRegistrationId: string) => {
+    try {
+      const response = await payRegistrationFeeAPI(
+        user?.access_token,
+        tourRegistrationId,
+      );
+      console.log('Check response:', response.data);
+      if (
+        response?.data?.statusCode === 201 ||
+        response?.data?.statusCode === 200
+      ) {
+        toast.success(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        window.location.href =
+          response.data.data.checkoutDataResponse.checkoutUrl;
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log('Check error', error);
+    }
+  };
+
   useEffect(() => {
     getTournamentRegistrationByAthlete();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const columns: TableProps<DataType>['columns'] = [
@@ -153,7 +203,7 @@ const TourRegistrationOfAthleteTable = () => {
       title: 'Actions',
       align: 'center',
       key: 'action',
-      render: (_, { status }) => {
+      render: (_, { status, key }) => {
         return status === 'PENDING' ? (
           <div className="flex justify-center items-center gap-4">
             <p className=" hover:underline cursor-pointer text-[14px] transition-all duration-200">
@@ -166,7 +216,9 @@ const TourRegistrationOfAthleteTable = () => {
             </Popconfirm>
           </div>
         ) : status === 'ON_WAITING_REGISTRATION_FEE' ? (
-          <Button variant="outlined">Pay fee</Button>
+          <Button variant="outlined" onClick={() => handlePayFee(key)}>
+            Pay fee {isLoading && <LoadingOutlined />}
+          </Button>
         ) : (
           <></>
         );

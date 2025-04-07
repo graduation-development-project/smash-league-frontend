@@ -10,13 +10,13 @@ export const Wrapper = styled.div`
 `;
 
 export const TopText = styled.p`
-  color: ${({ theme }) => theme.textColor.dark};
+  color: black;
   margin-bottom: 0.2rem;
   min-height: 1.25rem;
 `;
 
 export const BottomText = styled.p`
-  color: ${({ theme }) => theme.textColor.dark};
+  color: black;
   flex: 0 0 none;
   text-align: center;
   margin-top: 0.2rem;

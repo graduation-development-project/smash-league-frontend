@@ -58,7 +58,7 @@ const RegisterAthleteTournamentForm = ({
   const tournamentEventReal = async () => {
     // if (detail) return;
     try {
-      // console.log('Check detail id', detail?.id); 
+      // console.log('Check detail id', detail?.id);
       const response = await getTournamentEventDetailAPI(detailId);
       setTournamentEvent(response.data.data);
     } catch (error: any) {
@@ -68,7 +68,7 @@ const RegisterAthleteTournamentForm = ({
 
   useEffect(() => {
     tournamentEventReal();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailId]);
 
   const tournamentEventsOptions = tournamentEvent
@@ -77,13 +77,27 @@ const RegisterAthleteTournamentForm = ({
       if (a.tournamentEvent > b.tournamentEvent) return 1;
       return a.fromAge - b.fromAge;
     })
-    .map((item: any) => ({
-      value: item.id,
-      label: `${item.tournamentEvent} - Age: ${item.fromAge} to ${item.toAge}`,
-      disabled:
-        item.fromAge > calculateAge(user?.dateOfBirth) ||
-        calculateAge(user?.dateOfBirth) > item.toAge,
-    }));
+    .map((item: any) => {
+      let isNotGender = true;
+      if (item.tournamentEvent.includes('MEN') && user.gender === 'MALE') {
+        isNotGender = false;
+      } else if (
+        item.tournamentEvent.includes('WOMEN') &&
+        user.gender === 'FEMALE'
+      ) {
+        isNotGender = false;
+      } else if (item.tournamentEvent.includes('MIXED')) {
+        isNotGender = false;
+      }
+      return {
+        value: item.id,
+        label: `${item.tournamentEvent} - Age: ${item.fromAge} to ${item.toAge}`,
+        disabled:
+          item.fromAge > calculateAge(user?.dateOfBirth) ||
+          calculateAge(user?.dateOfBirth) > item.toAge ||
+          isNotGender,
+      };
+    });
 
   const handleidentificationFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
