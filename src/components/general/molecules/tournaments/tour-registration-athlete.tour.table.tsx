@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ConfigProvider, Popconfirm, Space, Table, Tag } from 'antd';
+import { Button, ConfigProvider, Popconfirm, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import { formatDateTime } from '@/utils/format';
 import { getTournamentRegistrationByAthleteAPI } from '@/services/tour-registration';
+import { GrView } from 'react-icons/gr';
+import { MdOutlineDeleteOutline } from 'react-icons/md';
 
 interface DataType {
   key: string;
@@ -18,7 +20,9 @@ interface DataType {
 }
 
 const TourRegistrationOfAthleteTable = () => {
-  const [tourRegistrationList, setTourRegistrationList] = useState([]);
+  const [tourRegistrationList, setTourRegistrationList] = useState<DataType[]>(
+    [],
+  );
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -36,7 +40,6 @@ const TourRegistrationOfAthleteTable = () => {
       const response = await getTournamentRegistrationByAthleteAPI(
         user?.access_token,
       );
-      // console.log('Check list', response?.data.data);
       if (
         response?.data?.statusCode === 200 ||
         response?.data?.statusCode === 201
@@ -63,10 +66,7 @@ const TourRegistrationOfAthleteTable = () => {
 
   useEffect(() => {
     getTournamentRegistrationByAthlete();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-
-  console.log('Check list', tourRegistrationList);
 
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -86,7 +86,6 @@ const TourRegistrationOfAthleteTable = () => {
       key: 'startDate',
       render: (_, { startDate }) => <>{formatDateTime(startDate)}</>,
     },
-
     {
       title: 'End Date',
       dataIndex: 'endDate',
@@ -103,64 +102,89 @@ const TourRegistrationOfAthleteTable = () => {
       key: 'status',
       dataIndex: 'status',
       render: (_, { status }) => (
-        <>
-          <Tag
-            color={
-              status === 'Pending'
-                ? 'magenta'
-                : status === 'Approved'
-                ? 'green'
-                : 'red'
-            }
-            key={status}
-          >
-            {status.toUpperCase()}
-          </Tag>
-        </>
+        <Tag
+          style={{
+            fontFamily: 'inherit',
+            padding: '6px',
+            fontSize: '14px',
+            fontWeight: '500',
+          }}
+          color={
+            status === 'PENDING'
+              ? 'magenta'
+              : status === 'APPROVED'
+              ? 'green'
+              : status === 'ON_WAITING_REGISTRATION_FEE'
+              ? 'cyan'
+              : 'red'
+          }
+          key={status}
+        >
+          {status === 'PENDING'
+            ? 'Pending'
+            : status === 'APPROVED'
+            ? 'Approved'
+            : status === 'ON_WAITING_REGISTRATION_FEE'
+            ? 'Waiting Registration Fee'
+            : 'Rejected'}
+        </Tag>
       ),
     },
-
     {
       title: 'Payment Status',
       key: 'isPayForTheRegistrationFee',
       align: 'center',
       dataIndex: 'isPayForTheRegistrationFee',
       render: (_, { isPayForTheRegistrationFee }) => (
-        <>
-          <Tag
-            color={isPayForTheRegistrationFee === true ? 'green' : 'red'}
-            key={_}
-          >
-            {isPayForTheRegistrationFee ? 'Paid' : 'Unpaid'}
-          </Tag>
-        </>
+        <Tag
+          style={{
+            fontFamily: 'inherit',
+            padding: '6px',
+            fontSize: '14px',
+            fontWeight: '500',
+          }}
+          color={isPayForTheRegistrationFee ? 'green' : 'red'}
+        >
+          {isPayForTheRegistrationFee ? 'Paid' : 'Unpaid'}
+        </Tag>
       ),
     },
-
     {
-      title: 'Action',
+      title: 'Actions',
+      align: 'center',
       key: 'action',
-      render: (_, { status }) => (
-        <Space size="middle">
-          <p className="text-secondColor hover:underline  cursor-pointer text-[14px] transition-all duration-200">
-            View
-          </p>
-          <Popconfirm title="Are you sure to delete this tournament?">
-            <p className="text-primaryColor hover:underline cursor-pointer text-[14px] transition-all duration-200">
-              Delete
+      render: (_, { status }) => {
+        return status === 'PENDING' ? (
+          <div className="flex justify-center items-center gap-4">
+            <p className=" hover:underline cursor-pointer text-[14px] transition-all duration-200">
+              <GrView size={16} />
             </p>
-          </Popconfirm>
-        </Space>
-      ),
+            <Popconfirm title="Are you sure to delete this tournament?">
+              <p className="hover:underline cursor-pointer text-[14px] transition-all duration-200">
+                <MdOutlineDeleteOutline size={16} />
+              </p>
+            </Popconfirm>
+          </div>
+        ) : status === 'ON_WAITING_REGISTRATION_FEE' ? (
+          <Button variant="outlined">Pay fee</Button>
+        ) : (
+          <></>
+        );
+      },
     },
   ];
-
 
   return (
     <div className="flex flex-col gap-3 p-3">
       <h2 className="font-bold text-[20px]">Tournament Registration</h2>
-      <ConfigProvider theme={{ token: { colorPrimary: '#FF8243' } }}>
-        <Table<DataType> columns={columns} dataSource={tourRegistrationList} />
+      <ConfigProvider
+        theme={{ token: { colorPrimary: '#FF8243', fontFamily: 'inherit' } }}
+      >
+        <Table
+          style={{ width: '100%', fontFamily: 'inherit' }}
+          columns={columns}
+          dataSource={tourRegistrationList}
+        />
       </ConfigProvider>
     </div>
   );

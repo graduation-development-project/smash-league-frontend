@@ -40,40 +40,15 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ selectedKey }) => {
     case 'tournaments':
       return <TournamentsListTable />;
     case 'MENS_SINGLE':
-      return (
-        <MenSinglesAthleteTable
-          eventId={eventId}
-          isVerification={verifications}
-        />
-      );
+      return <MenSinglesAthleteTable eventId={eventId} />;
     case 'WOMENS_SINGLE':
-      return (
-        <WomenSinglesAthleteTable
-          eventId={eventId}
-          isVerification={verifications}
-        />
-      );
+      return <WomenSinglesAthleteTable eventId={eventId} />;
     case 'MENS_DOUBLE':
-      return (
-        <MenDoublesAthleteTable
-          eventId={eventId}
-          isVerification={verifications}
-        />
-      );
+      return <MenDoublesAthleteTable eventId={eventId} />;
     case 'WOMENS_DOUBLE':
-      return (
-        <WomenDoublesAthleteTable
-          eventId={eventId}
-          isVerification={verifications}
-        />
-      );
+      return <WomenDoublesAthleteTable eventId={eventId} />;
     case 'MIXED_DOUBLE':
-      return (
-        <MixedDoublesAthleteTable
-          eventId={eventId}
-          isVerification={verifications}
-        />
-      );
+      return <MixedDoublesAthleteTable eventId={eventId} />;
     default:
       return <DashboardOrganizer />;
   }
