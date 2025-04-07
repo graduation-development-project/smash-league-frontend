@@ -19,15 +19,15 @@ const CreateTeamsModal = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { getTeams } = useTeamContext();
   const [user, setUser] = useState<any>(null);
- 
-   useEffect(() => {
-     if (typeof window !== 'undefined') {
-       const storedUser = localStorage.getItem('user');
-       if (storedUser) {
-         setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
-       }
-     }
-   }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
@@ -35,7 +35,7 @@ const CreateTeamsModal = ({
   };
   const handleCreateTeam = async (values: any) => {
     const { teamLeaderId, teamName, teamDescription } = values;
-    const accessToken = user?.access_token
+    const accessToken = user?.access_token;
     setIsLoading(true);
     const response = await createTeamAPI(
       file,
@@ -44,7 +44,7 @@ const CreateTeamsModal = ({
       accessToken,
     );
 
-    // console.log('Check', response);
+    // console.log('Check', response.data);
     setIsLoading(false);
     if (response?.status === 200 || response?.status === 201) {
       await getTeams(1, 6, '');
@@ -52,6 +52,7 @@ const CreateTeamsModal = ({
       if (!user?.userRoles.includes('Team Leader')) {
         const newUser = {
           ...user,
+          teamId: response?.data?.id,
           userRoles: [...user.userRoles, 'Team Leader'],
         };
         localStorage.setItem('user', JSON.stringify(newUser));
