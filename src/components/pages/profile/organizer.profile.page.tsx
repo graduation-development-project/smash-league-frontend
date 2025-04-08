@@ -44,6 +44,7 @@ const OrganizerProfilePage = (props: any) => {
 
   useEffect(() => {
     getProfile();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organizerId]);
 
   console.log('Check profile', profile);
