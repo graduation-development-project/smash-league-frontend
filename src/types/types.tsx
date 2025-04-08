@@ -253,3 +253,14 @@ export type SingleElimLeaderboardProps = BracketLeaderboardProps & {
 export type DoubleElimLeaderboardProps = BracketLeaderboardProps & {
   matches: { upper: Match[]; lower: Match[] };
 };
+
+export type RegisterAthleteTournamentFormProps = {
+  playerId: string;
+  playerName: string;
+  fromTeamId: string;
+  tournamentId: string;
+  tournamentEventId: string;
+  registrationDocumentCreator: Record<string, File[]>
+  // partnerId?: string;
+  // registrationDocumentPartner?: File[]
+}

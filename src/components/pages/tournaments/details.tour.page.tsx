@@ -37,6 +37,7 @@ import EventAgeDetails from '@/components/general/molecules/tournaments/event-ag
 import RegisterAthleteTournamentForm from '@/components/general/molecules/tournaments/register-athlete.tournament.form';
 import RegisterUmpireTournamentForm from '@/components/general/molecules/tournaments/register-umpire.tournament.form';
 import AttendantsCheck from '@/components/general/molecules/tournaments/attendants-check.tour';
+import RegisterTeamTourForm from '@/components/general/molecules/tournaments/register-team.tournament.form';
 
 const DetailsTourPage = () => {
   const param = useParams();
@@ -157,13 +158,19 @@ const DetailsTourPage = () => {
                 <Button variant={'default'} size={'lg'} onClick={showModal}>
                   Register Now
                 </Button>
-                {/* Athlete Form */}
-                <RegisterAthleteTournamentForm
+                <RegisterTeamTourForm 
                   isModalOpen={isModalOpen}
                   setIsModalOpen={setIsModalOpen}
                   detail={detail}
                   detailId={detail?.id}
-                />
+                /> 
+                {/* Athlete Form */}
+                {/* <RegisterAthleteTournamentForm
+                  isModalOpen={isModalOpen}
+                  setIsModalOpen={setIsModalOpen}
+                  detail={detail}
+                  detailId={detail?.id}
+                /> */}
                 <Button variant="default" size={'lg'} onClick={showUmpire}>
                   Register As Umpire
                 </Button>
