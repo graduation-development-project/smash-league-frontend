@@ -96,6 +96,7 @@ const MyTournaments = () => {
 
   useEffect(() => {
     getParticipatedTournaments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
