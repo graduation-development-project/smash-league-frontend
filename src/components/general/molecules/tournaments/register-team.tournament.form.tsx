@@ -122,7 +122,7 @@ const RegisterTeamTourForm = ({
         try {
             for (const athlete of beforeSubmit) {
                 const registrationDocumentCreator : any[] =[];
-                const registerationDocumentPartner: any[] = [];
+                const registrationDocumentPartner: any[] = [];
 
                 for (const [docType, files] of Object.entries(athlete.registrationDocumentCreator)) {
                     
@@ -135,12 +135,12 @@ const RegisterTeamTourForm = ({
                     
                 }
 
-                if (athlete.partnerId && athlete.partnerId !== '' && athlete.registerationDocumentPartner) {
+                if (athlete.partnerId && athlete.partnerId !== '' && athlete.registrationDocumentPartner) {
                     
-                    for (const [docType, files] of Object.entries(athlete.registerationDocumentPartner)) {
+                    for (const [docType, files] of Object.entries(athlete.registrationDocumentPartner)) {
                         const response = await fetchUploadImage(files);
                         if (response.statusCode === 201 || response.statusCode === 200) {
-                            registerationDocumentPartner.push(...response.data);
+                            registrationDocumentPartner.push(...response.data);
                         }
                     }
                 }
@@ -153,7 +153,7 @@ const RegisterTeamTourForm = ({
                     registrationDocumentCreator,
                     partnerId: athlete.partnerId || undefined,
                     partnerName: athlete.partnerName || undefined,
-                    registerationDocumentPartner: athlete.partnerId ? registerationDocumentPartner : [],
+                    registrationDocumentPartner: athlete.partnerId ? registrationDocumentPartner : [],
                   });
             }
             console.log("submitList", submitList);

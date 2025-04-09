@@ -1,11 +1,11 @@
 'use client';
+
 import Layout from 'antd/es/layout';
 import Menu from 'antd/es/menu';
 import {
   AppstoreOutlined,
   BankOutlined,
   MailOutlined,
-  SettingOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
 import React, { useContext, useEffect, useState } from 'react';
@@ -19,7 +19,7 @@ type MenuItem = Required<MenuProps>['items'][number];
 const AdminSideBar = () => {
   const { Sider } = Layout;
   const adminContext = useContext(AdminContext);
-  const collapseMenu = adminContext?.collapseMenu ?? false; // Tránh lỗi nếu AdminContext chưa có
+  const collapseMenu = adminContext?.collapseMenu ?? false;
 
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +33,6 @@ const AdminSideBar = () => {
           setUser(JSON.parse(storedUser));
         } catch (error) {
           console.error('Error parsing user data:', error);
-          setUser(null);
         }
       }
       setIsLoading(false);
@@ -46,32 +45,32 @@ const AdminSideBar = () => {
     children = [
       {
         key: 'staffdashboard',
-        label: 'Dashboard',
+        label: <Link href="/staff/dashboard">Dashboard</Link>,
         icon: <AppstoreOutlined />,
       },
       {
-        key: 'sub1',
+        key: 'verification',
         label: 'Verification',
         icon: <MailOutlined />,
         children: [
           {
-            key: 'organizers',
+            key: 'verify-organizers',
             label: <Link href="/dashboard/verify/organizers">Organizers</Link>,
           },
           {
-            key: 'umpires',
+            key: 'verify-umpires',
             label: <Link href="/dashboard/verify/umpires">Umpires</Link>,
           },
         ],
       },
       {
-        key: 'sub2',
+        key: 'transactions',
         label: <Link href="/dashboard/transactions">Transactions</Link>,
         icon: <BankOutlined />,
       },
       {
-        key: 'sub3',
-        label: 'Tournaments',
+        key: 'tournaments',
+        label: <Link href="/dashboard/tournaments">Tournaments</Link>,
         icon: <TbTournament />,
       },
     ];
@@ -79,97 +78,80 @@ const AdminSideBar = () => {
     children = [
       {
         key: 'dashboard',
-        label: <Link href={'/dashboard'}>Dashboard</Link>,
+        label: <Link href="/dashboard">Dashboard</Link>,
         icon: <AppstoreOutlined />,
       },
       {
         key: 'users',
-        label: (
-          <Link style={{ color: 'inherit' }} href={'/dashboard/user'}>
-            Manage Users
-          </Link>
-        ),
+        label: 'Manage Users',
         icon: <TeamOutlined />,
         children: [
-          { key: 'athletes', label: 'Athletes' },
-          { key: 'organizers', label: 'Organizers' },
-          { key: 'umpires', label: 'Umpires' },
+          {
+            key: 'athletes',
+            label: <Link href="/dashboard/user/athletes">Athletes</Link>,
+          },
+          {
+            key: 'organizers',
+            label: <Link href="/dashboard/user/organizers">Organizers</Link>,
+          },
+          {
+            key: 'umpires',
+            label: <Link href="/dashboard/user/umpires">Umpires</Link>,
+          },
         ],
       },
       {
-        key: 'sub1',
-        label: 'Navigation One',
+        key: 'manage-tournaments',
+        label: 'Manage Tournaments',
         icon: <MailOutlined />,
         children: [
           {
-            key: 'g1',
-            label: 'Item 1',
+            key: 'group1',
             type: 'group',
+            label: 'Item 1',
             children: [
-              { key: '1', label: 'Option 1' },
-              { key: '2', label: 'Option 2' },
+              { key: 'option1', label: 'Option 1' },
+              { key: 'option2', label: 'Option 2' },
             ],
           },
           {
-            key: 'g2',
-            label: 'Item 2',
+            key: 'group2',
             type: 'group',
+            label: 'Item 2',
             children: [
-              { key: '3', label: 'Option 3' },
-              { key: '4', label: 'Option 4' },
+              { key: 'option3', label: 'Option 3' },
+              { key: 'option4', label: 'Option 4' },
             ],
           },
         ],
       },
       {
-        key: 'sub2',
-        label: 'Navigation Two',
+        key: 'manage-transactions',
+        label: 'Manage Transactions',
         icon: <AppstoreOutlined />,
         children: [
-          { key: '5', label: 'Option 5' },
-          { key: '6', label: 'Option 6' },
+          { key: 'option5', label: 'Option 5' },
+          { key: 'option6', label: 'Option 6' },
           {
-            key: 'sub3',
+            key: 'subsubmenu',
             label: 'Submenu',
             children: [
-              { key: '7', label: 'Option 7' },
-              { key: '8', label: 'Option 8' },
+              { key: 'option7', label: 'Option 7' },
+              { key: 'option8', label: 'Option 8' },
             ],
           },
-        ],
-      },
-      {
-        key: 'sub4',
-        label: 'Navigation Three',
-        icon: <SettingOutlined />,
-        children: [
-          { key: '9', label: 'Option 9' },
-          { key: '10', label: 'Option 10' },
-          { key: '11', label: 'Option 11' },
-          { key: '12', label: 'Option 12' },
         ],
       },
     ];
   }
-
-  const items: MenuItem[] = [
-    {
-      key: 'grp',
-      label: 'Smash League',
-      type: 'group',
-      children: children,
-    },
-  ];
 
   return (
     <Sider collapsed={collapseMenu}>
       <ConfigProvider
         theme={{
           token: {
-            /* here is your global tokens */
             colorPrimary: '#FF8243',
           },
-
           components: {
             Menu: {
               colorPrimary: '#FF8243',
@@ -188,8 +170,18 @@ const AdminSideBar = () => {
         <Menu
           mode="inline"
           defaultSelectedKeys={['dashboard']}
-          items={items}
-          style={{ height: '100vh', fontSize: '14px', fontFamily: 'inherit' }}
+          defaultOpenKeys={[
+            'users',
+            'verification',
+            'manage-tournaments',
+            'manage-transactions',
+          ]}
+          items={children}
+          style={{
+            height: '100vh',
+            fontSize: '14px',
+            fontFamily: 'inherit',
+          }}
         />
       </ConfigProvider>
     </Sider>

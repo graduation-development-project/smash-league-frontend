@@ -10,7 +10,7 @@ const BecomeOrganizerForm = () => {
     File[]
   >([]);
   const [file, setFile] = useState<File>();
-
+  const [form] = Form.useForm();
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,6 +56,7 @@ const BecomeOrganizerForm = () => {
 
       if (response?.status === 200 || response?.status === 201) {
         setIsLoading(false);
+        form.resetFields();
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,
@@ -68,6 +69,7 @@ const BecomeOrganizerForm = () => {
         });
       } else {
         setIsLoading(false);
+        form.resetFields();
         toast.error(`${response?.message}`, {
           position: 'top-right',
           autoClose: 5000,
@@ -111,6 +113,7 @@ const BecomeOrganizerForm = () => {
               onFinish={onFinish}
               autoComplete="off"
               style={{ fontFamily: 'inherit' }}
+              form={form}
               // layout="vertical"
             >
               <ConfigProvider
