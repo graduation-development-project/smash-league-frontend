@@ -98,7 +98,7 @@ const RegisterTeamStep2Form = ({
       fromTeamId: player?.fromTeamId || '',
       tournamentEventId: eventId,
       registrationDocumentCreator: player?.registrationDocumentCreator || {},
-      registerationDocumentPartner: partner?.registrationDocumentCreator || {},
+      registrationDocumentPartner: partner?.registrationDocumentCreator || {},
     };
 
     const updatedBeforeSubmit = beforeSubmitList.filter((item) =>

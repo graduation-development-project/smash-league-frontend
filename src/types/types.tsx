@@ -271,7 +271,7 @@ export type RegisterAthleteTournamentBeforeSubmitFormProps = {
   registrationDocumentCreator: Record<string, File[]>
   partnerId?: string;
   partnerName?: string;
-  registerationDocumentPartner?: Record<string, File[]>
+  registrationDocumentPartner?: Record<string, File[]>
 }
 export type RegisterAthleteTournamentSubmitFormProps = {
   playerId: string;
@@ -282,5 +282,5 @@ export type RegisterAthleteTournamentSubmitFormProps = {
   registrationDocumentCreator: string[]
   partnerId?: string;
   partnerName?: string;
-  registerationDocumentPartner?: string[]
+  registrationDocumentPartner?: string[]
 }

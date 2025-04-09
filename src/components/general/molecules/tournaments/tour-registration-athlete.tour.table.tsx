@@ -181,25 +181,6 @@ const TourRegistrationOfAthleteTable = () => {
       ),
     },
     {
-      title: 'Payment Status',
-      key: 'isPayForTheRegistrationFee',
-      align: 'center',
-      dataIndex: 'isPayForTheRegistrationFee',
-      render: (_, { isPayForTheRegistrationFee }) => (
-        <Tag
-          style={{
-            fontFamily: 'inherit',
-            padding: '6px',
-            fontSize: '14px',
-            fontWeight: '500',
-          }}
-          color={isPayForTheRegistrationFee ? 'green' : 'red'}
-        >
-          {isPayForTheRegistrationFee ? 'Paid' : 'Unpaid'}
-        </Tag>
-      ),
-    },
-    {
       title: 'Actions',
       align: 'center',
       key: 'action',

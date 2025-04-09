@@ -10,7 +10,7 @@ const BecomeUmpireForm = () => {
     File[]
   >([]);
   const [file, setFile] = useState<File>();
-
+  const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
 
@@ -56,6 +56,7 @@ const BecomeUmpireForm = () => {
 
       if (response?.status === 200 || response?.status === 201) {
         setIsLoading(false);
+        form.resetFields();
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,
@@ -68,6 +69,7 @@ const BecomeUmpireForm = () => {
         });
       } else {
         setIsLoading(false);
+        form.resetFields();
         toast.error(`${response?.message}`, {
           position: 'top-right',
           autoClose: 5000,

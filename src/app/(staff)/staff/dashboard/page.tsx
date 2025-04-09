@@ -1,7 +1,7 @@
-import AdminCard from '@/components/general/molecules/admin/admin.card';
 import AdminDashboard from '@/components/pages/dashboard/admin-dashboard.page';
+import React from 'react';
 
-const DashboardPage = () => {
+const StaffDashboard = () => {
   return (
     <div>
       <AdminDashboard />
@@ -9,4 +9,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default StaffDashboard;

@@ -6,6 +6,7 @@ import ModalChangePassword from '../../auth/modal.change.password';
 import { useProfileContext } from '@/context/profile.context';
 import { getProfileAPI, updateProfileAPI } from '@/services/user';
 import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
 
 const UpdateInformationProfile = ({
   session,
@@ -89,7 +90,30 @@ const UpdateInformationProfile = ({
         },
         user?.access_token,
       );
-      console.log('Check update', response);
+      // console.log('Check update', response);
+      if (response?.data.statusCode === 200 || response?.statusCode === 201) {
+        toast.success(`${response?.data.message}`, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
       getProfile();
     } catch (error: any) {
       console.log(error);
