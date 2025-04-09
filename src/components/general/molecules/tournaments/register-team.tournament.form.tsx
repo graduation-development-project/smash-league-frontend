@@ -125,7 +125,6 @@ const RegisterTeamTourForm = ({
                 const registerationDocumentPartner: any[] = [];
 
                 for (const [docType, files] of Object.entries(athlete.registrationDocumentCreator)) {
-                    // console.log([docType, files]);
                     
                     const response = await fetchUploadImage(files);
                     if (response.statusCode === 200 || response.statusCode === 201) {
@@ -137,11 +136,10 @@ const RegisterTeamTourForm = ({
                 }
 
                 if (athlete.partnerId && athlete.partnerId !== '' && athlete.registerationDocumentPartner) {
-                    // console.log("partner");
                     
                     for (const [docType, files] of Object.entries(athlete.registerationDocumentPartner)) {
                         const response = await fetchUploadImage(files);
-                        if (!response || response.statusCode !== 200) {
+                        if (response.statusCode === 201 || response.statusCode === 200) {
                             registerationDocumentPartner.push(...response.data);
                         }
                     }
