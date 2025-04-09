@@ -215,41 +215,42 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       console.log(error);
     }
   };
-  const handleGenerateBrackets = async () => {
-    try {
-      const response = await generateBracketsAPI(eventId);
-      if (
-        response?.data.statusCode === 200 ||
-        response?.data?.statusCode === 201
-      ) {
-        setIsLoading(false);
-        toast.success(`${response?.data?.message}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
-      } else {
-        setIsLoading(false);
-        toast.error(`${response?.message}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
-      }
-    } catch (error: any) {
-      console.log('Check error', error);
-    }
-  };
+ const handleGenerateBrackets = async () => {
+     try {
+       const response = await generateBracketsAPI(eventId);
+       console.log('Check response', response.data);
+       if (
+         response?.data.statusCode === 200 ||
+         response?.data?.statusCode === 201
+       ) {
+         setIsLoading(false);
+         toast.success(`${response?.data?.message}`, {
+           position: 'top-right',
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: 'light',
+         });
+       } else {
+         setIsLoading(false);
+         toast.error(`${response?.message}`, {
+           position: 'top-right',
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: 'light',
+         });
+       }
+     } catch (error: any) {
+       console.log('Check error', error);
+     }
+   };
 
   const getColumnSearchProps = (
     dataIndex: string,
@@ -596,6 +597,7 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
               }}
               type="primary"
               variant="solid"
+              onClick={handleGenerateBrackets}
             >
               Generate Brackets
             </Button>

@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Stack from "@mui/material/Stack";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
-import { BarChart } from "@mui/x-charts/BarChart";
-import { axisClasses } from "@mui/x-charts/ChartsAxis";
-import { organizerDataset } from "@/assets/data";
-import { colors } from "@mui/material";
+import React, { useState } from 'react';
+import Stack from '@mui/material/Stack';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import { organizerDataset } from '@/assets/data';
+import { colors } from '@mui/material';
 
 type TickParamsSelectorProps = {
-  tickPlacement: "end" | "start" | "middle" | "extremities";
-  tickLabelPlacement: "tick" | "middle";
+  tickPlacement: 'end' | 'start' | 'middle' | 'extremities';
+  tickLabelPlacement: 'tick' | 'middle';
   setTickPlacement: React.Dispatch<
-    React.SetStateAction<"end" | "start" | "middle" | "extremities">
+    React.SetStateAction<'end' | 'start' | 'middle' | 'extremities'>
   >;
   setTickLabelPlacement: React.Dispatch<
-    React.SetStateAction<"tick" | "middle">
+    React.SetStateAction<'tick' | 'middle'>
   >;
 };
 
@@ -37,7 +37,7 @@ function TickParamsSelector({
     <Stack
       direction="column"
       justifyContent="space-between"
-      sx={{ width: "100%" }}
+      sx={{ width: '100%' }}
     >
       <FormControl>
         <FormLabel id="tick-placement-radio-buttons-group-label">
@@ -50,7 +50,7 @@ function TickParamsSelector({
           value={tickPlacement}
           onChange={(event) =>
             setTickPlacement(
-              event.target.value as "start" | "end" | "middle" | "extremities"
+              event.target.value as 'start' | 'end' | 'middle' | 'extremities',
             )
           }
         >
@@ -74,7 +74,7 @@ function TickParamsSelector({
           name="label-placement"
           value={tickLabelPlacement}
           onChange={(event) =>
-            setTickLabelPlacement(event.target.value as "tick" | "middle")
+            setTickLabelPlacement(event.target.value as 'tick' | 'middle')
           }
         >
           <FormControlLabel value="tick" control={<Radio />} label="tick" />
@@ -88,21 +88,21 @@ function TickParamsSelector({
 const chartSetting = {
   yAxis: [
     {
-      label: "rainfall (mm)",
+      label: 'rainfall (mm)',
     },
   ],
   series: [
     {
-      dataKey: "seoul",
-      label: "Seoul rainfall",
+      dataKey: 'seoul',
+      label: 'Seoul rainfall',
       valueFormatter,
-      color: "#74ba74",
+      color: '#74ba74',
     },
   ],
   height: 300,
   sx: {
     [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
-      transform: "translateX(-10px)",
+      transform: 'translateX(-10px)',
     },
   },
 };
@@ -110,45 +110,48 @@ const chartSetting = {
 const chartSetting1 = {
   yAxis: [
     {
-      label: "rainfall (mm)",
+      label: 'rainfall (mm)',
     },
   ],
   series: [
     {
-      dataKey: "paris",
-      label: "Paris rainfall",
+      dataKey: 'paris',
+      label: 'Paris rainfall',
       valueFormatter,
-      color: "#FF8243",
+      color: '#FF8243',
     },
   ],
   height: 300,
   sx: {
     [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
-      transform: "translateX(-10px)",
+      transform: 'translateX(-10px)',
     },
   },
 };
 
-const DashboardOrganizer = () => {
-  const [credit, setCredit] = useState(0);
+const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
   const [tickPlacement, setTickPlacement] = React.useState<
-    "start" | "end" | "middle" | "extremities"
-  >("middle");
+    'start' | 'end' | 'middle' | 'extremities'
+  >('middle');
   const [tickLabelPlacement, setTickLabelPlacement] = React.useState<
-    "middle" | "tick"
-  >("middle");
+    'middle' | 'tick'
+  >('middle');
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-[32px] font-bold">Dashboard</h1>
       <div className="w-full flex flex-col gap-2 font-semibold">
-        <h1>Number of Credit: {credit} </h1>
-        {credit === 0 && (
+        <h1>
+          Number of Credit: {credit === null || credit === 0 ? 0 : credit}{' '}
+        </h1>
+        {credit === null || credit === 0 ? (
           <h1 className="text-[14px] font-normal italic">
-            You don&apos;t have any credit.{" "}
+            You don&apos;t have any credit.{' '}
             <span className="text-primaryColor not-italic hover:underline cursor-pointer">
               View the tournaments packages
             </span>
           </h1>
+        ) : (
+          <div></div>
         )}
       </div>
 
@@ -159,8 +162,8 @@ const DashboardOrganizer = () => {
             dataset={organizerDataset}
             xAxis={[
               {
-                scaleType: "band",
-                dataKey: "month",
+                scaleType: 'band',
+                dataKey: 'month',
                 tickPlacement,
                 tickLabelPlacement,
               },
@@ -174,8 +177,8 @@ const DashboardOrganizer = () => {
             dataset={organizerDataset}
             xAxis={[
               {
-                scaleType: "band",
-                dataKey: "month",
+                scaleType: 'band',
+                dataKey: 'month',
                 tickPlacement,
                 tickLabelPlacement,
               },

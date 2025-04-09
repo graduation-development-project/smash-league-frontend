@@ -79,14 +79,21 @@ const RegisterAthleteTournamentForm = ({
     })
     .map((item: any) => {
       let isNotGender = true;
-      if (item.tournamentEvent.includes('MEN') && user.gender === 'MALE') {
-        isNotGender = false;
-      } else if (
-        item.tournamentEvent.includes('WOMEN') &&
-        user.gender === 'FEMALE'
+      // console.log('check gender', item.tournamentEvent.includes('MENS'));
+      // Check for Women's tournament and Female user
+      if (
+        item.tournamentEvent.startsWith('WOMENS') &&
+        user?.gender === 'FEMALE'
       ) {
         isNotGender = false;
-      } else if (item.tournamentEvent.includes('MIXED')) {
+        // Check for Mixed tournament (gender doesn't matter)
+      } else if (item.tournamentEvent.startsWith('MIXED')) {
+        isNotGender = false;
+        // Check for Men's tournament and Male user
+      } else if (
+        item.tournamentEvent.startsWith('MENS') &&
+        user?.gender === 'MALE'
+      ) {
         isNotGender = false;
       }
       return {

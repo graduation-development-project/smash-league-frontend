@@ -85,7 +85,11 @@ const MatchDetailsTour = ({
             {matches.map((match: any) => {
               return (
                 <div key={match.id} className="w-full h-max">
-                  <MatchCard match={match} tournamentId={tournamentId} />
+                  <MatchCard
+                    match={match}
+                    tournamentId={tournamentId}
+                    tournamentEventId={eventUUID}
+                  />
                 </div>
               );
             })}

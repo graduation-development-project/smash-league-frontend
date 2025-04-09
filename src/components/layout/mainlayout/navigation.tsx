@@ -27,7 +27,7 @@ const Navigation = (props: any) => {
   const [user, setUser] = useState<any>({});
   const [notifications, setNotifications] = useState<any>([]);
   const [unread, setUnread] = useState<boolean>(true);
-  const { setOrganizerId } = useProfileContext();
+  const { setOrganizerId, setAthleteId } = useProfileContext();
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user');
@@ -91,7 +91,7 @@ const Navigation = (props: any) => {
         if (!user || !user.userRoles) return; // Avoid errors
         localStorage.setItem('page', 'Home');
         setRoute('Profile');
-        router.push(`/profile/athlete/${user?.name.toLowerCase()}`);
+        router.push(`/profile/athlete/${user?.id}`);
       },
     },
     ...(user?.userRoles?.includes('Organizer') ||

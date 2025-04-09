@@ -1,36 +1,79 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
-import { IoLogoDiscord } from "react-icons/io5";
-import { FaSquareXTwitter } from "react-icons/fa6";
-import { Avatar, Rate, Popover } from "antd";
-import { FaRegUser } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
-import { useProfileContext } from "@/context/profile.context";
-import TournamentCard from "@/components/general/atoms/tournaments/tournament.card";
+import React, { useEffect, useState } from 'react';
+import { FaFacebookSquare, FaInstagramSquare } from 'react-icons/fa';
+import { IoLogoDiscord } from 'react-icons/io5';
+import { FaSquareXTwitter } from 'react-icons/fa6';
+import { Avatar, Rate, Popover } from 'antd';
+import { FaRegUser } from 'react-icons/fa';
+import { Button } from '@/components/ui/button';
+import { useProfileContext } from '@/context/profile.context';
+import TournamentCard from '@/components/general/atoms/tournaments/tournament.card';
+import { getTournamentsOfOrganizerIdAPI } from '@/services/tournament';
 
-const OverviewOrganizerProfile = () => {
+const OverviewOrganizerProfile = ({
+  tournamentList,
+  setTournamentList,
+}: {
+  tournamentList: any[];
+  setTournamentList: React.Dispatch<React.SetStateAction<never[]>>;
+}) => {
   const [isSocialMediaVisible, setIsSocialMediaVisible] = useState(true);
-  const { setActiveKey } = useProfileContext();
+  const { setActiveKey, organizerId } = useProfileContext();
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(6);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
+
+  const getTournamentsOfOrganizerId = async () => {
+    if (!user) return;
+    try {
+      const response = await getTournamentsOfOrganizerIdAPI(
+        user.access_token,
+        organizerId,
+        page,
+        perPage,
+      );
+      // console.log('Check tournament per page', response.data);
+      setTournamentList(response.data.data.data);
+    } catch (error: any) {
+      console.error('Error fetching tournaments:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    getTournamentsOfOrganizerId();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  // console.log("Check tournament per page", tournamentList);
+
   return (
     <div className="w-full h-full flex justify-around px-2 py-4 gap-3">
       {/* Tournaments */}
       <div className="w-[70%] flex flex-col gap-3 ">
         <Button
-          variant={"link"}
-          colorBtn={"whiteBtn"}
-          shadow={"shadowNone"}
+          variant={'link'}
+          colorBtn={'whiteBtn'}
+          shadow={'shadowNone'}
           className="w-full justify-end text-primaryColor"
-          onClick={() => setActiveKey("3")}
+          onClick={() => setActiveKey('3')}
         >
           View all tournaments
         </Button>
 
-        <div className="w-full h-full grid grid-cols-3 place-items-center">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="w-max h-max">
-              <TournamentCard />
+        <div className="w-full h-full grid grid-cols-3 gap-3 place-items-center">
+          {tournamentList?.map((tour: any) => (
+            <div key={tour.id} className="w-max h-max">
+              <TournamentCard tour={tour} />
             </div>
           ))}
         </div>
@@ -120,10 +163,10 @@ const OverviewOrganizerProfile = () => {
             </h1>
             <p>
               <Popover title="Ho Duong Trung Nguyen" placement="bottomLeft">
-                {" "}
+                {' '}
                 <Avatar
-                  style={{ backgroundColor: "gray" }}
-                  size={"default"}
+                  style={{ backgroundColor: 'gray' }}
+                  size={'default'}
                   icon={<FaRegUser size={15} />}
                 />
               </Popover>

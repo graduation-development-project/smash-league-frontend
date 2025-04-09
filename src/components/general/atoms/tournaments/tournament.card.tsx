@@ -20,7 +20,7 @@ const TournamentCard = ({ tour }: any) => {
 
   return (
     <div
-      className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-2 border cursor-pointer "
+      className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-2 border cursor-pointer hover:shadow-shadowComp"
       onClick={() => router.push(`/tournaments/details/${tour.id}`)}
     >
       <div className="w-full h-[200px]">
@@ -63,7 +63,7 @@ const TournamentCard = ({ tour }: any) => {
             <div className="h-6"></div>
           )}
         </span>
-        <button className="w-full py-2 bg-gradient-orange rounded-lg text-white font-bold hover:bg-gradient-orange">
+        <button className="w-full py-2 bg-gradient-orange rounded-lg text-white font-bold hover:bg-gradient-orange hover:bg-opacity-80 hover:shadow-shadowBtn">
           Register now
         </button>
       </div>
