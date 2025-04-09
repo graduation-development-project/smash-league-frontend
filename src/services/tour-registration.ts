@@ -182,3 +182,27 @@ export const getTournamentRegistrationByAthleteAPI = async (
     return error.response?.data;
   }
 };
+
+export const payRegistrationFeeAPI = async (
+  accessToken: string,
+  tournamentRegistrationId: string,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/payment/pay-registration-fee/${tournamentRegistrationId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error pay registration by athlete:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

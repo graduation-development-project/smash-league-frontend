@@ -50,6 +50,7 @@ const AthleteProfilePage = (props: any) => {
 
   useEffect(() => {
     getProfile();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [athleteId]);
   const onChange = (key: string) => {
     console.log(key);

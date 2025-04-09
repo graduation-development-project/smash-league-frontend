@@ -55,7 +55,7 @@ function Match({
         >
           <Team>
             <div className="flex flex-col gap-4 p-2">
-              <div>{topParty?.player1?.name || 'N/A'}</div>
+              <div>{topParty?.player1?.name || 'NO INFO'}</div>
               {/* <div>{topParty?.player2?.name || "N/A"}</div> */}
             </div>
           </Team>
@@ -103,7 +103,7 @@ function Match({
         >
           <Team>
             <div className="flex flex-col gap-3 p-2">
-              <div>{bottomParty?.player1?.name || 'N/A'}</div>
+              <div>{bottomParty?.player1?.name || 'NO INFO'}</div>
               {/* <div>{bottomParty?.player2?.name || "N/A"}</div> */}
             </div>
           </Team>

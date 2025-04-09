@@ -8,6 +8,7 @@ import {
   Tag,
   Image,
   Popconfirm,
+  Select,
 } from 'antd';
 import type { TableProps } from 'antd';
 import { createStyles } from 'antd-style';
@@ -19,7 +20,7 @@ import {
 } from '@ant-design/icons';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
-import { getTournamentEventParticipantsAPI } from '@/services/tournament';
+import { generateBracketsAPI, getTournamentEventParticipantsAPI } from '@/services/tournament';
 import {
   getTournamentRegistrationAPI,
   responseTournamentRegistrationAPI,
@@ -44,13 +45,7 @@ const useStyle = createStyles(({ css }) => ({
   `,
 }));
 
-const MixedDoublesAthleteTable = ({
-  eventId,
-  isVerification,
-}: {
-  eventId: string | null;
-  isVerification: boolean;
-}) => {
+const MixedDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   // const { styles } = useStyle();
 
   interface ParticipantInfo {
@@ -67,15 +62,14 @@ const MixedDoublesAthleteTable = ({
 
   interface BaseDataType {
     user: ParticipantInfo;
-    partner: ParticipantInfo;
+    partner: ParticipantInfo | null;
   }
 
   interface VerificationDataType {
     id: string;
-    user: ParticipantInfo;
-    partner: ParticipantInfo;
+    userId: string;
+    name: string;
     registrationDocumentCreator: string[];
-    registrationDocumentPartner: string[];
     isPayForTheRegistrationFee: boolean;
     status: string;
   }
@@ -86,21 +80,16 @@ const MixedDoublesAthleteTable = ({
 
   // console.log(eventId);
 
-  type TableDataType = DataType<typeof isVerification>;
-
   // console.log('check', isVerification);
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
   const [user, setUser] = useState<any>(null);
-  const [checkVerification, setCheckVerification] = useState<boolean>(
-    Boolean(isVerification),
-  );
-
+  const [isVerification, setIsVerification] = useState('verify');
   const [participantList, setParticipantList] = useState([]);
   const [verificationList, setVetificationList] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
@@ -119,28 +108,18 @@ const MixedDoublesAthleteTable = ({
     }
   }, []); // Run only once on mount
 
+  const handleChange = (value: string) => {
+    // console.log('check', value);
+    setIsVerification(value);
+  };
+
   const getTournamentEventParticipants = async () => {
     const res = await getTournamentEventParticipantsAPI(
       user?.access_token,
       eventId,
     );
-    // console.log('Check ---------', res.data.data.listParticipants);
     if (res?.data?.data?.listParticipants) {
       // Transform data into correct format
-      // const formattedData = res.data.data.listParticipants.map(
-      //   (participant: any) => ({
-      //     key: participant.user.id, // Use unique ID as key
-      //     name: participant.user.name,
-      //     age: participant.user.dateOfBirth
-      //       ? new Date().getFullYear() -
-      //         new Date(participant.user.dateOfBirth).getFullYear()
-      //       : 'N/A',
-      //     address: participant.user.phoneNumber || 'Unknown',
-      //     image: 'https://via.placeholder.com/100', // Replace with actual image if available
-      //     tags: participant.user.gender ? [participant.user.gender] : [],
-      //   }),
-      // );
-
       setParticipantList(res.data.data.listParticipants);
     } else {
       setParticipantList([]);
@@ -164,14 +143,13 @@ const MixedDoublesAthleteTable = ({
       ) {
         const formatData = response.data.data.map((regis: any) => ({
           id: regis.id,
-          user: regis.user,
-          partner: regis.partner,
+          userId: regis.userId,
+          name: regis.user.name,
           registrationDocumentCreator: regis.registrationDocumentCreator,
-          registrationDocumentPartner: regis.registrationDocumentPartner,
           isPayForTheRegistrationFee: regis.isPayForTheRegistrationFee,
           status: regis.status,
         }));
-        // console.log(response?.data, 'check');
+
         setVetificationList(formatData);
       } else {
         setVetificationList([]);
@@ -184,8 +162,8 @@ const MixedDoublesAthleteTable = ({
   useEffect(() => {
     getTournamentRegistration();
     getTournamentEventParticipants();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventId, isVerification, checkVerification, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventId, isVerification, user]);
 
   // console.log('check registration', participantList);
 
@@ -193,6 +171,8 @@ const MixedDoublesAthleteTable = ({
     clearFilters?.();
     setSearchText('');
   };
+
+  // console.log('Check verification', verificationList);
 
   const handleVerify = async (id: string, option: boolean, reason: string) => {
     if (!user?.access_token) return;
@@ -203,7 +183,6 @@ const MixedDoublesAthleteTable = ({
         option,
         reason,
       );
-      // console.log('Check response', response);
       if (response?.status === 200 || response?.status === 201) {
         getTournamentRegistration();
         toast.success(`${response?.data?.message}`, {
@@ -232,6 +211,40 @@ const MixedDoublesAthleteTable = ({
       console.log(error);
     }
   };
+
+  const handleGenerateBrackets = async () => {
+    try {
+     const response = await generateBracketsAPI(eventId);
+     if (response?.data.statusCode === 200 || response?.data?.statusCode === 201) {
+   
+             setIsLoading(false);
+             toast.success(`${response?.data?.message}`, {
+               position: 'top-right',
+               autoClose: 5000,
+               hideProgressBar: false,
+               closeOnClick: true,
+               pauseOnHover: true,
+               draggable: true,
+               progress: undefined,
+               theme: 'light',
+             });
+           } else {
+             setIsLoading(false);
+             toast.error(`${response?.message}`, {
+               position: 'top-right',
+               autoClose: 5000,
+               hideProgressBar: false,
+               closeOnClick: true,
+               pauseOnHover: true,
+               draggable: true,
+               progress: undefined,
+               theme: 'light',
+             });
+           }
+    } catch (error:any) {
+     console.log("Check error", error);
+    } 
+   }
 
   const getColumnSearchProps = (
     dataIndex: string,
@@ -290,9 +303,6 @@ const MixedDoublesAthleteTable = ({
           >
             Choose All
           </Button>
-          {/* <Button type="link" size="small" onClick={close} style={{ color: "#2c2c2c" }}>
-            Close
-          </Button> */}
         </Space>
       </div>
     ),
@@ -322,139 +332,89 @@ const MixedDoublesAthleteTable = ({
   const columns: TableProps<BaseDataType>['columns'] = [
     {
       title: '',
-      dataIndex: ['user', 'partner'],
+      dataIndex: ['user'],
       key: 'image',
       fixed: 'left',
       width: 150,
-      render: (_, { user, partner }) => (
-        <div className="flex flex-col gap-3">
-          <Image
-            style={{
-              borderRadius: '50%',
-              border: '1px solid #FF8243',
-              padding: '2px',
-            }}
-            src={user?.avatarURL}
-            width={50}
-            height={50}
-            alt="Athlete Image"
-          />
-          <Image
-            style={{
-              borderRadius: '50%',
-              border: '1px solid #FF8243',
-              padding: '2px',
-            }}
-            src={partner?.avatarURL}
-            width={50}
-            height={50}
-            alt="Athlete Image"
-          />
-        </div>
+      render: (_, { user }) => (
+        <Image
+          style={{
+            borderRadius: '50%',
+            border: '1px solid #FF8243',
+            padding: '2px',
+          }}
+          src={user?.avatarURL}
+          width={100}
+          height={100}
+          alt="Athlete Image"
+        />
       ),
     },
 
     {
       title: 'Full Name',
       width: 250,
-      dataIndex: ['user', 'partner'],
+      dataIndex: ['user'],
       key: 'name',
       fixed: 'left',
       // ...getColumnSearchProps('name'),
-      render: (_, { user, partner }) => (
-        <div className="flex flex-col gap-3">
-          <h1 className="font-semibold text-[16px]">{user?.name}</h1>
-          <h1 className="font-semibold text-[16px]">{partner?.name}</h1>
-        </div>
+      render: (_, { user }) => (
+        <h1 className="font-semibold text-[16px]">{user?.name}</h1>
       ),
     },
     {
       title: 'Age',
-      dataIndex: 'age',
+      dataIndex: ['user'],
       align: 'center',
       key: 'age',
       width: 100,
       // ...getColumnSearchProps('age'),
-      render: (_, { user, partner }) => (
-        <div className="flex flex-col gap-3">
-          <h1 className="font-semibold text-[16px]">
-            {calculateAge(user?.dateOfBirth)}
-          </h1>
-          <h1 className="font-semibold text-[16px]">
-            {calculateAge(partner?.dateOfBirth)}
-          </h1>
-        </div>
+      render: (_, { user }) => (
+        <h1 className="font-semibold text-[16px]">
+          {calculateAge(user?.dateOfBirth)}
+        </h1>
       ),
     },
     {
       title: 'Email',
-      dataIndex: ['user', 'partner'],
+      dataIndex: ['user'],
       key: 'email',
       align: 'center',
       width: 100,
       // ...getColumnSearchProps('phoneNumber'),
-      render: (_, { user, partner }) => (
-        <div className="flex flex-col gap-3">
-          <h1 className="font-semibold text-[16px]">{user?.email}</h1>
-          <h1 className="font-semibold text-[16px]">{partner?.email}</h1>
-        </div>
+      render: (_, { user }) => (
+        <h1 className="font-semibold text-[16px]">{user?.email}</h1>
       ),
     },
 
     {
       title: 'Hand',
-      dataIndex: ['user', 'partner'],
+      dataIndex: ['user'],
       key: 'hand',
       align: 'center',
       width: 100,
       // ...getColumnSearchProps('phoneNumber'),
-      render: (_, { user, partner }) => (
-        <div className="flex flex-col gap-3">
-          <h1 className="font-semibold text-[16px]">
-            {user?.hands ? user?.hands : 'No Infomation'}
-          </h1>
-          <h1 className="font-semibold text-[16px]">
-            {partner?.hands ? partner?.hands : 'No Infomation'}
-          </h1>
-        </div>
+      render: (_, { user }) => (
+        <h1 className="font-semibold text-[16px]">
+          {user?.hands ? user?.hands : 'No Infomation'}
+        </h1>
       ),
     },
   ];
   const columnsVerification: TableProps<VerificationDataType>['columns'] = [
     {
       title: 'Full Name',
-      width: 300,
-      dataIndex: ['user', 'partner'],
+      width: 200,
+      dataIndex: 'name', // Dùng key đã map sẵn
       key: 'name',
-      // fixed: 'left',
+      fixed: 'left',
       // ...getColumnSearchProps('name'),
-      render: (_, { user, partner }) => (
-        <div className="flex flex-col gap-3">
-          <h1 className="font-semibold text-[16px]">{user?.name}</h1>
-          {/* <h1 className="font-semibold text-[16px]">{partner?.name}</h1> */}
-        </div>
-      ),
-    },
-
-    {
-      title: 'Partner Full Name',
-      width: 300,
-      dataIndex: ['user', 'partner'],
-      key: 'name',
-      // fixed: 'left',
-      // ...getColumnSearchProps('name'),
-      render: (_, { user, partner }) => (
-        <div className="flex flex-col gap-3">
-          {/* <h1 className="font-semibold text-[16px]">{user?.name}</h1> */}
-          <h1 className="font-semibold text-[16px]">{partner?.name}</h1>
-        </div>
-      ),
     },
     {
       title: 'Front ID Card',
       dataIndex: 'registrationDocumentCreator',
       key: 'registrationDocumentCreator',
-      width: 100,
+      width: 200,
       fixed: 'left',
       render: (_, record) => {
         const verificationRecord = record as VerificationDataType;
@@ -467,8 +427,8 @@ const MixedDoublesAthleteTable = ({
                 : ''
             }
             alt="Front ID Card"
-            width={100}
-            height={100}
+            width={200}
+            height={120}
             style={{ objectFit: 'cover' }}
           />
         );
@@ -479,7 +439,7 @@ const MixedDoublesAthleteTable = ({
       title: 'Back ID Card',
       dataIndex: 'registrationDocumentCreator',
       key: 'registrationDocumentCreator1',
-      width: 100,
+      width: 200,
       fixed: 'left',
       render: (_, record) => {
         // console.log('check record', record);
@@ -493,8 +453,8 @@ const MixedDoublesAthleteTable = ({
                 : ''
             }
             alt="Back ID Card"
-            width={100}
-            height={100}
+            width={200}
+            height={120}
             style={{ objectFit: 'cover' }}
           />
         );
@@ -504,7 +464,7 @@ const MixedDoublesAthleteTable = ({
       title: 'ID Photo',
       dataIndex: 'registrationDocumentCreator',
       key: 'registrationDocumentCreator2',
-      width: 100,
+      width: 200,
       fixed: 'left',
       render: (_, record) => {
         const verificationRecord = record as VerificationDataType;
@@ -516,82 +476,8 @@ const MixedDoublesAthleteTable = ({
                 : ''
             }
             alt="ID Photo"
-            width={100}
-            height={100}
-            style={{ objectFit: 'cover' }}
-          />
-        );
-      },
-    },
-
-    {
-      title: 'Partner Front ID Card',
-      dataIndex: 'registrationDocumentPartner',
-      key: 'registrationDocumentPartner',
-      width: 100,
-      fixed: 'left',
-      render: (_, record) => {
-        const verificationRecord = record as VerificationDataType;
-        // console.log('Check record', verificationRecord);
-        return (
-          <Image
-            src={
-              verificationRecord?.registrationDocumentPartner[0]
-                ? verificationRecord?.registrationDocumentPartner[0]
-                : ''
-            }
-            alt="Partner Front ID Card"
-            width={100}
-            height={100}
-            style={{ objectFit: 'cover' }}
-          />
-        );
-      },
-    },
-
-    {
-      title: 'Partner Back ID Card',
-      dataIndex: 'registrationDocumentPartner',
-      key: 'registrationDocumentPartner1',
-      width: 200,
-      fixed: 'left',
-      render: (_, record) => {
-        // console.log('check record', record);
-        const verificationRecord = record as VerificationDataType;
-
-        return (
-          <Image
-            src={
-              verificationRecord?.registrationDocumentPartner[1]
-                ? verificationRecord?.registrationDocumentPartner[1]
-                : ''
-            }
-            alt="Partner Back ID Card"
-            width={100}
-            height={100}
-            style={{ objectFit: 'cover' }}
-          />
-        );
-      },
-    },
-    {
-      title: 'Partner ID Photo',
-      dataIndex: 'registrationDocumentPartner',
-      key: 'registrationDocumentPartner2',
-      width: 200,
-      fixed: 'left',
-      render: (_, record) => {
-        const verificationRecord = record as VerificationDataType;
-        return (
-          <Image
-            src={
-              verificationRecord?.registrationDocumentPartner[2]
-                ? verificationRecord?.registrationDocumentPartner[2]
-                : ''
-            }
-            alt="PartnerID Photo"
-            width={100}
-            height={100}
+            width={150}
+            height={150}
             style={{ objectFit: 'cover' }}
           />
         );
@@ -645,6 +531,19 @@ const MixedDoublesAthleteTable = ({
                   Approved
                 </Tag>
               </>
+            ) : verificationRecord.status === 'ON_WAITING_REGISTRATION_FEE' ? (
+              <>
+                <Tag
+                  style={{
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    padding: '8px',
+                  }}
+                  color="cyan"
+                >
+                  Waiting
+                </Tag>
+              </>
             ) : (
               <>
                 <Tag
@@ -667,47 +566,80 @@ const MixedDoublesAthleteTable = ({
 
   return (
     <div className="w-full h-full flex flex-col gap-5">
-      <h1 className="text-[32px] font-bold">
-        Mixed&apos;s Double Athlete List
-      </h1>
+      <div className="w-full h-max flex justify-between">
+        <h1 className="text-[32px] font-bold">
+          {isVerification === 'verify'
+            ? 'Mixed Doubles Verifications List'
+            : 'Mixed Doubles Participants List'}
+        </h1>
+
+        <div className="flex gap-4">
+          <ConfigProvider
+            theme={{
+              token: {
+                /* here is your global tokens */
+                colorPrimary: '#FF8243',
+                fontFamily: 'inherit',
+              },
+            }}
+          >
+            <Button
+              style={{
+                fontFamily: 'inherit',
+                marginTop: '10px',
+                fontWeight: 500,
+              }}
+              type="primary"
+            >
+              Generate Brackets
+            </Button>
+
+            <Select
+              defaultValue={'verify'}
+              style={{ width: 120, fontFamily: 'inherit', marginTop: '10px' }}
+              onChange={handleChange}
+              options={[
+                { value: 'verify', label: 'Verifications' },
+                { value: 'participant', label: 'Participants' },
+                // { value: 'assign', label: 'Assign' },
+              ]}
+            />
+          </ConfigProvider>
+        </div>
+      </div>
+
       <div className="w-full h-full p-5 rounded-[10px] border border-solid border-gray-200">
         <ConfigProvider
           theme={{
             token: {
               /* here is your global tokens */
               colorPrimary: '#FF8243',
+              fontFamily: 'inherit',
             },
           }}
         >
-          {isVerification ? (
-            <div className="overflow-hidden">
-              <Table<VerificationDataType>
-                // className={styles.customTable}
-                // scroll={{ x: 'max-content', y: 500 }}
-                columns={columnsVerification}
-                dataSource={verificationList}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  fontFamily: 'inherit',
-                  overflowX: 'scroll',
-                }}
-              />
-            </div>
+          {isVerification === 'verify' ? (
+            <Table<VerificationDataType>
+              // className={styles.customTable}
+              columns={columnsVerification}
+              dataSource={verificationList}
+              style={{
+                width: '100%',
+                height: '100%',
+                fontFamily: 'inherit',
+              }}
+            />
           ) : (
-            <div className="overflow-hidden">
-              <Table<BaseDataType>
-                // className={styles.customTable}
-                columns={columns}
-                dataSource={participantList}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  fontFamily: 'inherit',
-                  overflowX: 'scroll',
-                }}
-              />
-            </div>
+            <Table<BaseDataType>
+              // className={styles.customTable}
+              columns={columns}
+              dataSource={participantList}
+              style={{
+                width: '100%',
+                height: '100%',
+                fontFamily: 'inherit',
+              }}
+            />
           )}
         </ConfigProvider>
       </div>

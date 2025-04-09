@@ -37,6 +37,7 @@ import EventAgeDetails from '@/components/general/molecules/tournaments/event-ag
 import RegisterAthleteTournamentForm from '@/components/general/molecules/tournaments/register-athlete.tournament.form';
 import RegisterUmpireTournamentForm from '@/components/general/molecules/tournaments/register-umpire.tournament.form';
 import AttendantsCheck from '@/components/general/molecules/tournaments/attendants-check.tour';
+import AlertCreateTeamsModal from '@/components/general/molecules/teams/alert-create-teams-modal';
 import RegisterTeamTourForm from '@/components/general/molecules/tournaments/register-team.tournament.form';
 
 const DetailsTourPage = () => {
@@ -47,6 +48,17 @@ const DetailsTourPage = () => {
   const [activeKey, setActiveKey] = React.useState('details');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -67,6 +79,7 @@ const DetailsTourPage = () => {
     try {
       if (typeof url === 'string') {
         const response = await getTourDetailAPI(url);
+        console.log('Check details', response.data);
         setDetail(response.data);
         setEventList(Object.entries(response.data.tournamentEvents));
       }
@@ -154,33 +167,52 @@ const DetailsTourPage = () => {
                 <h1 className="text-4xl font-extrabold">{detail?.name}</h1>
                 <h4>@{detail?.shortName}</h4>
               </div>
-              <div className="flex gap-3">
-                <Button variant={'default'} size={'lg'} onClick={showModal}>
-                  Register Now
-                </Button>
-                <RegisterTeamTourForm 
+              <div>
+                {user?.id === detail?.organizer?.id ? (
+                  <div></div>
+                ) : (
+                  <div className="flex gap-3 justify-center items-center">
+                    <Button variant={'default'} size={'sm'} onClick={showModal}>
+                      Register Now
+                    </Button>
+
+                    <Button variant="default" size={'sm'} onClick={showUmpire}>
+                      Register As Umpire
+                    </Button>
+                  </div>
+                )}
+              </div>
+              {/* Athlete Form */}
+              <RegisterTeamTourForm 
                   isModalOpen={isModalOpen}
                   setIsModalOpen={setIsModalOpen}
                   detail={detail}
                   detailId={detail?.id}
                 /> 
-                {/* Athlete Form */}
-                {/* <RegisterAthleteTournamentForm
-                  isModalOpen={isModalOpen}
-                  setIsModalOpen={setIsModalOpen}
-                  detail={detail}
-                  detailId={detail?.id}
-                /> */}
-                <Button variant="default" size={'lg'} onClick={showUmpire}>
-                  Register As Umpire
-                </Button>
-                {/* Umpire Form */}
+              {/* <RegisterAthleteTournamentForm
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                detail={detail}
+                detailId={detail?.id}
+              /> */}
+
+              {/* Umpire Form */}
+              {user?.userRoles?.includes('Umpire') ? (
                 <RegisterUmpireTournamentForm
                   isRegisterModalOpen={isRegisterModalOpen}
                   setIsRegisterModalOpen={setIsRegisterModalOpen}
                   detail={detail}
                 />
-              </div>
+              ) : (
+                <AlertCreateTeamsModal
+                  isModalOpen={isRegisterModalOpen}
+                  setIsModalOpen={setIsRegisterModalOpen}
+                  message="You are not authorized to register as umpire"
+                  description="Please register as an umpire"
+                  linkText="Become an Umpire"
+                  path="/become/umpire"
+                />
+              )}
             </div>
           </div>
           <div className="w-full h-max flex flex-col py-8 px-5 gap-5 justify-center items-center shadow-shadowComp rounded-lg">

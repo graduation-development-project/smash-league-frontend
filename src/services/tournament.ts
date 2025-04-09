@@ -185,10 +185,10 @@ export const getTournamentEventDetailAPI = async (tournamentId: string) => {
   }
 };
 
-export const generateBracketsAPI = async (tournamentId: string) => {
+export const generateBracketsAPI = async (tournamentEventId: string | null) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/generate-brackets/${tournamentId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/generate-brackets/${tournamentEventId}`,
     );
 
     return response;
@@ -273,6 +273,51 @@ export const assignUmpireToMatchAPI = async (
   } catch (error: any) {
     console.error(
       'Error assign umpire to match:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getParticipatedTournamentsAPI = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/umpires/participate-tournaments`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get participated tournaments:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getAssignedMatchesAPI = async (
+  accessToken: string,
+  tournamentId: string,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/umpires/assigned-matches/${tournamentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get assigned matches:',
       error.response?.data || error.message,
     );
     return error.response?.data;

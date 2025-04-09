@@ -144,6 +144,7 @@ const UmpiresVerifyTable = () => {
       console.log('Check response', response);
       if (response?.status === 200 || response?.status === 201) {
         setIsLoading(false);
+        getAllVerifications();
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,

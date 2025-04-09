@@ -10,16 +10,16 @@ import { useProfileContext } from '@/context/profile.context';
 const TeamsBanner = (props: any) => {
   const { session } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [user, setUser] = useState<any>(null);
-  
-    useEffect(() => {
-      if (typeof window !== 'undefined') {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
-        }
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
       }
-    }, []);
+    }
+  }, []);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -63,10 +63,7 @@ const TeamsBanner = (props: any) => {
               setIsModalOpen={setIsModalOpen}
             />
           ) : (
-            <AlertCreateTeamsModal
-              isModalOpen={isModalOpen}
-              setIsModalOpen={setIsModalOpen}
-            />
+            <div></div>
           )}
         </div>
         <div className="">

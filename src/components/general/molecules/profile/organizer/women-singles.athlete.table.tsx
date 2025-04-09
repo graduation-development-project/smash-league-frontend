@@ -8,6 +8,7 @@ import {
   Tag,
   Image,
   Popconfirm,
+  Select,
 } from 'antd';
 import type { TableProps } from 'antd';
 import { createStyles } from 'antd-style';
@@ -19,7 +20,10 @@ import {
 } from '@ant-design/icons';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
-import { getTournamentEventParticipantsAPI } from '@/services/tournament';
+import {
+  generateBracketsAPI,
+  getTournamentEventParticipantsAPI,
+} from '@/services/tournament';
 import {
   getTournamentRegistrationAPI,
   responseTournamentRegistrationAPI,
@@ -44,13 +48,7 @@ const useStyle = createStyles(({ css }) => ({
   `,
 }));
 
-const WomenSinglesAthleteTable = ({
-  eventId,
-  isVerification,
-}: {
-  eventId: string | null;
-  isVerification: boolean;
-}) => {
+const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   // const { styles } = useStyle();
 
   interface ParticipantInfo {
@@ -85,18 +83,16 @@ const WomenSinglesAthleteTable = ({
 
   // console.log(eventId);
 
-  type TableDataType = DataType<typeof isVerification>;
+  // console.log('check', isVerification);
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
   const [user, setUser] = useState<any>(null);
-  const [checkVerification, setCheckVerification] = useState<boolean>(
-    Boolean(isVerification),
-  );
-
+  const [isVerification, setIsVerification] = useState('verify');
   const [participantList, setParticipantList] = useState([]);
   const [verificationList, setVetificationList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = (
     selectedKeys: string[],
@@ -115,6 +111,11 @@ const WomenSinglesAthleteTable = ({
       }
     }
   }, []); // Run only once on mount
+
+  const handleChange = (value: string) => {
+    // console.log('check', value);
+    setIsVerification(value);
+  };
 
   const getTournamentEventParticipants = async () => {
     const res = await getTournamentEventParticipantsAPI(
@@ -165,8 +166,8 @@ const WomenSinglesAthleteTable = ({
   useEffect(() => {
     getTournamentRegistration();
     getTournamentEventParticipants();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventId, isVerification, checkVerification, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventId, isVerification, user]);
 
   // console.log('check registration', participantList);
 
@@ -174,6 +175,8 @@ const WomenSinglesAthleteTable = ({
     clearFilters?.();
     setSearchText('');
   };
+
+  // console.log('Check verification', verificationList);
 
   const handleVerify = async (id: string, option: boolean, reason: string) => {
     if (!user?.access_token) return;
@@ -210,6 +213,41 @@ const WomenSinglesAthleteTable = ({
       }
     } catch (error: any) {
       console.log(error);
+    }
+  };
+  const handleGenerateBrackets = async () => {
+    try {
+      const response = await generateBracketsAPI(eventId);
+      if (
+        response?.data.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
+        setIsLoading(false);
+        toast.success(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        setIsLoading(false);
+        toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log('Check error', error);
     }
   };
 
@@ -498,6 +536,19 @@ const WomenSinglesAthleteTable = ({
                   Approved
                 </Tag>
               </>
+            ) : verificationRecord.status === 'ON_WAITING_REGISTRATION_FEE' ? (
+              <>
+                <Tag
+                  style={{
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    padding: '8px',
+                  }}
+                  color="cyan"
+                >
+                  Waiting
+                </Tag>
+              </>
             ) : (
               <>
                 <Tag
@@ -520,17 +571,59 @@ const WomenSinglesAthleteTable = ({
 
   return (
     <div className="w-full h-full flex flex-col gap-5">
-      <h1 className="text-[32px] font-bold">Men&apos;s Singles Athlete List</h1>
+      <div className="w-full h-max flex justify-between">
+        <h1 className="text-[32px] font-bold">
+          {isVerification === 'verify'
+            ? 'Women Singles Verifications List'
+            : 'Women Singles Participants List'}
+        </h1>
+
+        <div className="flex gap-4">
+          <ConfigProvider
+            theme={{
+              token: {
+                /* here is your global tokens */
+                colorPrimary: '#FF8243',
+                fontFamily: 'inherit',
+              },
+            }}
+          >
+            <Button
+              style={{
+                fontFamily: 'inherit',
+                marginTop: '10px',
+                fontWeight: 500,
+              }}
+              type="primary"
+            >
+              Generate Brackets
+            </Button>
+
+            <Select
+              defaultValue={'verify'}
+              style={{ width: 120, fontFamily: 'inherit', marginTop: '10px' }}
+              onChange={handleChange}
+              options={[
+                { value: 'verify', label: 'Verifications' },
+                { value: 'participant', label: 'Participants' },
+                // { value: 'assign', label: 'Assign' },
+              ]}
+            />
+          </ConfigProvider>
+        </div>
+      </div>
+
       <div className="w-full h-full p-5 rounded-[10px] border border-solid border-gray-200">
         <ConfigProvider
           theme={{
             token: {
               /* here is your global tokens */
               colorPrimary: '#FF8243',
+              fontFamily: 'inherit',
             },
           }}
         >
-          {isVerification ? (
+          {isVerification === 'verify' ? (
             <Table<VerificationDataType>
               // className={styles.customTable}
               columns={columnsVerification}

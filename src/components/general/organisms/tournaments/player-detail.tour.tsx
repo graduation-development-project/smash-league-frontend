@@ -34,6 +34,7 @@ const PlayerDetailTour = ({ mainColor, eventId }: { mainColor: string, eventId: 
   }
   useEffect(() => {
     fetchParticipantList();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventUUID]);
 
   const userProfile = (userId: string) => {

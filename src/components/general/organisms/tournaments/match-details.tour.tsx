@@ -43,7 +43,7 @@ const MatchDetailsTour = ({
     try {
       const response = await getMatchesOfTournamentEventAPI(eventUUID);
       // console.log('Check res', response.data);
-      setMatches(response.data.data);
+      setMatches(response.data.data.reverse());
     } catch (error: any) {
       console.log('error', error);
     }
@@ -51,14 +51,15 @@ const MatchDetailsTour = ({
 
   useEffect(() => {
     getMatchesOfTournamentEvent();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventId]);
   // console.log('matches', matches);
 
   return (
     <div className="w-full h-max">
       <div className={`w-full h-max flex flex-col items-center`}>
         <div className="w-3/4 h-max flex flex-col gap-5">
-          {matchCourt.map((item, index) => {
+          {/* {matchCourt.map((item, index) => {
             return (
               <div
                 key={index}
@@ -68,7 +69,7 @@ const MatchDetailsTour = ({
                   {item.court}
                 </h2>
                 <div className="w-full h-max flex flex-col justify-between items-center gap-16">
-                  {matches.map((match: any, index) => {
+                  {matches.map((match: any) => {
                     return (
                       <div key={match.id} className="w-full h-max">
                         <MatchCard match={match} tournamentId={tournamentId}/>
@@ -78,7 +79,17 @@ const MatchDetailsTour = ({
                 </div>
               </div>
             );
-          })}
+          })} */}
+
+          <div className="w-full h-max flex flex-col justify-between items-center gap-16">
+            {matches.map((match: any) => {
+              return (
+                <div key={match.id} className="w-full h-max">
+                  <MatchCard match={match} tournamentId={tournamentId} />
+                </div>
+              );
+            })}
+          </div>
           {/* <MatchCard match={}/> */}
         </div>
       </div>

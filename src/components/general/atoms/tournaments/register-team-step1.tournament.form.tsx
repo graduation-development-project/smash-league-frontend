@@ -27,7 +27,7 @@ const RegisterTeamStep1Form = ({
         const fetchAthletes = async () => {
             try {
                 const res = await getTeamMembersAPI(teamId, '', 1, 200);
-                const formatted = res?.data?.data?.data?.map((a: any) => ({ label: a.name, value: a.id }));
+                const formatted = res?.data?.data?.data?.map((a: any) => ({  value: a.id, label: a.name }));
                 setAthleteList(formatted);
                 setFullAthleteList(formatted);
             } catch (err) {
@@ -36,13 +36,17 @@ const RegisterTeamStep1Form = ({
         };
         fetchAthletes();
     }, [teamId]);
+    console.log("athleteList", athleteList);
+
 
     const handleSelectAthlete = (index: number, value: string) => {
         const selected = athleteList.find((a) => a.value === value);
         if (!selected) return;
 
+
         const updatedList = [...registerAthleteList];
         updatedList[index].playerId = value;
+        updatedList[index].playerName = selected.label;
         updatedList[index].fromTeamId = teamId;
         updatedList[index].tournamentId = detail.id;
         updatedList[index].tournamentEventId = '';
@@ -92,15 +96,18 @@ const RegisterTeamStep1Form = ({
 
     const handleRemoveAthlete = (index: number) => {
         const removed = registerAthleteList[index];
-      
+
         // Tìm lại từ danh sách gốc
         const athleteOption = fullAthleteList.find((a) => a.value === removed.playerId);
         if (athleteOption) {
-          setAthleteList((prev) => [...prev, athleteOption]);
+            setAthleteList((prev) => [...prev, athleteOption]);
         }
-      
+
         setRegisterAthleteList((prev) => prev.filter((_, i) => i !== index));
-      };
+    };
+
+    console.log('registerAthleteList', registerAthleteList);
+    
 
     return (
         <div className="flex flex-col items-center w-full">
@@ -117,12 +124,16 @@ const RegisterTeamStep1Form = ({
                             )
                         }
                     >
-                        <Form.Item label="Athlete">
+                        <Form.Item  label="Athlete">
                             <Select
+                                showSearch
                                 options={athleteList}
-                                placeholder="Select athlete"
+                                optionFilterProp="label"
+                                placeholder="Select Athlete"
+                                filterSort={(optionA, optionB) =>
+                                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                                }
                                 onChange={(val) => handleSelectAthlete(index, val)}
-                                value={athlete.playerId || undefined}
                             />
                         </Form.Item>
 

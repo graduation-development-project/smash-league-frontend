@@ -2,7 +2,9 @@ import { Button, ConfigProvider, Form, Modal, Steps, theme } from 'antd';
 import React, { useEffect, useState } from 'react'
 import RegisterTeamStep1Form from '../../atoms/tournaments/register-team-step1.tournament.form';
 import RegisterTeamStep2Form from '../../atoms/tournaments/register-team-step2.tournament.form';
-import { RegisterAthleteTournamentFormProps } from '@/types/types';
+import { RegisterAthleteTournamentBeforeSubmitFormProps, RegisterAthleteTournamentFormProps, RegisterAthleteTournamentSubmitFormProps } from '@/types/types';
+import { uploadMerchandiseImageAPI } from '@/services/create-tour';
+import { registerTournamentByTeamAPI } from '@/services/team';
 
 const RegisterTeamTourForm = ({
     isModalOpen,
@@ -25,10 +27,7 @@ const RegisterTeamTourForm = ({
             }
         }
     }, []);
-    console.log(user, "user");
     
-    console.log('teamId lead', user?.teamLeaderOf?.id);
-    const teamId = user?.teamLeaderOf?.id;
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [form] = Form.useForm();
@@ -37,29 +36,32 @@ const RegisterTeamTourForm = ({
     const [athleteFiles, setAthleteFiles] = useState<Record<number, Record<string, File[]>>>({});
     const [dataStep1, setDataStep1] = useState<any>(null);
     const [registerAthleteList, setRegisterAthleteList] = useState<RegisterAthleteTournamentFormProps[]>([]);
-
+    const [beforeSubmit, setBeforeSubmit] = useState<RegisterAthleteTournamentBeforeSubmitFormProps[]>([]);
+    const [submitList, setSubmitList] = useState<RegisterAthleteTournamentSubmitFormProps[]>([]);
 
     const steps = [
         {
             title: "Athlete Information",
             content: <RegisterTeamStep1Form
                 form={form}
-                teamId={user?.teamId}
+                teamId={user?.teamLeaderOf[0]?.id}
                 detail={detail}
                 registerAthleteList={registerAthleteList}
                 setRegisterAthleteList={setRegisterAthleteList}
-                // dataStep1={dataStep1}
-                // setDataStep1={setDataStep1}
-                // athleteFiles={athleteFiles}
-                // setAthleteFiles={setAthleteFiles}
+            // dataStep1={dataStep1}
+            // setDataStep1={setDataStep1}
+            // athleteFiles={athleteFiles}
+            // setAthleteFiles={setAthleteFiles}
             />
         },
         {
             title: "Choose Events",
             content: <RegisterTeamStep2Form
+                setBeforeSubmitList={setBeforeSubmit}
                 detailId={detailId}
                 registerAthleteList={registerAthleteList}
                 detail={detail}
+                beforeSubmitList={beforeSubmit}
             />
         },
 
@@ -70,7 +72,7 @@ const RegisterTeamTourForm = ({
 
     const nextStep = async () => {
         const values = await form.getFieldsValue();
-        console.log('Check values step1', values);
+        // console.log('Check values step1', values);
         // const { createTournamentEvent } = values
         // console.log(createTournamentEvent, "createTournamentEvent");
         // setDataStep1(values);
@@ -95,9 +97,81 @@ const RegisterTeamTourForm = ({
         },
     };
 
-    const handleDataStep1 = () => {
-
+    const fetchUploadImage = async (fileList: File[]) => {
+        try {
+            const response = await uploadMerchandiseImageAPI(fileList);
+            return response;
+        } catch (error) {
+            console.error(error, "uploadMerchandiseImageAPI");
+        }
     }
+
+    const fetchRegisterSubmit = async () => {
+        try {
+            // console.log("user", user.accessToken);
+            
+            const response = await registerTournamentByTeamAPI(submitList, user.access_token);
+            console.log(response, "registerTournamentByTeamAPI");
+        } catch (error) {
+            console.error(error, "register Tournament By Team API");
+        }
+    }
+
+    const handleFinish = async () => {
+        setIsLoading(true);
+        try {
+            for (const athlete of beforeSubmit) {
+                const registrationDocumentCreator : any[] =[];
+                const registerationDocumentPartner: any[] = [];
+
+                for (const [docType, files] of Object.entries(athlete.registrationDocumentCreator)) {
+                    // console.log([docType, files]);
+                    
+                    const response = await fetchUploadImage(files);
+                    if (response.statusCode === 200 || response.statusCode === 201) {
+                        registrationDocumentCreator.push(...response.data);
+                    }else {
+                        throw new Error('Upload athlete docs failed');
+                    }
+                    
+                }
+
+                if (athlete.partnerId && athlete.partnerId !== '' && athlete.registerationDocumentPartner) {
+                    // console.log("partner");
+                    
+                    for (const [docType, files] of Object.entries(athlete.registerationDocumentPartner)) {
+                        const response = await fetchUploadImage(files);
+                        if (!response || response.statusCode !== 200) {
+                            registerationDocumentPartner.push(...response.data);
+                        }
+                    }
+                }
+                submitList.push({
+                    playerId: athlete.playerId,
+                    playerName: athlete.playerName,
+                    fromTeamId: athlete.fromTeamId,
+                    tournamentId: athlete.tournamentId,
+                    tournamentEventId: athlete.tournamentEventId,
+                    registrationDocumentCreator,
+                    partnerId: athlete.partnerId || undefined,
+                    partnerName: athlete.partnerName || undefined,
+                    registerationDocumentPartner: athlete.partnerId ? registerationDocumentPartner : [],
+                  });
+            }
+            console.log("submitList", submitList);
+            
+            await fetchRegisterSubmit();
+            
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
+
+
+
 
     const contentStyle: React.CSSProperties = {
         width: '95%',
@@ -110,11 +184,6 @@ const RegisterTeamTourForm = ({
         marginTop: 16,
     };
 
-    const handleFinish = async () => {
-        setIsLoading(true);
-
-        setIsLoading(false);
-    }
 
     const handleCancel = () => {
         setIsModalOpen(false);

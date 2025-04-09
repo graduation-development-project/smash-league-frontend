@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import Loaders from '../../atoms/loaders/loaders';
-import { getProfileAPI } from '@/services/user';
+import { getProfileAPI, getProfileAPI1 } from '@/services/user';
 import { data } from 'react-router-dom';
 
 const RoleDirectionRouter = (props: any) => {
@@ -21,14 +21,39 @@ const RoleDirectionRouter = (props: any) => {
       try {
         const res = await getProfileAPI(session.user?.id);
         if (typeof window !== 'undefined') {
-          localStorage.setItem('user', JSON.stringify({...res.data, access_token: session.user?.access_token}));
+          localStorage.setItem(
+            'user',
+            JSON.stringify({
+              ...res,
+              access_token: session.user?.access_token,
+            }),
+          );
         }
       } catch (error: any) {
         console.log('error', error);
       }
     };
 
-    getProfile();
+    const getProfile1 = async () => {
+      try {
+        const res = await getProfileAPI1(session.user?.access_token);
+        console.log('Check res profile', res);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(
+            'user',
+            JSON.stringify({
+              ...res.data,
+              access_token: session.user?.access_token,
+            }),
+          );
+        }
+      } catch (error: any) {
+        console.log('error', error);
+      }
+    };
+
+    // getProfile();
+    getProfile1();
     // Store user data only if session.user exists
 
     if (session?.user?.userRoles.includes('Admin')) {

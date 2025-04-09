@@ -54,7 +54,6 @@ const AdminSideBar = () => {
         label: 'Verification',
         icon: <MailOutlined />,
         children: [
-          { key: 'athletes', label: <Link href="/athletes">Athletes</Link> },
           {
             key: 'organizers',
             label: <Link href="/dashboard/verify/organizers">Organizers</Link>,
@@ -67,7 +66,7 @@ const AdminSideBar = () => {
       },
       {
         key: 'sub2',
-        label: 'Transactions',
+        label: <Link href="/dashboard/transactions">Transactions</Link>,
         icon: <BankOutlined />,
       },
       {

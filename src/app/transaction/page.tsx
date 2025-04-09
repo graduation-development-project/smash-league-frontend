@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
 import MainLayout from '@/components/layout/mainlayout/layout';
-import TransactionHistoryPage from '@/components/pages/transaction/transaction-history.page';
+import TransactionHistoryPage from '@/components/pages/transactions/transaction-history.page';
 import React from 'react';
 
 const Transaction = async () => {
