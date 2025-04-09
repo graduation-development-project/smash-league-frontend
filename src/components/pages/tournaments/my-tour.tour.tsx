@@ -96,7 +96,7 @@ const MyTournaments = () => {
 
   useEffect(() => {
     getParticipatedTournaments();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
@@ -148,12 +148,16 @@ const MyTournaments = () => {
                   icon: <TbTournament size={15} />,
                 },
 
-                {
-                  key: 'matches-umpires',
-                  label: 'Matches',
-                  icon: <TbTournament size={15} />,
-                  children: [...participatedTournaments],
-                },
+                ...(user?.userRoles.includes('Umpire')
+                  ? [
+                      {
+                        key: 'matches-umpires',
+                        label: 'Umpires Matches',
+                        icon: <TbTournament size={15} />,
+                        children: [...participatedTournaments],
+                      },
+                    ]
+                  : []),
               ]}
             />
           </Sider>

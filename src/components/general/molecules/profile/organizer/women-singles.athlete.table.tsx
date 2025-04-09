@@ -218,6 +218,7 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   const handleGenerateBrackets = async () => {
     try {
       const response = await generateBracketsAPI(eventId);
+      console.log('Check response', response.data);
       if (
         response?.data.statusCode === 200 ||
         response?.data?.statusCode === 201
@@ -250,7 +251,6 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       console.log('Check error', error);
     }
   };
-
   const getColumnSearchProps = (
     dataIndex: string,
   ): TableColumnType<BaseDataType> => ({
@@ -595,6 +595,7 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
                 fontWeight: 500,
               }}
               type="primary"
+              onClick={handleGenerateBrackets}
             >
               Generate Brackets
             </Button>

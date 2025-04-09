@@ -10,9 +10,13 @@ import MenDoublesAthleteTable from './men-doubles.athlete.table';
 
 interface DashboardPageProps {
   selectedKey: string;
+  credit: number | null;
 }
 
-const DashboardPage: React.FC<DashboardPageProps> = ({ selectedKey }) => {
+const DashboardPage: React.FC<DashboardPageProps> = ({
+  selectedKey,
+  credit,
+}) => {
   let eventName = selectedKey;
 
   let eventId = null;
@@ -36,7 +40,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ selectedKey }) => {
 
   switch (eventName) {
     case 'dashboard':
-      return <DashboardOrganizer />;
+      return <DashboardOrganizer credit={credit}/>;
     case 'tournaments':
       return <TournamentsListTable />;
     case 'MENS_SINGLE':
@@ -50,7 +54,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ selectedKey }) => {
     case 'MIXED_DOUBLE':
       return <MixedDoublesAthleteTable eventId={eventId} />;
     default:
-      return <DashboardOrganizer />;
+      return <DashboardOrganizer credit={credit}/>;
   }
 };
 

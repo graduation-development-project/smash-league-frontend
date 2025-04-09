@@ -10,37 +10,34 @@ import TournamentsAthleteProfile from '../../general/organisms/profile/athlete/t
 import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 import { getProfileAPI } from '@/services/user';
 import { useProfileContext } from '@/context/profile.context';
+import { useParams } from 'next/navigation';
 
 const AthleteProfilePage = (props: any) => {
   const { session } = props;
+  const params = useParams();
   const { athleteId, setAthleteId } = useProfileContext();
-  console.log('athleteId', athleteId);
-  console.log('session', session);
-
-
-
-
+  // console.log('athleteId', athleteId);
+  // console.log('session', session);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
-  console.log("user", user);
+  // console.log("user", user);
 
-
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     const storedUser = localStorage.getItem('user');
-  //     if (storedUser) {
-  //       setUser(storedUser ? JSON.parse(storedUser) : {}); 
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {});
+      }
+    }
+  }, []);
 
   const getProfile = async () => {
     // if (!user) return;
-    console.log("check getProfile");
-    console.log('athleteId', athleteId);
+    // console.log('check getProfile');
+    // console.log('athleteId', athleteId);
     try {
-      const response = await getProfileAPI(athleteId);
+      const response = await getProfileAPI(params?.name);
       console.log('Check profile', response);
       setProfile(response);
     } catch (error: any) {
@@ -50,8 +47,10 @@ const AthleteProfilePage = (props: any) => {
 
   useEffect(() => {
     getProfile();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [athleteId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params?.name]);
+
+  // console.log("Check is profile")
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -60,21 +59,21 @@ const AthleteProfilePage = (props: any) => {
     {
       key: '1',
       label: 'Overview',
-      children: <OverviewAthleteProfile info={profile} />,
+      children: <OverviewAthleteProfile info={profile} setProfile={setProfile}/>,
     },
     {
       key: '2',
       label: 'Tournaments',
-      children: <TournamentsAthleteProfile />,
+      children: <TournamentsAthleteProfile profile={profile} setProfile={setProfile}/>,
     },
-    ...(session?.user?.id === session?.user?.id
+    ...(user?.id === profile?.id
       ? [
-        {
-          key: '3',
-          label: 'Update Information',
-          children: <UpdateInformationProfile session={session} />,
-        },
-      ]
+          {
+            key: '3',
+            label: 'Update Information',
+            children: <UpdateInformationProfile session={session} profile={profile} setProfile={setProfile}/>,
+          },
+        ]
       : []),
   ];
 
@@ -103,16 +102,13 @@ const AthleteProfilePage = (props: any) => {
                 <div className="text-white text-[14px] italic ">
                   {profile?.email}
                 </div>
-                {
-                  profile?.address ?
-                    <div className="text-white text-[14px] font-semibold flex gap-1">
-                      <CiLocationOn size={20} /> <span>Thu Duc, Ho Chi Minh</span>
-                    </div>
-                      :
-                    <></>
-                }
-
-
+                {profile?.address ? (
+                  <div className="text-white text-[14px] font-semibold flex gap-1">
+                    <CiLocationOn size={20} /> <span>Thu Duc, Ho Chi Minh</span>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           </div>

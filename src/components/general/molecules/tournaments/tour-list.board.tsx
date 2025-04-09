@@ -31,7 +31,7 @@ const TourListBoard = ({
         ))}
       </div>
       <div className='w-full flex justify-center'>
-        <div className="flex justify-center items-center bg-white w-max py-3 px-6 shadow-shadowBtn rounded-xl mt-2">
+        {/* <div className="flex justify-center items-center bg-white w-max py-3 px-6 shadow-shadowBtn rounded-xl mt-2"> */}
           <ConfigProvider
             theme={{
               token: {
@@ -52,7 +52,7 @@ const TourListBoard = ({
               onChange={handlePageChange}
             />
           </ConfigProvider>
-        </div>
+        {/* </div> */}
       </div>
 
 

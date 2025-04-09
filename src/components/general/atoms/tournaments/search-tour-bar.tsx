@@ -61,7 +61,7 @@ const SearchTourBar = ({
   return (
     <div className="w-[90%] flex items-center justify-between gap-10 shadow-shadowBtn bg-white rounded-[15px] p-4 ">
       <div className="w-[85%] flex flex-col gap-4 ">
-        <h2 className="text-[16px] font-bold">Search Teams</h2>
+        <h2 className="text-[16px] font-bold">Search Tournaments</h2>
         <ConfigProvider
           theme={{
             components: {
@@ -76,7 +76,7 @@ const SearchTourBar = ({
         >
           <Input
             size="large"
-            placeholder="Find a Team name here..."
+            placeholder="Find a Tournament here..."
             onChange={(e) => {
               setSearchTerms(e.target.value);
             }}

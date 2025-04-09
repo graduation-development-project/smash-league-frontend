@@ -20,7 +20,10 @@ import {
 } from '@ant-design/icons';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
-import { generateBracketsAPI, getTournamentEventParticipantsAPI } from '@/services/tournament';
+import {
+  generateBracketsAPI,
+  getTournamentEventParticipantsAPI,
+} from '@/services/tournament';
 import {
   getTournamentRegistrationAPI,
   responseTournamentRegistrationAPI,
@@ -214,38 +217,41 @@ const MenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   };
 
   const handleGenerateBrackets = async () => {
-   try {
-    const response = await generateBracketsAPI(eventId);
-    if (response?.data.statusCode === 200 || response?.data?.statusCode === 201) {
-  
-            setIsLoading(false);
-            toast.success(`${response?.data?.message}`, {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-            });
-          } else {
-            setIsLoading(false);
-            toast.error(`${response?.message}`, {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-            });
-          }
-   } catch (error:any) {
-    console.log("Check error", error);
-   } 
-  }
+    try {
+      const response = await generateBracketsAPI(eventId);
+      console.log('Check response', response.data);
+      if (
+        response?.data.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
+        setIsLoading(false);
+        toast.success(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        setIsLoading(false);
+        toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log('Check error', error);
+    }
+  };
 
   const getColumnSearchProps = (
     dataIndex: string,
@@ -591,6 +597,7 @@ const MenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
                 fontWeight: 500,
               }}
               type="primary"
+              onClick={handleGenerateBrackets}
             >
               Generate Brackets
             </Button>

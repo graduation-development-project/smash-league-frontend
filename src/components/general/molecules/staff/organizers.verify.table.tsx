@@ -143,6 +143,7 @@ const OrganizersVerifyTable = () => {
       console.log('Check response', response);
       if (response?.status === 200 || response?.status === 201) {
         setIsLoading(false);
+        getAllVerifications();
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,
@@ -397,7 +398,7 @@ const OrganizersVerifyTable = () => {
   return (
     <div className="w-full h-full flex flex-col gap-5">
       <div className="w-full flex justify-between items-center">
-        <h1 className="text-[32px] font-bold">Umpires Verification</h1>
+        <h1 className="text-[32px] font-bold">Organizers Verification</h1>
         <Select
           defaultValue="All"
           style={{ width: 120 }}

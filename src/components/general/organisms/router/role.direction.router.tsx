@@ -20,6 +20,7 @@ const RoleDirectionRouter = (props: any) => {
     const getProfile = async () => {
       try {
         const res = await getProfileAPI(session.user?.id);
+        console.log('Check res profile', res);
         if (typeof window !== 'undefined') {
           localStorage.setItem(
             'user',
