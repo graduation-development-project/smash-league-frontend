@@ -595,7 +595,6 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
                 fontWeight: 500,
               }}
               type="primary"
-              variant="solid"
             >
               Generate Brackets
             </Button>

@@ -204,7 +204,7 @@ const RegisterAthleteTournamentForm = ({
         theme={{
           components: {
             Button: {
-              /* here is your component tokens */
+              fontFamily: 'inherit',
               defaultHoverBorderColor: '#FF8243',
               defaultHoverColor: '#FF8243',
               defaultActiveColor: '#FF8243',

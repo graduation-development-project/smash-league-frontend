@@ -685,7 +685,7 @@ const CreateTourStep1 = ({
                     <Form.List name="createTournamentEvent">
                         {(fields, { add, remove }) => (
                             <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16, width: '90%' }}>
-                                {eventList.map((event, index) => {
+                                {eventList?.map((event, index) => {
   
                                     const field = fields.find((f) => f.name === index);
                                     if (!field) add()
@@ -693,7 +693,7 @@ const CreateTourStep1 = ({
                                     return (
                                         <Card
                                             size="small"
-                                            title={eventOptions.find((e) => e.value === event)?.label || event}
+                                            title={eventOptions?.find((e) => e.value === event)?.label || event}
                                             key={event}
                                             style={{ borderWidth: 2, width: '100%', display: 'flex', flexDirection: 'column', rowGap: 16, alignSelf: 'center' }}
                                             extra={eventList.length > 1 && (

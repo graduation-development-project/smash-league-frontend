@@ -217,7 +217,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
         <div className="w-full flex gap-4">
           {matchStatus === 'NOT_STARTED' ? (
             <Button
-              variant="outlined"
+              // variant="outlined"
               onClick={() => {
                 setIsModalOpen(true);
                 setMatchId(id);
@@ -227,7 +227,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
             </Button>
           ) : matchStatus === 'ON_GOING' ? (
             <Button
-              variant="solid"
+              type='primary'
               onClick={() => {
                 setIsStartPlayerModalOpen(true);
                 setMatchId(id);
@@ -236,7 +236,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
               Score Match
             </Button>
           ) : (
-            <Button variant="solid">View Score</Button>
+            <Button type='primary'>View Score</Button>
           )}
         </div>
       ),

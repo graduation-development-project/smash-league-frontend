@@ -1,4 +1,5 @@
 'use client';
+import { RegisterAthleteTournamentSubmitFormProps } from '@/types/types';
 import httpRequest from '@/utils/httpRequest';
 import axios from 'axios';
 
@@ -396,3 +397,28 @@ export const responseRequestTransferTeamLeaderAPI = async (
     return error.response?.data;
   }
 };
+export const registerTournamentByTeamAPI = async (
+  athleteList: RegisterAthleteTournamentSubmitFormProps[],
+  accessToken: string,
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/team-leaders/register-tournament-for-team`,athleteList,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return res;
+  } catch (error: any) {
+    console.error(
+      'Error response register tournament by leader:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+
+

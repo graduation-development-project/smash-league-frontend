@@ -216,7 +216,7 @@ const TourRegistrationOfAthleteTable = () => {
             </Popconfirm>
           </div>
         ) : status === 'ON_WAITING_REGISTRATION_FEE' ? (
-          <Button variant="outlined" onClick={() => handlePayFee(key)}>
+          <Button  onClick={() => handlePayFee(key)}>
             Pay fee {isLoading && <LoadingOutlined />}
           </Button>
         ) : (
