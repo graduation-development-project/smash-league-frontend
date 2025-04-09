@@ -183,18 +183,21 @@ const DetailsTourPage = () => {
                 )}
               </div>
               {/* Athlete Form */}
-              <RegisterTeamTourForm 
+              {user?.userRoles?.includes('Team Leader') ? (
+                <RegisterTeamTourForm
                   isModalOpen={isModalOpen}
                   setIsModalOpen={setIsModalOpen}
                   detail={detail}
                   detailId={detail?.id}
-                /> 
-              {/* <RegisterAthleteTournamentForm
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-                detail={detail}
-                detailId={detail?.id}
-              /> */}
+                />
+              ) : (
+                <RegisterAthleteTournamentForm
+                  isModalOpen={isModalOpen}
+                  setIsModalOpen={setIsModalOpen}
+                  detail={detail}
+                  detailId={detail?.id}
+                />
+              )}
 
               {/* Umpire Form */}
               {user?.userRoles?.includes('Umpire') ? (
