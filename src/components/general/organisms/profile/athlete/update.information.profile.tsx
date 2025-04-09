@@ -159,7 +159,7 @@ const UpdateInformationProfile = ({
           <Form.Item
             label="Date Of Birth"
             name="dateOfBirth"
-            initialValue={profile?.dateOfBirth}
+            // initialValue={profile?.dateOfBirth}
           >
             <DatePicker format={'YYYY-MM-DD'} style={{ width: '100%' }} />
           </Form.Item>
