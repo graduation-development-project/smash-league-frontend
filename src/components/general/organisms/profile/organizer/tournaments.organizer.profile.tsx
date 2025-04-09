@@ -6,8 +6,14 @@ import TeamsTournamentsCard from '@/components/general/atoms/teams/teams-tournam
 import { getAllTournamentsByUserAPI } from '@/services/tournament';
 import React, { useEffect, useState } from 'react';
 
-const TournamentsOrganizerProfile = () => {
-  const [tournamentList, setTournamentList] = useState<any>([]);
+const TournamentsOrganizerProfile = ({
+  tournamentList,
+  setTournamentList,
+}: {
+  tournamentList: any[];
+  setTournamentList: React.Dispatch<React.SetStateAction<never[]>>;
+}) => {
+  // const [tournamentList, setTournamentList] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
 

@@ -75,6 +75,7 @@ const MyTournaments = () => {
     setCollapsed(!collapsed);
   };
 
+
   const getParticipatedTournaments = async () => {
     try {
       const response = await getParticipatedTournamentsAPI(user.access_token);
@@ -96,7 +97,7 @@ const MyTournaments = () => {
 
   useEffect(() => {
     getParticipatedTournaments();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
@@ -148,12 +149,16 @@ const MyTournaments = () => {
                   icon: <TbTournament size={15} />,
                 },
 
-                {
-                  key: 'matches-umpires',
-                  label: 'Matches',
-                  icon: <TbTournament size={15} />,
-                  children: [...participatedTournaments],
-                },
+                ...(user?.userRoles.includes('umpire')
+                  ? [
+                      {
+                        key: 'matches-umpires',
+                        label: 'Umpires Matches',
+                        icon: <TbTournament size={15} />,
+                        children: [...participatedTournaments],
+                      },
+                    ]
+                  : []),
               ]}
             />
           </Sider>

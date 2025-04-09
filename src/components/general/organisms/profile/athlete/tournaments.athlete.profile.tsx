@@ -2,7 +2,7 @@ import SearchTournamentsAthleteProfile from "@/components/general/atoms/profile/
 import TournamentBar from "@/components/general/atoms/profile/athlete/tournament.bar";
 import React from "react";
 
-const TournamentsAthleteProfile = () => {
+const TournamentsAthleteProfile = ({profile, setProfile}: {profile: any, setProfile: React.Dispatch<any>}) => {
   return (
     <div className="w-full h-full flex flex-col gap-3 p-5">
       <SearchTournamentsAthleteProfile />

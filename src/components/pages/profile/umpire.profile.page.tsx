@@ -11,6 +11,7 @@ import OverviewUmpireProfile from '../../general/organisms/profile/umpire/overvi
 
 const UmpireProfilePage = (props: any) => {
   const { session } = props;
+  const [profile, setProfile] = useState<any>(null);
   const user = {
     accessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0MTkxNzd9.fvQaEsYcX956KnXmI5HpGtTosAfxrYgtsg1SdgjxHlA',
@@ -35,14 +36,22 @@ const UmpireProfilePage = (props: any) => {
     {
       key: '2',
       label: 'Tournaments',
-      children: <TournamentsAthleteProfile />,
+      children: (
+        <TournamentsAthleteProfile profile={profile} setProfile={setProfile} />
+      ),
     },
     ...(session?.user?.id === session?.user?.id
       ? [
           {
             key: '3',
             label: 'Update Information',
-            children: <UpdateInformationProfile session={session} />,
+            children: (
+              <UpdateInformationProfile
+                session={session}
+                profile={profile}
+                setProfile={setProfile}
+              />
+            ),
           },
         ]
       : []),

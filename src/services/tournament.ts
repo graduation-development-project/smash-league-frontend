@@ -248,6 +248,36 @@ export const getTournamentsOfOrganizerAPI = async (
   }
 };
 
+export const getTournamentsOfOrganizerIdAPI = async (
+  accessToken: string,
+  organizerId: string,
+  page: number,
+  perPage: number,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-tournaments-by-organizer-id/${organizerId}`,
+      {
+        params: {
+          page: page,
+          perPage: perPage,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get Tournament List of Organizer Id:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
 export const assignUmpireToMatchAPI = async (
   accessToken: string,
   tournamentId: string | string[] | null,
@@ -323,3 +353,19 @@ export const getAssignedMatchesAPI = async (
     return error.response?.data;
   }
 };
+
+export const getParticipantsByTournamentEventAPI = async (tournamentId:string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-participants-by-tournament-event/${tournamentId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get assigned players in match:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+}

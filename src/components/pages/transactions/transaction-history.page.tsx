@@ -33,6 +33,7 @@ const TransactionHistoryPage = () => {
     if (!user) return;
     try {
       const response = await getTransactionHistoryAPI(user?.access_token);
+      console.log(response?.data, 'check');
       if (response.statusCode === 200 || response.statusCode === 201) {
         const formatedData = response.data.map((transaction: any) => ({
           id: transaction.id,

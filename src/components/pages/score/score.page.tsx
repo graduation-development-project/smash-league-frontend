@@ -56,7 +56,7 @@ const ScorePage = () => {
       getMatchById();
       setCurrent(game.currentServerId);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game]);
 
   const handleUpdatePoint = async (winningId: string) => {
@@ -82,16 +82,16 @@ const ScorePage = () => {
           point3: currentPoint[2]?.right ?? 0,
         });
         setCurrent(response.data.data.currentServerId);
-        toast.success(`${response?.data?.message}`, {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+        // toast.success(`${response?.data?.message}`, {
+        //   position: 'top-right',
+        //   autoClose: 2000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: 'light',
+        // });
         if (response.data.data.isEnd === true) {
           if (response.data.data.newGame === null) {
             // console.log('Check if new game is null');

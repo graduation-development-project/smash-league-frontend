@@ -94,3 +94,29 @@ export const checkAttendanceAPI = async (
     return error.response?.data;
   }
 };
+
+export const assignPlayerInMatchAPI = async (
+  matchId: string,
+  leftCompetitorId?: string,
+  rightCompetitorId?: string,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/assign-athlete-into-match/${matchId}`,
+      {
+        params: {
+          leftCompetitorId,
+          rightCompetitorId,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error assign player in match:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

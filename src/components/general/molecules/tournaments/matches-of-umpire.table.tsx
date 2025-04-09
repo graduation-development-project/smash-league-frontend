@@ -122,7 +122,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
 
   useEffect(() => {
     getAssignedMatches();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const updateStatusOfMatch = async (status: string, matchId: string) => {
@@ -199,6 +199,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
       render: (_, { matchStatus, id }) => (
         <Select
           defaultValue={matchStatus}
+          disabled={matchStatus === 'ENDED'}
           style={{ width: 150 }}
           onChange={(value) => updateStatusOfMatch(value, id)}
           options={[

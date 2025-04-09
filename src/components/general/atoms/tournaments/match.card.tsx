@@ -1,20 +1,43 @@
 'use client';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, ConfigProvider, Popconfirm, Popover } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import UmpireAssignModal from './umpire-assign.tour.modal';
+import AssignPlayerInMatchModal from './assign-player-in-match.modal';
+import {
+  getParticipantsByTournamentEventAPI,
+  getTournamentEventParticipantsAPI,
+} from '@/services/tournament';
 
 const MatchCard = ({
   match,
   tournamentId,
+  tournamentEventId,
 }: {
   match: any;
   tournamentId: string | string[];
+  tournamentEventId: string;
 }) => {
   const mainColor = '#60a5fa';
   const bgColor = 'bg-[#60a5fa]';
   const name = 'H.D.T.Nguyen';
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAssignAthleteModalOpen, setIsAssignAthleteModalOpen] =
+    useState(false);
+  const [participantsList, setParticipantsList] = useState([]);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
+
   const setScore = [
     {
       player1: 17,
@@ -37,6 +60,7 @@ const MatchCard = ({
       player2: 21,
     },
   ];
+  // console.log("Check tournamentId", tournamentId);
 
   // console.log('Check', match.participants);
 
@@ -44,8 +68,43 @@ const MatchCard = ({
     setIsModalOpen(true);
   };
 
+  const showAssignAthleteModal = () => {
+    setIsAssignAthleteModalOpen(true);
+  };
+
+  const getTournamentEventParticipants = async () => {
+    if (!user) return;
+    try {
+      const response = await getParticipantsByTournamentEventAPI(
+        tournamentEventId,
+      );
+      // console.log('Check participants', response.data.data.listParticipants);
+      const formatData = response.data.data.listParticipants.map(
+        (participant: any) => {
+          return {
+            value: participant.id,
+            label:
+              participant.partner !== null
+                ? participant.user.name + ' / ' + participant.partner.name
+                : participant.user.name,
+          };
+        },
+      );
+      setParticipantsList(formatData);
+    } catch (error: any) {
+      console.log('Check error', error);
+    }
+  };
+
+  useEffect(() => {
+    getTournamentEventParticipants();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  console.log('Check party', participantsList);
+
   const player = (hasPlayer: boolean, players?: any) => {
-    console.log('Check player', players);
+    // console.log('Check player', players);
     return (
       <div className="">
         {hasPlayer ? (
@@ -142,7 +201,6 @@ const MatchCard = ({
       </div>
     );
   };
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const content = (
     <ConfigProvider
@@ -171,7 +229,7 @@ const MatchCard = ({
         <button
           className="text-primaryColor text-[14px] font-semibold hover:underline w-full"
           // onClick={handleRemoveMember}
-          // onClick={() => setIsModalOpen(true)}
+          onClick={showAssignAthleteModal}
         >
           Assign Athlete
         </button>
@@ -231,6 +289,13 @@ const MatchCard = ({
         setIsModalOpen={setIsModalOpen}
         tournamentId={tournamentId}
         matchId={match.id}
+      />
+
+      <AssignPlayerInMatchModal
+        isModalOpen={isAssignAthleteModalOpen}
+        setIsModalOpen={setIsAssignAthleteModalOpen}
+        matchId={match.id}
+        playersOptions={participantsList}
       />
     </div>
   );

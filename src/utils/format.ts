@@ -59,5 +59,5 @@ export const formatYearOfBirth = (date?: string) => {
   return date ? dayjs(date).format('YYYY') : "N/A";
 }
 export const formatHeight = (height: number) => {
-  return height ? `${height} cm` : "N/A";
+  return height ? `${height} cm` : "No Info";
 }

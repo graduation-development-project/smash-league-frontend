@@ -93,32 +93,6 @@ const DashboardOrganizerProfile = () => {
         ),
       ) || [],
     ),
-    // getItem(
-    //   'Verifications',
-    //   'verifications',
-    //   <TbTournament size={15} />,
-    //   tournamentList?.flatMap((item: any) =>
-    //     getItem(
-    //       item?.name,
-    //       item?.id,
-    //       <TbTournament size={15} />,
-    //       Object.entries(item.tournamentEvents)?.map(([name, events]) =>
-    //         getItem(
-    //           name,
-    //           name,
-    //           <TbTournament size={15} />,
-    //           (Array.isArray(events) ? events : []).map((event: any) =>
-    //             getItem(
-    //               `From ${event.fromAge} - to ${event.toAge}`,
-    //               `${name}_${event.fromAge}_${event.toAge}_${event.id}_verifications`,
-    //               <TbTournament size={15} />,
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ) || [],
-    // ),
     getItem(
       'Umpires',
       'umpires',
@@ -198,7 +172,7 @@ const DashboardOrganizerProfile = () => {
               boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
             }}
           >
-            <DashboardPage selectedKey={selectedKey} />
+            <DashboardPage selectedKey={selectedKey} credit={user?.creditsRemain}/>
           </div>
         </Content>
       </Layout>

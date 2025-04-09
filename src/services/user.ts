@@ -57,12 +57,14 @@ export const registerNewRoleAPI = async (
   }
 };
 
-export const getProfileAPI = async (id : string) => {
+export const getProfileAPI = async (id: string | string[]) => {
   try {
+   console.log("id", id);
+   
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/id/${id}`,
     );
-    // console.log( "getProfile", response);
+    console.log( "getProfile", response);
     
     // if(response.data.statusCode === 200 || response.data.statusCode === 201){
     //   return response.data;
@@ -90,6 +92,29 @@ export const getProfileAPI1 = async (accesToken : string) => {
   } catch (error: any) {
     console.error(
       'Error register new role:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const updateProfileAPI = async (data: any, accessToken: string) => {
+  console.log('data', data);
+  try {
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error update user profile:',
       error.response?.data || error.message,
     );
     return error.response?.data;

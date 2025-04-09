@@ -14,28 +14,24 @@ const OrganizerProfilePage = (props: any) => {
   const { session } = props;
   const { organizerId, activeKey, setActiveKey } = useProfileContext();
   const [profile, setProfile] = useState<any>(null);
+  const [user, setUser] = useState<any>(null);
+  const [tournamentList, setTournamentList] = useState([]);
 
-  
-
-
-  // console.log('organizerId', organizerId);
-
-
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     const storedUser = localStorage.getItem('user');
-  //     if (storedUser) {
-  //       setUser(storedUser ? JSON.parse(storedUser) : {});
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
 
   const getProfile = async () => {
-    // if (!user) return;
+    if (!user) return;
     // console.log('check getProfile');
     try {
       const response = await getProfileAPI(organizerId);
-      console.log('Check profile', response);
+      // console.log('Check profile', response);
       setProfile(response);
     } catch (error: any) {
       console.log(error);
@@ -44,19 +40,26 @@ const OrganizerProfilePage = (props: any) => {
 
   useEffect(() => {
     getProfile();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [organizerId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organizerId, user]);
 
-  console.log('Check profile', profile);
+  // console.log('Check profile', profile);
   const onChange = (key: string) => {
     setActiveKey(key);
   };
+
+  const isOrganizer = user?.id === organizerId;
 
   const items: TabsProps['items'] = [
     {
       key: '1',
       label: 'Overview',
-      children: <OverviewOrganizerProfile />,
+      children: (
+        <OverviewOrganizerProfile
+          tournamentList={tournamentList}
+          setTournamentList={setTournamentList}
+        />
+      ),
     },
     {
       key: '2',
@@ -66,25 +69,33 @@ const OrganizerProfilePage = (props: any) => {
     {
       key: '3',
       label: 'Tournaments',
-      children: <TournamentsOrganizerProfile />,
+      children: (
+        <TournamentsOrganizerProfile
+          tournamentList={tournamentList}
+          setTournamentList={setTournamentList}
+        />
+      ),
     },
     {
       key: '4',
       label: 'Events',
       children: 'Content of Events',
     },
+    ...(isOrganizer
+      ? [
+          {
+            key: '5',
+            label: 'Dashboard',
+            children: <DashboardOrganizerProfile />,
+          },
 
-    {
-      key: '5',
-      label: 'Dashboard',
-      children: <DashboardOrganizerProfile />,
-    },
-
-    {
-      key: '6',
-      label: 'Update Information',
-      children: 'Content of Update Information',
-    },
+          {
+            key: '6',
+            label: 'Update Information',
+            children: 'Content of Update Information',
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -104,7 +115,7 @@ const OrganizerProfilePage = (props: any) => {
               <p>{profile?.email}</p>
             </div>
           </div>
-          <Button size={'sm'}>Follow</Button>
+          {/* <Button size={'sm'}>Follow</Button> */}
         </div>
         <ConfigProvider
           theme={{
