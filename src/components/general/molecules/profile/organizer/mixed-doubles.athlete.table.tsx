@@ -20,7 +20,10 @@ import {
 } from '@ant-design/icons';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
-import { generateBracketsAPI, getTournamentEventParticipantsAPI } from '@/services/tournament';
+import {
+  generateBracketsAPI,
+  getTournamentEventParticipantsAPI,
+} from '@/services/tournament';
 import {
   getTournamentRegistrationAPI,
   responseTournamentRegistrationAPI,
@@ -62,14 +65,15 @@ const MixedDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
 
   interface BaseDataType {
     user: ParticipantInfo;
-    partner: ParticipantInfo | null;
+    partner: ParticipantInfo;
   }
 
   interface VerificationDataType {
     id: string;
-    userId: string;
-    name: string;
+    user: ParticipantInfo;
+    partner: ParticipantInfo;
     registrationDocumentCreator: string[];
+    registrationDocumentPartner: string[];
     isPayForTheRegistrationFee: boolean;
     status: string;
   }
@@ -125,7 +129,6 @@ const MixedDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       setParticipantList([]);
     }
   };
-
   const getTournamentRegistration = async () => {
     if (!user) return;
     try {
@@ -143,13 +146,14 @@ const MixedDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       ) {
         const formatData = response.data.data.map((regis: any) => ({
           id: regis.id,
-          userId: regis.userId,
-          name: regis.user.name,
+          user: regis.user,
+          partner: regis.partner,
           registrationDocumentCreator: regis.registrationDocumentCreator,
+          registrationDocumentPartner: regis.registrationDocumentPartner,
           isPayForTheRegistrationFee: regis.isPayForTheRegistrationFee,
           status: regis.status,
         }));
-
+        // console.log(response?.data, 'check');
         setVetificationList(formatData);
       } else {
         setVetificationList([]);
@@ -212,7 +216,7 @@ const MixedDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
     }
   };
 
-const handleGenerateBrackets = async () => {
+  const handleGenerateBrackets = async () => {
     try {
       const response = await generateBracketsAPI(eventId);
       console.log('Check response', response.data);
@@ -335,89 +339,139 @@ const handleGenerateBrackets = async () => {
   const columns: TableProps<BaseDataType>['columns'] = [
     {
       title: '',
-      dataIndex: ['user'],
+      dataIndex: ['user', 'partner'],
       key: 'image',
       fixed: 'left',
       width: 150,
-      render: (_, { user }) => (
-        <Image
-          style={{
-            borderRadius: '50%',
-            border: '1px solid #FF8243',
-            padding: '2px',
-          }}
-          src={user?.avatarURL}
-          width={100}
-          height={100}
-          alt="Athlete Image"
-        />
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <Image
+            style={{
+              borderRadius: '50%',
+              border: '1px solid #FF8243',
+              padding: '2px',
+            }}
+            src={user?.avatarURL}
+            width={50}
+            height={50}
+            alt="Athlete Image"
+          />
+          <Image
+            style={{
+              borderRadius: '50%',
+              border: '1px solid #FF8243',
+              padding: '2px',
+            }}
+            src={partner?.avatarURL}
+            width={50}
+            height={50}
+            alt="Athlete Image"
+          />
+        </div>
       ),
     },
 
     {
       title: 'Full Name',
       width: 250,
-      dataIndex: ['user'],
+      dataIndex: ['user', 'partner'],
       key: 'name',
       fixed: 'left',
       // ...getColumnSearchProps('name'),
-      render: (_, { user }) => (
-        <h1 className="font-semibold text-[16px]">{user?.name}</h1>
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <h1 className="font-semibold text-[16px]">{user?.name}</h1>
+          <h1 className="font-semibold text-[16px]">{partner?.name}</h1>
+        </div>
       ),
     },
     {
       title: 'Age',
-      dataIndex: ['user'],
+      dataIndex: 'age',
       align: 'center',
       key: 'age',
       width: 100,
       // ...getColumnSearchProps('age'),
-      render: (_, { user }) => (
-        <h1 className="font-semibold text-[16px]">
-          {calculateAge(user?.dateOfBirth)}
-        </h1>
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <h1 className="font-semibold text-[16px]">
+            {calculateAge(user?.dateOfBirth)}
+          </h1>
+          <h1 className="font-semibold text-[16px]">
+            {calculateAge(partner?.dateOfBirth)}
+          </h1>
+        </div>
       ),
     },
     {
       title: 'Email',
-      dataIndex: ['user'],
+      dataIndex: ['user', 'partner'],
       key: 'email',
       align: 'center',
       width: 100,
       // ...getColumnSearchProps('phoneNumber'),
-      render: (_, { user }) => (
-        <h1 className="font-semibold text-[16px]">{user?.email}</h1>
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <h1 className="font-semibold text-[16px]">{user?.email}</h1>
+          <h1 className="font-semibold text-[16px]">{partner?.email}</h1>
+        </div>
       ),
     },
 
     {
       title: 'Hand',
-      dataIndex: ['user'],
+      dataIndex: ['user', 'partner'],
       key: 'hand',
       align: 'center',
       width: 100,
       // ...getColumnSearchProps('phoneNumber'),
-      render: (_, { user }) => (
-        <h1 className="font-semibold text-[16px]">
-          {user?.hands ? user?.hands : 'No Infomation'}
-        </h1>
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <h1 className="font-semibold text-[16px]">
+            {user?.hands ? user?.hands : 'No Infomation'}
+          </h1>
+          <h1 className="font-semibold text-[16px]">
+            {partner?.hands ? partner?.hands : 'No Infomation'}
+          </h1>
+        </div>
       ),
     },
   ];
   const columnsVerification: TableProps<VerificationDataType>['columns'] = [
     {
       title: 'Full Name',
-      width: 200,
-      dataIndex: 'name', // Dùng key đã map sẵn
+      width: 300,
+      dataIndex: ['user', 'partner'],
       key: 'name',
-      fixed: 'left',
+      // fixed: 'left',
       // ...getColumnSearchProps('name'),
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          <h1 className="font-semibold text-[16px]">{user?.name}</h1>
+          {/* <h1 className="font-semibold text-[16px]">{partner?.name}</h1> */}
+        </div>
+      ),
+    },
+
+    {
+      title: 'Partner Full Name',
+      width: 300,
+      dataIndex: ['user', 'partner'],
+      key: 'name',
+      // fixed: 'left',
+      // ...getColumnSearchProps('name'),
+      render: (_, { user, partner }) => (
+        <div className="flex flex-col gap-3">
+          {/* <h1 className="font-semibold text-[16px]">{user?.name}</h1> */}
+          <h1 className="font-semibold text-[16px]">{partner?.name}</h1>
+        </div>
+      ),
     },
     {
       title: 'Front ID Card',
       dataIndex: 'registrationDocumentCreator',
       key: 'registrationDocumentCreator',
-      width: 200,
+      width: 100,
       fixed: 'left',
       render: (_, record) => {
         const verificationRecord = record as VerificationDataType;
@@ -430,8 +484,8 @@ const handleGenerateBrackets = async () => {
                 : ''
             }
             alt="Front ID Card"
-            width={200}
-            height={120}
+            width={100}
+            height={100}
             style={{ objectFit: 'cover' }}
           />
         );
@@ -442,7 +496,7 @@ const handleGenerateBrackets = async () => {
       title: 'Back ID Card',
       dataIndex: 'registrationDocumentCreator',
       key: 'registrationDocumentCreator1',
-      width: 200,
+      width: 100,
       fixed: 'left',
       render: (_, record) => {
         // console.log('check record', record);
@@ -456,8 +510,8 @@ const handleGenerateBrackets = async () => {
                 : ''
             }
             alt="Back ID Card"
-            width={200}
-            height={120}
+            width={100}
+            height={100}
             style={{ objectFit: 'cover' }}
           />
         );
@@ -467,7 +521,7 @@ const handleGenerateBrackets = async () => {
       title: 'ID Photo',
       dataIndex: 'registrationDocumentCreator',
       key: 'registrationDocumentCreator2',
-      width: 200,
+      width: 100,
       fixed: 'left',
       render: (_, record) => {
         const verificationRecord = record as VerificationDataType;
@@ -479,8 +533,82 @@ const handleGenerateBrackets = async () => {
                 : ''
             }
             alt="ID Photo"
-            width={150}
-            height={150}
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover' }}
+          />
+        );
+      },
+    },
+
+    {
+      title: 'Partner Front ID Card',
+      dataIndex: 'registrationDocumentPartner',
+      key: 'registrationDocumentPartner',
+      width: 100,
+      fixed: 'left',
+      render: (_, record) => {
+        const verificationRecord = record as VerificationDataType;
+        // console.log('Check record', verificationRecord);
+        return (
+          <Image
+            src={
+              verificationRecord?.registrationDocumentPartner[0]
+                ? verificationRecord?.registrationDocumentPartner[0]
+                : ''
+            }
+            alt="Partner Front ID Card"
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover' }}
+          />
+        );
+      },
+    },
+
+    {
+      title: 'Partner Back ID Card',
+      dataIndex: 'registrationDocumentPartner',
+      key: 'registrationDocumentPartner1',
+      width: 200,
+      fixed: 'left',
+      render: (_, record) => {
+        // console.log('check record', record);
+        const verificationRecord = record as VerificationDataType;
+
+        return (
+          <Image
+            src={
+              verificationRecord?.registrationDocumentPartner[1]
+                ? verificationRecord?.registrationDocumentPartner[1]
+                : ''
+            }
+            alt="Partner Back ID Card"
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover' }}
+          />
+        );
+      },
+    },
+    {
+      title: 'Partner ID Photo',
+      dataIndex: 'registrationDocumentPartner',
+      key: 'registrationDocumentPartner2',
+      width: 200,
+      fixed: 'left',
+      render: (_, record) => {
+        const verificationRecord = record as VerificationDataType;
+        return (
+          <Image
+            src={
+              verificationRecord?.registrationDocumentPartner[2]
+                ? verificationRecord?.registrationDocumentPartner[2]
+                : ''
+            }
+            alt="PartnerID Photo"
+            width={100}
+            height={100}
             style={{ objectFit: 'cover' }}
           />
         );
@@ -593,7 +721,6 @@ const handleGenerateBrackets = async () => {
                 fontWeight: 500,
               }}
               type="primary"
-              variant="solid"
               onClick={handleGenerateBrackets}
             >
               Generate Brackets
@@ -624,16 +751,20 @@ const handleGenerateBrackets = async () => {
           }}
         >
           {isVerification === 'verify' ? (
-            <Table<VerificationDataType>
-              // className={styles.customTable}
-              columns={columnsVerification}
-              dataSource={verificationList}
-              style={{
-                width: '100%',
-                height: '100%',
-                fontFamily: 'inherit',
-              }}
-            />
+            <div className="overflow-hidden">
+              <Table<VerificationDataType>
+                // className={styles.customTable}
+                // scroll={{ x: 'max-content', y: 500 }}
+                columns={columnsVerification}
+                dataSource={verificationList}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  fontFamily: 'inherit',
+                  overflowX: 'scroll',
+                }}
+              />
+            </div>
           ) : (
             <Table<BaseDataType>
               // className={styles.customTable}
@@ -643,6 +774,7 @@ const handleGenerateBrackets = async () => {
                 width: '100%',
                 height: '100%',
                 fontFamily: 'inherit',
+                overflow: 'auto',
               }}
             />
           )}

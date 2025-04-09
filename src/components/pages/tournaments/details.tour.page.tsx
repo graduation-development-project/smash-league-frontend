@@ -38,6 +38,7 @@ import RegisterAthleteTournamentForm from '@/components/general/molecules/tourna
 import RegisterUmpireTournamentForm from '@/components/general/molecules/tournaments/register-umpire.tournament.form';
 import AttendantsCheck from '@/components/general/molecules/tournaments/attendants-check.tour';
 import AlertCreateTeamsModal from '@/components/general/molecules/teams/alert-create-teams-modal';
+import RegisterTeamTourForm from '@/components/general/molecules/tournaments/register-team.tournament.form';
 
 const DetailsTourPage = () => {
   const param = useParams();
@@ -182,12 +183,18 @@ const DetailsTourPage = () => {
                 )}
               </div>
               {/* Athlete Form */}
-              <RegisterAthleteTournamentForm
+              <RegisterTeamTourForm 
+                  isModalOpen={isModalOpen}
+                  setIsModalOpen={setIsModalOpen}
+                  detail={detail}
+                  detailId={detail?.id}
+                /> 
+              {/* <RegisterAthleteTournamentForm
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 detail={detail}
                 detailId={detail?.id}
-              />
+              /> */}
 
               {/* Umpire Form */}
               {user?.userRoles?.includes('Umpire') ? (

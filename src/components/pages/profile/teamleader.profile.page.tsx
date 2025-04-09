@@ -11,6 +11,7 @@ import { CiLocationOn } from 'react-icons/ci';
 
 const TeamLeaderProfilePage = (props: any) => {
   const { session } = props;
+  const [profile, setProfile] = useState<any>({});
   const user = {
     accessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0MTkxNzd9.fvQaEsYcX956KnXmI5HpGtTosAfxrYgtsg1SdgjxHlA',
@@ -30,19 +31,27 @@ const TeamLeaderProfilePage = (props: any) => {
     {
       key: '1',
       label: 'Overview',
-      children: <OverviewAthleteProfile info={user} />,
+      children: <OverviewAthleteProfile info={user} setProfile={setProfile} />,
     },
     {
       key: '2',
       label: 'Tournaments',
-      children: <TournamentsAthleteProfile />,
+      children: (
+        <TournamentsAthleteProfile profile={profile} setProfile={setProfile} />
+      ),
     },
     ...(session?.user?.id === session?.user?.id
       ? [
           {
             key: '3',
             label: 'Update Information',
-            children: <UpdateInformationProfile session={session} />,
+            children: (
+              <UpdateInformationProfile
+                session={session}
+                profile={profile}
+                setProfile={setProfile}
+              />
+            ),
           },
           {
             key: '4',
@@ -76,7 +85,7 @@ const TeamLeaderProfilePage = (props: any) => {
                   Vo Nguyen Trung Son
                 </h1>
                 <div className="text-white text-[14px] italic ">
-                 smount273@gmail.com
+                  smount273@gmail.com
                 </div>
                 <div className="text-white text-[14px] font-semibold flex gap-1">
                   <CiLocationOn size={20} /> <span>Thu Duc, Ho Chi Minh</span>
