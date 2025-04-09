@@ -2,6 +2,7 @@
 import { useProfileContext } from '@/context/profile.context';
 import { useTeamContext } from '@/context/team.context';
 import { createTeamAPI, searchTeamsAPI } from '@/services/team';
+import { getProfileAPI1 } from '@/services/user';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Form, Input, Modal, notification } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -19,6 +20,7 @@ const CreateTeamsModal = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { getTeams } = useTeamContext();
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -28,6 +30,25 @@ const CreateTeamsModal = ({
       }
     }
   }, []);
+
+  const getProfile = async () => {
+    try {
+      const res = await getProfileAPI1(user?.access_token);
+      console.log('Check res profile', res);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            ...res.data,
+            access_token: user?.access_token,
+          }),
+        );
+      }
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
@@ -50,12 +71,7 @@ const CreateTeamsModal = ({
       await getTeams(1, 6, '');
       setIsModalOpen(false);
       if (!user?.userRoles.includes('Team Leader')) {
-        const newUser = {
-          ...user,
-          teamId: response?.data?.id,
-          userRoles: [...user.userRoles, 'Team Leader'],
-        };
-        localStorage.setItem('user', JSON.stringify(newUser));
+        getProfile();
       }
       toast.success('Create team successfully', {
         position: 'top-right',
