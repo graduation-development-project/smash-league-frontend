@@ -544,7 +544,7 @@ const CreateTourStep1 = ({
                         </Form.Item>
 
                     </Form.Item>
-                    <Form.Item name="intro" label="Introduction">
+                    <Form.Item name="introduction" label="Introduction">
                         <TextArea
                             // value={value}
                             // onChange={(e) => setValue(e.target.value)}
@@ -686,7 +686,7 @@ const CreateTourStep1 = ({
                         {(fields, { add, remove }) => (
                             <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16, width: '90%' }}>
                                 {eventList?.map((event, index) => {
-  
+
                                     const field = fields.find((f) => f.name === index);
                                     if (!field) add()
 
@@ -736,10 +736,11 @@ const CreateTourStep1 = ({
                                                                     )}
                                                                 >
                                                                     {/* FIX: Properly nest fields inside Form.List */}
-                                                                    <Form.Item name={[subField.name, "typeOfFormat"]} label="Type of format" required>
+                                                                    <Form.Item name={[subField.name, "typeOfFormat"]} label="Type of format" initialValue={"SINGLE_ELIMINATION"} required>
                                                                         <Select placeholder="Number of game(s)">
                                                                             <Select.Option value="SINGLE_ELIMINATION">Single Elimination</Select.Option>
-                                                                            <Select.Option value="ROUND_ROBIN">Round Robin</Select.Option>                                                                    </Select>
+                                                                            {/* <Select.Option value="ROUND_ROBIN">Round Robin</Select.Option> */}
+                                                                        </Select>
                                                                     </Form.Item>
                                                                     <Form.Item name={[subField.name, "maximumAthlete"]} label="Maximum athletes" required>
                                                                         <InputNumber min={0} max={1000} style={{ width: '100%' }} placeholder="Maximum athletes" />
@@ -757,11 +758,11 @@ const CreateTourStep1 = ({
                                                                         </Select>
                                                                     </Form.Item>
 
-                                                                    <Form.Item name={[subField.name, "winningPoint"]} label="Winning points" required>
+                                                                    <Form.Item name={[subField.name, "winningPoint"]} label="Winning points" >
                                                                         <InputNumber min={15} max={51} style={{ width: '100%' }} placeholder="Winning points" />
                                                                     </Form.Item>
 
-                                                                    <Form.Item name={[subField.name, "lastPoint"]} label="Last points">
+                                                                    <Form.Item name={[subField.name, "lastPoint"]} label="Last points" required>
                                                                         <InputNumber min={15} max={51} style={{ width: '100%' }} placeholder="Last points" />
                                                                     </Form.Item>
 
@@ -825,7 +826,7 @@ const CreateTourStep1 = ({
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item name={"registrationFeePerPair"} label={"Registration Fee Per Pair"}
-                        style={isRegister ? { display: 'block' } : { display: 'none' }} initialValue={1000}>
+                        style={isRegister ? { display: 'block' } : { display: 'none' }} initialValue={0}>
                         <InputNumber<number>
                             min={0}
                             suffix={'VND'}
@@ -839,7 +840,7 @@ const CreateTourStep1 = ({
                         {/* <span className='text-[12px] text-textColor2 flex items-center gap-1 mt-2 ml-3'><Info size={15} /> Refund policy <a href="">here</a></span> */}
                     </Form.Item>
                     <Form.Item name={"registrationFeePerPerson"} label={"Registration Fee"}
-                        style={isRegister ? { display: 'block' } : { display: 'none' }} initialValue={1000}>
+                        style={isRegister ? { display: 'block' } : { display: 'none' }} initialValue={0}>
                         <InputNumber<number>
                             min={0}
                             suffix={'VND'}
@@ -852,7 +853,7 @@ const CreateTourStep1 = ({
                         />
                         {/* <span className='text-[12px] text-textColor2 flex items-center gap-1 mt-2 ml-3'><Info size={15} /> Refund policy <a href="">here</a></span> */}
                     </Form.Item>
-                    <Form.Item name={"protestFeePerTime"} label={"Potest Fee Per Time"} initialValue={1000}>
+                    <Form.Item name={"protestFeePerTime"} label={"Potest Fee Per Time"} initialValue={0}>
                         <InputNumber<number>
                             min={0}
                             suffix={'VND'}
@@ -960,7 +961,7 @@ const CreateTourStep1 = ({
                         <Form.Item name={"merchandise"} label="Merchandise description">
                             <Input style={{ width: '100%' }} />
                         </Form.Item>
-                        <Form.Item name={"numberOfMerchandise"} label="Number of merchandise">
+                        <Form.Item name={"numberOfMerchandise"} label="Number of merchandise" required>
                             <InputNumber min={1} max={1000} style={{ width: '100%' }} placeholder="Number of merchandise" changeOnWheel />
                         </Form.Item>
                         <Form.Item name="merchandiseImages" label="Merchandise Image">
