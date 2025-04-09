@@ -75,7 +75,6 @@ const MyTournaments = () => {
     setCollapsed(!collapsed);
   };
 
-
   const getParticipatedTournaments = async () => {
     try {
       const response = await getParticipatedTournamentsAPI(user.access_token);
@@ -149,7 +148,7 @@ const MyTournaments = () => {
                   icon: <TbTournament size={15} />,
                 },
 
-                ...(user?.userRoles.includes('umpire')
+                ...(user?.userRoles.includes('Umpire')
                   ? [
                       {
                         key: 'matches-umpires',
