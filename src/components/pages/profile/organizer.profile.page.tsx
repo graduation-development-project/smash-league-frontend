@@ -9,6 +9,7 @@ import TournamentsOrganizerProfile from '../../general/organisms/profile/organiz
 import AnnouncementsOrganizerProfile from '@/components/general/organisms/profile/organizer/announcements.organizer.profile';
 import DashboardOrganizerProfile from '@/components/general/organisms/profile/organizer/dashboard.organizers.profile';
 import { getProfileAPI } from '@/services/user';
+import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 
 const OrganizerProfilePage = (props: any) => {
   const { session } = props;
@@ -92,7 +93,13 @@ const OrganizerProfilePage = (props: any) => {
           {
             key: '6',
             label: 'Update Information',
-            children: 'Content of Update Information',
+            children: (
+              <UpdateInformationProfile
+                session={session}
+                profile={profile}
+                setProfile={setProfile}
+              />
+            ),
           },
         ]
       : []),
