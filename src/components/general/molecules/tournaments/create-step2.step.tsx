@@ -44,10 +44,10 @@ const CreateTourStep2 = () => {
                     </div>
                 </div>
                 <div className='w-5/6 h-max p-10'>
-
+{/* 
                     <Form.Item name="sponsors" label="Sponsors" >
                         <Select {...sharedSponsorProps} {...selectSponsorProps} placeholder="Select sponsors" />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Divider />
                     <Form.Item name="isRecruit" label="Umpires" required>
                         <Radio.Group
@@ -64,7 +64,7 @@ const CreateTourStep2 = () => {
 
                     {/* <div className='w-full h-max flex flex-col items-center justify-center'> */}
                     {/* <div className='w-full '> */}
-                    <Form.Item label="Umpires' List" name="umpireList">
+                    {/* <Form.Item label="Umpires' List" name="umpireList">
                         <Form.List name="umpires" >
                             {(fields, { add, remove }) => (
                                 <div className='w-full  flex flex-col justify-center items-center '>
@@ -105,9 +105,9 @@ const CreateTourStep2 = () => {
                                 </div>
                             )}
                         </Form.List>
-                    </Form.Item>
+                    </Form.Item> */}
                     <Divider />
-                    <Form.Item label="Organizers' List" name="organizerList">
+                    {/* <Form.Item label="Organizers' List" name="organizerList">
                         <Form.List name="organizers" >
                             {(organizerList, { add, remove }) => (
                                 <div className='w-full  flex flex-col justify-center items-center '>
@@ -148,7 +148,7 @@ const CreateTourStep2 = () => {
                                 </div>
                             )}
                         </Form.List>
-                    </Form.Item>
+                    </Form.Item> */}
                 </div>
             </div>
             <div className='w-full flex flex-col shadow-shadowBtn'>
