@@ -10,6 +10,7 @@ import { HiOutlineUserGroup } from 'react-icons/hi';
 import { TfiBarChartAlt } from 'react-icons/tfi';
 import DashboardPage from '@/components/general/molecules/profile/organizer/dashboard.page';
 import { getAllTournamentsByUserAPI } from '@/services/tournament';
+import { getProfileAPI, getProfileAPI1 } from '@/services/user';
 
 const { Content, Sider } = Layout;
 
@@ -34,6 +35,7 @@ const DashboardOrganizerProfile = () => {
   const [selectedKey, setSelectedKey] = useState('dashboard');
   const [tournamentList, setTournamentList] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -56,10 +58,30 @@ const DashboardOrganizerProfile = () => {
     }
   };
 
+  const getProfile = async () => {
+    if (!user) return;
+    try {
+      const res = await getProfileAPI1(user?.access_token);
+      // console.log('Check res profile', res);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            ...res.data,
+            access_token: user?.access_token,
+          }),
+        );
+      }
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
+
   // console.log('Check tournaments', tournamentList);
 
   useEffect(() => {
     if (user) {
+      getProfile();
       getAllTournamentByUser();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -172,7 +194,10 @@ const DashboardOrganizerProfile = () => {
               boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
             }}
           >
-            <DashboardPage selectedKey={selectedKey} credit={user?.creditsRemain}/>
+            <DashboardPage
+              selectedKey={selectedKey}
+              credit={user?.creditsRemain}
+            />
           </div>
         </Content>
       </Layout>
