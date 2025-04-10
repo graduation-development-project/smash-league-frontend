@@ -282,5 +282,5 @@ export type RegisterAthleteTournamentSubmitFormProps = {
   registrationDocumentCreator: string[]
   partnerId?: string;
   partnerName?: string;
-  registerationDocumentPartner?: string[]
+  registrationDocumentPartner?: string[]
 }
