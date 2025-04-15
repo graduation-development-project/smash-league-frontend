@@ -14,6 +14,7 @@ import {
 import {
   Breadcrumb,
   Button,
+  ConfigProvider,
   Divider,
   Layout,
   Menu,
@@ -27,7 +28,7 @@ import { TbTournament } from 'react-icons/tb';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const MyTournaments = () => {
+const MyTournaments = ({ profileRole }: { profileRole: string }) => {
   const content = {};
   const [selectedKey, setSelectedKey] = useState('dashboard');
 
@@ -101,81 +102,106 @@ const MyTournaments = () => {
 
   return (
     <div className="w-full h-max flex flex-col px-10 py-3 gap-5">
-      <Breadcrumb
+      {/* <Breadcrumb
+        style={{ fontFamily: 'inherit' }}
         items={[{ title: 'Home', onClick: () => {} }, { title: 'Tournaments' }]}
-      />
+      /> */}
       <div className="flex flex-row gap-8">
-        <Layout style={{ display: 'flex', gap: 10, backgroundColor: 'white' }}>
-          <Sider
-            theme="light"
+        <ConfigProvider
+          theme={{
+            token: {
+              // colorBorder: " #FF8243",
+              fontFamily: 'inherit',
+              fontWeightStrong: 700,
+              colorPrimary: '#FF8243',
+            },
+          }}
+        >
+          <Layout
             style={{
-              boxShadow: '0px 2px 4px 0px rgb(0 0 0 / 0.25)',
-              borderRadius: 8,
+              display: 'flex',
+              gap: 10,
+              backgroundColor: 'white',
+              fontFamily: 'inherit',
             }}
           >
-            <div className="demo-logo-vertical" />
-            <Menu
-              // theme="dark"
-              mode="inline"
-              selectedKeys={[selectedKey]}
-              onClick={({ key }) => setSelectedKey(key)}
-              // style={{position: 'sticky'}}
-
-              items={[
-                {
-                  key: 'all-tournaments',
-                  icon: <UserOutlined />,
-                  label: 'All Tournaments',
-                },
-                {
-                  key: 'my-series',
-                  icon: <CalendarOutlined />,
-                  label: 'Your Series',
-                  children: [
-                    {
-                      key: '5',
-                      label: 'Happy Summer',
-                    },
-                    {
-                      key: '6',
-                      label: 'Ice Breaker ',
-                    },
-                  ],
-                },
-                {
-                  key: 'tour-registration',
-                  label: 'Tour Registration',
-                  icon: <TbTournament size={15} />,
-                },
-
-                ...(user?.userRoles.includes('Umpire')
-                  ? [
-                      {
-                        key: 'matches-umpires',
-                        label: 'Umpires Matches',
-                        icon: <TbTournament size={15} />,
-                        children: [...participatedTournaments],
-                      },
-                    ]
-                  : []),
-              ]}
-            />
-          </Sider>
-          <Layout>
-            <Content
-              key={'1'}
+            <Sider
+              theme="light"
               style={{
-                minHeight: 280,
-                background: 'white',
+                boxShadow: '0px 2px 4px 0px rgb(0 0 0 / 0.25)',
                 borderRadius: 8,
+                fontFamily: 'inherit',
               }}
             >
-              <MyTourListBoard selectedKey={selectedKey} />
-            </Content>
+              <div className="demo-logo-vertical" />
+              <Menu
+                // theme="dark"
+                mode="inline"
+                selectedKeys={[selectedKey]}
+                onClick={({ key }) => setSelectedKey(key)}
+                style={{
+                  fontFamily: 'inherit',
+                }}
+                items={[
+                  {
+                    key: 'all-tournaments',
+                    icon: <UserOutlined />,
+                    label: 'All Tournaments',
+                  },
+                  {
+                    key: 'my-series',
+                    icon: <CalendarOutlined />,
+                    label: 'Your Series',
+                    children: [
+                      {
+                        key: '5',
+                        label: 'Happy Summer',
+                      },
+                      {
+                        key: '6',
+                        label: 'Ice Breaker ',
+                      },
+                    ],
+                  },
+                  {
+                    key: 'tour-registration',
+                    label: 'Tour Registration',
+                    icon: <TbTournament size={15} />,
+                  },
+
+                  ...(user?.userRoles.includes('Umpire') &&
+                  profileRole === 'UMPIRE'
+                    ? [
+                        {
+                          key: 'matches-umpires',
+                          label: 'Umpires Matches',
+                          icon: <TbTournament size={15} />,
+                          children: [...participatedTournaments],
+                        },
+                      ]
+                    : []),
+                ]}
+              />
+            </Sider>
+            <Layout>
+              <Content
+                key={'1'}
+                style={{
+                  minHeight: 280,
+                  background: 'white',
+                  borderRadius: 8,
+                  fontFamily: 'inherit',
+                }}
+              >
+                <MyTourListBoard
+                  selectedKey={selectedKey}
+                  profileRole={profileRole}
+                />
+              </Content>
+            </Layout>
           </Layout>
-        </Layout>
+        </ConfigProvider>
       </div>
-      <div></div>
     </div>
   );
 };

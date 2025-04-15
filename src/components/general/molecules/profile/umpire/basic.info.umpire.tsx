@@ -4,8 +4,16 @@ import InfoLine from '@/components/general/atoms/profile/athlete/info.line';
 import { Divider } from 'antd';
 import React, { useState } from 'react';
 import CertificateImageShowModal from './certificate.image.show.modal';
+import { calculateAge } from '@/utils/calculateAge';
+import { formatDate, formatHeight } from '@/utils/format';
 
-const UmpireBasicInfo = () => {
+const UmpireBasicInfo = ({
+  profile,
+  setProfile,
+}: {
+  profile: any;
+  setProfile: React.Dispatch<any>;
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
 
@@ -31,13 +39,19 @@ const UmpireBasicInfo = () => {
         <div className="w-full h-full flex flex-col gap-3">
           {/* Info Boxes */}
           <div className="w-full h-full flex gap-2">
-            <InfoBox title="AGE" info="24" />
-            <InfoBox title="HEIGHT(cm)" info="160" />
-            <InfoBox title="EXPERIENCE YEARS" info="20" />
+            <InfoBox
+              title="AGE"
+              info={calculateAge(profile?.dateOfBirth).toString()}
+            />
+            <InfoBox
+              title="HEIGHT(cm)"
+              info={formatHeight(profile?.height) || 'No Info'}
+            />
+            <InfoBox title="HAND" info={profile?.hand || 'No Info'} />
           </div>
           <div className="w-full h-full flex gap-2 justify-center">
-            <InfoBox title="LOCATION" info="Thu Duc, Ho Chi Minh" />
-            <InfoBox title="LANGUAGE" info="Vietnamese/Korean/English" />
+            <InfoBox title="LOCATION" info={profile?.location || 'No Info'} />
+            <InfoBox title="LANGUAGE" info={profile?.language || 'No Info'} />
           </div>
 
           {/* Certificates Section */}
@@ -83,21 +97,27 @@ const UmpireBasicInfo = () => {
         <div className="w-full h-full flex flex-col px-9">
           <InfoLine
             quest="When did you start professional umpire career?"
-            ans="2020"
+            ans={profile?.startPlayingCompetitively || 'No Info'}
           />
           <Divider />
-          <InfoLine quest="Date Of Birth" ans="12/12/1986" />
+          <InfoLine
+            quest="Date Of Birth"
+            ans={formatDate(profile?.dateOfBirth)}
+          />
           <Divider />
-          <InfoLine quest="Place Of Birth" ans="Thu Duc, Ho Chi Minh" />
+          <InfoLine
+            quest="Place Of Birth"
+            ans={profile?.placeOfBirth || 'No Info'}
+          />
           <Divider />
           <InfoLine
             quest="What thing made you want to be an umpire?"
-            ans="In 2009, I started playing badminton and my brother recommended playing badminton."
+            ans={profile?.umpireMotivation || 'No Info'}
           />
           <Divider />
           <InfoLine
             quest="Sport Ambitions"
-            ans="I want to be a professional badminton umpire in the future."
+            ans={profile?.sportAmbitions || 'No Info'}
           />
         </div>
       </div>
