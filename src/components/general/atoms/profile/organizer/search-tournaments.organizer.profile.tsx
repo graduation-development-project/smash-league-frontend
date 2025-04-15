@@ -65,8 +65,8 @@ const SearchTournamentsOrganizersProfile = () => {
         },
       }}
     >
-      <div className="w-full h-full flex justify-between items-center gap-5 shadow-shadowBtn p-5 rounded-[10px]">
-        <div className="w-[80%]">
+      <div className="w-full h-full flex justify-between items-center gap-3 shadow-shadowBtn p-2 rounded-[10px]">
+        <div className="w-[70%]">
           <Input
             size="large"
             placeholder="Find a Tournament name here..."
@@ -77,7 +77,7 @@ const SearchTournamentsOrganizersProfile = () => {
             }
           />
         </div>
-        <div className="w-[20%] flex gap-3 justify-center items-center">
+        <div className="w-[30%] flex gap-3 justify-end items-center">
           <Dropdown menu={{ items: statusItems, onClick: handleMenuClick }}>
             <Button
               size="large"

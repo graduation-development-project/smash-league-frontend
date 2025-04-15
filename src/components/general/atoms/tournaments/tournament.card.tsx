@@ -10,8 +10,6 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { format } from 'path';
-
 import React from 'react';
 
 const TournamentCard = ({ tour }: any) => {
@@ -20,26 +18,31 @@ const TournamentCard = ({ tour }: any) => {
 
   return (
     <div
-      className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-2 border cursor-pointer hover:shadow-shadowComp"
+      className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-4 border cursor-pointer hover:shadow-shadowComp "
       onClick={() => router.push(`/tournaments/details/${tour.id}`)}
     >
       <div className="w-full h-[200px]">
         <Image
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover rounded-lg "
           src={images.badmintonSummerOlympics}
           alt={tour?.name ? tour?.name : 'Badminton Summer Olympics'}
         />
       </div>
       <div className="flex flex-col gap-2">
-        <h3 className="text-base font-bold text-textColor">{tour?.name}</h3>
+        <h3 className="text-base font-bold text-textColor line-clamp-1 w-full">
+          {tour?.name}
+        </h3>
         <div className=" flex w-max py-1 px-2 bg-gradient-orange bg-opacity-20 rounded-full text-center items-center">
           <span className="text-xs text-white font-semibold ">
             Price pool: {formatMoney(tour?.prizePool)}
           </span>
         </div>
         <ul className="flex flex-col gap-1">
-          <li className="flex flex-row items-center gap-2">
-            <MapPin size={16} color="#ff8243" /> {tour?.location}
+          <li className="flex items-center gap-2 w-full">
+            <MapPin size={16} color="#ff8243" />
+            <span className="truncate whitespace-nowrap overflow-hidden text-ellipsis w-full">
+              {tour?.location}
+            </span>
           </li>
           <li className="flex flex-row items-center gap-2">
             <CalendarClock size={16} color="#ff8243" />{' '}

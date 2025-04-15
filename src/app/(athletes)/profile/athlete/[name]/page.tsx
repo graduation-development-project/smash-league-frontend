@@ -10,7 +10,7 @@ const AthleteProfile = async () => {
   return (
     <>
       <MainLayout session={session} noHero={true}>
-        <div className="mt-[70px] relative">
+        <div className="relative">
           <AthleteProfilePage session={session} />
         </div>
       </MainLayout>

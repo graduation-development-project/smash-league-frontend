@@ -6,23 +6,43 @@ import OverviewAthleteProfile from '@/components/general/organisms/profile/athle
 import TournamentsAthleteProfile from '@/components/general/organisms/profile/athlete/tournaments.athlete.profile';
 import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 import { Avatar, ConfigProvider, Tabs, TabsProps } from 'antd';
-import React, { useState } from 'react';
-import { CiLocationOn } from 'react-icons/ci';
+import React, { useEffect, useState } from 'react';
+import MyTournaments from '../tournaments/my-tour.tour';
+import MyTeams from '@/components/general/organisms/teams/my-teams';
+import { useProfileContext } from '@/context/profile.context';
+import { getProfileAPI } from '@/services/user';
 
 const TeamLeaderProfilePage = (props: any) => {
   const { session } = props;
   const [profile, setProfile] = useState<any>({});
-  const user = {
-    accessToken:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0MTkxNzd9.fvQaEsYcX956KnXmI5HpGtTosAfxrYgtsg1SdgjxHlA',
-    refreshToken:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0NDI1Nzd9.mlxCTkI_ujgJh5Hx-JJpV1rKsZmCrsp1OaozJETWyNk',
-    email: 'smount273@gmail.com',
-    name: 'Tran Anh Minh',
-    roles: ['Athlete'],
-    id: 'dc033ba7-de1a-4fcc-b1f7-d9901388594b',
-  };
+  const [user, setUser] = useState<any>(null);
+  const { teamLeaderId } = useProfileContext();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const getProfile = async () => {
+    try {
+      const response = await getProfileAPI(teamLeaderId);
+      // console.log('Check profile', response);
+      setProfile(response);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamLeaderId]);
+  // console.log('Check profile teamLeader', profile);
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -31,19 +51,24 @@ const TeamLeaderProfilePage = (props: any) => {
     {
       key: '1',
       label: 'Overview',
-      children: <OverviewAthleteProfile info={user} setProfile={setProfile} />,
+      children: (
+        <OverviewAthleteProfile info={profile} setProfile={setProfile} />
+      ),
     },
     {
       key: '2',
       label: 'Tournaments',
-      children: (
-        <TournamentsAthleteProfile profile={profile} setProfile={setProfile} />
-      ),
+      children: <MyTournaments profileRole="TEAM LEADER" />,
     },
-    ...(session?.user?.id === session?.user?.id
+    ...(user?.id === profile?.id
       ? [
           {
             key: '3',
+            label: 'Teams List',
+            children: <MyTeams />,
+          },
+          {
+            key: '4',
             label: 'Update Information',
             children: (
               <UpdateInformationProfile
@@ -52,11 +77,6 @@ const TeamLeaderProfilePage = (props: any) => {
                 setProfile={setProfile}
               />
             ),
-          },
-          {
-            key: '4',
-            label: 'My Teams List',
-            children: <div>My Teams List</div>,
           },
         ]
       : []),
@@ -82,13 +102,17 @@ const TeamLeaderProfilePage = (props: any) => {
               />
               <div className="flex flex-col gap-2">
                 <h1 className="text-white text-[32px] font-bold">
-                  Vo Nguyen Trung Son
+                  {profile?.name}
                 </h1>
                 <div className="text-white text-[14px] italic ">
-                  smount273@gmail.com
+                  {profile?.email}
                 </div>
                 <div className="text-white text-[14px] font-semibold flex gap-1">
-                  <CiLocationOn size={20} /> <span>Thu Duc, Ho Chi Minh</span>
+                  <span>
+                    {profile?.location
+                      ? profile?.location
+                      : 'No Infomation. Please update your profile'}
+                  </span>
                 </div>
               </div>
             </div>
