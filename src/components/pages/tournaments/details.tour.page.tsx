@@ -39,15 +39,17 @@ import RegisterUmpireTournamentForm from '@/components/general/molecules/tournam
 import AttendantsCheck from '@/components/general/molecules/tournaments/attendants-check.tour';
 import AlertCreateTeamsModal from '@/components/general/molecules/teams/alert-create-teams-modal';
 import RegisterTeamTourForm from '@/components/general/molecules/tournaments/register-team.tournament.form';
+import UpdateDetailsTour from '@/components/general/organisms/tournaments/update-details.tour';
 
 const DetailsTourPage = () => {
   const param = useParams();
-  const url = param.id;
+  const url = param.id.toString();
   const [eventList, setEventList] = useState<any[]>([]);
   const router = useRouter();
   const [activeKey, setActiveKey] = React.useState('details');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const [user, setUser] = useState<any>(null);
 
@@ -66,6 +68,9 @@ const DetailsTourPage = () => {
   const showUmpire = () => {
     setIsRegisterModalOpen(true);
   };
+  const showEdit = () => {
+    setIsEditModalOpen(true);
+  };
 
   const [detail, setDetail] = useState<any>();
 
@@ -79,7 +84,6 @@ const DetailsTourPage = () => {
     try {
       if (typeof url === 'string') {
         const response = await getTourDetailAPI(url);
-        console.log('Check details', response.data);
         setDetail(response.data);
         setEventList(Object.entries(response.data.tournamentEvents));
       }
@@ -120,6 +124,8 @@ const DetailsTourPage = () => {
         return <PostDetailsTour />;
       case 'merchandise':
         return <MerchandiseDetailsTour />;
+      case 'update':
+        return <UpdateDetailsTour detail={detail} />;
       default:
         return isEventKey ? (
           <EventAgeDetails
@@ -140,20 +146,64 @@ const DetailsTourPage = () => {
               fontFamily: 'inherit',
               colorPrimary: '#FF8243',
             },
+            Tabs: {
+              fontFamily: 'inherit',
+              colorText: '#2c2c2c',
+              itemActiveColor: '#FF8243',
+              inkBarColor: '#FF8243',
+              itemSelectedColor: '#FF8243',
+              itemHoverColor: '#FF8243',
+              // itemHeight: 48,
+            },
 
             Menu: {
               fontFamily: 'inherit',
               colorPrimary: '#FF8243',
-              // colorBgTextHover: '#FF8243',
+              itemSelectedBg: "#fcf7f4",
+              itemActiveBg: "#ffebde",
+              fontWeightStrong: 600,
+              itemHeight: 35,
               colorBgLayout: '#FF8243',
             },
             Breadcrumb: {
               fontFamily: 'inherit',
             },
+            Button: {
+              fontFamily: 'inherit',
+              colorPrimary: '#FF8243',
+              colorPrimaryHover: '#ffa97e',
+              colorPrimaryActive: '#e7753c',
+              colorPrimaryBgHover: '#ffebde',
+
+              colorBgTextActive: "#ffebde",
+              
+            },
+            Input: {
+              hoverBorderColor: '#FF8243',
+              activeBorderColor: '#FF8243',
+              fontFamily: 'inherit',
+            },
+            ColorPicker: {
+              fontFamily: 'inherit',
+              // colorBorder: '#FF8243',
+              colorPrimaryBorderHover: '#FF8243',
+              colorPrimaryActive: '#FF8243',
+              // hoverBorderColor: '#FF8243',
+              // activeBorderColor: '#FF8243',
+            },
+            Checkbox: {
+              fontFamily: 'inherit',
+              colorPrimary: '#FF8243',
+              colorPrimaryHover: '#ffa97e',
+            },
+            Select: {
+              fontFamily: 'inherit',
+            },
+
           },
         }}
       >
-        <div className="w-full h-max flex flex-col gap-8 px-20">
+        <div className="w-full h-max flex flex-col gap-8 px-20 text-textColor">
           <div className="w-full h-max shadow-shadowComp rounded-b-lg">
             <div className="w-full h-[500px] ">
               <img
@@ -175,47 +225,57 @@ const DetailsTourPage = () => {
                     <Button variant={'default'} size={'sm'} onClick={showModal}>
                       Register Now
                     </Button>
+                    {/* Athlete Form */}
+                    {user?.userRoles?.includes('Team Leader') ? (
+                      <RegisterTeamTourForm
+                        isModalOpen={isModalOpen}
+                        setIsModalOpen={setIsModalOpen}
+                        detail={detail}
+                        detailId={detail?.id}
+                      />
+                    ) : (
+                      <RegisterAthleteTournamentForm
+                        isModalOpen={isModalOpen}
+                        setIsModalOpen={setIsModalOpen}
+                        detail={detail}
+                        detailId={detail?.id}
+                      />
+                    )}
 
                     <Button variant="default" size={'sm'} onClick={showUmpire}>
                       Register As Umpire
                     </Button>
+                    {/* Umpire Form */}
+                    {user?.userRoles?.includes('Umpire') ? (
+                      <RegisterUmpireTournamentForm
+                        isRegisterModalOpen={isRegisterModalOpen}
+                        setIsRegisterModalOpen={setIsRegisterModalOpen}
+                        detail={detail}
+                      />
+                    ) : (
+                      <AlertCreateTeamsModal
+                        isModalOpen={isRegisterModalOpen}
+                        setIsModalOpen={setIsRegisterModalOpen}
+                        message="You are not authorized to register as umpire"
+                        description="Please register as an umpire"
+                        linkText="Become an Umpire"
+                        path="/become/umpire"
+                      />
+                    )}
+                    {/* {
+                      user?.userRoles?.includes('Organizer') ? (
+                        <Button variant="default" size={'sm'} onClick={showEdit}>
+                          Edit
+                        </Button>) : (<></>)
+                    } */}
+
                   </div>
                 )}
               </div>
-              {/* Athlete Form */}
-              {user?.userRoles?.includes('Team Leader') ? (
-                <RegisterTeamTourForm
-                  isModalOpen={isModalOpen}
-                  setIsModalOpen={setIsModalOpen}
-                  detail={detail}
-                  detailId={detail?.id}
-                />
-              ) : (
-                <RegisterAthleteTournamentForm
-                  isModalOpen={isModalOpen}
-                  setIsModalOpen={setIsModalOpen}
-                  detail={detail}
-                  detailId={detail?.id}
-                />
-              )}
 
-              {/* Umpire Form */}
-              {user?.userRoles?.includes('Umpire') ? (
-                <RegisterUmpireTournamentForm
-                  isRegisterModalOpen={isRegisterModalOpen}
-                  setIsRegisterModalOpen={setIsRegisterModalOpen}
-                  detail={detail}
-                />
-              ) : (
-                <AlertCreateTeamsModal
-                  isModalOpen={isRegisterModalOpen}
-                  setIsModalOpen={setIsRegisterModalOpen}
-                  message="You are not authorized to register as umpire"
-                  description="Please register as an umpire"
-                  linkText="Become an Umpire"
-                  path="/become/umpire"
-                />
-              )}
+
+
+
             </div>
           </div>
           <div className="w-full h-max flex flex-col py-8 px-5 gap-5 justify-center items-center shadow-shadowComp rounded-lg">
@@ -235,7 +295,8 @@ const DetailsTourPage = () => {
                 <Sider
                   theme="light"
                   style={{
-                    boxShadow: '0px 2px 4px 0px rgb(0 0 0 / 0.25)',
+                    boxShadow: '2px 0px 4px 0px rgb(0 0 0 / 0.1)',
+                    backgroundColor: 'white',
                     borderTopLeftRadius: 10,
                     borderBottomLeftRadius: 10,
                     padding: 10,
@@ -244,7 +305,7 @@ const DetailsTourPage = () => {
                   <div className="demo-logo-vertical" />
                   <Menu
                     // theme="dark"
-                    style={{}}
+                    style={{fontWeight: 500, color: '#2c2c2c'}}
                     mode="inline"
                     defaultSelectedKeys={[activeKey]}
                     onClick={({ key }) => setActiveKey(key)}
@@ -287,6 +348,10 @@ const DetailsTourPage = () => {
                         label: 'Merchandise',
                         disabled: !detail?.hasMerchandise,
                       },
+                      {
+                        key: 'update',
+                        label: 'Update Details',
+                      },
                     ]}
                   />
                 </Sider>
@@ -302,7 +367,7 @@ const DetailsTourPage = () => {
                   <Content
                     key={activeKey}
                     style={{
-                      minHeight: 280,
+                      minHeight: 400,
                       background: 'white',
                       // borderRadius: 8,
                     }}

@@ -28,7 +28,7 @@ const RegisterTeamStep2Form = ({
     const fetchEventDetails = async () => {
       try {
         const response = await getTournamentEventDetailAPI(detailId);
-        setTournamentEvent(response.data.data);
+        setTournamentEvent(response.data);
       } catch (error) {
         console.log('Error fetching event details:', error);
       }
@@ -98,7 +98,7 @@ const RegisterTeamStep2Form = ({
       fromTeamId: player?.fromTeamId || '',
       tournamentEventId: eventId,
       registrationDocumentCreator: player?.registrationDocumentCreator || {},
-      registerationDocumentPartner: partner?.registrationDocumentCreator || {},
+      registrationDocumentPartner: partner?.registrationDocumentCreator || {},
     };
 
     const updatedBeforeSubmit = beforeSubmitList.filter((item) =>

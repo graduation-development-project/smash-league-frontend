@@ -7,6 +7,7 @@ import { createTourAPI } from '@/services/tournament';
 import { uploadBgTourImageAPI, uploadMerchandiseImageAPI } from '@/services/create-tour';
 import Loaders from '@/components/general/atoms/loaders/loaders';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 
 
@@ -126,8 +127,17 @@ const CreateTourPage = ({ session }: any) => {
             )
             console.log(response, "create API");
             if (response?.statusCode === 200 || response?.statusCode === 201) {
-                message.success('Created successfully!')
-                router.push("/tournaments")
+                router.push("/tournaments/details/" + response?.data?.id);
+                toast.success(`${response?.data?.message}`, {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
                 return true;
             }
             throw new Error("Failed to create tournament");

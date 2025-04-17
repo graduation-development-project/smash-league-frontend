@@ -5,6 +5,7 @@ import RegisterTeamStep2Form from '../../atoms/tournaments/register-team-step2.t
 import { RegisterAthleteTournamentBeforeSubmitFormProps, RegisterAthleteTournamentFormProps, RegisterAthleteTournamentSubmitFormProps } from '@/types/types';
 import { uploadMerchandiseImageAPI } from '@/services/create-tour';
 import { registerTournamentByTeamAPI } from '@/services/team';
+import { toast } from 'react-toastify';
 
 const RegisterTeamTourForm = ({
     isModalOpen,
@@ -27,7 +28,7 @@ const RegisterTeamTourForm = ({
             }
         }
     }, []);
-    
+
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [form] = Form.useForm();
@@ -108,10 +109,22 @@ const RegisterTeamTourForm = ({
 
     const fetchRegisterSubmit = async () => {
         try {
-            // console.log("user", user.accessToken);
-            
             const response = await registerTournamentByTeamAPI(submitList, user.access_token);
             console.log(response, "registerTournamentByTeamAPI");
+            if (response.statusCode === 200 || response.statusCode === 201) {
+                toast.success(`${response?.data?.message}`, {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
+                return response.data;
+            }
+            return null;
         } catch (error) {
             console.error(error, "register Tournament By Team API");
         }
@@ -121,24 +134,23 @@ const RegisterTeamTourForm = ({
         setIsLoading(true);
         try {
             for (const athlete of beforeSubmit) {
-                const registrationDocumentCreator : any[] =[];
+                const registrationDocumentCreator: any[] = [];
                 const registrationDocumentPartner: any[] = [];
 
                 for (const [docType, files] of Object.entries(athlete.registrationDocumentCreator)) {
-                    
+
                     const response = await fetchUploadImage(files);
                     if (response.statusCode === 200 || response.statusCode === 201) {
                         registrationDocumentCreator.push(...response.data);
-                    }else {
+                    } else {
                         throw new Error('Upload athlete docs failed');
                     }
-                    
+
                 }
 
-                if (athlete.partnerId && athlete.partnerId !== '' && athlete.registerationDocumentPartner) {
-                    // console.log("partner");
-                    
-                    for (const [docType, files] of Object.entries(athlete.registerationDocumentPartner)) {
+                if (athlete.partnerId && athlete.partnerId !== '' && athlete.registrationDocumentPartner) {
+
+                    for (const [docType, files] of Object.entries(athlete.registrationDocumentPartner)) {
                         const response = await fetchUploadImage(files);
                         if (response.statusCode === 201 || response.statusCode === 200) {
                             registrationDocumentPartner.push(...response.data);
@@ -155,12 +167,19 @@ const RegisterTeamTourForm = ({
                     partnerId: athlete.partnerId || undefined,
                     partnerName: athlete.partnerName || undefined,
                     registrationDocumentPartner: athlete.partnerId ? registrationDocumentPartner : [],
-                  });
+                });
             }
             console.log("submitList", submitList);
-            
-            await fetchRegisterSubmit();
-            
+
+            const registerSubmit = await fetchRegisterSubmit();
+            if (registerSubmit) {
+                setIsModalOpen(false);
+                setCurrentStep(0);
+                setBeforeSubmit([]);
+                setRegisterAthleteList([]);
+            }
+
+
         } catch (error) {
             console.log(error);
         }
