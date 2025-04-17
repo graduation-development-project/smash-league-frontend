@@ -27,7 +27,8 @@ const Navigation = (props: any) => {
   const [user, setUser] = useState<any>({});
   const [notifications, setNotifications] = useState<any>([]);
   const [unread, setUnread] = useState<boolean>(true);
-  const { setOrganizerId, setAthleteId } = useProfileContext();
+  const { setOrganizerId, setAthleteId, setTeamLeaderId, setUmpireId } =
+    useProfileContext();
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user');
@@ -123,7 +124,9 @@ const Navigation = (props: any) => {
             onClick: () => {
               if (!user || !user.userRoles) return; // Avoid errors
               localStorage.setItem('page', 'Home');
+              localStorage.setItem('teamLeaderId', user?.id);
               setRoute('Profile');
+              setTeamLeaderId(user?.id);
               router.push(`/profile/teamleader/${user?.name.toLowerCase()}`);
             },
           },
@@ -140,7 +143,9 @@ const Navigation = (props: any) => {
             onClick: () => {
               if (!user || !user.userRoles) return; // Avoid errors
               localStorage.setItem('page', 'Home');
+              localStorage.setItem('umpireId', user?.id);
               setRoute('Profile');
+              setUmpireId(user?.id);
               router.push(`/profile/umpire/${user?.name.toLowerCase()}`);
             },
           },
@@ -250,9 +255,9 @@ const Navigation = (props: any) => {
 
         {/* Navigation */}
         <ul className="flex gap-12 text-lg font-quicksand font-bold">
-          {['News', 'Tournaments', 'Teams', 'Organizers Zone', 'About'].map(
+          {['Tournaments', 'Teams', 'Organizers Zone', 'About', 'Pricing'].map(
             (item, index) => {
-              if (item === 'News' || item === 'Tournaments') {
+              if (item === 'Teams' || item === 'Tournaments') {
                 return (
                   <li
                     key={index}
@@ -290,9 +295,14 @@ const Navigation = (props: any) => {
                     onClick={() => {
                       localStorage.setItem('page', item);
                       setRoute(item);
-                      router.push(
-                        `/${item.toLowerCase().replace(/\s+/g, '-')}`,
-                      );
+                      console.log(item, 'Check item');
+                      if (item === 'Pricing') {
+                        router.push('/packages');
+                      } else {
+                        router.push(
+                          `/${item.toLowerCase().replace(/\s+/g, '-')}`,
+                        );
+                      }
                     }}
                   >
                     {item}

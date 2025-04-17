@@ -52,8 +52,17 @@ const OrganizerProfilePage = (props: any) => {
   const isOrganizer = user?.id === organizerId;
 
   const items: TabsProps['items'] = [
+    ...(isOrganizer
+      ? [
+          {
+            key: '1',
+            label: 'Dashboard',
+            children: <DashboardOrganizerProfile />,
+          },
+        ]
+      : []),
     {
-      key: '1',
+      key: '2',
       label: 'Overview',
       children: (
         <OverviewOrganizerProfile
@@ -63,33 +72,28 @@ const OrganizerProfilePage = (props: any) => {
       ),
     },
     {
-      key: '2',
+      key: '3',
       label: 'Announcements',
       children: <AnnouncementsOrganizerProfile />,
     },
     {
-      key: '3',
+      key: '4',
       label: 'Tournaments',
       children: (
         <TournamentsOrganizerProfile
+          isOrganizer={isOrganizer}
           tournamentList={tournamentList}
           setTournamentList={setTournamentList}
         />
       ),
     },
     {
-      key: '4',
+      key: '5',
       label: 'Events',
       children: 'Content of Events',
     },
     ...(isOrganizer
       ? [
-          {
-            key: '5',
-            label: 'Dashboard',
-            children: <DashboardOrganizerProfile />,
-          },
-
           {
             key: '6',
             label: 'Update Information',

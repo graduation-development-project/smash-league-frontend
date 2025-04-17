@@ -11,8 +11,6 @@ import {
 } from 'lucide-react';
 
 import { useRouter } from 'next/navigation';
-import { format } from 'path';
-
 import React from 'react';
 
 const TournamentCard = ({ tour }: any) => {
@@ -22,6 +20,7 @@ const TournamentCard = ({ tour }: any) => {
   return (
     <div
       className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-2 border cursor-pointer hover:shadow-shadowBtn"
+      onClick={() => router.push(`/tournaments/details/${tour.id}`)}
     >
       <div className="w-full h-[200px]">
         <Image
@@ -42,8 +41,11 @@ const TournamentCard = ({ tour }: any) => {
           </span>
         </div>
         <ul className="flex flex-col gap-1">
-          <li className="flex flex-row items-center gap-2">
-            <MapPin size={16} color="#ff8243" /> {formatLocation(tour?.location) || tour?.location}
+          <li className="flex items-center gap-2 w-full">
+            <MapPin size={16} color="#ff8243" />
+            <span className="truncate whitespace-nowrap overflow-hidden text-ellipsis w-full">
+              {tour?.location}
+            </span>
           </li>
           <li className="flex flex-row items-center gap-2">
             <CalendarClock size={16} color="#ff8243" />{' '}

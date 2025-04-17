@@ -22,9 +22,14 @@ interface DataType {
   location: string;
   isPayForTheRegistrationFee: boolean;
   status: string;
+  createdAt: string;
 }
 
-const TourRegistrationOfAthleteTable = () => {
+const TourRegistrationOfAthleteTable = ({
+  profileRole,
+}: {
+  profileRole: string;
+}) => {
   const [tourRegistrationList, setTourRegistrationList] = useState<DataType[]>(
     [],
   );
@@ -35,33 +40,57 @@ const TourRegistrationOfAthleteTable = () => {
     if (typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
-        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        getTournamentRegistrationByAthlete(parsedUser); // pass to function directly
       }
     }
   }, []);
 
-  const getTournamentRegistrationByAthlete = async () => {
+  console.log('Check user', user);
+  const getTournamentRegistrationByAthlete = async (user: any) => {
     if (!user) return;
     try {
       const response = await getTournamentRegistrationByAthleteAPI(
         user?.access_token,
       );
-      console.log('Check response', response.data.data);
+      console.log('Check tour', response.data.data);
       if (
         response?.data?.statusCode === 200 ||
         response?.data?.statusCode === 201
       ) {
-        const formatData = response.data.data.map((regis: any) => ({
-          key: regis.id,
-          tourName: regis.tournament.name,
-          event: regis.tournamentEvent.tournamentEvent,
-          startDate: regis.tournament.startDate,
-          endDate: regis.tournament.endDate,
-          location: regis.tournament.location,
-          isPayForTheRegistrationFee: regis.isPayForTheRegistrationFee,
-          status: regis.status,
-        }));
-        setTourRegistrationList(formatData);
+        if (profileRole === 'UMPIRE') {
+          const formatData = response.data.data
+            .filter((regis: any) => regis?.registrationRole === 'UMPIRE')
+            .map((regis: any) => ({
+              key: regis?.id,
+              tourName: regis?.tournament?.name,
+              event: '', // Placeholder
+              startDate: regis?.tournament?.startDate,
+              endDate: regis?.tournament?.endDate,
+              location: '', // Placeholder
+              isPayForTheRegistrationFee: false, // Placeholder
+              status: regis?.status,
+              createdAt: regis?.createdAt,
+            }));
+          // console.log("Check formData", formatData);
+          setTourRegistrationList(formatData);
+        } else {
+          const formatData = response.data.data
+            .filter((regis: any) => regis?.registrationRole === 'ATHLETE')
+            .map((regis: any) => ({
+              key: regis?.id,
+              tourName: regis?.tournament?.name,
+              event: regis?.tournamentEvent?.tournamentEvent,
+              startDate: regis?.tournament?.startDate,
+              endDate: regis?.tournament?.endDate,
+              location: regis?.tournament?.location,
+              isPayForTheRegistrationFee: regis?.isPayForTheRegistrationFee,
+              status: regis?.status,
+              createdAt: regis?.createdAt,
+            }));
+          setTourRegistrationList(formatData);
+        }
       }
     } catch (error: any) {
       console.error(
@@ -113,99 +142,186 @@ const TourRegistrationOfAthleteTable = () => {
     }
   };
 
-  useEffect(() => {
-    getTournamentRegistrationByAthlete();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  console.log('Check tourRegistrationList', tourRegistrationList);
 
-  const columns: TableProps<DataType>['columns'] = [
-    {
-      title: 'Tournament Name',
-      dataIndex: 'tourName',
-      key: 'name',
-      render: (text) => <p className="font-semibold">{text}</p>,
-    },
-    {
-      title: 'Event',
-      dataIndex: 'event',
-      key: 'event',
-    },
-    {
-      title: 'Start Date',
-      dataIndex: 'startDate',
-      key: 'startDate',
-      render: (_, { startDate }) => <>{formatDateTime(startDate)}</>,
-    },
-    {
-      title: 'End Date',
-      dataIndex: 'endDate',
-      key: 'endDate',
-      render: (_, { endDate }) => <>{formatDateTime(endDate)}</>,
-    },
-    {
-      title: 'Location',
-      dataIndex: 'location',
-      key: 'location',
-    },
-    {
-      title: 'Status',
-      key: 'status',
-      dataIndex: 'status',
-      render: (_, { status }) => (
-        <Tag
-          style={{
-            fontFamily: 'inherit',
-            padding: '6px',
-            fontSize: '14px',
-            fontWeight: '500',
-          }}
-          color={
-            status === 'PENDING'
-              ? 'magenta'
-              : status === 'APPROVED'
-              ? 'green'
-              : status === 'ON_WAITING_REGISTRATION_FEE'
-              ? 'cyan'
-              : 'red'
-          }
-          key={status}
-        >
-          {status === 'PENDING'
-            ? 'Pending'
-            : status === 'APPROVED'
-            ? 'Approved'
-            : status === 'ON_WAITING_REGISTRATION_FEE'
-            ? 'Waiting Registration Fee'
-            : 'Rejected'}
-        </Tag>
-      ),
-    },
-    {
-      title: 'Actions',
-      align: 'center',
-      key: 'action',
-      render: (_, { status, key }) => {
-        return status === 'PENDING' ? (
-          <div className="flex justify-center items-center gap-4">
-            <p className=" hover:underline cursor-pointer text-[14px] transition-all duration-200">
-              <GrView size={16} />
-            </p>
-            <Popconfirm title="Are you sure to delete this tournament?">
-              <p className="hover:underline cursor-pointer text-[14px] transition-all duration-200">
-                <MdOutlineDeleteOutline size={16} />
-              </p>
-            </Popconfirm>
-          </div>
-        ) : status === 'ON_WAITING_REGISTRATION_FEE' ? (
-          <Button  onClick={() => handlePayFee(key)}>
-            Pay fee {isLoading && <LoadingOutlined />}
-          </Button>
-        ) : (
-          <></>
-        );
-      },
-    },
-  ];
+  const columns: TableProps<DataType>['columns'] =
+    profileRole === 'UMPIRE'
+      ? [
+          {
+            title: 'Tournament Name',
+            dataIndex: 'tourName',
+            key: 'name',
+            render: (text) => <p className="font-semibold">{text}</p>,
+          },
+          {
+            title: 'Start Date',
+            dataIndex: 'startDate',
+            key: 'startDate',
+            render: (_, { startDate }) => <>{formatDateTime(startDate)}</>,
+          },
+          {
+            title: 'End Date',
+            dataIndex: 'endDate',
+            key: 'endDate',
+            render: (_, { endDate }) => <>{formatDateTime(endDate)}</>,
+          },
+          {
+            title: 'Status',
+            key: 'status',
+            dataIndex: 'status',
+            render: (_, { status }) => (
+              <Tag
+                style={{
+                  fontFamily: 'inherit',
+                  padding: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                }}
+                color={
+                  status === 'PENDING'
+                    ? 'magenta'
+                    : status === 'APPROVED'
+                    ? 'green'
+                    : status === 'ON_WAITING_REGISTRATION_FEE'
+                    ? 'cyan'
+                    : 'red'
+                }
+                key={status}
+              >
+                {status === 'PENDING'
+                  ? 'Pending'
+                  : status === 'APPROVED'
+                  ? 'Approved'
+                  : status === 'ON_WAITING_REGISTRATION_FEE'
+                  ? 'Waiting Registration Fee'
+                  : 'Rejected'}
+              </Tag>
+            ),
+          },
+
+          {
+            title: 'Registration Date',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (_, { createdAt }) => <>{formatDateTime(createdAt)}</>,
+          },
+
+          {
+            title: 'Actions',
+            align: 'center',
+            key: 'action',
+            render: (_, { status, key }) => {
+              return status === 'PENDING' ? (
+                <div className="flex justify-center items-center gap-4">
+                  <p className=" hover:underline cursor-pointer text-[14px] transition-all duration-200">
+                    <GrView size={16} />
+                  </p>
+                  <Popconfirm title="Are you sure to delete this tournament?">
+                    <p className="hover:underline cursor-pointer text-[14px] transition-all duration-200">
+                      <MdOutlineDeleteOutline size={16} />
+                    </p>
+                  </Popconfirm>
+                </div>
+              ) : (
+                <></>
+              );
+            },
+          },
+        ]
+      : [
+          {
+            title: 'Tournament Name',
+            dataIndex: 'tourName',
+            key: 'name',
+            render: (text) => <p className="font-semibold">{text}</p>,
+          },
+          {
+            title: 'Event',
+            dataIndex: 'event',
+            key: 'event',
+          },
+          {
+            title: 'Start Date',
+            dataIndex: 'startDate',
+            key: 'startDate',
+            render: (_, { startDate }) => <>{formatDateTime(startDate)}</>,
+          },
+          {
+            title: 'End Date',
+            dataIndex: 'endDate',
+            key: 'endDate',
+            render: (_, { endDate }) => <>{formatDateTime(endDate)}</>,
+          },
+          {
+            title: 'Location',
+            dataIndex: 'location',
+            key: 'location',
+          },
+          {
+            title: 'Status',
+            key: 'status',
+            dataIndex: 'status',
+            render: (_, { status }) => (
+              <Tag
+                style={{
+                  fontFamily: 'inherit',
+                  padding: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                }}
+                color={
+                  status === 'PENDING'
+                    ? 'magenta'
+                    : status === 'APPROVED'
+                    ? 'green'
+                    : status === 'ON_WAITING_REGISTRATION_FEE'
+                    ? 'cyan'
+                    : 'red'
+                }
+                key={status}
+              >
+                {status === 'PENDING'
+                  ? 'Pending'
+                  : status === 'APPROVED'
+                  ? 'Approved'
+                  : status === 'ON_WAITING_REGISTRATION_FEE'
+                  ? 'Waiting Registration Fee'
+                  : 'Rejected'}
+              </Tag>
+            ),
+          },
+          {
+            title: 'Registration Date',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (_, { createdAt }) => <>{formatDateTime(createdAt)}</>,
+          },
+          {
+            title: 'Actions',
+            align: 'center',
+            key: 'action',
+            render: (_, { status, key }) => {
+              return status === 'PENDING' ? (
+                <div className="flex justify-center items-center gap-4">
+                  <p className=" hover:underline cursor-pointer text-[14px] transition-all duration-200">
+                    <GrView size={16} />
+                  </p>
+                  <Popconfirm title="Are you sure to delete this tournament?">
+                    <p className="hover:underline cursor-pointer text-[14px] transition-all duration-200">
+                      <MdOutlineDeleteOutline size={16} />
+                    </p>
+                  </Popconfirm>
+                </div>
+              ) : status === 'ON_WAITING_REGISTRATION_FEE' ? (
+                <Button onClick={() => handlePayFee(key)}>
+                  Pay fee {isLoading && <LoadingOutlined />}
+                </Button>
+              ) : (
+                <></>
+              );
+            },
+          },
+        ];
 
   return (
     <div className="flex flex-col gap-3 p-3">
