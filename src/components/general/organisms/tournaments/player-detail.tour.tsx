@@ -15,7 +15,6 @@ const PlayerDetailTour = ({ mainColor, eventId }: { mainColor: string, eventId: 
   const textColor = "text-white"
   const eventName = eventId.split('-')[0];
   const eventUUID = eventId.slice(eventId.indexOf('-') + 1);
-  console.log(eventUUID);
 
 
   const [playerList, setPlayerList] = useState<{ user: any, partner?: any }[]>([]);
@@ -23,7 +22,6 @@ const PlayerDetailTour = ({ mainColor, eventId }: { mainColor: string, eventId: 
   const fetchParticipantList = async () => {
     try {
       const res = await getParticipantListAPI(eventUUID);
-      console.log('res', res.data.listParticipants);
       if (res.statusCode === 200 || res.statusCode === 201) {
 
         setPlayerList(res?.data?.listParticipants);
@@ -34,7 +32,7 @@ const PlayerDetailTour = ({ mainColor, eventId }: { mainColor: string, eventId: 
   }
   useEffect(() => {
     fetchParticipantList();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventUUID]);
 
   const userProfile = (userId: string) => {
@@ -68,7 +66,10 @@ const PlayerDetailTour = ({ mainColor, eventId }: { mainColor: string, eventId: 
                 <td className='w-32 h-32 pt-5'>
                   <img className='w-32 h-32 object-contain' src="https://img.bwfbadminton.com/image/upload/w_308,h_359,c_thumb,g_face:center/v1697765036/assets/players/thumbnail/87442.png" alt="" />
                 </td>
-                <td className=' text-start'>{player?.user?.name}</td>
+                <td className='text-start pl-5 cursor-pointer hover:underline'
+                  onClick={() => userProfile(playerList[index]?.user?.id)}
+                >{player?.user?.name}
+                </td>
                 <td>{formatYearOfBirth(player?.user?.dateOfBirth)}</td>
                 <td>{formatHeight(player?.user?.height)}</td>
                 <td>{player?.user?.hands || "N/A"}</td>

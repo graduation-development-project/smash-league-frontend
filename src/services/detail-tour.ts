@@ -41,7 +41,10 @@ export const getMerchandiseListAPI = async (id: string) => {
 export const getParticipantListAPI = async (id: string) => {
   try {
     const response = await axios.get(`${URL}/get-participants-of-tournament-event/${id}`);
-    return response.data;
+    if (response.data.statusCode === 200 || response.data.statusCode === 201) {
+      return response.data;
+    }
+    throw new Error('Failed to get Detail tour');
   } catch (error: any) {
     console.error(
       'Error creating team:',

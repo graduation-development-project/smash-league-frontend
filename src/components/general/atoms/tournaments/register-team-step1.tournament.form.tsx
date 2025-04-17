@@ -102,10 +102,8 @@ const RegisterTeamStep1Form = ({
         if (athleteOption) {
             setAthleteList((prev) => [...prev, athleteOption]);
         }
-
         setRegisterAthleteList((prev) => prev.filter((_, i) => i !== index));
     };
-
     console.log('registerAthleteList', registerAthleteList);
     
 

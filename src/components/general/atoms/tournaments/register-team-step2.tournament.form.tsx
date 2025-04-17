@@ -28,7 +28,7 @@ const RegisterTeamStep2Form = ({
     const fetchEventDetails = async () => {
       try {
         const response = await getTournamentEventDetailAPI(detailId);
-        setTournamentEvent(response.data.data);
+        setTournamentEvent(response.data);
       } catch (error) {
         console.log('Error fetching event details:', error);
       }

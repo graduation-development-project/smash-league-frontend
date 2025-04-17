@@ -1,5 +1,5 @@
 'use client';
-import { Tabs, TabsProps } from 'antd';
+import { ConfigProvider, Tabs, TabsProps } from 'antd';
 import React, { useEffect, useState } from 'react';
 import BracketDetailsTour from '../../organisms/tournaments/bracket-details.tour';
 import MatchDetailsTour from '../../organisms/tournaments/match-details.tour';
@@ -10,7 +10,7 @@ const EventAgeDetails = ({
   eventId,
   mainColor,
 }: {
-  tournamentId: string | string[];
+  tournamentId: string;
   eventId: string;
   mainColor: string;
 }) => {
@@ -20,20 +20,22 @@ const EventAgeDetails = ({
   // console.log('check ', eventId);
 
 
-
-
-
   const [tabs, setTabs] = useState<TabsProps['items']>([
     {
       label: 'Bracket',
       key: 'bracket',
-      children: <BracketDetailsTour mainColor={mainColor} bracket={bracket} eventId={eventId}/>,
+      children: <BracketDetailsTour
+        mainColor={mainColor}
+        bracket={bracket}
+        eventId={eventId}
+        tournamentId={tournamentId}
+      />,
     },
     {
       label: 'Matches',
       key: 'matches',
       children: (
-        <MatchDetailsTour mainColor={mainColor} matchList={matchList} eventId={eventId} tournamentId={tournamentId}/>
+        <MatchDetailsTour mainColor={mainColor} matchList={matchList} eventId={eventId} tournamentId={tournamentId} />
       ),
     },
     {
@@ -54,11 +56,12 @@ const EventAgeDetails = ({
       <Tabs
         defaultActiveKey="1"
         // type="card"
-        size={'large'}
-        style={{ marginBottom: 32 }}
+        size={'small'}
+        style={{ marginBottom: 32, fontWeight: 600 }}
         items={tabs}
-        // onClick={}
+      // onClick={}
       />
+
     </div>
   );
 };
