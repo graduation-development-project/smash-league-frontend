@@ -16,6 +16,9 @@ const EmptyCard = ({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          fontFamily: 'inherit',
+          fontSize: "16px",
+          color: "#333",
         }}
         description={description}
         image={image}

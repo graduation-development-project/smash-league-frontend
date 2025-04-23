@@ -421,4 +421,25 @@ export const registerTournamentByTeamAPI = async (
 };
 
 
+export const getJoinedTeamAPI = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/teams/joined-team`, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get joined team:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+}
+
+
 

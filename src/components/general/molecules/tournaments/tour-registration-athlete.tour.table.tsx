@@ -7,11 +7,13 @@ import { formatDateTime } from '@/utils/format';
 import {
   getTournamentRegistrationByAthleteAPI,
   payRegistrationFeeAPI,
+  removeTournamentRegistrationAPI,
 } from '@/services/tour-registration';
 import { GrView } from 'react-icons/gr';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { LoadingOutlined } from '@ant-design/icons';
+import { TableRowSelection } from 'antd/es/table/interface';
 
 interface DataType {
   key: string;
@@ -35,6 +37,7 @@ const TourRegistrationOfAthleteTable = ({
   );
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -47,7 +50,7 @@ const TourRegistrationOfAthleteTable = ({
     }
   }, []);
 
-  console.log('Check user', user);
+  // console.log('Check user', user);
   const getTournamentRegistrationByAthlete = async (user: any) => {
     if (!user) return;
     try {
@@ -81,7 +84,7 @@ const TourRegistrationOfAthleteTable = ({
             .map((regis: any) => ({
               key: regis?.id,
               tourName: regis?.tournament?.name,
-              event: regis?.tournamentEvent?.tournamentEvent,
+              event: `${regis?.tournamentEvent?.tournamentEvent} (${regis?.tournamentEvent?.fromAge} to ${regis?.tournamentEvent?.toAge})`,
               startDate: regis?.tournament?.startDate,
               endDate: regis?.tournament?.endDate,
               location: regis?.tournament?.location,
@@ -142,7 +145,59 @@ const TourRegistrationOfAthleteTable = ({
     }
   };
 
-  console.log('Check tourRegistrationList', tourRegistrationList);
+  // console.log('Check tourRegistrationList', tourRegistrationList);
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection: TableRowSelection<DataType> = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const hasSelected = selectedRowKeys.length > 0;
+
+  const handleRemoveRegistration = async (tourIds: string[]) => {
+    try {
+      const response = await removeTournamentRegistrationAPI(
+        user.access_token,
+        tourIds,
+      );
+      console.log('Check remove', response.data);
+      if (
+        response.data.statusCode === 200 ||
+        response.data.statusCode === 201 ||
+        response.data.statusCode === 204
+      ) {
+        toast.success(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        getTournamentRegistrationByAthlete(user);
+      } else {
+        toast.error(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log('Check error', error);
+    }
+  };
 
   const columns: TableProps<DataType>['columns'] =
     profileRole === 'UMPIRE'
@@ -214,11 +269,17 @@ const TourRegistrationOfAthleteTable = ({
               return status === 'PENDING' ? (
                 <div className="flex justify-center items-center gap-4">
                   <p className=" hover:underline cursor-pointer text-[14px] transition-all duration-200">
-                    <GrView size={16} />
+                    <GrView size={16} className="hover:text-secondColor" />
                   </p>
-                  <Popconfirm title="Are you sure to delete this tournament?">
+                  <Popconfirm
+                    title="Are you sure to delete this tournament?"
+                    onConfirm={() => handleRemoveRegistration([key])}
+                  >
                     <p className="hover:underline cursor-pointer text-[14px] transition-all duration-200">
-                      <MdOutlineDeleteOutline size={16} />
+                      <MdOutlineDeleteOutline
+                        size={16}
+                        className="hover:text-primaryColor"
+                      />
                     </p>
                   </Popconfirm>
                 </div>
@@ -237,6 +298,7 @@ const TourRegistrationOfAthleteTable = ({
           },
           {
             title: 'Event',
+            width: 150,
             dataIndex: 'event',
             key: 'event',
           },
@@ -304,11 +366,17 @@ const TourRegistrationOfAthleteTable = ({
               return status === 'PENDING' ? (
                 <div className="flex justify-center items-center gap-4">
                   <p className=" hover:underline cursor-pointer text-[14px] transition-all duration-200">
-                    <GrView size={16} />
+                    <GrView size={16} className="hover:text-secondColor" />
                   </p>
-                  <Popconfirm title="Are you sure to delete this tournament?">
+                  <Popconfirm
+                    title="Are you sure to delete this tournament?"
+                    onConfirm={() => handleRemoveRegistration([key])}
+                  >
                     <p className="hover:underline cursor-pointer text-[14px] transition-all duration-200">
-                      <MdOutlineDeleteOutline size={16} />
+                      <MdOutlineDeleteOutline
+                        size={16}
+                        className="hover:text-primaryColor"
+                      />
                     </p>
                   </Popconfirm>
                 </div>
@@ -325,12 +393,32 @@ const TourRegistrationOfAthleteTable = ({
 
   return (
     <div className="flex flex-col gap-3 p-3">
-      <h2 className="font-bold text-[20px]">Tournament Registration</h2>
+      <div className="w-full flex justify-between items-center p-2">
+        <h2 className="font-bold text-[20px]">Tournament Registration</h2>
+        <Popconfirm
+          title="Are you sure delete all tournament registration?"
+          onConfirm={() =>
+            handleRemoveRegistration(selectedRowKeys.map(String))
+          }
+          disabled={selectedRowKeys.length == 0}
+        >
+          <button
+            className={`text-white bg-primaryColor p-2 rounded text-[16px] font-semibold hover:bg-opacity-80 ${
+              tourRegistrationList.length === 0 &&
+              'opacity-50 bg-gray-500 cursor-not-allowed '
+            }`}
+          >
+            Delete All
+          </button>
+        </Popconfirm>
+      </div>
+
       <ConfigProvider
         theme={{ token: { colorPrimary: '#FF8243', fontFamily: 'inherit' } }}
       >
         <Table
           style={{ width: '100%', fontFamily: 'inherit' }}
+          rowSelection={rowSelection}
           columns={columns}
           dataSource={tourRegistrationList}
         />

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Col,
@@ -11,7 +11,7 @@ import {
   notification,
   Row,
 } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { sendRequest } from '@/utils/api';
 import { useRouter } from 'next/navigation';
@@ -20,10 +20,11 @@ const VerifyForm = (props: any) => {
   const { email } = props;
 
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (values: any) => {
     const { email, otp } = values;
-
+    setIsLoading(true);
     const res = await sendRequest<IBackendRes<any>>({
       url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/verify-otp`,
       method: 'PUT',
@@ -34,9 +35,11 @@ const VerifyForm = (props: any) => {
     });
 
     if (res?.status === 200) {
+      setIsLoading(false);
       message.success('Verify successfully.');
       router.push(`/auth/login`);
     } else {
+      setIsLoading(false);
       notification.error({
         message: 'Verify error',
         description: res?.message,
@@ -110,7 +113,7 @@ const VerifyForm = (props: any) => {
                   fontWeight: '500',
                 }}
               >
-                Submit
+                Submit {isLoading && <LoadingOutlined />}
               </Button>
             </Form.Item>
 

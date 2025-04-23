@@ -206,3 +206,31 @@ export const payRegistrationFeeAPI = async (
     return error.response?.data;
   }
 };
+
+export const removeTournamentRegistrationAPI = async (
+  accessToken: string,
+  tournamentRegistrationIds: string[],
+) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/remove-register-tournament-list`,
+
+      {
+        tournamentRegistrationIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error remove registration :',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

@@ -354,7 +354,30 @@ export const getAssignedMatchesAPI = async (
   }
 };
 
-export const getParticipantsByTournamentEventAPI = async (tournamentId:string) => {
+export const getAllAssignedMatchesAPI = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/umpires/all-assigned-matches`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all assigned matches:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getParticipantsByTournamentEventAPI = async (
+  tournamentId: string,
+) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-participants-by-tournament-event/${tournamentId}`,
@@ -368,4 +391,34 @@ export const getParticipantsByTournamentEventAPI = async (tournamentId:string) =
     );
     return error.response?.data;
   }
-}
+};
+
+export const updateMatchInfoAPI = async (
+  matchId: string,
+  umpireId: string,
+  startedWhen: string,
+  leftCompetitorId: string,
+  rightCompetitorId: string,
+  courtId: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/update-match-info/${matchId}`,
+      {
+        umpireId,
+        startedWhen,
+        leftCompetitorId,
+        rightCompetitorId,
+        courtId,
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error update assigned players in match:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

@@ -4,8 +4,10 @@ import images from '@/assets/images';
 import { formatDate } from '@/utils/format';
 import { Avatar, Image, Popover } from 'antd';
 import { CalendarDays, MapPin, UsersRound } from 'lucide-react';
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { formatMoney } from '../../../../utils/format';
 
 const TeamsTournamentsCard = ({ tour }: { tour?: any }) => {
   const router = useRouter();
@@ -40,16 +42,16 @@ const TeamsTournamentsCard = ({ tour }: { tour?: any }) => {
             <CalendarDays className="group-hover:text-primaryColor group-hover:animate-around transition-all duration-300" />
             {formatDate(tour.startDate)}
           </p>
-          <Popover
+          {/* <Popover
             content={membersRelated}
             trigger="hover"
             title="Members Related"
-          >
+          > */}
             <p className="flex justify-between items-center gap-2 group">
-              <UsersRound className="group-hover:text-primaryColor group-hover:animate-around transition-all duration-300" />
-              50 Participants
+              <FaMoneyBillTrendUp size={18} className="group-hover:text-primaryColor group-hover:animate-around transition-all duration-300" />
+              {formatMoney(tour.prizePool)}
             </p>
-          </Popover>
+          {/* </Popover> */}
           <p className="flex justify-between items-center gap-2 group">
             <MapPin className="group-hover:text-primaryColor group-hover:animate-around transition-all duration-300" />
             {tour.location}
