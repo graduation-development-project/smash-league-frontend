@@ -54,7 +54,7 @@ const NotificationCard = ({
         user?.access_token,
         option,
       );
-
+console.log("check invitation response", response?.data)
       if (response.status === 200 || response.status === 201) {
         getNotifications();
         toast.success(`${response?.data}`, {
@@ -116,7 +116,7 @@ const NotificationCard = ({
         );
       }
 
-      console.log(response);
+      // console.log("check request response", response?.data)
       if (response.status === 200 || response.status === 201) {
         getNotifications && getNotifications();
         if (notification?.type?.typeOfNotification === 'Transfer Team Leader') {
@@ -128,7 +128,7 @@ const NotificationCard = ({
             localStorage.setItem('user', JSON.stringify(newUser));
           }
         }
-        toast.success(`${response?.data.message}`, {
+        toast.success(`${response?.data}`, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,

@@ -74,6 +74,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
   }, []);
 
   const getAssignedMatches = async () => {
+  if(!user) return;
     try {
       const response = await getAssignedMatchesAPI(
         user.access_token,

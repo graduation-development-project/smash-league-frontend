@@ -101,7 +101,8 @@ const UmpireProfilePage = (props: any) => {
               <Avatar
                 style={{ border: '3px solid #FF8243' }}
                 size={200}
-                src="https://thebridge.in/h-upload/uid/1WBjBeRGUTAFdtLSbygdVctMuxxkfATBS2658560.jpg"
+                src={profile?.avatarURL}
+                alt="Umpire Image"
               />
               <div className="flex flex-col gap-2">
                 <h1 className="text-white text-[32px] font-bold">

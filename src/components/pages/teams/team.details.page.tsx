@@ -17,13 +17,23 @@ import {
 } from '@/services/team';
 import { toast } from 'react-toastify';
 import Spinner from '@/components/general/atoms/loaders/spinner';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 const TeamDetailsPage = (props: any) => {
   const { session } = props;
   const { activeKey, setActiveKey, teamDetails, teamId } = useTeamContext();
-  const [user, setUser] = useState<any>(null);
   const [teamMemberList, setTeamMemberList] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
 
   const fetchTeamMembers = async (teamId: string) => {
     if (teamId) {
@@ -37,13 +47,6 @@ const TeamDetailsPage = (props: any) => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-      setUser(storedUser);
-    }
-  }, []);
 
   useEffect(() => {
     fetchTeamMembers(teamId);
@@ -104,20 +107,21 @@ const TeamDetailsPage = (props: any) => {
         <MembersTeamsDetails
           setTeamMemberList={setTeamMemberList}
           teamMemberList={teamMemberList}
+          teamId = {teamId}
         />
       ),
     },
-    {
-      key: '3',
-      label: 'Announcements',
-      children: <AnnouncementsTeamsDetails />,
-    },
+    // {
+    //   key: '3',
+    //   label: 'Announcements',
+    //   children: <AnnouncementsTeamsDetails />,
+    // },
     { key: '4', label: 'Tournaments', children: <TournamentsTeamsDetails /> },
     ...(isTeamLeader
       ? [
           {
             key: '5',
-            label: 'Update Info',
+            label: 'Update Information',
             children: <UpdateTeamsForm user={user} />,
           },
         ]

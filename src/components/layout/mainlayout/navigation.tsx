@@ -114,24 +114,24 @@ const Navigation = (props: any) => {
         ]
       : []),
 
-    ...(user?.userRoles?.includes('Team Leader') ||
-    session?.user?.userRoles?.includes('Team Leader')
-      ? [
-          {
-            key: 'team-leader-profile',
-            label: 'Team Leader Profile',
-            icon: <RiProfileFill size={15} />,
-            onClick: () => {
-              if (!user || !user.userRoles) return; // Avoid errors
-              localStorage.setItem('page', 'Home');
-              localStorage.setItem('teamLeaderId', user?.id);
-              setRoute('Profile');
-              setTeamLeaderId(user?.id);
-              router.push(`/profile/teamleader/${user?.name.toLowerCase()}`);
-            },
-          },
-        ]
-      : []),
+    // ...(user?.userRoles?.includes('Team Leader') ||
+    // session?.user?.userRoles?.includes('Team Leader')
+    //   ? [
+    //       {
+    //         key: 'team-leader-profile',
+    //         label: 'Team Leader Profile',
+    //         icon: <RiProfileFill size={15} />,
+    //         onClick: () => {
+    //           if (!user || !user.userRoles) return; // Avoid errors
+    //           localStorage.setItem('page', 'Home');
+    //           localStorage.setItem('teamLeaderId', user?.id);
+    //           setRoute('Profile');
+    //           setTeamLeaderId(user?.id);
+    //           router.push(`/profile/teamleader/${user?.name.toLowerCase()}`);
+    //         },
+    //       },
+    //     ]
+    //   : []),
 
     ...(user?.userRoles?.includes('Umpire') ||
     session?.user?.userRoles?.includes('Umpire')

@@ -202,41 +202,41 @@ const MatchCard = ({
     );
   };
 
-  const content = (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: '#FF8243',
-        },
-      }}
-    >
-      <div className="w-full h-full flex flex-col gap-2 px-1 justify-self-start font-semibold">
-        <button
-          className="text-secondColor text-[14px] font-semibold hover:underline w-full"
-          onClick={showModal}
-        >
-          Assign Umpire
-        </button>
+  // const content = (
+  //   <ConfigProvider
+  //     theme={{
+  //       token: {
+  //         colorPrimary: '#FF8243',
+  //       },
+  //     }}
+  //   >
+  //     <div className="w-full h-full flex flex-col gap-2 px-1 justify-self-start font-semibold">
+  //       <button
+  //         className="text-secondColor text-[14px] font-semibold hover:underline w-full"
+  //         onClick={showModal}
+  //       >
+  //         Assign Umpire
+  //       </button>
 
-        {/* <Popconfirm
-          title="Are you sure to assign this athlete"
-          description="Are you sure to remove this member?"
-          onConfirm={() => {}}
-          onCancel={() => {}}
-          okText="Yes"
-          cancelText="No"
-        > */}
-        <button
-          className="text-primaryColor text-[14px] font-semibold hover:underline w-full"
-          // onClick={handleRemoveMember}
-          onClick={showAssignAthleteModal}
-        >
-          Assign Athlete
-        </button>
-        {/* </Popconfirm> */}
-      </div>
-    </ConfigProvider>
-  );
+  //       {/* <Popconfirm
+  //         title="Are you sure to assign this athlete"
+  //         description="Are you sure to remove this member?"
+  //         onConfirm={() => {}}
+  //         onCancel={() => {}}
+  //         okText="Yes"
+  //         cancelText="No"
+  //       > */}
+  //       <button
+  //         className="text-primaryColor text-[14px] font-semibold hover:underline w-full"
+  //         // onClick={handleRemoveMember}
+  //         onClick={showAssignAthleteModal}
+  //       >
+  //         Assign Athlete
+  //       </button>
+  //       {/* </Popconfirm> */}
+  //     </div>
+  //   </ConfigProvider>
+  // );
   return (
     <div className="relative w-full h-max flex flex-col items-center ">
       <div className="relative w-full h-[300px]  bg-[#2c2c2c] rounded-xl text-white shadow-shadowBtn">
@@ -263,16 +263,15 @@ const MatchCard = ({
         </div>
 
         <div className="text-white absolute top-4 right-2">
-          <Popover
+          {/* <Popover
             trigger={'click'}
             content={content}
             placement="bottomLeft"
             arrow={false}
             style={{ display: 'flex', justifyContent: 'flex-start' }}
-          >
-            {' '}
-            <HiOutlineDotsVertical size={25} />
-          </Popover>
+          > */}{' '}
+          <HiOutlineDotsVertical size={25} onClick={showModal} />
+          {/* </Popover> */}
         </div>
       </div>
       <div
@@ -289,6 +288,7 @@ const MatchCard = ({
         setIsModalOpen={setIsModalOpen}
         tournamentId={tournamentId}
         matchId={match.id}
+        playersOptions={participantsList}
       />
 
       <AssignPlayerInMatchModal

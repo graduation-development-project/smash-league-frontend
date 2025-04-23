@@ -71,11 +71,11 @@ const OrganizerProfilePage = (props: any) => {
         />
       ),
     },
-    {
-      key: '3',
-      label: 'Announcements',
-      children: <AnnouncementsOrganizerProfile />,
-    },
+    // {
+    //   key: '3',
+    //   label: 'Announcements',
+    //   children: <AnnouncementsOrganizerProfile />,
+    // },
     {
       key: '4',
       label: 'Tournaments',
@@ -87,11 +87,11 @@ const OrganizerProfilePage = (props: any) => {
         />
       ),
     },
-    {
-      key: '5',
-      label: 'Events',
-      children: 'Content of Events',
-    },
+    // {
+    //   key: '5',
+    //   label: 'Events',
+    //   children: 'Content of Events',
+    // },
     ...(isOrganizer
       ? [
           {

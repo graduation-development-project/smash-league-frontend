@@ -63,14 +63,14 @@ const AthleteProfilePage = (props: any) => {
     {
       key: '2',
       label: 'Tournaments',
-      children: <MyTournaments profileRole='ATHLETE'/>,
+      children: <MyTournaments profileRole="ATHLETE" />,
     },
     ...(user?.id === profile?.id
       ? [
           {
             key: '3',
             label: 'Teams List',
-            children: <MyTeams/>,
+            children: <MyTeams user={user}/>,
           },
           {
             key: '4',
@@ -103,7 +103,10 @@ const AthleteProfilePage = (props: any) => {
               <Avatar
                 style={{ border: '3px solid #FF8243' }}
                 size={200}
-                src="https://thebridge.in/h-upload/uid/1WBjBeRGUTAFdtLSbygdVctMuxxkfATBS2658560.jpg"
+                src={
+                  profile?.avatarURL
+                }
+                alt="Athlete Image"
               />
               <div className="flex flex-col gap-2">
                 <h1 className="text-white text-[32px] font-bold">

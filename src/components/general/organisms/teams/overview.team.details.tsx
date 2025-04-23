@@ -10,16 +10,18 @@ import { Button } from '@/components/ui/button';
 import TournamentCard from '../../atoms/tournaments/tournament.card';
 import { useTeamContext } from '@/context/team.context';
 import { useRouter } from 'next/navigation';
+import EmptyCard from '../../molecules/empty/empty.card';
 const OverviewTeamDetails = () => {
   const [isSocialMediaVisible, setIsSocialMediaVisible] = useState(true);
-  const { setActiveKey, teamDetails} = useTeamContext();
+  const { setActiveKey, teamDetails } = useTeamContext();
+  const [tournamentList, setTournamentList] = useState([]);
   // console.log(teamDetails);
   const router = useRouter();
   return (
     <div className="w-full h-full flex justify-around px-8 py-4 gap-3">
       {/* Tournaments */}
       <div className="w-[60%] flex flex-col gap-3 px-5">
-        <div className="w-full h-full flex justify-between items-center">
+        <div className="w-full h-max flex justify-between">
           <Button
             variant={'link'}
             colorBtn={'whiteBtn'}
@@ -44,13 +46,22 @@ const OverviewTeamDetails = () => {
           </Button>
         </div>
 
-        <div className="w-full grid grid-cols-2 gap-5 place-items-center ">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index}>
-              <TournamentCard />
-            </div>
-          ))}
-        </div>
+        {tournamentList.length > 0 ? (
+          <div className="w-full grid grid-cols-2 gap-5 place-items-center ">
+            {tournamentList.map((_, index) => (
+              <div key={index}>
+                <TournamentCard />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="w-full h-full flex justify-center items-center text-[20px] font-semibold">
+            <EmptyCard
+              description="No tournaments found"
+              image="https://cdn-icons-png.flaticon.com/512/313/313738.png"
+            />
+          </div>
+        )}
       </div>
       {/* Rating */}
 
@@ -83,25 +94,49 @@ const OverviewTeamDetails = () => {
             </h1>
             {isSocialMediaVisible ? (
               <div className="flex gap-4 items-center">
-                <Popover title="Facebook" placement="bottomRight" getPopupContainer={(triggerNode:any) => triggerNode.parentNode}>
+                <Popover
+                  title="Facebook"
+                  placement="bottomRight"
+                  getPopupContainer={(triggerNode: any) =>
+                    triggerNode.parentNode
+                  }
+                >
                   <FaFacebookSquare
                     size={20}
                     className="hover:animate-around hover:text-blue-700 transition-all duration-300"
                   />
                 </Popover>
-                <Popover title="Instagram" placement="bottomRight" getPopupContainer={(triggerNode:any) => triggerNode.parentNode}>
+                <Popover
+                  title="Instagram"
+                  placement="bottomRight"
+                  getPopupContainer={(triggerNode: any) =>
+                    triggerNode.parentNode
+                  }
+                >
                   <FaInstagramSquare
                     size={20}
                     className="hover:animate-around hover:text-[#c4238a] transition-all duration-300"
                   />
                 </Popover>
-                <Popover title="Discord" placement="bottomRight" getPopupContainer={(triggerNode:any) => triggerNode.parentNode}>
+                <Popover
+                  title="Discord"
+                  placement="bottomRight"
+                  getPopupContainer={(triggerNode: any) =>
+                    triggerNode.parentNode
+                  }
+                >
                   <IoLogoDiscord
                     size={20}
                     className="hover:animate-around hover:text-[#4007a2] transition-all duration-300"
                   />
                 </Popover>
-                <Popover title="Twitter" placement="bottomRight" getPopupContainer={(triggerNode:any) => triggerNode.parentNode}>
+                <Popover
+                  title="Twitter"
+                  placement="bottomRight"
+                  getPopupContainer={(triggerNode: any) =>
+                    triggerNode.parentNode
+                  }
+                >
                   <FaSquareXTwitter
                     size={20}
                     className="hover:animate-around hover:text-slate-500 transition-all duration-300"

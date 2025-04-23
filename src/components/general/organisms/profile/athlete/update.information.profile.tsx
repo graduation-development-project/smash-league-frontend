@@ -1,12 +1,25 @@
 'use client';
 
-import { Button, ConfigProvider, DatePicker, Form, Input, Select } from 'antd';
+import {
+  Button,
+  ConfigProvider,
+  DatePicker,
+  Form,
+  Image,
+  Input,
+  Select,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import ModalChangePassword from '../../auth/modal.change.password';
-import { useProfileContext } from '@/context/profile.context';
-import { getProfileAPI, updateProfileAPI } from '@/services/user';
+import {
+  getProfileAPI,
+  updateProfileAPI,
+  uploadAvatarAPI,
+} from '@/services/user';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
+import AddBankAccountModal from '@/components/general/atoms/profile/add-bank-account.modal';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const UpdateInformationProfile = ({
   session,
@@ -20,6 +33,11 @@ const UpdateInformationProfile = ({
   const [changePassword, setChangePassword] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [form] = Form.useForm();
+  const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [avatarImage, setAvatarImage] = useState('');
+  const [isUpdated, setIsUpdated] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -29,6 +47,12 @@ const UpdateInformationProfile = ({
       }
     }
   }, []);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
 
   const getProfile = async () => {
     if (!user) return;
@@ -58,6 +82,7 @@ const UpdateInformationProfile = ({
           response?.startPlayingSport === null
             ? ''
             : response?.startPlayingSport,
+        avatarUrl: response?.avatarUrl === null ? '' : response?.avatarUrl,
       });
     } catch (error: any) {
       console.log(error);
@@ -68,6 +93,44 @@ const UpdateInformationProfile = ({
     getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  const uploadAvatar = async () => {
+    if (!user) return;
+    try {
+      const response = await uploadAvatarAPI(file, user?.access_token);
+      console.log('Check upload avatar', response);
+      setAvatarImage(response?.data?.data);
+      if (
+        response?.data?.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
+        toast.success(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        toast.error(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   const handleUpdateInformation = async (values: any) => {
     // console.log('values', values);
     if (!user) return;
@@ -81,8 +144,11 @@ const UpdateInformationProfile = ({
       ? dayjs(values.dateOfBirth).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       : null;
 
-    // console.log('Check formatted DOB', formattedDOB);
+    // console.log('Check clean values', cleanedValues);
     try {
+      setIsLoading(true);
+      if (avatarImage !== null) cleanedValues.avatarURL = avatarImage;
+      console.log('Check image', avatarImage);
       const response = await updateProfileAPI(
         {
           ...cleanedValues,
@@ -90,9 +156,14 @@ const UpdateInformationProfile = ({
         },
         user?.access_token,
       );
-      // console.log('Check update', response);
-      if (response?.data.statusCode === 200 || response?.statusCode === 201) {
-        toast.success(`${response?.data.message}`, {
+      // console.log('Check update', response?.data);
+      if (response?.status === 200 || response?.status === 201) {
+        setIsUpdated(false);
+        form.resetFields();
+        setFile(null);
+        setAvatarImage('');
+        setIsLoading(false);
+        toast.success('Update profile successfully', {
           position: 'top-right',
           autoClose: 3000,
           hideProgressBar: false,
@@ -103,7 +174,8 @@ const UpdateInformationProfile = ({
           theme: 'light',
         });
       } else {
-        toast.error(`${response?.message}`, {
+        setIsLoading(false);
+        toast.error(`Please try again`, {
           position: 'top-right',
           autoClose: 3000,
           hideProgressBar: false,
@@ -246,6 +318,32 @@ const UpdateInformationProfile = ({
           >
             <Input.TextArea placeholder="Write here" />
           </Form.Item>
+
+          {/* <Form.Item
+            label="When did you start playing sport?"
+            name="startPlayingSport"
+            initialValue={profile?.startPlayingSport}
+          >
+            <Input.TextArea placeholder="Write here" />
+          </Form.Item> */}
+
+          <Form.Item name="avatarUrl" label="Avatar">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="mb-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            />
+          </Form.Item>
+
+          {(file || profile?.avatarUrl) && (
+            <Image
+              src={file ? URL.createObjectURL(file) : profile.avatarUrl}
+              alt="Avatar"
+              width={200}
+              height={200}
+            />
+          )}
         </ConfigProvider>
 
         <ConfigProvider
@@ -256,20 +354,39 @@ const UpdateInformationProfile = ({
           }}
         >
           <Form.Item>
-            <div className="flex justify-end gap-1">
-              <Button
-                style={{ fontFamily: 'inherit', fontWeight: '500' }}
-                onClick={() => setChangePassword(true)}
-              >
+            <div className="flex justify-between items-center">
+              <div className="cursor-pointer text-[14px] hover:underline hover:text-secondColor hover:font-semibold ">
                 Change Password
-              </Button>
-              <Button
-                style={{ fontFamily: 'inherit', fontWeight: '500' }}
-                type="primary"
-                htmlType="submit"
-              >
-                Update
-              </Button>
+              </div>
+              <div className="flex justify-end gap-1">
+                <Button
+                  style={{ fontFamily: 'inherit', fontWeight: '500' }}
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Add Bank Account
+                </Button>
+                {file && !isUpdated ? (
+                  <Button
+                    style={{ fontFamily: 'inherit', fontWeight: '500' }}
+                    // type="primary"
+                    // htmlType="submit"
+                    onClick={() => {
+                      uploadAvatar();
+                      setIsUpdated(true);
+                    }}
+                  >
+                    Upload {isLoading && <LoadingOutlined />}
+                  </Button>
+                ) : (
+                  <Button
+                    style={{ fontFamily: 'inherit', fontWeight: '500' }}
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    Update {isLoading && <LoadingOutlined />}
+                  </Button>
+                )}
+              </div>
             </div>
           </Form.Item>
         </ConfigProvider>
@@ -278,6 +395,12 @@ const UpdateInformationProfile = ({
       <ModalChangePassword
         isModalOpen={changePassword}
         setIsModalOpen={setChangePassword}
+      />
+
+      <AddBankAccountModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        accessToken={user?.access_token}
       />
     </div>
   );

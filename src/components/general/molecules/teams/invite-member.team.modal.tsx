@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import HeadlessTippy from '@tippyjs/react/headless';
 import MemberSearchTeamCard from '../../atoms/teams/member-search.teams.card';
 import { useDebounce } from '@/hooks/use-debounce';
-import { searchUserByEmail } from '@/services/user';
+import { searchUserByEmailAPI } from '@/services/user';
 import { useTeamContext } from '@/context/team.context';
 import { inviteMemberAPI } from '@/services/team';
 import { toast } from 'react-toastify';
@@ -37,9 +37,9 @@ const InviteMemberTeamModal = ({
 
   const searchUsers = async (debounceValue: string) => {
     try {
-      const response = await searchUserByEmail(
-        debounceValue,
+      const response = await searchUserByEmailAPI(
         user.access_token,
+        debounceValue,
       );
       // console.log(response?.data?.data, 'response');
       setUserList(response?.data?.data.filter((us: any) => us.id !== user.id));

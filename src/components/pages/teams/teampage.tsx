@@ -16,27 +16,27 @@ const TeamPage = (props: any) => {
   //   return <Loaders isLoading={isLoading}/>
   //  }
 
-  const items: TabsProps['items'] = [
-    {
-      key: '1',
-      label: 'All Teams',
-      children: <AllTeams session={session} />,
-    },
-    ...(session?.user
-      ? [
-          {
-            key: '2',
-            label: 'My Teams',
-            children: <MyTeams />,
-          },
-          {
-            key: '3',
-            label: 'Participated Tournaments',
-            children: <ParticipatedTournamentsOfTeams />,
-          },
-        ]
-      : []),
-  ];
+  // const items: TabsProps['items'] = [
+  //   {
+  //     key: '1',
+  //     label: 'All Teams',
+  //     children: <AllTeams session={session} />,
+  //   },
+  //   ...(session?.user
+  //     ? [
+  //         {
+  //           key: '2',
+  //           label: 'My Teams',
+  //           children: <MyTeams />,
+  //         },
+  //         {
+  //           key: '3',
+  //           label: 'Participated Tournaments',
+  //           children: <ParticipatedTournamentsOfTeams />,
+  //         },
+  //       ]
+  //     : []),
+  // ];
   return (
     <ConfigProvider
       theme={{

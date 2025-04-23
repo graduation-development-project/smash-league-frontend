@@ -4,23 +4,43 @@ import {
   getTournamentUmpiresParticipantsAPI,
 } from '@/services/tournament';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Button, ConfigProvider, Form, Modal, Select } from 'antd';
+import {
+  Button,
+  Col,
+  ConfigProvider,
+  Form,
+  Modal,
+  Row,
+  Select,
+  TimePicker,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { DatePicker, Space } from 'antd';
+import type { DatePickerProps, GetProps } from 'antd';
+
+interface Option {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
 
 const UmpireAssignModal = ({
   isModalOpen,
   setIsModalOpen,
   tournamentId,
   matchId,
+  playersOptions,
 }: {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   tournamentId: string | string[];
   matchId: string;
+  playersOptions: any[];
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [umpiresList, setUmpiresList] = useState([]);
+  const [umpiresList, setUmpiresList] = useState<Option[]>([]);
+  const [form] = Form.useForm();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -38,7 +58,24 @@ const UmpireAssignModal = ({
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const [form] = Form.useForm();
+
+  // const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+  //   console.log(date, dateString);
+  // };
+
+  // const onTimeChange: TimePickerProps['onChange'] = (time, timeString) => {
+  //   console.log(time, timeString);
+  // };
+
+  type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
+
+  const { RangePicker } = DatePicker;
+
+  const onOk = (
+    value: DatePickerProps['value'] | RangePickerProps['value'],
+  ) => {
+    console.log('onOk: ', value);
+  };
 
   const getTournamentUmpiresParticipants = async () => {
     const res = await getTournamentUmpiresParticipantsAPI(
@@ -63,7 +100,7 @@ const UmpireAssignModal = ({
 
   useEffect(() => {
     getTournamentUmpiresParticipants();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen]);
 
   const handleAssignUmpire = async (values: any) => {
@@ -77,7 +114,10 @@ const UmpireAssignModal = ({
         umpireId,
       );
       console.log('check res', response);
-      if (response?.data.statusCode === 200 || response?.data?.statusCode === 201) {
+      if (
+        response?.data.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
         setIsModalOpen(false);
         setIsLoading(false);
         toast.success(`${response?.data?.message}`, {
@@ -125,8 +165,11 @@ const UmpireAssignModal = ({
         }}
       >
         <Modal
-          title="Umpire Assign Form"
-          width={500}
+          title="Match Assignment"
+          width={800}
+          style={{
+            fontFamily: 'inherit',
+          }}
           open={isModalOpen}
           //   onOk={handleOk}
           okButtonProps={{
@@ -142,14 +185,17 @@ const UmpireAssignModal = ({
           <Form
             autoComplete="off"
             onFinish={handleAssignUmpire}
-            layout="horizontal"
+            layout="vertical"
             form={form}
+            style={{
+              fontFamily: 'inherit',
+              paddingTop: 10,
+            }}
           >
             <ConfigProvider
               theme={{
                 components: {
                   Input: {
-                    /* here is your component tokens */
                     activeBorderColor: '#FF8243',
                     activeShadow: '0 0 0 2px #fffff',
                     hoverBorderColor: '#FF8243',
@@ -157,14 +203,107 @@ const UmpireAssignModal = ({
                 },
               }}
             >
-              <Form.Item label="Umpire" name="umpireId">
-                <Select
-                  //   defaultValue="lucy"
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item label="Right Competitor" name="rightCompetitorId">
+                    <Select
+                      showSearch
+                      placeholder="Select player/couple"
+                      filterOption={(input, option) =>
+                        (option?.label ?? '')
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={playersOptions}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="Umpire" name="umpireId">
+                    <Select
+                      showSearch
+                      placeholder="Select umpire"
+                      filterOption={(input, option) =>
+                        (option?.label ?? '')
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={umpiresList}
+                    />
+                  </Form.Item>
+
+                  {/* <Form.Item label="Start Date" name="startDate">
+                    <DatePicker onChange={onChange} style={{ width: '100%' }} />
+                  </Form.Item> */}
+                </Col>
+
+                <Col span={12}>
+                  <Form.Item label="Left Competitor" name="leftCompetitorId">
+                    <Select
+                      showSearch
+                      placeholder="Select player/couple"
+                      filterOption={(input, option) =>
+                        (option?.label ?? '')
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={playersOptions}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="Court" name="courtId">
+                    <Select
+                      showSearch
+                      placeholder="Select Court"
+                      filterOption={(input, option) =>
+                        (option?.label ?? '')
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={[
+                        {
+                          value: '1',
+                          label: 'Court 1',
+                        },
+                        {
+                          value: '2',
+                          label: 'Court 2',
+                        },
+                        {
+                          value: '3',
+                          label: 'Court 3',
+                          disabled: true,
+                        },
+                      ]}
+                    />
+                  </Form.Item>
+
+                  {/* <Form.Item label="Start Time" name="startTime">
+                    <TimePicker
+                      format="HH:mm"
+                      onChange={onTimeChange}
+                      style={{ width: '100%' }}
+                    />
+                  </Form.Item> */}
+                </Col>
+              </Row>
+
+              <Form.Item
+                label="Start When"
+                name="startWhen"
+                style={{ width: '100%' }}
+              >
+                <DatePicker
                   style={{ width: '100%' }}
-                  //   onChange={handleChange}
-                  options={umpiresList}
+                  showTime={{ format: 'HH:mm' }}
+                  format="YYYY-MM-DD HH:mm"
+                  onChange={(value, dateString) => {
+                    console.log('Selected Time: ', value);
+                    console.log('Formatted Selected Time: ', dateString);
+                  }}
+                  onOk={onOk}
                 />
               </Form.Item>
+
               <Form.Item>
                 <div className="w-full flex justify-end gap-2">
                   <Button
@@ -187,7 +326,7 @@ const UmpireAssignModal = ({
                       type="primary"
                       htmlType="submit"
                     >
-                      Register
+                      Assign
                       {isLoading && (
                         <LoadingOutlined
                           style={{ marginLeft: '5px', fontSize: '20px' }}
