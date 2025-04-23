@@ -82,6 +82,7 @@ export default function CalendarPage({ profileRole }: { profileRole: string }) {
     if (user) {
       getAllAssignedMatches();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   console.log('Check scheduleList', scheduleList);

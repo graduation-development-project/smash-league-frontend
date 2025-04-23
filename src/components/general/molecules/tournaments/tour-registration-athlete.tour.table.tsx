@@ -48,6 +48,7 @@ const TourRegistrationOfAthleteTable = ({
         getTournamentRegistrationByAthlete(parsedUser); // pass to function directly
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // console.log('Check user', user);

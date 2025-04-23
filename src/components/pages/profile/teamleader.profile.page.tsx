@@ -65,7 +65,7 @@ const TeamLeaderProfilePage = (props: any) => {
           {
             key: '3',
             label: 'Teams List',
-            children: <MyTeams />,
+            children: <MyTeams user={user} />,
           },
           {
             key: '4',

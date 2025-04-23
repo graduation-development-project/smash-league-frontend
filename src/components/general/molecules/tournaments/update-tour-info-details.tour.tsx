@@ -150,20 +150,24 @@ const UpdateBasicInfoDetailsTour = ({
   useEffect(() => {
     fetchGetAllSeries();
     fetchProvince();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchGetAllSeries();
     fetchProvince();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     form.setFieldsValue({ url: url });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url])
   useEffect(() => {
     if (debounceUrl.length > 8) {
       fetchCheckExistUrl();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceUrl]);
 
   useEffect(() => {
@@ -182,6 +186,7 @@ const UpdateBasicInfoDetailsTour = ({
       }
       fetchDistrict(provinceId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceId]);
 
   useEffect(() => {
@@ -199,12 +204,14 @@ const UpdateBasicInfoDetailsTour = ({
       }
       fetchWard(districtId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceId, districtId]);
 
   useEffect(() => {
     const newLocation = [street, ward, districtName, provinceName].join(', ');
     setLocation(newLocation);
     form.setFieldValue('location', newLocation);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [street, ward, districtName, provinceName]);
 
   const handleColorChange = (value: Color) => {

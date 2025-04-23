@@ -45,6 +45,7 @@ const MyTeams = ({ user }: { user: any }) => {
     if (user?.access_token) {
       getJoinedTeam();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   type MenuItem = Required<MenuProps>['items'][number];

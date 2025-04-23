@@ -180,6 +180,7 @@ const RegisterAthleteTournamentForm = ({
 
   useEffect(() => {
     searchUserByEmail();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   const handleRegisterTournament = async (values: any) => {
     if (!user) return;
