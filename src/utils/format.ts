@@ -14,6 +14,14 @@ export const formatMoney = (value: number) => {
   return formatted;
 };
 
+export const formatLocation = (value: string) => {
+  const parts = value.split(',');
+  if (parts.length <= 2) return '';
+  return parts.slice(1).join(',').trim();
+};
+
+
+
 export const formatOccurDate = (startDate?: string, endDate?: string) => {
   
   if (!startDate || !endDate) return "Invalid Date";

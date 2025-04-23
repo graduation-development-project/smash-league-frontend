@@ -1,6 +1,7 @@
 'use client';
 import images from '@/assets/images';
-import { formatDate, formatMoney, formatOccurDate } from '@/utils/format';
+import { formatDate, formatLocation, formatMoney, formatOccurDate } from '@/utils/format';
+import { Image } from 'antd';
 import {
   CalendarClock,
   CalendarX,
@@ -8,7 +9,7 @@ import {
   MapPin,
   Users,
 } from 'lucide-react';
-import Image from 'next/image';
+
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -18,21 +19,23 @@ const TournamentCard = ({ tour }: any) => {
 
   return (
     <div
-      className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-4 border cursor-pointer hover:shadow-shadowComp "
+      className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-2 border cursor-pointer hover:shadow-shadowBtn"
       onClick={() => router.push(`/tournaments/details/${tour.id}`)}
     >
       <div className="w-full h-[200px]">
         <Image
-          className="w-full h-full object-cover rounded-lg "
-          src={images.badmintonSummerOlympics}
-          alt={tour?.name ? tour?.name : 'Badminton Summer Olympics'}
+          className="w-full h-full object-cover rounded-lg"
+          width={282}
+          height={200}
+          src={tour?.backgroundTournament}
+          alt={tour?.name}
         />
       </div>
-      <div className="flex flex-col gap-2">
-        <h3 className="text-base font-bold text-textColor line-clamp-1 w-full">
-          {tour?.name}
-        </h3>
-        <div className=" flex w-max py-1 px-2 bg-gradient-orange bg-opacity-20 rounded-full text-center items-center">
+      <div className="flex flex-col gap-2"
+        onClick={() => router.push(`/tournaments/details/${tour.id}`)}
+      >
+        <h3 className="text-base font-bold text-textColor">{tour?.name}</h3>
+        <div className=" flex w-max py-1 px-2 bg-gradient-orange bg-opacity-20 rounded-full text-center items-center"        >
           <span className="text-xs text-white font-semibold ">
             Price pool: {formatMoney(tour?.prizePool)}
           </span>

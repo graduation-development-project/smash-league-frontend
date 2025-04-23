@@ -10,3 +10,8 @@ export enum ATTACHMENTS_ENUM {
   IDENTIFICATION_CARD = 'Identification Card',
   PORTRAIT_PHOTO = 'Portrait Photo',
 }
+
+export enum TYPE_OF_FORMAT_ENUM {
+  SINGLE_ELIMINATION = 'Single Elimination',
+  ROUND_ROBIN = 'Round Robin',
+}

@@ -61,7 +61,7 @@ const RegisterAthleteTournamentForm = ({
     try {
       // console.log('Check detail id', detail?.id);
       const response = await getTournamentEventDetailAPI(detailId);
-      setTournamentEvent(response.data.data);
+      setTournamentEvent(response.data);
     } catch (error: any) {
       console.log('Error', error);
     }

@@ -174,8 +174,10 @@ export const getTournamentEventDetailAPI = async (tournamentId: string) => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-tournament-event/${tournamentId}`,
     );
-
-    return response;
+    if (response.data.statusCode === 200 || response.data.statusCode === 201) {
+      return response.data;
+    }
+    throw new Error('Failed to get Detail tour');
   } catch (error: any) {
     console.error(
       'Error get Tournament Event Detail:',
