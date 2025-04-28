@@ -7,10 +7,23 @@ import { toast } from 'react-toastify';
 const PackagePage = () => {
   const [packages, setPackages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
+
+  const isHasOrganizerRole = user?.userRoles.includes('Organizer');
+
   const getAllPackages = async () => {
     setIsLoading(true);
     const response = await getAllPackagesAPI();
-    console.log('check', response);
+    // console.log('check', response);
     setPackages(response?.data);
     setIsLoading(false);
     if (response.statusCode === 200 || response.statusCode === 201) {
@@ -48,7 +61,7 @@ const PackagePage = () => {
         {packages.map((item: PackageCardProps) => {
           return (
             <div key={item.id}>
-              <PackageCard pack={item} />
+              <PackageCard pack={item} isHasOrganizerRole={isHasOrganizerRole} />
             </div>
           );
         })}

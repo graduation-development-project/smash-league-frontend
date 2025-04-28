@@ -2,6 +2,7 @@
 import {
   assignUmpireToMatchAPI,
   getTournamentUmpiresParticipantsAPI,
+  updateMatchInfoAPI,
 } from '@/services/tournament';
 import { LoadingOutlined } from '@ant-design/icons';
 import {
@@ -18,6 +19,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { DatePicker, Space } from 'antd';
 import type { DatePickerProps, GetProps } from 'antd';
+import { data } from 'react-router-dom';
 
 interface Option {
   label: string;
@@ -113,7 +115,62 @@ const UmpireAssignModal = ({
         matchId,
         umpireId,
       );
-      console.log('check res', response);
+      // console.log('check res', response);
+      if (
+        response?.data.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
+        setIsModalOpen(false);
+        setIsLoading(false);
+        toast.success(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        setIsModalOpen(false);
+        setIsLoading(false);
+        toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log('Error', error);
+    }
+  };
+
+  const handleUpdateMatchInfomation = async (values: any) => {
+    const {
+      umpireId,
+      startedWhen,
+      leftCompetitorId,
+      rightCompetitorId,
+      courtId,
+    } = values;
+    console.log('check values', values);
+    try {
+      setIsLoading(true);
+      const response = await updateMatchInfoAPI(
+        matchId,
+        umpireId,
+        startedWhen,
+        leftCompetitorId,
+        rightCompetitorId,
+        courtId,
+      );
+      console.log('check res', response.data);
       if (
         response?.data.statusCode === 200 ||
         response?.data?.statusCode === 201
@@ -184,7 +241,7 @@ const UmpireAssignModal = ({
         >
           <Form
             autoComplete="off"
-            onFinish={handleAssignUmpire}
+            onFinish={handleUpdateMatchInfomation}
             layout="vertical"
             form={form}
             style={{
@@ -205,7 +262,7 @@ const UmpireAssignModal = ({
             >
               <Row gutter={16}>
                 <Col span={12}>
-                  <Form.Item label="Right Competitor" name="rightCompetitorId">
+                  <Form.Item label="Left Competitor" name="leftCompetitorId">
                     <Select
                       showSearch
                       placeholder="Select player/couple"
@@ -237,7 +294,7 @@ const UmpireAssignModal = ({
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item label="Left Competitor" name="leftCompetitorId">
+                  <Form.Item label="Right Competitor" name="rightCompetitorId">
                     <Select
                       showSearch
                       placeholder="Select player/couple"
@@ -261,17 +318,16 @@ const UmpireAssignModal = ({
                       }
                       options={[
                         {
-                          value: '1',
+                          value: '16ed0de5-35d6-46d9-8911-c56df13aa8ae',
                           label: 'Court 1',
                         },
                         {
-                          value: '2',
+                          value: '76004619-e334-4efc-8d12-9feb4a812a93',
                           label: 'Court 2',
                         },
                         {
-                          value: '3',
+                          value: '6a395999-498e-4d93-b16c-b1e6f41f2c25',
                           label: 'Court 3',
-                          disabled: true,
                         },
                       ]}
                     />
@@ -289,7 +345,7 @@ const UmpireAssignModal = ({
 
               <Form.Item
                 label="Start When"
-                name="startWhen"
+                name="startedWhen"
                 style={{ width: '100%' }}
               >
                 <DatePicker
