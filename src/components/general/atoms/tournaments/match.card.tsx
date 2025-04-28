@@ -14,14 +14,16 @@ const MatchCard = ({
   match,
   tournamentId,
   tournamentEventId,
+  isOrganizer,
 }: {
   match: any;
   tournamentId: string | string[];
   tournamentEventId: string;
+  isOrganizer: boolean;
 }) => {
   const mainColor = '#60a5fa';
   const bgColor = 'bg-[#60a5fa]';
-  const name = 'H.D.T.Nguyen';
+  // const name = 'H.D.T.Nguyen';
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAssignAthleteModalOpen, setIsAssignAthleteModalOpen] =
@@ -101,7 +103,7 @@ const MatchCard = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  console.log('Check party', participantsList);
+  // console.log('Check party', participantsList);
 
   const player = (hasPlayer: boolean, players?: any) => {
     // console.log('Check player', players);
@@ -262,17 +264,19 @@ const MatchCard = ({
           <div className={`w-1/2 h-1 rounded-full ${bgColor}`} />
         </div>
 
-        <div className="text-white absolute top-4 right-2">
-          {/* <Popover
+        {isOrganizer && (
+          <div className="text-white absolute top-4 right-2">
+            {/* <Popover
             trigger={'click'}
             content={content}
             placement="bottomLeft"
             arrow={false}
             style={{ display: 'flex', justifyContent: 'flex-start' }}
           > */}{' '}
-          <HiOutlineDotsVertical size={25} onClick={showModal} />
-          {/* </Popover> */}
-        </div>
+            <HiOutlineDotsVertical size={25} onClick={showModal} />
+            {/* </Popover> */}
+          </div>
+        )}
       </div>
       <div
         className={`absolute w-1/3 h-12 -top-7 flex text-white text-3xl rounded-lg font-bold items-center justify-center shadow-shadowBtn`}

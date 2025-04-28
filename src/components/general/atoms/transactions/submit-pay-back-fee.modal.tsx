@@ -1,92 +1,61 @@
 'use client';
-import { checkAttendanceAPI, getMatchByIdAPI } from '@/services/match';
+import { payBackTournamentFeeAPI } from '@/services/payment';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Checkbox, ConfigProvider, Form, GetProp, Modal } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Button, ConfigProvider, Form, Image, Input, Modal } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const CheckAttendanceModal = ({
+const SubmitPayBackFeeModal = ({
   isModalOpen,
   setIsModalOpen,
-  matchId,
-  setIsCheckAttendance
+  accessToken,
+  paybackFeeId,
+  getPayBackFeeList,
 }: {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  matchId: string;
-  setIsCheckAttendance: React.Dispatch<React.SetStateAction<boolean>>;
+  accessToken: string;
+  paybackFeeId: string;
+  getPayBackFeeList: any;
 }) => {
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-  //   console.log('Check id', matchId);
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
-  const [attendance, setAttendance] = useState<
-    { label: string; value: string }[]
-  >([]);
 
-  const getMatchById = async () => {
-    try {
-      //   setIsLoading(true);
-      const response = await getMatchByIdAPI(matchId);
-      console.log('Check ', response.data.data);
-      if (
-        response?.data?.statusCode === 200 ||
-        response?.data?.statusCode === 201
-      ) {
-        const formatData = [
-          {
-            label:
-              response.data.data.leftCompetitor.partner !== null
-                ? response.data.data.leftCompetitor.user.name +
-                  ' / ' +
-                  response.data.data.leftCompetitor.partner.name
-                : response.data.data.leftCompetitor.user.name,
-            value: 'left',
-          },
-          {
-            label:
-              response.data.data.rightCompetitor.partner !== null
-                ? response.data.data.rightCompetitor.user.name +
-                  ' / ' +
-                  response.data.data.rightCompetitor.partner.name
-                : response.data.data.rightCompetitor.user.name,
-            value: 'right',
-          },
-        ];
-        setAttendance(formatData);
-        
-      }
-    } catch (error: any) {
-      console.log('check error', error);
+  const [file, setFile] = useState<File | null>();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
     }
   };
 
-  // console.log("Check attendance", attendance);
-
-  const onChange: GetProp<typeof Checkbox.Group, 'onChange'> = (
-    checkedValues,
-  ) => {
-    console.log('checked = ', checkedValues);
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
-  const handleSubmit = async (values: any) => {
-    const { attendance } = values;
-    const left = attendance.includes('left');
-    const right = attendance.includes('right');
-    setIsLoading(true);
+  const handlePayBackTournamentFee = async (values: any) => {
     try {
-      const response = await checkAttendanceAPI(matchId, left, right);
-      // console.log('check response', response.data);
-      if (
-        response?.data?.statusCode === 204 ||
-        response?.data?.statusCode === 200
-      ) {
+      setIsLoading(true);
+      if (!file) {
+        console.error('No file selected');
+        return;
+      }
+      const response = await payBackTournamentFeeAPI(
+        values.transactionDetail,
+        paybackFeeId,
+        file,
+        accessToken,
+      );
+      console.log('Check paybacksubmit', response);
+      if (response.statusCode === 200 || response.statusCode === 201) {
+        form.resetFields();
+        setFile(null);
         setIsLoading(false);
+        getPayBackFeeList();
         setIsModalOpen(false);
-        setIsCheckAttendance(true);
-        toast.success(`${response?.data?.message}`, {
+
+        toast.success(`${response?.message}`, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -97,7 +66,10 @@ const CheckAttendanceModal = ({
           theme: 'light',
         });
       } else {
+        form.resetFields();
+        setFile(null);
         setIsLoading(false);
+        setIsModalOpen(false);
         toast.error(`${response?.message}`, {
           position: 'top-right',
           autoClose: 5000,
@@ -109,17 +81,13 @@ const CheckAttendanceModal = ({
           theme: 'light',
         });
       }
-    } catch (error: any) {
-      console.log('check error', error);
+
+      // setPayBackFeeList(response);
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  //   console.log('Check attendance', attendance);
-
-  useEffect(() => {
-    getMatchById();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matchId]);
   return (
     <div>
       <ConfigProvider
@@ -136,7 +104,7 @@ const CheckAttendanceModal = ({
         }}
       >
         <Modal
-          title="Check Attendance"
+          title="Pay Back Fee Submission"
           width={500}
           open={isModalOpen}
           //   onOk={handleOk}
@@ -152,7 +120,7 @@ const CheckAttendanceModal = ({
         >
           <Form
             autoComplete="off"
-            onFinish={handleSubmit}
+            onFinish={handlePayBackTournamentFee}
             layout="vertical"
             form={form}
           >
@@ -168,9 +136,51 @@ const CheckAttendanceModal = ({
                 },
               }}
             >
-              <Form.Item name={'attendance'} label="Attendance">
-                <Checkbox.Group options={attendance} onChange={onChange} />
+              <Form.Item
+                name="paybackFeeId"
+                label="Pay Back Fee ID"
+                initialValue={paybackFeeId}
+                hidden
+              >
+                <Input />
               </Form.Item>
+
+              <Form.Item
+                name="paybackImage"
+                label="Pay Back Image"
+                // style={{ fontFamily: 'inherit', fontWeight: '500' }}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
+                  className="mb-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-secondColor hover:file:bg-green-100"
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <div className="flex flex-wrap gap-4">
+                  {file && (
+                    <Image
+                      src={URL.createObjectURL(file)}
+                      alt="Uploaded"
+                      width={200}
+                      height={200}
+                      className="max-w-full h-auto rounded-lg shadow"
+                    />
+                  )}
+                </div>
+              </Form.Item>
+
+              <Form.Item
+                name="transactionDetail"
+                label="Transaction Detail"
+                initialValue={'Pay Back Fee Transaction'}
+              >
+                <TextArea defaultValue={'Pay Back Fee Transaction'} />
+              </Form.Item>
+
               <Form.Item>
                 <div className="w-full flex justify-end gap-2">
                   <Button
@@ -211,4 +221,4 @@ const CheckAttendanceModal = ({
   );
 };
 
-export default CheckAttendanceModal;
+export default SubmitPayBackFeeModal;

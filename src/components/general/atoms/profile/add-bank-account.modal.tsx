@@ -1,6 +1,10 @@
 'use client';
 
-import { addBankAccountAPI, getBankListAPI } from '@/services/bank';
+import {
+  addBankAccountAPI,
+  checkBankAccountAPI,
+  getBankListAPI,
+} from '@/services/bank';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Form, Input, Modal, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -19,6 +23,8 @@ const AddBankAccountModal = ({
   const [bankList, setBankList] = useState<any>([]);
   const [isShowAccountNumber, setIsShowAccountNumber] = useState(false);
   const [form] = Form.useForm();
+  const [bankId, setBankId] = useState('');
+  const [bankCode, setBankCode] = useState('');
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -33,7 +39,7 @@ const AddBankAccountModal = ({
       ) {
         const formatData = response.data.data.map((bank: any) => ({
           label: `${bank.name} (${bank.shortName})`,
-          value: bank.id,
+          value: `${bank.id} _ ${bank.code}`,
         }));
         setBankList(formatData);
       }
@@ -46,27 +52,63 @@ const AddBankAccountModal = ({
     getBankList();
   }, []);
 
+  const handleSelectBank = (value: string) => {
+    const [id, code] = value.split('_');
+    console.log(id, code);
+    setBankId(id.trim());
+    setBankCode(code.trim());
+    setIsShowAccountNumber(true);
+  };
+
   const handleAddBankAccount = async (values: any) => {
     try {
-      // console.log('Check Values', values);
       setIsLoading(true);
-      const response = await addBankAccountAPI(
+
+      // First, check the bank account
+      console.log('Check bank code', bankCode);
+      const checkResponse = await checkBankAccountAPI(
+        bankCode,
+        values.accountNumber,
+      );
+      console.log('Check bank account response', checkResponse.data);
+
+      if (
+        checkResponse?.data.statusCode !== 200 &&
+        checkResponse?.data.statusCode !== 201
+      ) {
+        toast.error(`${checkResponse?.data.message}`, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // If check passed, proceed to add bank account
+      const addResponse = await addBankAccountAPI(
         {
-          bankId: values.bankId,
+          bankId: bankId,
           accountNumber: values.accountNumber,
         },
         accessToken,
       );
-      console.log('Add bank account response', response.data);
+      console.log('Add bank account response', addResponse.data);
+
       if (
-        response?.data.statusCode === 200 ||
-        response?.data.statusCode === 201
+        addResponse?.data.statusCode === 200 ||
+        addResponse?.data.statusCode === 201
       ) {
         setIsLoading(false);
         setIsModalOpen(false);
         form.resetFields();
         setBankList([]);
-        toast.success(`${response?.data?.message}`, {
+        toast.success(`${addResponse?.data?.message}`, {
           position: 'top-right',
           autoClose: 2000,
           hideProgressBar: false,
@@ -78,7 +120,7 @@ const AddBankAccountModal = ({
         });
       } else {
         setIsLoading(false);
-        toast.error(`${response?.data.message}`, {
+        toast.error(`${addResponse?.data.message}`, {
           position: 'top-right',
           autoClose: 2000,
           hideProgressBar: false,
@@ -91,6 +133,17 @@ const AddBankAccountModal = ({
       }
     } catch (error: any) {
       console.log('Error', error);
+      setIsLoading(false);
+      toast.error('Something went wrong.', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
     }
   };
 
@@ -153,7 +206,7 @@ const AddBankAccountModal = ({
                       .includes(input.toLowerCase())
                   }
                   options={bankList}
-                  onClick={() => setIsShowAccountNumber(true)}
+                  onChange={handleSelectBank}
                 />
               </Form.Item>
 

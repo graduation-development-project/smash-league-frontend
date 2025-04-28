@@ -7,6 +7,7 @@ import {
   BankOutlined,
   MailOutlined,
   TeamOutlined,
+  TransactionOutlined,
 } from '@ant-design/icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { AdminContext } from '@/context/admin.context';
@@ -64,8 +65,14 @@ const AdminSideBar = () => {
         ],
       },
       {
+        key: 'payback-list',
+        label: <Link href="/staff/dashboard/payback">PayBack List</Link>,
+        icon: <TransactionOutlined />,
+      },
+
+      {
         key: 'transactions',
-        label: <Link href="/dashboard/transactions">Transactions</Link>,
+        label: <Link href="/staff/dashboard/transactions">Transactions</Link>,
         icon: <BankOutlined />,
       },
       {

@@ -16,7 +16,7 @@ interface DataType {
   // date: string;
 }
 
-const TransactionHistoryPage = () => {
+const TransactionHistoryDashboardPage = () => {
   const [transactionList, setTransactionList] = useState([]);
   const [user, setUser] = useState<any>(null);
 
@@ -124,8 +124,7 @@ const TransactionHistoryPage = () => {
   ];
 
   return (
-    <div className="w-full h-full flex flex-col p-8 gap-3">
-      <h1 className="text-[24px] font-bold">Transaction History</h1>
+    <div className="w-full h-full flex flex-col">
       <ConfigProvider
         theme={{ token: { colorPrimary: '#FF8243', fontFamily: 'inherit' } }}
       >
@@ -136,4 +135,4 @@ const TransactionHistoryPage = () => {
   );
 };
 
-export default TransactionHistoryPage;
+export default TransactionHistoryDashboardPage;

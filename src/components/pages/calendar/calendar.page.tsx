@@ -6,21 +6,23 @@ import type { Dayjs } from 'dayjs';
 import { getAllAssignedMatchesAPI } from '../../../services/tournament';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { formatDateTime } from '@/utils/format';
+
 dayjs.extend(utc);
 
 interface TournamentEvent {
   id: string;
-  tournamentEvent: string; // e.g., "MENS_SINGLE"
-  tournamentEventStatus: string; // e.g., "CREATED"
-  tournamentId: string; // e.g., "european-badminton-masters-2025"
+  tournamentEvent: string;
+  tournamentEventStatus: string;
+  tournamentId: string;
   championshipId: string | null;
-  championshipPrize: string; // e.g., "Gold Medal, 8,000 USD"
+  championshipPrize: string;
   runnerUpId: string | null;
-  runnerUpPrize: string; // e.g., "Silver Medal 4,000 USD"
+  runnerUpPrize: string;
   thirdPlaceId: string | null;
-  thirdPlacePrize: string; // e.g., "Bronze Medal, 2,000 USD"
+  thirdPlacePrize: string;
   jointThirdPlaceId: string | null;
-  jointThirdPlacePrize: string; // e.g., "Consolation Prize, 1,000 USD"
+  jointThirdPlacePrize: string;
   fromAge: number;
   toAge: number;
   winningPoint: number;
@@ -28,9 +30,10 @@ interface TournamentEvent {
   minimumAthlete: number;
   maximumAthlete: number;
   numberOfGames: number;
-  typeOfFormat: string; // e.g., "SINGLE_ELIMINATION"
-  ruleOfEventExtension: string; // e.g., "Players must reach 2 winning sets to advance."
+  typeOfFormat: string;
+  ruleOfEventExtension: string;
 }
+
 interface Match {
   courtId: string | null;
   forfeitCompetitorId: string | null;
@@ -49,9 +52,6 @@ interface Match {
   tournamentEvent: TournamentEvent;
   tournamentEventId: string;
   umpireId: string | null;
-  // Add more fields as needed
-  // e.g., '2025-04-27 00:00:00'
-  // Add more fields as needed
 }
 
 export default function CalendarPage({ profileRole }: { profileRole: string }) {
@@ -67,6 +67,13 @@ export default function CalendarPage({ profileRole }: { profileRole: string }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      getAllAssignedMatches();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
   const getAllAssignedMatches = async () => {
     if (!user) return;
     try {
@@ -77,15 +84,6 @@ export default function CalendarPage({ profileRole }: { profileRole: string }) {
       console.error('Failed to fetch matches:', error);
     }
   };
-
-  useEffect(() => {
-    if (user) {
-      getAllAssignedMatches();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  console.log('Check scheduleList', scheduleList);
 
   const getBadgeStatusByEvent = (event: string) => {
     switch (event) {
@@ -102,41 +100,35 @@ export default function CalendarPage({ profileRole }: { profileRole: string }) {
     }
   };
 
-  const content = (
-    <div className="w-full h-full flex flex-col justify-center">
-      <p>Check in:</p>
-      <p>Start Time:</p>
-    </div>
-  );
-
   const getListData = (value: Dayjs) => {
     const dateStr = value.format('YYYY-MM-DD');
-
-    const matches = scheduleList.filter((match) => {
+    return scheduleList.filter((match) => {
       if (!match.startedWhen) return false;
       const matchDate = dayjs.utc(match.startedWhen).format('YYYY-MM-DD');
       return matchDate === dateStr;
     });
-
-    console.log(`Date: ${dateStr}, Matches:`, matches);
-
-    return matches.map((match) => ({
-      color: getBadgeStatusByEvent(match.matchStatus), // use different badge colors if needed
-      content: `${match.tournamentEvent.tournamentId} - ${match.tournamentEvent.tournamentEvent}`,
-    }));
   };
+
   const dateCellRender = (value: Dayjs) => {
-    const listData = getListData(value);
+    const matches = getListData(value);
+
     return (
       <ul className="events">
-        {listData.map((item, idx) => (
+        {matches.map((match, idx) => (
           <Popover
-            key={`${item.content}-${idx}`}
-            content={content}
+            key={match.id}
             title="Information"
+            content={
+              <div className="w-full flex flex-col">
+                <p>Start Time: {match.startedWhen ? formatDateTime(match.startedWhen) : 'N/A'}</p>
+              </div>
+            }
           >
             <li>
-              <Badge color={item.color} text={item.content} />
+              <Badge
+                color={getBadgeStatusByEvent(match.matchStatus)}
+                text={`${match.tournamentEvent.tournamentId} - ${match.tournamentEvent.tournamentEvent}`}
+              />
             </li>
           </Popover>
         ))}
@@ -144,9 +136,7 @@ export default function CalendarPage({ profileRole }: { profileRole: string }) {
     );
   };
 
-  const monthCellRender = () => {
-    return null;
-  };
+  const monthCellRender = () => null;
 
   const cellRender: CalendarProps<Dayjs>['cellRender'] = (current, info) => {
     if (info.type === 'date') return dateCellRender(current);
@@ -155,8 +145,8 @@ export default function CalendarPage({ profileRole }: { profileRole: string }) {
   };
 
   return (
-    <div className='w-full h-full flex flex-col'>
-       <div className="w-full h-full flex items-center gap-5">
+    <div className="w-full h-full flex flex-col">
+      <div className="w-full h-full flex items-center gap-5 mb-4">
         <Badge color="orange" text="Not Started" />
         <Badge color="blue" text="On Going" />
         <Badge color="gold" text="Interval" />

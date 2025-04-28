@@ -87,8 +87,16 @@ const TeamCard = (team: any) => {
           ))}
         </Avatar.Group>
         <div className="flex flex-col gap-2 justify-center ">
-          <p className="text-[16px] font-semibold">
-            {teamMemberList.length}{' '}
+          <p
+            className={`text-[16px] font-semibold ${
+              teamMemberList.length >= 15
+                ? 'text-yellow-400'
+                : teamMemberList.length >= 30
+                ? 'text-red-600'
+                : ''
+            }`}
+          >
+            {teamMemberList.length}/30 {'\t'}
             <span>{teamMemberList.length === 1 ? 'Player' : 'Players'}</span>
           </p>
           <p className="text-[14px] text-[#6A6A6A]">Joined this group</p>

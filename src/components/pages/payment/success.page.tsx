@@ -54,8 +54,8 @@ const SuccessPage = () => {
                 <FaRegCheckCircle size={100} className="text-green-500" />
               </div>
             }
-            title="Successfully Purchased Packages"
-            subTitle="Please check your credit in the profile page"
+            title="Successful Payment"
+            subTitle="Please check your transaction history"
             style={{ fontFamily: 'inherit', fontWeight: '500' }}
             extra={[
               <Button
