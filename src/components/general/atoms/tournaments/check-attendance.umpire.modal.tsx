@@ -9,10 +9,12 @@ const CheckAttendanceModal = ({
   isModalOpen,
   setIsModalOpen,
   matchId,
+  setIsCheckAttendance
 }: {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   matchId: string;
+  setIsCheckAttendance: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -54,13 +56,14 @@ const CheckAttendanceModal = ({
           },
         ];
         setAttendance(formatData);
+        
       }
     } catch (error: any) {
       console.log('check error', error);
     }
   };
 
-  console.log("Check attendance", attendance);
+  // console.log("Check attendance", attendance);
 
   const onChange: GetProp<typeof Checkbox.Group, 'onChange'> = (
     checkedValues,
@@ -82,6 +85,7 @@ const CheckAttendanceModal = ({
       ) {
         setIsLoading(false);
         setIsModalOpen(false);
+        setIsCheckAttendance(true);
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,

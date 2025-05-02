@@ -173,6 +173,7 @@ const UpdateBasicInfoDetailsTour = ({
     fetchGetTourInfoDetailsTour();
     fetchGetAllSeries();
     fetchProvince();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -182,6 +183,7 @@ const UpdateBasicInfoDetailsTour = ({
       setDistrict("");
       fetchDistrict(provinceId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceId]);
 
   useEffect(() => {
@@ -190,6 +192,7 @@ const UpdateBasicInfoDetailsTour = ({
       setWard("");
       fetchWard(districtId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceId, districtId]);
 
   useEffect(() => {

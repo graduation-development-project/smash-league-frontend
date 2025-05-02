@@ -123,35 +123,6 @@ const TransactionHistoryPage = () => {
     },
   ];
 
-  // const data: DataType[] = [
-  //   {
-  //     id: '123',
-  //     orderId: '1',
-  //     transactionType: 'Deposit',
-  //     transactionDetail: 'Deposit to wallet',
-  //     value: 1000,
-  //     status: 'PENDING',
-  //     date: '2003-11-17 10:30:00Z',
-  //   },
-  //   {
-  //     id: '1234',
-  //     orderId: '2',
-  //     transactionType: 'BUYING PACKAGE',
-  //     transactionDetail: 'Payment for package Advanced',
-  //     value: 3700,
-  //     status: 'SUCCESSFUL',
-  //     date: '2003-11-17 10:30:00Z',
-  //   },
-  //   {
-  //     id: '12345',
-  //     orderId: '3',
-  //     transactionType: 'BUYING PACKAGE',
-  //     transactionDetail: 'Payment for package Pro',
-  //     value: 4800,
-  //     status: 'FAILED',
-  //     date: '2003-11-17 10:30:00Z',
-  //   },
-  // ];
   return (
     <div className="w-full h-full flex flex-col p-8 gap-3">
       <h1 className="text-[24px] font-bold">Transaction History</h1>

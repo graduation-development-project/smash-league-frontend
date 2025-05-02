@@ -5,14 +5,17 @@ import OnGoingTournament from '@/components/general/organisms/tournaments/on-goi
 import { HomeContextProvider } from '@/context/home.context';
 import {
   CalendarOutlined,
+  DownOutlined,
   UploadOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import {
   Breadcrumb,
   ConfigProvider,
+  Dropdown,
   Layout,
   Menu,
+  MenuProps,
   Tabs,
   TabsProps,
 } from 'antd';
@@ -40,6 +43,8 @@ import AttendantsCheck from '@/components/general/molecules/tournaments/attendan
 import AlertCreateTeamsModal from '@/components/general/molecules/teams/alert-create-teams-modal';
 import RegisterTeamTourForm from '@/components/general/molecules/tournaments/register-team.tournament.form';
 import UpdateDetailsTour from '@/components/general/organisms/tournaments/update-details.tour';
+import Loaders from '@/components/general/atoms/loaders/loaders';
+import Spinner from '@/components/general/atoms/loaders/spinner';
 import FeedbackDetailsTour from '@/components/general/organisms/tournaments/feedback-details.tour';
 import SponsorsDetailsTour from '@/components/general/organisms/tournaments/sponsors-details.tour';
 
@@ -51,8 +56,10 @@ const DetailsTourPage = () => {
   const [activeKey, setActiveKey] = React.useState('details');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isTeamLeaderModalOpen, setIsTeamLeaderModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [detail, setDetail] = useState<any>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [user, setUser] = useState<any>(null);
 
@@ -71,25 +78,67 @@ const DetailsTourPage = () => {
   const showUmpire = () => {
     setIsRegisterModalOpen(true);
   };
+
+  const showTeamLeader = () => {
+    setIsTeamLeaderModalOpen(true);
+  };
   const showEdit = () => {
     setIsEditModalOpen(true);
   };
 
+  // const onChange = (key: string) => {
+  //   console.log(key);
+  // };
 
+  const items: MenuProps['items'] = [
+    {
+      key: 'register-athlete',
+      label: 'Register Athlete',
+      disabled: !user,
+      onClick: () => {
+        showModal();
+      },
+    },
+    {
+      type: 'divider',
+    },
+    ...(detail?.isRecruit
+      ? [
+          {
+            key: 'register-umpire',
+            label: 'Register Umpire',
+            disabled: !user?.userRoles?.includes('Umpire'),
+            onClick: () => {
+              showUmpire();
+            },
+          },
+        ]
+      : []),
 
-  const onChange = (key: string) => {
-    console.log(key);
-  };
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) =>
-    console.log(info?.source, value);
+    {
+      type: 'divider',
+    },
+    {
+      key: 'register-team',
+      label: 'Register Team',
+      disabled: !user?.userRoles?.includes('Team Leader'),
+      onClick: () => {
+        showTeamLeader();
+      },
+    },
+  ];
+  // const onSearch: SearchProps['onSearch'] = (value, _e, info) =>
+  //   console.log(info?.source, value);
 
   const handleGetTourDetail = async () => {
     try {
+      setIsLoading(true);
       if (typeof url === 'string') {
         const response = await getTourDetailAPI(url);
         setDetail(response.data);
         setEventList(Object.entries(response.data.tournamentEvents));
       }
+      setIsLoading(false);
       throw new Error('Failed to get detail tour');
     } catch (error) {
       console.log(error, 'getTourDetail');
@@ -116,7 +165,7 @@ const DetailsTourPage = () => {
 
     switch (activeKey) {
       case 'details':
-        return <InfoDetailsTour tour={detail} />;
+        return <InfoDetailsTour tour={detail} isOrganizer={isOrganizer} />;
       case 'live1':
         return <LiveDetailsTour />;
       case 'live2':
@@ -130,7 +179,7 @@ const DetailsTourPage = () => {
       case 'update':
         return <UpdateDetailsTour detail={detail} setDetail={setDetail} handleGetTourDetail= {handleGetTourDetail}/>;
       case 'feedback':
-        return <FeedbackDetailsTour detail={detail} />;
+        return <FeedbackDetailsTour detail={detail} isOrganizer={isOrganizer} user={user}/>;
       case 'sponsors':
         return <SponsorsDetailsTour />;
       default:
@@ -139,11 +188,15 @@ const DetailsTourPage = () => {
             tournamentId={url}
             eventId={activeKey}
             mainColor={detail?.mainColor || '#FF8243'}
+            isOrganizer={isOrganizer}
           />
         ) : null;
     }
   };
 
+  const isOrganizer = user?.id === detail?.organizer?.id;
+
+  // console.log("check isRecruit", detail);
   return (
     <HomeContextProvider>
       <ConfigProvider
@@ -166,8 +219,8 @@ const DetailsTourPage = () => {
             Menu: {
               fontFamily: 'inherit',
               colorPrimary: '#FF8243',
-              itemSelectedBg: "#fcf7f4",
-              itemActiveBg: "#ffebde",
+              itemSelectedBg: '#fcf7f4',
+              itemActiveBg: '#ffebde',
               fontWeightStrong: 600,
               itemHeight: 35,
               colorBgLayout: '#FF8243',
@@ -181,9 +234,7 @@ const DetailsTourPage = () => {
               colorPrimaryHover: '#ffa97e',
               colorPrimaryActive: '#e7753c',
               colorPrimaryBgHover: '#ffebde',
-
-              colorBgTextActive: "#ffebde",
-
+              colorBgTextActive: '#ffebde',
             },
             Input: {
               hoverBorderColor: '#FF8243',
@@ -206,70 +257,94 @@ const DetailsTourPage = () => {
             Select: {
               fontFamily: 'inherit',
             },
-
           },
         }}
       >
-        <div className="w-full h-max flex flex-col gap-8 px-20 text-textColor">
-          <div className="w-full h-max shadow-shadowComp rounded-b-lg">
-            <div className="w-full h-[500px] ">
-              <img
-                className="w-full h-full object-cover"
-                src={detail?.backgroundTournament}
-                alt="Tournament's Banner Image"
-              />
-            </div>
-            <div className="w-full h-max px-12 py-5 text-sm flex gap-2 justify-between items-center">
-              <div className="flex flex-col gap-2">
-                <h1 className="text-4xl font-extrabold">{detail?.name}</h1>
-                <h4>@{detail?.shortName}</h4>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-screen">
+            <Spinner isLoading={isLoading} />
+          </div>
+        ) : (
+          <div className="w-full h-max flex flex-col gap-8 px-20 text-textColor">
+            <div className="w-full h-max shadow-shadowComp rounded-b-lg">
+              <div className="w-full h-[500px] ">
+                <img
+                  className="w-full h-full object-cover"
+                  src={detail?.backgroundTournament}
+                  alt="Tournament's Banner Image"
+                />
               </div>
-              <div>
-                {user?.id === detail?.organizer?.id ? (
-                  <div></div>
-                ) : (
-                  <div className="flex gap-3 justify-center items-center">
-                    <Button variant={'default'} size={'sm'} onClick={showModal}>
-                      Register Now
-                    </Button>
-                    {/* Athlete Form */}
-                    {user?.userRoles?.includes('Team Leader') ? (
-                      <RegisterTeamTourForm
-                        isModalOpen={isModalOpen}
-                        setIsModalOpen={setIsModalOpen}
-                        detail={detail}
-                        detailId={detail?.id}
-                      />
-                    ) : (
+              <div className="w-full h-max px-12 py-5 text-sm flex gap-2 justify-between items-center">
+                <div className="flex flex-col gap-2">
+                  <h1 className="text-4xl font-extrabold">{detail?.name}</h1>
+                  <h4>@{detail?.shortName}</h4>
+                </div>
+                <div>
+                  {isOrganizer ? (
+                    <div></div>
+                  ) : (
+                    <div className="flex gap-3 justify-center items-center">
+                      <Dropdown
+                        menu={{ items }}
+                        overlayStyle={{
+                          fontFamily: 'inherit',
+                          fontWeight: 400,
+                        }}
+                      >
+                        <Button
+                          variant={'default'}
+                          size={'sm'}
+                          // onClick={showModal}
+                        >
+                          Register Now <DownOutlined />
+                        </Button>
+                      </Dropdown>
+
+                      {/* Team Form */}
+                      {user?.userRoles?.includes('Team Leader') ? (
+                        <RegisterTeamTourForm
+                          isModalOpen={isTeamLeaderModalOpen}
+                          setIsModalOpen={setIsTeamLeaderModalOpen}
+                          detail={detail}
+                          detailId={detail?.id}
+                        />
+                      ) : (
+                        <AlertCreateTeamsModal
+                          isModalOpen={isTeamLeaderModalOpen}
+                          setIsModalOpen={setIsTeamLeaderModalOpen}
+                          message="You are not authorized to register as Team Leader"
+                          description="Please register as a Team Leader. "
+                          linkText="Create your team"
+                          path="/teams"
+                        />
+                      )}
+
+                      {/* Athlete Form */}
                       <RegisterAthleteTournamentForm
                         isModalOpen={isModalOpen}
                         setIsModalOpen={setIsModalOpen}
                         detail={detail}
                         detailId={detail?.id}
                       />
-                    )}
 
-                    <Button variant="default" size={'sm'} onClick={showUmpire}>
-                      Register As Umpire
-                    </Button>
-                    {/* Umpire Form */}
-                    {user?.userRoles?.includes('Umpire') ? (
-                      <RegisterUmpireTournamentForm
-                        isRegisterModalOpen={isRegisterModalOpen}
-                        setIsRegisterModalOpen={setIsRegisterModalOpen}
-                        detail={detail}
-                      />
-                    ) : (
-                      <AlertCreateTeamsModal
-                        isModalOpen={isRegisterModalOpen}
-                        setIsModalOpen={setIsRegisterModalOpen}
-                        message="You are not authorized to register as umpire"
-                        description="Please register as an umpire"
-                        linkText="Become an Umpire"
-                        path="/become/umpire"
-                      />
-                    )}
-                    {/* {
+                      {/* Umpire Form */}
+                      {user?.userRoles?.includes('Umpire') ? (
+                        <RegisterUmpireTournamentForm
+                          isRegisterModalOpen={isRegisterModalOpen}
+                          setIsRegisterModalOpen={setIsRegisterModalOpen}
+                          detail={detail}
+                        />
+                      ) : (
+                        <AlertCreateTeamsModal
+                          isModalOpen={isRegisterModalOpen}
+                          setIsModalOpen={setIsRegisterModalOpen}
+                          message="You are not authorized to register as Umpire"
+                          description="Please register as an Umpire. "
+                          linkText="Become an Umpire"
+                          path="/become/umpire"
+                        />
+                      )}
+                      {/* {
                       user?.userRoles?.includes('Organizer') ? (
                         <Button variant="default" size={'sm'} onClick={showEdit}>
                           Edit
@@ -363,7 +438,7 @@ const DetailsTourPage = () => {
                         key: 'feedback',
                         label: 'Feedback',
                       },
-                      ... (user ? [{
+                      ... (isOrganizer ? [{
                         key: 'update',
                         label: 'Update Details',
                       }] : []),
@@ -392,10 +467,11 @@ const DetailsTourPage = () => {
                 </Layout>
               </Layout>
 
-              {/* <Input placeholder="Search" style={{ width: "80%", marginTop: "20px" }} /> */}
+                {/* <Input placeholder="Search" style={{ width: "80%", marginTop: "20px" }} /> */}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </ConfigProvider>
     </HomeContextProvider>
   );

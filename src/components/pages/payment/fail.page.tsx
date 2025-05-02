@@ -46,7 +46,7 @@ const FailPage = () => {
         <div className="animate-fadeInBottom p-20">
           <Result
             status="error"
-            title="Submission Failed"
+            title="Failed to submit payment"
             subTitle="Please check and modify the following information before resubmitting."
             extra={[
               <Button

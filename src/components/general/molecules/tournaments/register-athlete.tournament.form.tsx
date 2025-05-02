@@ -14,6 +14,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getTournamentEventDetailAPI } from '@/services/tournament';
+import { searchUserByEmailAPI } from '@/services/user';
 
 const RegisterAthleteTournamentForm = ({
   isModalOpen,
@@ -38,8 +39,8 @@ const RegisterAthleteTournamentForm = ({
   const [isHasPartner, setIsHasPartner] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [tournamentEvent, setTournamentEvent] = useState([]);
-
   const [form] = Form.useForm();
+  const [userList, setUserList] = useState<any>([]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -53,7 +54,7 @@ const RegisterAthleteTournamentForm = ({
   // console.log('Check user', user);
   // console.log('Check detail', detail?.id);
 
-  console.log('Check detail', tournamentEvent);
+  // console.log('Check detail', tournamentEvent);
 
   const tournamentEventReal = async () => {
     // if (detail) return;
@@ -146,6 +147,7 @@ const RegisterAthleteTournamentForm = ({
     setIdentificationCardFilesPartner([]);
     setFilePartner(undefined);
     form.resetFields();
+    setIsHasPartner(false);
   };
 
   const handleChange = (value: string, option: any) => {
@@ -155,14 +157,39 @@ const RegisterAthleteTournamentForm = ({
       setIsHasPartner(false);
     }
   };
+
+  const searchUserByEmail = async () => {
+    if (!user) return;
+    try {
+      const response = await searchUserByEmailAPI(user.access_token, '');
+      console.log(response?.data, 'response');
+      if (
+        response?.data?.statusCode === 200 ||
+        response?.data?.statusCode === 201
+      ) {
+        const fomatData = response.data.data.map((us: any) => ({
+          label: us.email,
+          value: us.email,
+        }));
+        setUserList(fomatData);
+      }
+    } catch (error: any) {
+      console.log('Error', error);
+    }
+  };
+
+  useEffect(() => {
+    searchUserByEmail();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
   const handleRegisterTournament = async (values: any) => {
     if (!user) return;
     const { tournamentId, registrationRole, tournamentEventId, partnerEmail } =
       values;
     const imageList = [...identificationCardFiles, file];
     const imageListPartner = [...identificationCardFilesPartner, filePartner];
-    console.log('Check image', imageListPartner);
-    console.log(values, 'values');
+    // console.log('Check image', imageListPartner);
+    // console.log(values, 'values');
     try {
       setIsLoading(true);
       const response = await registerTournamentByAthleteAPI(
@@ -177,6 +204,12 @@ const RegisterAthleteTournamentForm = ({
       if (response?.status === 200 || response?.status === 201) {
         setIsModalOpen(false);
         setIsLoading(false);
+        setIdentificationCardFiles([]);
+        setFile(undefined);
+        setIdentificationCardFilesPartner([]);
+        setFilePartner(undefined);
+        form.resetFields();
+        setIsHasPartner(false);
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,
@@ -188,7 +221,7 @@ const RegisterAthleteTournamentForm = ({
           theme: 'light',
         });
       } else {
-        setIsModalOpen(false);
+        // setIsModalOpen(false);
         setIsLoading(false);
         toast.error(`${response?.message}`, {
           position: 'top-right',
@@ -373,7 +406,17 @@ const RegisterAthleteTournamentForm = ({
                       },
                     ]}
                   >
-                    <Input placeholder="Email Partner" />
+                    <Select
+                      showSearch
+                      placeholder="Search to select partner email"
+                      filterOption={(input, option) =>
+                        (option?.label ?? '')
+                          .toString()
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={userList}
+                    />
                   </Form.Item>
                   {/* <Form.Item
                     name="identificationCardImagesPartner"

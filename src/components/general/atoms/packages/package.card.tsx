@@ -8,7 +8,13 @@ import React, { useEffect, useState } from 'react';
 import { IoCheckmarkSharp } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 
-const PackageCard = ({ pack }: { pack: PackageCardProps }) => {
+const PackageCard = ({
+  pack,
+  isHasOrganizerRole,
+}: {
+  pack: PackageCardProps;
+  isHasOrganizerRole: boolean;
+}) => {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -27,7 +33,7 @@ const PackageCard = ({ pack }: { pack: PackageCardProps }) => {
       const response = await buyPackageAPI(packageId, user.access_token);
       // console.log('Package ID', packageId);
       // console.log('Access Token', user.access_token);
-      console.log(response, 'check payment');
+      // console.log(response, 'check payment');
       if (response.statusCode === 200 || response.statusCode === 201) {
         toast.success(`${response?.message}`, {
           position: 'top-right',
@@ -117,6 +123,7 @@ const PackageCard = ({ pack }: { pack: PackageCardProps }) => {
           pack.isRecommended ? 'gradientGreenBtn' : 'gradientOrangeBtn'
         }`}
         // disabled={!pack.isAvailable}
+        disabled={!isHasOrganizerRole}
         onClick={() => handleBuyPackage(pack.id)}
       >
         Choose {pack.packageName}

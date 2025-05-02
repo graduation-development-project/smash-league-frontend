@@ -18,6 +18,7 @@ import CheckAttendanceModal from '../../atoms/tournaments/check-attendance.umpir
 import ChooseStartPlayerModal from '../../atoms/tournaments/choose-start-player.modal';
 import { updateStatusOfMatchAPI } from '@/services/match';
 import { toast } from 'react-toastify';
+import { formatDateTime } from '@/utils/format';
 
 interface DataType {
   key: string;
@@ -51,7 +52,7 @@ interface MatchesType {
   rightCompetitorAttendance: boolean;
   rightCompetitorId: string | null;
   stageId: string | null;
-  startedWhen: string | null;
+  startedWhen: string;
   tournamentEvent: TournamentEvent;
   tournamentEventId: string;
   umpireId: string | null;
@@ -63,6 +64,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
   const [matchesList, setMatchesList] = useState<any>([]);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckAttendance, setIsCheckAttendance] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -74,6 +76,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
   }, []);
 
   const getAssignedMatches = async () => {
+    if (!user) return;
     try {
       const response = await getAssignedMatchesAPI(
         user.access_token,
@@ -193,13 +196,28 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
         <h1>{tournamentEvent.tournamentEvent}</h1>
       ),
     },
+
+    {
+      title: 'Start Time',
+      dataIndex: 'startedWhen',
+      key: 'startedWhen',
+      render: (_, { startedWhen }) => <h1>{formatDateTime(startedWhen)}</h1>,
+    },
+
+    {
+      title: 'Court',
+      dataIndex: 'courtId',
+      key: 'courtId',
+      render: (_, { courtId }) => <h1>{courtId}</h1>,
+    },
+
     {
       title: 'Status',
       key: 'status',
       render: (_, { matchStatus, id }) => (
         <Select
           defaultValue={matchStatus}
-          disabled={matchStatus === 'ENDED'}
+          disabled={matchStatus === 'ENDED' || isCheckAttendance === false}
           style={{ width: 150 }}
           onChange={(value) => updateStatusOfMatch(value, id)}
           options={[
@@ -228,7 +246,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
             </Button>
           ) : matchStatus === 'ON_GOING' ? (
             <Button
-              type='primary'
+              type="primary"
               onClick={() => {
                 setIsStartPlayerModalOpen(true);
                 setMatchId(id);
@@ -237,7 +255,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
               Score Match
             </Button>
           ) : (
-            <Button type='primary'>View Score</Button>
+            <Button type="primary">View Score</Button>
           )}
         </div>
       ),
@@ -255,6 +273,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         matchId={matchId}
+        setIsCheckAttendance={setIsCheckAttendance}
       />
 
       <ChooseStartPlayerModal

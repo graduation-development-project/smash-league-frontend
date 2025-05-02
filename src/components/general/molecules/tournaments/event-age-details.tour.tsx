@@ -9,41 +9,48 @@ const EventAgeDetails = ({
   tournamentId,
   eventId,
   mainColor,
+  isOrganizer,
 }: {
   tournamentId: string;
   eventId: string;
   mainColor: string;
+  isOrganizer: boolean;
 }) => {
   const [bracket, setBracket] = useState({});
   const [playerList, setPlayerList] = useState([]);
   const [matchList, setMatchList] = useState([]);
   // console.log('check ', eventId);
 
-
   const [tabs, setTabs] = useState<TabsProps['items']>([
     {
       label: 'Bracket',
       key: 'bracket',
-      children: <BracketDetailsTour
-        mainColor={mainColor}
-        bracket={bracket}
-        eventId={eventId}
-        tournamentId={tournamentId}
-      />,
+      children: (
+        <BracketDetailsTour
+          mainColor={mainColor}
+          bracket={bracket}
+          eventId={eventId}
+          tournamentId={tournamentId}
+        />
+      ),
     },
     {
       label: 'Matches',
       key: 'matches',
       children: (
-        <MatchDetailsTour mainColor={mainColor} matchList={matchList} eventId={eventId} tournamentId={tournamentId} />
+        <MatchDetailsTour
+          mainColor={mainColor}
+          matchList={matchList}
+          eventId={eventId}
+          tournamentId={tournamentId}
+          isOrganizer={isOrganizer}
+        />
       ),
     },
     {
       label: 'Players',
       key: 'players',
-      children: (
-        <PlayerDetailTour mainColor={mainColor} eventId={eventId} />
-      ),
+      children: <PlayerDetailTour mainColor={mainColor} eventId={eventId} />,
     },
     // {
     //   label: 'Check List',
@@ -59,9 +66,8 @@ const EventAgeDetails = ({
         size={'small'}
         style={{ marginBottom: 32, fontWeight: 600 }}
         items={tabs}
-      // onClick={}
+        // onClick={}
       />
-
     </div>
   );
 };

@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useProfileContext } from '@/context/profile.context';
 import TournamentCard from '@/components/general/atoms/tournaments/tournament.card';
 import { getTournamentsOfOrganizerIdAPI } from '@/services/tournament';
+import EmptyCard from '@/components/general/molecules/empty/empty.card';
 
 const OverviewOrganizerProfile = ({
   tournamentList,
@@ -65,18 +66,27 @@ const OverviewOrganizerProfile = ({
           colorBtn={'whiteBtn'}
           shadow={'shadowNone'}
           className="w-full justify-end text-primaryColor"
-          onClick={() => setActiveKey('3')}
+          onClick={() => setActiveKey('4')}
         >
           View all tournaments
         </Button>
 
-        <div className="w-full h-full grid grid-cols-3 gap-3 place-items-center">
-          {tournamentList?.map((tour: any) => (
-            <div key={tour.id} className="w-max h-max">
-              <TournamentCard tour={tour} />
-            </div>
-          ))}
-        </div>
+        {tournamentList.length > 0 ? (
+          <div className="w-full h-full grid grid-cols-3 gap-3 place-items-center">
+            {tournamentList?.map((tour: any) => (
+              <div key={tour.id} className="w-max h-max">
+                <TournamentCard tour={tour} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="w-full h-full flex justify-center items-center text-[20px] font-semibold">
+            <EmptyCard
+              description="No tournaments found"
+              image="https://cdn-icons-png.flaticon.com/512/313/313738.png"
+            />
+          </div>
+        )}
       </div>
       {/* Rating */}
 

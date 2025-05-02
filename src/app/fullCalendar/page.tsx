@@ -2,7 +2,7 @@ import CalendarPage from '@/components/pages/calendar/calendar.page';
 import React from 'react';
 
 const Calendar = () => {
-  return <CalendarPage />;
+  // return <CalendarPage />;
 };
 
 export default Calendar;

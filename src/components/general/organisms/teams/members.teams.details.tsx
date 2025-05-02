@@ -13,11 +13,11 @@ import { getTeamMembersAPI } from '@/services/team';
 import { useDebounce } from '@/hooks/use-debounce';
 
 const MembersTeamsDetails = (props: any) => {
-  const { teamMemberList, setTeamMemberList } = props;
+  const { teamMemberList, setTeamMemberList, teamId } = props;
   const [isMembers, setIsMembers] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState<any>({});
-  const { teamDetails, teamId } = useTeamContext();
+  const { teamDetails} = useTeamContext();
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
@@ -35,7 +35,7 @@ const MembersTeamsDetails = (props: any) => {
       setIsLoading(true);
       try {
         const res = await getTeamMembersAPI(teamId, searchTerm, page, perPage);
-        // console.log(res?.data.data);
+        console.log(res?.data.data?.meta, "Check meta");
         setTeamMemberList(res?.data?.data?.data || []);
         setPage(res?.data?.data?.meta?.currentPage);
         setPerPage(res?.data?.data?.meta?.totalPerPage);
@@ -73,7 +73,7 @@ const MembersTeamsDetails = (props: any) => {
     <>
       {teamMemberList.length > 0 ? (
         <div className="w-full h-full flex flex-col items-center gap-5 p-5">
-          <div className="w-full flex justify-between items-center px-10">
+          <div className="w-full flex justify-between items-center px-5">
             <ConfigProvider
               theme={{
                 components: {

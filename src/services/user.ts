@@ -2,9 +2,9 @@
 
 import axios from 'axios';
 
-export const searchUserByEmail = async (
-  searchTerms: string,
+export const searchUserByEmailAPI = async (
   accessToken: string,
+  searchTerms?: string,
 ) => {
   try {
     const response = await axios.get(
@@ -59,7 +59,7 @@ export const registerNewRoleAPI = async (
 
 export const getProfileAPI = async (id: string | string[]) => {
   try {
-   console.log("id", id);
+  //  console.log("id", id);
    
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/id/${id}`,
@@ -87,7 +87,7 @@ export const getProfileAPI1 = async (accesToken : string) => {
         },
       }
     );
-    console.log( "getProfile", response);
+    // console.log( "getProfile", response);
     return response.data;
   } catch (error: any) {
     console.error(
@@ -118,5 +118,29 @@ export const updateProfileAPI = async (data: any, accessToken: string) => {
       error.response?.data || error.message,
     );
     return error.response?.data;
+  }
+};
+
+export const uploadAvatarAPI = async (file: File | null, accessToken: string) => {
+  const formData = new FormData();
+  formData.append('files', file ?? '');
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/upload-avatar`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    // console.log(response.data, 'uploadAvatarAPI');
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error upload avatar profile:',
+      error.response?.data || error.message,
+    );
   }
 };

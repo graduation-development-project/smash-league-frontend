@@ -1,5 +1,5 @@
 'use client';
-import { Avatar, ConfigProvider, Popconfirm, Popover } from 'antd';
+import { Avatar, ConfigProvider, Popconfirm, Popover, Tooltip } from 'antd';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { BsGenderMale, BsGenderFemale } from 'react-icons/bs';
 import { GrLocation } from 'react-icons/gr';
@@ -9,15 +9,15 @@ import { useTeamContext } from '@/context/team.context';
 import { removeMemberAPI, transferTeamLeaderAPI } from '@/services/team';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { calculateAge } from '@/utils/calculateAge';
 
 const TeamMemberCard = ({
   member,
   fetchMembers,
 }: {
-  member?: UserProps | undefined;
+  member?: any;
   fetchMembers?: () => void;
 }) => {
-  const [gender, setGender] = useState('Male');
   const { teamDetails, teamId } = useTeamContext();
   const [user, setUser] = useState<any>({});
   const router = useRouter();
@@ -128,6 +128,8 @@ const TeamMemberCard = ({
 
   const cancel = () => {};
 
+  console.log('check member', member);
+
   const content = (
     <ConfigProvider
       theme={{
@@ -180,27 +182,37 @@ const TeamMemberCard = ({
           {member?.name?.charAt(0).toUpperCase()}
         </Avatar>
       </div>
-      <div className="flex flex-col gap-1 ">
-        <h3 className="text-[16px] font-bold text-[#2c2c2c] hover:text-primaryColor">
-          {member?.name}
-        </h3>
+      <div className="flex flex-col gap-1 w-full">
+        <Tooltip
+          title={member?.name}
+          color="#2c2c2c"
+          style={{ fontFamily: 'inherit' }}
+        >
+          <h3 className="w-full text-[16px] font-bold text-[#2c2c2c] hover:text-primaryColor truncate">
+            {member?.name}
+          </h3>
+        </Tooltip>
         <p className="flex items-center gap-1 hover:text-primaryColor transition duration-300 ease-in-out">
           <IoCalendarOutline size={16} />
-          Age: <span className="text-[14px] text-slate-500">25</span>
+          Age:{' '}
+          <span className="text-[14px] text-slate-500">
+            {calculateAge(member?.dateOfBirth)}
+          </span>
         </p>
         <p className="flex items-center gap-1 hover:text-primaryColor transition duration-300 ease-in-out">
-          {gender === 'Male' ? (
+          {member?.gender === 'MALE' ? (
             <BsGenderMale size={16} />
           ) : (
             <BsGenderFemale size={16} />
           )}
-          Gender: <span className="text-[14px] text-slate-500">{gender}</span>
+          Gender:{' '}
+          <span className="text-[14px] text-slate-500">{member?.gender}</span>
         </p>
         <p className="flex items-center gap-1 hover:text-primaryColor transition duration-300 ease-in-out">
           <GrLocation size={16} />
           Location:{' '}
           <span className="w-max text-[14px] text-slate-500 truncate">
-            Ho Chi Minh
+            {member?.location ? member?.location : 'No location'}
           </span>
         </p>
       </div>

@@ -20,7 +20,8 @@ import Image from 'next/image';
 import images from '@/assets/images';
 import { ArrowLeft, Home } from 'lucide-react';
 import styles from '@/components/general/organisms/auth/auth.module.scss';
-import { useProfileContext } from '@/context/profile.context';
+// import { useProfileContext } from '@/context/profile.context';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const LoginForm = () => {
   const [isBack, setIsBack] = useState(false);
@@ -30,15 +31,17 @@ const LoginForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [changePassword, setChangePassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (values: any) => {
     const { username, password } = values;
 
     setUserEmail('');
     //trigger sign-in
+    setIsLoading(true);
     const res = await authenticate(username.trim(), password.trim());
 
-    console.log('Check res', res);
+    // console.log('Check res', res);
     // console.log('Check sesion', session?.user);
     if (res?.error) {
       //error
@@ -47,12 +50,14 @@ const LoginForm = () => {
         setUserEmail(username);
         return;
       }
+      setIsLoading(false);
       notification.error({
         message: 'Error login',
         description: 'Please try again',
       });
     } else {
       //redirect to /dashboard
+      setIsLoading(false);
       router.push('/');
       router.refresh();
       // console.log("Success login");
@@ -173,7 +178,7 @@ const LoginForm = () => {
                       fontSize: '16px',
                     }}
                   >
-                    Log In
+                    Log In {isLoading && <LoadingOutlined />}
                   </Button>
                   <Button
                     type="link"

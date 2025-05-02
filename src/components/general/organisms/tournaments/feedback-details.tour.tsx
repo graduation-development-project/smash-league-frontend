@@ -14,11 +14,16 @@ import { getFeedbackTournamentAPI } from '@/services/feedback-tour';
 
 
 const FeedbackDetailsTour = ({
-    detail
+    detail,
+    isOrganizer,
+    user,
 }: {
-    detail: any
+    detail: any;
+    isOrganizer: boolean;
+    user: any;
 }) => {
     const tourId = detail?.id
+
     const [star, setStar] = useState<number>(0);
     const rating = ["All", "1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
     const [page, setPage] = useState<number>(1);
@@ -37,9 +42,7 @@ const FeedbackDetailsTour = ({
     useEffect(() => {
         const filtered = async () => {
             const feedback = await fetchGetTournamentFeedback();
-
             const filtered = star > 0 ? feedback?.filter((fb: any) => fb.rating === star) : feedback;
-
             setFilteredFeedback(filtered);
         }
         filtered();
@@ -66,6 +69,7 @@ const FeedbackDetailsTour = ({
                         {rating.map((item, index) => {
                             return (
                                 <button
+                                    key={index}
                                     className='w-max h-max text-base font-semibold border px-4 py-1 rounded-md hover:bg-[#ffebde]'
                                     style={{
                                         backgroundColor: star === index ? `#FF8243` : "",
@@ -78,9 +82,15 @@ const FeedbackDetailsTour = ({
                             )
                         })}
                     </div>
-                    <Button size={'sm'} onClick={() => setIsOpenModal(true)}>
-                        <FaPlus /> Add Feedback
-                    </Button>
+                    {
+                        !isOrganizer && user && (
+                            <Button size={'sm'} onClick={() => setIsOpenModal(true)}>
+                                <FaPlus /> Add Feedback
+                            </Button>
+                        )
+
+                    }
+
                     <FeedbackModal
                         isModalOpen={isOpenModal}
                         setIsModalOpen={setIsOpenModal}
@@ -97,7 +107,7 @@ const FeedbackDetailsTour = ({
                                     {
                                         filteredFeedback?.map((fb: any, index: number) => {
                                             return (
-                                                <div className='w-full flex flex-col border rounded-md py-3  gap-2'>
+                                                <div key={index} className='w-full flex flex-col border rounded-md py-3  gap-2'>
                                                     <div className='w-full h-max flex justify-between  items-center px-5'>
                                                         <div className='flex flex-row font-semibold items-center gap-2'>
 
