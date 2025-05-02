@@ -34,9 +34,11 @@ const AthleteProfilePage = (props: any) => {
 
   const getProfile = async () => {
     try {
+      setIsLoading(true);
       const response = await getProfileAPI(params?.name);
       console.log('Check profile', response);
       setProfile(response);
+      setIsLoading(false);
     } catch (error: any) {
       console.log(error);
     }
@@ -70,7 +72,7 @@ const AthleteProfilePage = (props: any) => {
           {
             key: '3',
             label: 'Teams List',
-            children: <MyTeams user={user}/>,
+            children: <MyTeams user={user} />,
           },
           {
             key: '4',
@@ -89,79 +91,83 @@ const AthleteProfilePage = (props: any) => {
 
   return (
     <>
-      <Loaders isLoading={isLoading} />
-      <div className="w-full h-full relative z-0 shadow-shadowComp rounded-[5px]">
-        <div className="w-full h-full relative z-0">
-          <img
-            src="https://assets.challonge.com/assets/community_default_banners/default-cover-3-redesign-2693250cf849ef7bcd3975c81ca64c06e6bdffd39d47ae0c454fd0d6e0006fb4.svg"
-            alt=""
-            className="w-full h-[300px] object-cover rounded-[5px]"
-          />
+      {isLoading ? (
+        <div className="flex justify-center items-center h-screen">
+          <Loaders isLoading={isLoading} />
+        </div>
+      ) : (
+        <div className="w-full h-full relative z-0 shadow-shadowComp rounded-[5px]">
+          <div className="w-full h-full relative z-0">
+            <img
+              src="https://assets.challonge.com/assets/community_default_banners/default-cover-3-redesign-2693250cf849ef7bcd3975c81ca64c06e6bdffd39d47ae0c454fd0d6e0006fb4.svg"
+              alt=""
+              className="w-full h-[300px] object-cover rounded-[5px]"
+            />
 
-          <div className="absolute z-10 w-full h-full flex items-center top-0 pl-10">
-            <div className="flex items-center justify-center gap-4">
-              <Avatar
-                style={{ border: '3px solid #FF8243' }}
-                size={200}
-                src={
-                  profile?.avatarURL
-                }
-                alt="Athlete Image"
-              />
-              <div className="flex flex-col gap-2">
-                <h1 className="text-white text-[32px] font-bold">
-                  {profile?.name}
-                </h1>
-                <div className="text-white text-[14px] italic ">
-                  {profile?.email}
-                </div>
-                {profile?.address ? (
-                  <div className="text-white text-[14px] font-semibold flex gap-1">
-                    <CiLocationOn size={20} /> <span>Thu Duc, Ho Chi Minh</span>
+            <div className="absolute z-10 w-full h-full flex items-center top-0 pl-10">
+              <div className="flex items-center justify-center gap-4">
+                <Avatar
+                  style={{ border: '3px solid #FF8243' }}
+                  size={200}
+                  src={profile?.avatarURL}
+                  alt="Athlete Image"
+                />
+                <div className="flex flex-col gap-2">
+                  <h1 className="text-white text-[32px] font-bold">
+                    {profile?.name}
+                  </h1>
+                  <div className="text-white text-[14px] italic ">
+                    {profile?.email}
                   </div>
-                ) : (
-                  <></>
-                )}
+                  {profile?.address ? (
+                    <div className="text-white text-[14px] font-semibold flex gap-1">
+                      <CiLocationOn size={20} />{' '}
+                      <span>Thu Duc, Ho Chi Minh</span>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="w-full h-full flex flex-col items-center relative z-20 ">
-          <ConfigProvider
-            theme={{
-              components: {
-                Tabs: {
-                  /* here is your component tokens */
-                  itemColor: '#000000',
-                  itemSelectedColor: '#FF8243',
-                  inkBarColor: '#FF8243',
-                  itemHoverColor: '#FF8243',
-                  itemActiveColor: '#FF8243',
-                  horizontalItemPaddingLG: '0px 0px 16px 0px',
+          <div className="w-full h-full flex flex-col items-center relative z-20 ">
+            <ConfigProvider
+              theme={{
+                components: {
+                  Tabs: {
+                    /* here is your component tokens */
+                    itemColor: '#000000',
+                    itemSelectedColor: '#FF8243',
+                    inkBarColor: '#FF8243',
+                    itemHoverColor: '#FF8243',
+                    itemActiveColor: '#FF8243',
+                    horizontalItemPaddingLG: '0px 0px 16px 0px',
+                  },
                 },
-              },
-            }}
-          >
-            <Tabs
-              tabBarStyle={{
-                width: '100%',
-                fontWeight: 600,
-                // boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                marginTop: 30,
-                fontFamily: 'inherit',
               }}
-              style={{ width: '100%', fontFamily: 'inherit' }}
-              size="large"
-              centered
-              tabBarGutter={60}
-              defaultActiveKey="1"
-              items={items}
-              onChange={onChange}
-            />
-          </ConfigProvider>
+            >
+              <Tabs
+                tabBarStyle={{
+                  width: '100%',
+                  fontWeight: 600,
+                  // boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                  marginTop: 30,
+                  fontFamily: 'inherit',
+                }}
+                style={{ width: '100%', fontFamily: 'inherit' }}
+                size="large"
+                centered
+                tabBarGutter={60}
+                defaultActiveKey="1"
+                items={items}
+                onChange={onChange}
+              />
+            </ConfigProvider>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

@@ -62,7 +62,7 @@ const MatchCard = ({
       player2: 21,
     },
   ];
-  // console.log("Check tournamentId", tournamentId);
+  console.log('Check match', match);
 
   // console.log('Check', match.participants);
 

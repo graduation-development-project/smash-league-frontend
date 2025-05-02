@@ -19,7 +19,6 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { DatePicker, Space } from 'antd';
 import type { DatePickerProps, GetProps } from 'antd';
-import { data } from 'react-router-dom';
 
 interface Option {
   label: string;
@@ -152,6 +151,7 @@ const UmpireAssignModal = ({
   };
 
   const handleUpdateMatchInfomation = async (values: any) => {
+    if (!user) return;
     const {
       umpireId,
       startedWhen,
@@ -159,7 +159,7 @@ const UmpireAssignModal = ({
       rightCompetitorId,
       courtId,
     } = values;
-    console.log('check values', values);
+    // console.log('check values', values);
     try {
       setIsLoading(true);
       const response = await updateMatchInfoAPI(
@@ -169,8 +169,9 @@ const UmpireAssignModal = ({
         leftCompetitorId,
         rightCompetitorId,
         courtId,
+        user?.access_token,
       );
-      console.log('check res', response.data);
+      // console.log('check res', response.data);
       if (
         response?.data.statusCode === 200 ||
         response?.data?.statusCode === 201
