@@ -1,19 +1,41 @@
+import { getTourContactDetailsAPI, updateTourContactDetailsAPI } from '@/services/update-tour';
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, Image, Input, InputNumber, Radio } from 'antd';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify';
 
 const UpdateOrganizerMerchandiseDetailsTour = ({
   fileImgMerchandiseList,
   setFileImgMerchandiseList,
+  tourId,
+  // detail,
+  // setDetail,
+  accessToken,
 }: {
-  fileImgMerchandiseList: File[],
-  setFileImgMerchandiseList: (value: File[]) => void
+  fileImgMerchandiseList: File[];
+  setFileImgMerchandiseList: (value: File[]) => void;
+  tourId: string;
+  // detail: any;
+  // setDetail: any;
+  accessToken: string;
 }) => {
 
   const [form] = Form.useForm();
 
   const [hasMerchandise, setHasMerchandise] = useState(false);
   const inputImgMerchanRef = useRef<HTMLInputElement | null>(null);
+  const [detail, setDetail] = useState<any>();
+
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
 
 
   const handleFileImgMerchandiseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +52,32 @@ const UpdateOrganizerMerchandiseDetailsTour = ({
     setFileImgMerchandiseList(fileImgMerchandiseList.filter((_: File, i: number) => i !== index));
   };
 
+  const fetchUpdateTourContact = async (updateData: any) => {
+    {
+      const response = await updateTourContactDetailsAPI(updateData, user.access_token);
+      return response.data;
+    }
+  }
+
+  const fetchGetTourContactDetail = async () => {
+    const response = await getTourContactDetailsAPI(tourId);
+    setDetail(response.data);
+  }
+
+  useEffect(() => {
+    fetchGetTourContactDetail();
+  }, [])
+
+  const onFinish = async (fieldsValue: any) => {
+    const updateData = {
+      'id': tourId,
+      'contactEmail': fieldsValue['contactEmail'],
+      'contactPhone': fieldsValue['contactPhone'],
+    }
+    const updatedData = await fetchUpdateTourContact(updateData);
+    setDetail(updatedData);
+  }
+
   return (
     <div>
       <Form
@@ -37,7 +85,7 @@ const UpdateOrganizerMerchandiseDetailsTour = ({
         wrapperCol={{ span: 14 }}
         layout="horizontal"
         form={form}
-
+        onFinish={onFinish}
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -53,9 +101,10 @@ const UpdateOrganizerMerchandiseDetailsTour = ({
           <Form.Item
             name="host"
             label="Host"
+            initialValue={detail?.organizer?.name}
             required
           >
-            <Input value={"Ho Chi Minh Federation"} disabled />
+            <Input disabled />
           </Form.Item>
           {/* <Form.Item name="organizers" label="Co-Organizers">
                                   <Select {...sharedOrganizerProps} {...selectOrganizerProps} />
@@ -63,17 +112,20 @@ const UpdateOrganizerMerchandiseDetailsTour = ({
           <Form.Item
             name="contactEmail"
             label="Contact Email"
-            required>
+            initialValue={detail?.contactEmail}
+            required
+          >
             <Input placeholder='Your email here' />
           </Form.Item>
           <Form.Item
             label=" Contact Phone Number"
             name="contactPhone"
+            initialValue={detail?.contactPhone}
             required
             rules={[
               { required: true },
               {
-                pattern: new RegExp("^[0-9\-\+]{9,15}$"),
+                pattern: new RegExp("^(\\+84|84|0)(3|5|7|8|9)[0-9]{8}$"),
                 message: "Please enter a valid phone number"
               }
             ]}
@@ -83,7 +135,12 @@ const UpdateOrganizerMerchandiseDetailsTour = ({
 
           <Divider />
 
-          <Form.Item name="hasMerchandise" label="Merchandise for audiences">
+          <Form.Item
+            name="hasMerchandise"
+            label="Merchandise for audiences"
+            initialValue={detail?.hasMerchandise}
+            required
+          >
             <Radio.Group
               onChange={(e) => setHasMerchandise(e.target.value)}
               style={{ width: '100%', display: 'flex', justifyContent: 'space-between', flexDirection: 'column', rowGap: '8px' }}
@@ -94,8 +151,12 @@ const UpdateOrganizerMerchandiseDetailsTour = ({
           </Form.Item>
 
           <div style={{ display: hasMerchandise ? 'block' : 'none' }}>
-            <Form.Item name={"merchandise"} label="Merchandise description">
-              <Input style={{ width: '100%' }} />
+            <Form.Item
+              name={"merchandise"}
+              label="Merchandise description"
+              initialValue={detail?.merchandise}
+            >
+              <Input style={{ width: '100%' }} placeholder="Merchandise description"/>
             </Form.Item>
             <Form.Item
               name={"numberOfMerchandise"}
@@ -117,6 +178,7 @@ const UpdateOrganizerMerchandiseDetailsTour = ({
             <Form.Item
               name="merchandiseImages"
               label="Merchandise Image"
+              required
             >
               <div className='flex gap-4 flex-wrap w-full'>
                 {fileImgMerchandiseList.length < 5 && (

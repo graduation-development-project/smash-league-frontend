@@ -24,17 +24,19 @@ const TournamentCard = ({ tour }: any) => {
     >
       <div className="w-full h-[200px]">
         <Image
-          className="w-full h-full object-cover rounded-lg"
-          width={282}
+          width={"100%"}
           height={200}
+          className="w-full h-full object-cover rounded-lg"
           src={tour?.backgroundTournament}
-          alt={tour?.name}
+          alt={tour?.name ? tour?.name : 'Badminton Summer Olympics'}
         />
       </div>
       <div className="flex flex-col gap-2"
         onClick={() => router.push(`/tournaments/details/${tour.id}`)}
       >
-        <h3 className="text-base font-bold text-textColor">{tour?.name}</h3>
+        <h3 className="text-base font-bold text-textColor">
+          {tour?.name}
+        </h3>
         <div className=" flex w-max py-1 px-2 bg-gradient-orange bg-opacity-20 rounded-full text-center items-center"        >
           <span className="text-xs text-white font-semibold ">
             Price pool: {formatMoney(tour?.prizePool)}

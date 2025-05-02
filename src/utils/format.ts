@@ -69,3 +69,7 @@ export const formatYearOfBirth = (date?: string) => {
 export const formatHeight = (height: number) => {
   return height ? `${height} cm` : "No Info";
 }
+
+export const formatCreatedDateTime = (date?: string) => {
+  return date ? dayjs(date).format('MMM DD, YYYY, hh:mm:ss A') : "Invalid Date";
+}

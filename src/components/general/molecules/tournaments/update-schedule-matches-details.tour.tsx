@@ -1,10 +1,21 @@
+import { updateScheduleMatchesTourAPI } from '@/services/update-tour';
 import { Button, DatePicker, Divider, Form, InputNumber, Radio, Select, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import React, { useState } from 'react'
 
 const formatTimeCheckIn = 'mm:ss';
 
-const UpdateScheduleMatchesDetailsTour = () => {
+const UpdateScheduleMatchesDetailsTour = (
+    {
+        detail,
+        setDetail,
+        accessToken
+    }: {
+        detail: any;
+        setDetail: any;
+        accessToken: string;
+    }
+) => {
     const { RangePicker } = DatePicker;
     const [form] = Form.useForm();
 
@@ -29,6 +40,26 @@ const UpdateScheduleMatchesDetailsTour = () => {
         );
     };
 
+    const fetchScheduleMatches = async (updateData: any) => {
+        const response = await updateScheduleMatchesTourAPI(updateData, accessToken);
+        return response.data;
+    }
+
+    const onFinish = async (filedValues: any) => {
+
+        const updateData = {
+            id: detail?.id,
+            drawDate: filedValues.drawDate[0].format('YYYY-MM-DD HH:mm:ss'),
+            startDate: filedValues.occurDate[0].format('YYYY-MM-DD HH:mm:ss'),
+            endDate: filedValues.occurDate[1].format('YYYY-MM-DD HH:mm:ss'),
+            checkInBeforeStart: filedValues.checkIn.format('YYYY-MM-DD HH:mm:ss'),
+            umpirePerMatch: filedValues.umpirePerMatch,
+        }
+
+        const updatedData = await fetchScheduleMatches(updateData);
+        setDetail(updatedData);
+    }
+
     return (
         <div className='w-full h-max flex flex-col items-center justify-center'>
             <Form
@@ -36,7 +67,7 @@ const UpdateScheduleMatchesDetailsTour = () => {
                 wrapperCol={{ span: 14 }}
                 layout="horizontal"
                 form={form}
-
+                onFinish={onFinish}
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -49,22 +80,33 @@ const UpdateScheduleMatchesDetailsTour = () => {
                 }}
             >
                 <div className='w-full h-max pt-10 px-3'>
-                    <Form.Item name={"drawDate"} label="Draw Date" style={{ display: 'block', }} required>
-                        <RangePicker
-                            placeholder={["Select Start Date", "Select End Date"]}
+                    <Form.Item
+                        name={"drawDate"}
+                        label="Draw Date"
+                        style={{ display: 'block', }}
+                        initialValue={[dayjs(detail?.drawDate, 'YYYY-MM-DD HH:mm:ss')]}
+                        required
+                    >
+                        <DatePicker
+                            format="YYYY-MM-DD HH:mm:ss"
                             disabledDate={disabledDrawDate}
                             showTime={{
                                 hideDisabledOptions: true,
-                                defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('23:59:59', 'HH:mm:ss')],
+                                defaultValue: dayjs('00:00:00', 'HH:mm:ss')
                             }}
                             onChange={(date: any) => {
                                 setDrawDate(date);
                             }}
-                            format="YYYY-MM-DD HH:mm:ss"
                             style={{ width: "100%" }}
                         />
                     </Form.Item>
-                    <Form.Item name={"occurDate"} label="Occur Date" style={{ display: 'block', }} required>
+                    <Form.Item
+                        name={"occurDate"}
+                        label="Occur Date"
+                        style={{ display: 'block', }}
+                        initialValue={[dayjs(detail?.startDate, 'YYYY-MM-DD HH:mm:ss'), dayjs(detail?.endDate, 'YYYY-MM-DD HH:mm:ss')]}
+                        required
+                    >
                         <RangePicker
                             placeholder={["Select Start Date", "Select End Date"]}
                             disabledDate={disabledOccurDate}
@@ -79,17 +121,30 @@ const UpdateScheduleMatchesDetailsTour = () => {
                             style={{ width: "100%" }}
                         />
                     </Form.Item>
-                    <Form.Item name={"checkIn"} label="Check-in before start time" initialValue={dayjs('15:00', formatTimeCheckIn)} required>
+                    <Form.Item
+                        name={"checkIn"}
+                        label="Check-in before start time"
+                        initialValue={dayjs(detail?.checkInBeforeStart, formatTimeCheckIn)}
+                        required
+                    >
                         <TimePicker defaultValue={dayjs('15:00', formatTimeCheckIn)} format={formatTimeCheckIn} />
                     </Form.Item>
                     <Divider />
-                    <Form.Item name="umpirePerMatch" label="Main umpires in a match" required>
+                    <Form.Item
+                        name="umpirePerMatch"
+                        label="Umpires per match"
+                        required
+                    >
                         <InputNumber min={1} max={3} suffix={'Umpire(s)'} style={{ width: '100%' }} placeholder="Number of umpires" changeOnWheel />
 
                     </Form.Item>
-                    <Form.Item name="linemanPerMatch" label="Linesman in a match" required>
+                    {/* <Form.Item
+                        name="linemanPerMatch"
+                        label="Linesman in a match"
+                        required
+                    >
                         <InputNumber min={1} max={5} suffix={'Linemans'} style={{ width: '100%', marginTop: '8px' }} placeholder="Number of umpires" changeOnWheel />
-                    </Form.Item>
+                    </Form.Item> */}
                 </div>
 
 
