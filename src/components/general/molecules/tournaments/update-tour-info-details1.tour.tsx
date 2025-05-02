@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, ColorPicker, ColorPickerProps, Divider, Form, GetProp, Image, Input, InputNumber, InputRef, message, Select, Space, Spin } from 'antd'
+import { Button, ColorPicker, ColorPickerProps, Divider, Form, GetProp, Input, InputNumber, InputRef, message, Select, Space, Spin } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
+import Image from 'next/image'
 import { useDebounce } from '@/hooks/use-debounce'
 import { CheckOutlined, CloseCircleOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { MdOutlineEditLocation } from "react-icons/md";
 import { createTourSerieAPI, getAllMySeriesAPI } from '@/services/serie'
 import { generateUrlAPI, isExistedUrlAPI, uploadBgTourImageAPI } from '@/services/create-tour'
 import { getDistrictAPI, getProvinceAPI, getWardAPI } from '@/services/location'
 import { getTourInfoDetailsAPI, updateTourInfoDetailsAPI } from '@/services/update-tour'
-// import { toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 
 const UpdateBasicInfoDetailsTour = ({
@@ -16,15 +16,13 @@ const UpdateBasicInfoDetailsTour = ({
   tournamentId,
   fileBgTour,
   setFileBgTour,
-  handleGetTourDetail
   // detail,
   // setDetail,
 }: {
   accessToken: string;
   tournamentId: string;
   fileBgTour: File | null;
-  setFileBgTour: React.Dispatch<React.SetStateAction<File | null>>;
-  handleGetTourDetail: any;
+  setFileBgTour: any;
   // detail: any;
   // setDetail: any;
 }
@@ -33,11 +31,12 @@ const UpdateBasicInfoDetailsTour = ({
   type Color = Extract<GetProp<ColorPickerProps, 'value'>, string | { cleared: any }>;
   type Format = GetProp<ColorPickerProps, 'format'>;
   const [form] = Form.useForm();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const [detail, setDetail] = useState<any>({});
+  const [detail, setDetail] = useState<any>({
+    "mainColor": "",
+  });
 
-  const [imageURLBgTour, setImageURLBgTour] = useState<File | null>(null);
+  const [imageURLBgTour, setImageURLBgTour] = useState<string>("");
   const [formatHex, setFormatHex] = useState<Format>('hex');
   const [colorHex, setColorHex] = useState<string>('#ff8243');
 
@@ -54,7 +53,6 @@ const UpdateBasicInfoDetailsTour = ({
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const [location, setLocation] = useState('');
-  const [isChangeLocation, setIsChangeLocation] = useState(false);
 
   const [serieList, setSerieList] = useState([]);
   // const [items, setItems] = useState(['jack', 'lucy']);
@@ -75,20 +73,10 @@ const UpdateBasicInfoDetailsTour = ({
 
   const fetchGetTourInfoDetailsTour = async () => {
     const response = await getTourInfoDetailsAPI(tournamentId);
-    setDetail(response.data);
-    setLocation(response?.data?.location);
-    form.setFieldsValue({
-      id: response?.data?.id,
-      name: response?.data?.name,
-      description: response?.data.description,
-      shortName: response?.data?.shortName,
-      introduction: response?.data?.introduction,
-      location: response?.data?.location,
-      mainColor: response?.data?.mainColor,
-      prizePool: response?.data?.prizePool,
-      tournamentSerieId: response?.data?.tournamentSerieId,
-    });
+    setDetail(response);
+    
   }
+console.log("detail", detail);
   const fetchProvince = async () => {
     try {
       const res = await getProvinceAPI();
@@ -155,8 +143,6 @@ const UpdateBasicInfoDetailsTour = ({
     setAddSerieName(event.target.value);
   };
 
-  //________________
-
   const handleProvinceChange = (value: string) => {
     const [selectedProvinceId, selectedProvinceName] = value.split('|');
     setProvinceId(selectedProvinceId);
@@ -171,6 +157,11 @@ const UpdateBasicInfoDetailsTour = ({
 
   useEffect(() => {
     fetchGetTourInfoDetailsTour();
+    fetchGetAllSeries();
+    fetchProvince();
+  }, []);
+
+  useEffect(() => {
     fetchGetAllSeries();
     fetchProvince();
   }, []);
@@ -193,17 +184,10 @@ const UpdateBasicInfoDetailsTour = ({
   }, [provinceId, districtId]);
 
   useEffect(() => {
-    const newLocationString = (street: string, ward: string, district: string, province: string) => {
-      if (street !== "" || ward !== "" || district !== "" || province !== "") {
-        setLocation([street, ward, district, province].join(', '));
-      }
-      else {
-        setLocation("");
-      }
-    };
-    newLocationString(street, ward, districtName, provinceName);
-    form.setFieldValue('location', location);
-  }, [street, provinceId, provinceName, districtId, districtName, ward]);
+    const newLocation = [street, ward, districtName, provinceName].join(', ');
+    setLocation(newLocation);
+    form.setFieldValue('location', newLocation);
+  }, [street, ward, districtName, provinceName]);
 
 
   // Main Color
@@ -217,18 +201,9 @@ const UpdateBasicInfoDetailsTour = ({
   };
 
   const handleFileBgTourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // console.log(file);
-      setFileBgTour(file);
-      setImageURLBgTour(file); // Set URL để hiển thị trước ảnh
+    if (e.target.files && e.target.files[0]) {
+      setFileBgTour(e.target.files[0]);
     }
-  };
-
-  console.log(imageURLBgTour, "fileBgTour");
-  const getInitialMainColor = (color?: string) => {
-    if (!color) return "#FF8243";
-    return color.startsWith("#") ? color : "#FF8243";
   };
 
   const fetchTourInfoDetails = async (updateData: any) => {
@@ -241,14 +216,13 @@ const UpdateBasicInfoDetailsTour = ({
   }
 
   const fetchUploadTourBgImg = async () => {
-    if (!imageURLBgTour) return null
-    const response = await uploadBgTourImageAPI(imageURLBgTour);
+    if (!fileBgTour) return null
+    const response = await uploadBgTourImageAPI(fileBgTour);
     return response.data;
   }
 
 
   const onFinish = async (fieldValues: any) => {
-    setIsLoading(true);
     console.log("fieldValues", fieldValues);
     console.log("fileBgTour", fileBgTour);
 
@@ -259,10 +233,10 @@ const UpdateBasicInfoDetailsTour = ({
       'id': fieldValues['id'],
       'name': fieldValues['name'],
       'shortName': fieldValues['shortName'],
-      'backgroundTournament': imageLink || detail?.backgroundTournament,
+      'backgroundTournament': imageLink || '',
       'introduction': fieldValues['introduction'],
       'description': fieldValues['description'],
-      'location': location,
+      'location': fieldValues['location'],
       'mainColor': fieldValues['mainColor'],
       'prizePool': fieldValues['prizePool'],
       'tournamentSerieId': fieldValues['tournamentSerieId'] || null,
@@ -271,8 +245,6 @@ const UpdateBasicInfoDetailsTour = ({
 
     const updatedData = await fetchTourInfoDetails(updateData);
     setDetail(updatedData);
-    handleGetTourDetail();
-    setIsLoading(false);
   }
 
 
@@ -355,24 +327,24 @@ const UpdateBasicInfoDetailsTour = ({
             name="backgroundTournament"
             label="Tournament's Image"
             initialValue={detail?.backgroundTournament}
-            // required
+            required
           >
             <input
               type="file"
-              // required
+              required
               accept="image/*"
               onChange={handleFileBgTourChange}
               className="mb-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#fff8f3] file:text-[#FF8243] hover:file:bg-[#fae3d0]"
             />
             <div>
-
-              {detail?.backgroundTournament && (
+              {fileBgTour && (
                 <Image
-                  src={imageURLBgTour ? URL.createObjectURL(imageURLBgTour) : (detail?.backgroundTournament)}
+                  src={detail?.backgroundTournament || URL.createObjectURL(fileBgTour)}
                   alt="Uploaded"
                   width={200}
                   height={200}
-                  className="max-w-full h-auto rounded-lg shadow-shadowBtn object-contain"
+                  className="max-w-full h-auto rounded-lg shadow-shadowBtn"
+                  
                 />
               )}
             </div>
@@ -381,7 +353,7 @@ const UpdateBasicInfoDetailsTour = ({
           <Form.Item
             name="mainColor"
             label="Your Tour Color"
-            initialValue={getInitialMainColor(detail?.mainColor)}
+            initialValue={detail? (detail.mainColor.includes("#")? detail?.mainColor : "#FF8243") : "#FF8243"}
           >
             <ColorPicker
               format={formatHex}
@@ -412,124 +384,105 @@ const UpdateBasicInfoDetailsTour = ({
             style={{ rowGap: '10px' }}
             label="Location"
             required
-          ><Space.Compact style={{ width: '100%' }}>
+          >
+            <Space.Compact block>
               <Form.Item
-                name="location"
+                name={'province'}
                 noStyle
-                style={{ marginTop: '12px' }}
-                // initialValue={detail?.location}
-                required
+                // initialValue={}
+                rules={[{ required: true, message: 'Province is required' }]}
               >
+                <Select onChange={handleProvinceChange} value={provinceName} placeholder="Select province">
+                  {
+                    provinceList?.map((province: any) => {
+                      return (
+                        <Select.Option key={province.ProvinceID} value={`${province.ProvinceID}|${province.ProvinceName}`}> {province.ProvinceName}</Select.Option>
+                      )
+                    })
+                  }
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name={'district'}
+                noStyle
+                rules={[{ required: true, message: 'District is required' }]}
+              >
+                <Select onChange={handleDistrictChange} value={districtName} placeholder="Select district">
+                  {
+                    districtList?.map((district: any) => {
+                      return (
+                        <Select.Option key={district.DistrictID} value={`${district.DistrictID}|${district.DistrictName}`}> {district.DistrictName}</Select.Option>
+                      )
+                    })
+                  }
 
-                <Input value={location}  readOnly />
-                <Button
-                  type="primary"
-                  icon={<MdOutlineEditLocation />}
-                  onClick={() => {
-                    setIsChangeLocation(!isChangeLocation)
-                  }} />
+                </Select>
 
               </Form.Item>
+              <Form.Item
+                name={'ward'}
+                noStyle
+                rules={[{ required: true, message: 'Ward is required' }]}
+              >
+                <Select onChange={(e) => setWard(e)} value={ward} placeholder="Select ward" >
+                  {
+                    wardList?.map((ward: any) => {
+                      return (
+                        <Select.Option key={ward.WardID} value={ward.WardName}>{ward.WardName}</Select.Option>
+                      )
+                    })
+
+                  }
+                </Select>
+              </Form.Item>
             </Space.Compact>
+            <br />
+            <Form.Item
+              name={'street'}
+              noStyle
+              rules={[{ required: true, message: 'Street is required' }]}
+              initialValue={street}
+            >
+              <Input onChange={(e) => setStreet(e.target.value)} style={{ width: '50%' }} placeholder="Input address number and street" />
+            </Form.Item>
 
-            {
-              isChangeLocation && (
-                <>
+            <br />
 
-                  <Space.Compact style={{ marginTop: '20px' }} block>
-                    <Form.Item
-                      name={'province'}
-                      noStyle
-                    // initialValue={}
-                    // rules={[{ required: true, message: 'Province is required' }]}
-                    >
-                      <Select onChange={handleProvinceChange} value={provinceName} placeholder="Select province">
-                        {
-                          provinceList?.map((province: any) => {
-                            return (
-                              <Select.Option key={province.ProvinceID} value={`${province.ProvinceID}|${province.ProvinceName}`}> {province.ProvinceName}</Select.Option>
-                            )
-                          })
-                        }
-                      </Select>
-                    </Form.Item>
-                    <Form.Item
-                      name={'district'}
-                      noStyle
-                    // rules={[{ required: true, message: 'District is required' }]}
-                    >
-                      <Select onChange={handleDistrictChange} value={districtName} placeholder="Select district">
-                        {
-                          districtList?.map((district: any) => {
-                            return (
-                              <Select.Option key={district.DistrictID} value={`${district.DistrictID}|${district.DistrictName}`}> {district.DistrictName}</Select.Option>
-                            )
-                          })
-                        }
-
-                      </Select>
-
-                    </Form.Item>
-                    <Form.Item
-                      name={'ward'}
-                      noStyle
-                    // rules={[{ required: true, message: 'Ward is required' }]}
-                    >
-                      <Select onChange={(e) => setWard(e)} value={ward} placeholder="Select ward" >
-                        {
-                          wardList?.map((ward: any) => {
-                            return (
-                              <Select.Option key={ward.WardID} value={ward.WardName}>{ward.WardName}</Select.Option>
-                            )
-                          })
-
-                        }
-                      </Select>
-                    </Form.Item>
-                  </Space.Compact>
-                  <br />
-                  <Form.Item
-                    name={'street'}
-                    noStyle
-                    // rules={[{ required: true, message: 'Street is required' }]}
-                    initialValue={street}
-                  >
-                    <Input onChange={(e) => setStreet(e.target.value)} style={{ width: '50%' }} placeholder="Input address number and street" />
-                  </Form.Item>
-                </>
-              )
-            }
-
-
-
-
-
+            <Form.Item
+              name="location"
+              noStyle
+              style={{ marginTop: '12px' }}
+              // initialValue={detail?.location}
+              required
+            >
+              <Input defaultValue={location} variant='borderless' readOnly />
+            </Form.Item>
 
           </Form.Item>
           <Form.Item
             name="introduction"
             label="Introduction"
             initialValue={detail?.introduction}
-            required
           >
             <TextArea
               // value={value}
               // onChange={(e) => setValue(e.target.value)}
               placeholder="Tournament's introduction"
               autoSize={{ minRows: 3, maxRows: 5 }}
+              required
             />
           </Form.Item>
           <Form.Item
             name="description"
             label="Description"
             initialValue={detail?.description}
-            required
           >
             <TextArea
               // value={value}
               // onChange={(e) => setValue(e.target.value)}
               placeholder="Tournament description"
               autoSize={{ minRows: 3, maxRows: 5 }}
+              required
             />
           </Form.Item>
           <Form.Item
@@ -588,7 +541,7 @@ const UpdateBasicInfoDetailsTour = ({
         </div>
 
         <Button style={{ padding: '22px 30px', fontSize: '18px', fontWeight: 'bold' }} type="primary" htmlType="submit">
-          Save {isLoading && <LoadingOutlined/>}
+          Save
         </Button>
       </Form>
 

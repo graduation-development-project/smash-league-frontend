@@ -11,13 +11,13 @@ import UpdateInformationProfile from '@/components/general/organisms/profile/ath
 import { getProfileAPI } from '@/services/user';
 import { useProfileContext } from '@/context/profile.context';
 import { useParams } from 'next/navigation';
+import MyTournaments from '../tournaments/my-tour.tour';
+import MyTeams from '@/components/general/organisms/teams/my-teams';
 
 const AthleteProfilePage = (props: any) => {
   const { session } = props;
   const params = useParams();
   const { athleteId, setAthleteId } = useProfileContext();
-  // console.log('athleteId', athleteId);
-  // console.log('session', session);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
@@ -33,9 +33,6 @@ const AthleteProfilePage = (props: any) => {
   }, []);
 
   const getProfile = async () => {
-    // if (!user) return;
-    // console.log('check getProfile');
-    // console.log('athleteId', athleteId);
     try {
       const response = await getProfileAPI(params?.name);
       console.log('Check profile', response);
@@ -59,19 +56,32 @@ const AthleteProfilePage = (props: any) => {
     {
       key: '1',
       label: 'Overview',
-      children: <OverviewAthleteProfile info={profile} setProfile={setProfile}/>,
+      children: (
+        <OverviewAthleteProfile info={profile} setProfile={setProfile} />
+      ),
     },
     {
       key: '2',
       label: 'Tournaments',
-      children: <TournamentsAthleteProfile profile={profile} setProfile={setProfile}/>,
+      children: <MyTournaments profileRole='ATHLETE'/>,
     },
     ...(user?.id === profile?.id
       ? [
           {
             key: '3',
+            label: 'Teams List',
+            children: <MyTeams/>,
+          },
+          {
+            key: '4',
             label: 'Update Information',
-            children: <UpdateInformationProfile session={session} profile={profile} setProfile={setProfile}/>,
+            children: (
+              <UpdateInformationProfile
+                session={session}
+                profile={profile}
+                setProfile={setProfile}
+              />
+            ),
           },
         ]
       : []),

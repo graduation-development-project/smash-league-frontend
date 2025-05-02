@@ -1,7 +1,7 @@
 "use client"
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Divider, Form, Input, InputNumber, Radio, Select, SelectProps, Space } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 
 interface SelectItemProps {
     label: string;
@@ -10,8 +10,8 @@ interface SelectItemProps {
 
 const CreateTourStep2 = () => {
 
-    const [sponsorList, setSponsorList] = React.useState<string[]>([]);
-    const [isRecruit, setIsRecruit] = React.useState<boolean>(false);
+    const [sponsorList, setSponsorList] = useState<string[]>([]);
+    const [isRecruit, setIsRecruit] = useState<boolean>(false);
 
 
     const selectSponsors: SelectItemProps[] = [];

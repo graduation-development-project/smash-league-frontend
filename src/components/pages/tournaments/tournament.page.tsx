@@ -14,23 +14,23 @@ const TournamentPage = () => {
   const onSearch: SearchProps['onSearch'] = (value, _e, info) =>
     console.log(info?.source, value);
 
-  const items: TabsProps['items'] = [
-    {
-      key: '1',
-      label: 'Search',
-      children: <OnGoingTournament />,
-    },
-    {
-      key: '2',
-      label: 'My Tournaments',
-      children: <MyTournaments />,
-    },
-    // {
-    //     key: "3",
-    //     label: <Search style={{ width: "100%" }} placeholder="Search here" onSearch={onSearch} enterButton />,
-    //     children: "Content of Tab Pane 3",
-    // },
-  ];
+  // const items: TabsProps['items'] = [
+  //   {
+  //     key: '1',
+  //     label: 'Search',
+  //     children: <OnGoingTournament />,
+  //   },
+  //   {
+  //     key: '2',
+  //     label: 'My Tournaments',
+  //     children: <MyTournaments />,
+  //   },
+  //   // {
+  //   //     key: "3",
+  //   //     label: <Search style={{ width: "100%" }} placeholder="Search here" onSearch={onSearch} enterButton />,
+  //   //     children: "Content of Tab Pane 3",
+  //   // },
+  // ];
   return (
     <HomeContextProvider>
       <div className="w-full h-max flex flex-col gap-5 justify-center items-center">
@@ -65,7 +65,7 @@ const TournamentPage = () => {
               },
             }}
           >
-            <Tabs
+            {/* <Tabs
               tabBarStyle={{
                 width: '100%',
                 fontWeight: 700,
@@ -80,9 +80,14 @@ const TournamentPage = () => {
               defaultActiveKey="1"
               items={items}
               onChange={onChange}
-            />
+            /> */}
+
+            <div className='w-full mt-6'><OnGoingTournament /></div>
           </ConfigProvider>
-          {/* <Input placeholder="Search" style={{ width: "80%", marginTop: "20px" }} /> */}
+          {/* <Input
+            placeholder="Search"
+            style={{ width: '80%', marginTop: '20px' }}
+          /> */}
         </div>
       </div>
     </HomeContextProvider>

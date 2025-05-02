@@ -34,7 +34,7 @@ const buttonVariants = cva(
           'bg-gradient-orange hover:bg-dark-gradient-orange text-white',
         gradientGreenBtn:
           'bg-gradient-green hover:bg-dark-gradient-green text-white',
-        whiteBtn: 'bg-white',
+        whiteBtn: 'bg-white hover:bg-gray-200 text-primaryColor',
         gradientOrangeBorderBtn:
           'border-2 border-primaryColor hover:border-dark-gradient-orange ',
         // bgDarkGradientOrange: "bg-dar k-gradient-orange",

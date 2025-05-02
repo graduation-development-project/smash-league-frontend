@@ -16,7 +16,8 @@ import { Card, Divider, Image } from 'antd';
 
 const InfoDetailsTour = ({ tour }: any) => {
     const styleCard = 'w-full flex py-5 px-8 border rounded-md'
-    const color = tour?.mainColor || "#FF8243";
+    const color = tour?.mainColor.includes('#')? tour?.mainColor : "#FF8243";
+    const textColor = "#FF8243";
     // const bgColor = `bg-[${color}]` || "bg-[#FF8243]";
     console.log(tour);
 
@@ -33,11 +34,11 @@ const InfoDetailsTour = ({ tour }: any) => {
 
     return (
         <div className='w-full h-max flex flex-col gap-5 p-3'>
-            <div className={`${styleCard} justify-between items-center text-2xl  text-white`}
-                style={{ backgroundColor: `${color}` }}
+            <div className={`w-full flex py-4 px-8 rounded-md  justify-between items-center text-2xl  `}
+                style={{ backgroundColor: `${color}`, color: `${textColor}`, }}
             >
-                <h3 className='font-bold '>{tour?.tournamentSerie?.tournamentSerieName}</h3>
-                <Button>View series</Button>
+                <h3  className='font-bold text-white'>{tour?.tournamentSerie?.tournamentSerieName}</h3>
+                <Button size={'sm'} colorBtn={'whiteBtn'} >View series</Button>
             </div>
             <div className={`${styleCard} flex-col gap-7 text-base `}>
                 {titleCard('Basic Info')}

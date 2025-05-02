@@ -12,8 +12,6 @@ const TeamPage = (props: any) => {
     console.log(key);
   };
 
- 
-
   // if(isLoading){
   //   return <Loaders isLoading={isLoading}/>
   //  }
@@ -55,7 +53,7 @@ const TeamPage = (props: any) => {
         },
       }}
     >
-      <Tabs
+      {/* <Tabs
         tabBarStyle={{
           width: '100%',
           fontWeight: 600,
@@ -70,7 +68,10 @@ const TeamPage = (props: any) => {
         defaultActiveKey="1"
         items={items}
         onChange={onChange}
-      />
+      /> */}
+      <div className="w-full mt-6">
+        <AllTeams session={session} />
+      </div>
     </ConfigProvider>
   );
 };

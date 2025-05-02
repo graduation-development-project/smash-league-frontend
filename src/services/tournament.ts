@@ -356,7 +356,9 @@ export const getAssignedMatchesAPI = async (
   }
 };
 
-export const getParticipantsByTournamentEventAPI = async (tournamentId:string) => {
+export const getParticipantsByTournamentEventAPI = async (
+  tournamentId: string,
+) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-participants-by-tournament-event/${tournamentId}`,
@@ -370,4 +372,5 @@ export const getParticipantsByTournamentEventAPI = async (tournamentId:string) =
     );
     return error.response?.data;
   }
-}
+};
+

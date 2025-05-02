@@ -40,7 +40,7 @@ const OnGoingTournament = () => {
     return (
         <div className="w-full h-max flex flex-col gap-10 justify-center items-center ">
             <div className="w-full h-max">
-                <CreateBanner />
+                {/* <CreateBanner /> */}
             </div>
             <div className="w-full h-max px-20">
                 <Breadcrumb style={{ cursor: 'pointer' }}>

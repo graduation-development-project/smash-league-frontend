@@ -29,7 +29,10 @@ export const generateUrlAPI = async () => {
     throw new Error(error.response?.data?.message || 'Failed to generate url');
   }
 };
-export const uploadBgTourImageAPI = async (fileBgTour: File) => {
+export const uploadBgTourImageAPI = async (fileBgTour: File | null) => {
+  if (!fileBgTour) {
+    return null;
+  }
   const formData = new FormData();
   formData.append('backgroundImage', fileBgTour);
   try {
@@ -43,8 +46,10 @@ export const uploadBgTourImageAPI = async (fileBgTour: File) => {
       },
     );
     console.log(response.data, 'uploadBgTourImageAPI');
-    
-    return response.data;
+    if (response.data.statusCode === 200) {
+      return response.data;  
+    }
+    throw new Error('Failed to upload background image');
   } catch (error: any) {
     console.error(
       'Error creating team:',

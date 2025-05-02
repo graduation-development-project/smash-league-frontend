@@ -5,24 +5,47 @@ import Loaders from '@/components/general/atoms/loaders/loaders';
 import TournamentsAthleteProfile from '@/components/general/organisms/profile/athlete/tournaments.athlete.profile';
 import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 import { Avatar, ConfigProvider, Tabs, TabsProps } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
 import OverviewUmpireProfile from '../../general/organisms/profile/umpire/overview.umpire.profile';
+import MyTournaments from '../tournaments/my-tour.tour';
+import MyTeams from '@/components/general/organisms/teams/my-teams';
+import { getProfileAPI } from '@/services/user';
+import { useProfileContext } from '@/context/profile.context';
 
 const UmpireProfilePage = (props: any) => {
   const { session } = props;
   const [profile, setProfile] = useState<any>(null);
-  const user = {
-    accessToken:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0MTkxNzd9.fvQaEsYcX956KnXmI5HpGtTosAfxrYgtsg1SdgjxHlA',
-    refreshToken:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkYzAzM2JhNy1kZTFhLTRmY2MtYjFmNy1kOTkwMTM4ODU5NGIiLCJyb2xlcyI6WyIwZTVmMWQ5YS02NWMyLTQ4NmItOTczYy1lNzA1YWU5NTY5MTMiXSwiaWF0IjoxNzQwNDE3Mzc3LCJleHAiOjE3NDA0NDI1Nzd9.mlxCTkI_ujgJh5Hx-JJpV1rKsZmCrsp1OaozJETWyNk',
-    email: 'smount273@gmail.com',
-    name: 'Tran Anh Minh',
-    roles: ['Athlete'],
-    id: 'dc033ba7-de1a-4fcc-b1f7-d9901388594b',
-  };
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { umpireId } = useProfileContext();
+
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
+
+  const getProfile = async () => {
+    try {
+      const response = await getProfileAPI(umpireId);
+      console.log('Check profile', response);
+      setProfile(response);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [umpireId]);
+  // console.log('Check profile umpire', profile);
+
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -31,19 +54,24 @@ const UmpireProfilePage = (props: any) => {
     {
       key: '1',
       label: 'Overview',
-      children: <OverviewUmpireProfile />,
+      children: (
+        <OverviewUmpireProfile profile={profile} setProfile={setProfile} />
+      ),
     },
     {
       key: '2',
       label: 'Tournaments',
-      children: (
-        <TournamentsAthleteProfile profile={profile} setProfile={setProfile} />
-      ),
+      children: <MyTournaments profileRole="UMPIRE" />,
     },
-    ...(session?.user?.id === session?.user?.id
+    ...(user?.id === profile?.id
       ? [
+          // {
+          //   key: '3',
+          //   label: 'Teams List',
+          //   children: <MyTeams />,
+          // },
           {
-            key: '3',
+            key: '4',
             label: 'Update Information',
             children: (
               <UpdateInformationProfile
@@ -77,13 +105,18 @@ const UmpireProfilePage = (props: any) => {
               />
               <div className="flex flex-col gap-2">
                 <h1 className="text-white text-[32px] font-bold">
-                  Vo Nguyen Trung Son
+                  {profile?.name}
                 </h1>
                 <div className="text-white text-[14px] italic ">
-                  smount273@gmail.com
+                  {profile?.email}
                 </div>
                 <div className="text-white text-[14px] font-semibold flex gap-1">
-                  <CiLocationOn size={20} /> <span>Thu Duc, Ho Chi Minh</span>
+                  <CiLocationOn size={20} />{' '}
+                  <span>
+                    {profile?.location
+                      ? profile?.location
+                      : 'No Infomation. Please update your profile'}
+                  </span>
                 </div>
               </div>
             </div>

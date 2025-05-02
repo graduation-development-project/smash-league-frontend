@@ -40,6 +40,8 @@ import AttendantsCheck from '@/components/general/molecules/tournaments/attendan
 import AlertCreateTeamsModal from '@/components/general/molecules/teams/alert-create-teams-modal';
 import RegisterTeamTourForm from '@/components/general/molecules/tournaments/register-team.tournament.form';
 import UpdateDetailsTour from '@/components/general/organisms/tournaments/update-details.tour';
+import FeedbackDetailsTour from '@/components/general/organisms/tournaments/feedback-details.tour';
+import SponsorsDetailsTour from '@/components/general/organisms/tournaments/sponsors-details.tour';
 
 const DetailsTourPage = () => {
   const param = useParams();
@@ -50,6 +52,7 @@ const DetailsTourPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [detail, setDetail] = useState<any>();
 
   const [user, setUser] = useState<any>(null);
 
@@ -72,7 +75,7 @@ const DetailsTourPage = () => {
     setIsEditModalOpen(true);
   };
 
-  const [detail, setDetail] = useState<any>();
+
 
   const onChange = (key: string) => {
     console.log(key);
@@ -125,7 +128,11 @@ const DetailsTourPage = () => {
       case 'merchandise':
         return <MerchandiseDetailsTour />;
       case 'update':
-        return <UpdateDetailsTour detail={detail} />;
+        return <UpdateDetailsTour detail={detail} setDetail={setDetail} handleGetTourDetail= {handleGetTourDetail}/>;
+      case 'feedback':
+        return <FeedbackDetailsTour detail={detail} />;
+      case 'sponsors':
+        return <SponsorsDetailsTour />;
       default:
         return isEventKey ? (
           <EventAgeDetails
@@ -176,7 +183,7 @@ const DetailsTourPage = () => {
               colorPrimaryBgHover: '#ffebde',
 
               colorBgTextActive: "#ffebde",
-              
+
             },
             Input: {
               hoverBorderColor: '#FF8243',
@@ -305,7 +312,7 @@ const DetailsTourPage = () => {
                   <div className="demo-logo-vertical" />
                   <Menu
                     // theme="dark"
-                    style={{fontWeight: 500, color: '#2c2c2c'}}
+                    style={{ fontWeight: 500, color: '#2c2c2c' }}
                     mode="inline"
                     defaultSelectedKeys={[activeKey]}
                     onClick={({ key }) => setActiveKey(key)}
@@ -349,9 +356,17 @@ const DetailsTourPage = () => {
                         disabled: !detail?.hasMerchandise,
                       },
                       {
+                        key: 'sponsors',
+                        label: 'Sponsors',
+                      },
+                      {
+                        key: 'feedback',
+                        label: 'Feedback',
+                      },
+                      ... (user ? [{
                         key: 'update',
                         label: 'Update Details',
-                      },
+                      }] : []),
                     ]}
                   />
                 </Sider>
