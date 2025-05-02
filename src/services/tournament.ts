@@ -402,6 +402,7 @@ export const updateMatchInfoAPI = async (
   leftCompetitorId: string,
   rightCompetitorId: string,
   courtId: string,
+  accessToken: string,
 ) => {
   try {
     const response = await axios.put(
@@ -412,6 +413,11 @@ export const updateMatchInfoAPI = async (
         leftCompetitorId,
         rightCompetitorId,
         courtId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
     );
 

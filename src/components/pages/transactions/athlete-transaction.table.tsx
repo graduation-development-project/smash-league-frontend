@@ -3,10 +3,7 @@
 import { Button, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import React, { useEffect, useState } from 'react';
-import {
-  getPayBackFeeListAPI,
-  payBackTournamentFeeAPI,
-} from '../../../services/payment';
+import { getPayBackFeeListAPI } from '../../../services/payment';
 import SubmitPayBackFeeModal from '@/components/general/atoms/transactions/submit-pay-back-fee.modal';
 
 const AthleteTransactionTable = () => {
@@ -40,6 +37,7 @@ const AthleteTransactionTable = () => {
   const [user, setUser] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [payBackFeeId, setPayBackFeeId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -56,6 +54,7 @@ const AthleteTransactionTable = () => {
 
   const getPayBackFeeList = async () => {
     if (!user) return;
+    setIsLoading(true);
     try {
       const response = await getPayBackFeeListAPI(user.access_token);
       // console.log('Check paybackfeelist', response.data);
@@ -73,6 +72,7 @@ const AthleteTransactionTable = () => {
       }));
 
       setPayBackFeeList(formatData.reverse());
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -80,30 +80,10 @@ const AthleteTransactionTable = () => {
 
   useEffect(() => {
     getPayBackFeeList();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // console.log('Check payBackFeeList', payBackFeeList);
-
-  // const handlePayBackTournamentFee = async (
-  //   transactionDetail: string,
-  //   paybackFeeId: string,
-  //   paybackImage: File,
-  // ) => {
-  //   if (!user) return;
-  //   try {
-  //     const response = await payBackTournamentFeeAPI(
-  //       transactionDetail,
-  //       paybackFeeId,
-  //       paybackImage,
-  //       user.access_token,
-  //     );
-  //     console.log('Check paybackfeelist', response.data);
-  //     // setPayBackFeeList(response);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -185,35 +165,12 @@ const AthleteTransactionTable = () => {
     },
   ];
 
-  // const data: DataType[] = [
-  //   {
-  //     key: '1',
-  //     name: 'John Brown',
-  //     age: 32,
-  //     address: 'New York No. 1 Lake Park',
-  //     tags: ['nice', 'developer'],
-  //   },
-  //   {
-  //     key: '2',
-  //     name: 'Jim Green',
-  //     age: 42,
-  //     address: 'London No. 1 Lake Park',
-  //     tags: ['loser'],
-  //   },
-  //   {
-  //     key: '3',
-  //     name: 'Joe Black',
-  //     age: 32,
-  //     address: 'Sydney No. 1 Lake Park',
-  //     tags: ['cool', 'teacher'],
-  //   },
-  // ];
-
   return (
     <div>
       <Table<DataType>
         columns={columns}
         dataSource={payBackFeeList}
+        loading={isLoading}
         className="[&_.ant-table-thead>tr>th]:text-center"
         style={{ width: '100%', fontFamily: 'inherit' }}
       />

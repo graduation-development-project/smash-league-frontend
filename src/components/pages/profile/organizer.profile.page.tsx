@@ -10,6 +10,7 @@ import AnnouncementsOrganizerProfile from '@/components/general/organisms/profil
 import DashboardOrganizerProfile from '@/components/general/organisms/profile/organizer/dashboard.organizers.profile';
 import { getProfileAPI } from '@/services/user';
 import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
+import Loaders from '@/components/general/atoms/loaders/loaders';
 
 const OrganizerProfilePage = (props: any) => {
   const { session } = props;
@@ -17,6 +18,7 @@ const OrganizerProfilePage = (props: any) => {
   const [profile, setProfile] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
   const [tournamentList, setTournamentList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -31,9 +33,11 @@ const OrganizerProfilePage = (props: any) => {
     if (!user) return;
     // console.log('check getProfile');
     try {
+      setIsLoading(true);
       const response = await getProfileAPI(organizerId);
       // console.log('Check profile', response);
       setProfile(response);
+      setIsLoading(false);
     } catch (error: any) {
       console.log(error);
     }
@@ -110,71 +114,79 @@ const OrganizerProfilePage = (props: any) => {
   ];
 
   return (
-    <div className="w-full h-full relative z-0 shadow-shadowComp rounded-[5px]">
-      <img
-        src="https://assets.challonge.com/assets/community_default_banners/default-cover-3-redesign-2693250cf849ef7bcd3975c81ca64c06e6bdffd39d47ae0c454fd0d6e0006fb4.svg"
-        alt=""
-        className="w-full h-[300px] object-cover rounded-[5px]"
-      />
-
-      <div className="w-full h-full flex flex-col items-center relative z-20 ">
-        <div className="w-1/2 h-full flex justify-between items-center px-6 mt-2 ">
-          {' '}
-          <div className="flex flex-col">
-            <h1 className="text-[24px] font-bold">{profile?.name}</h1>
-            <div className="text-[14px] text-slate-400 italic">
-              <p>{profile?.email}</p>
-            </div>
-          </div>
-          {/* <Button size={'sm'}>Follow</Button> */}
+    <>
+      {isLoading ? (
+        <div className="flex justify-center items-center h-screen">
+          <Loaders isLoading={isLoading} />
         </div>
-        <ConfigProvider
-          theme={{
-            components: {
-              Tabs: {
-                /* here is your component tokens */
-                itemColor: '#000000',
-                itemSelectedColor: '#FF8243',
-                inkBarColor: '#FF8243',
-                itemHoverColor: '#FF8243',
-                itemActiveColor: '#FF8243',
-                horizontalItemPaddingLG: '0px 0px 16px 0px',
-              },
-            },
-          }}
-        >
-          <Tabs
-            tabBarStyle={{
-              width: '100%',
-              fontWeight: 600,
-              // boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-              marginTop: 30,
-              fontFamily: 'inherit',
-            }}
-            style={{ width: '100%', fontFamily: 'inherit' }}
-            size="large"
-            centered
-            tabBarGutter={60}
-            defaultActiveKey="1"
-            activeKey={activeKey}
-            items={items}
-            onChange={onChange}
+      ) : (
+        <div className="w-full h-full relative z-0 shadow-shadowComp rounded-[5px]">
+          <img
+            src="https://assets.challonge.com/assets/community_default_banners/default-cover-3-redesign-2693250cf849ef7bcd3975c81ca64c06e6bdffd39d47ae0c454fd0d6e0006fb4.svg"
+            alt=""
+            className="w-full h-[300px] object-cover rounded-[5px]"
           />
-        </ConfigProvider>
-      </div>
-      <div className="w-max h-max absolute z-10 bottom-0 left-48 top-60">
-        <Avatar
-          shape="square"
-          size={135}
-          style={{
-            backgroundColor: '#FF8243',
-            boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
-          }}
-          src={profile?.avatarUrl}
-          alt="Profile Avatar"
-        ></Avatar>
-      </div>
-    </div>
+
+          <div className="w-full h-full flex flex-col items-center relative z-20 ">
+            <div className="w-1/2 h-full flex justify-between items-center px-6 mt-2 ">
+              {' '}
+              <div className="flex flex-col">
+                <h1 className="text-[24px] font-bold">{profile?.name}</h1>
+                <div className="text-[14px] text-slate-400 italic">
+                  <p>{profile?.email}</p>
+                </div>
+              </div>
+              {/* <Button size={'sm'}>Follow</Button> */}
+            </div>
+            <ConfigProvider
+              theme={{
+                components: {
+                  Tabs: {
+                    /* here is your component tokens */
+                    itemColor: '#000000',
+                    itemSelectedColor: '#FF8243',
+                    inkBarColor: '#FF8243',
+                    itemHoverColor: '#FF8243',
+                    itemActiveColor: '#FF8243',
+                    horizontalItemPaddingLG: '0px 0px 16px 0px',
+                  },
+                },
+              }}
+            >
+              <Tabs
+                tabBarStyle={{
+                  width: '100%',
+                  fontWeight: 600,
+                  // boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                  marginTop: 30,
+                  fontFamily: 'inherit',
+                }}
+                style={{ width: '100%', fontFamily: 'inherit' }}
+                size="large"
+                centered
+                tabBarGutter={60}
+                defaultActiveKey="1"
+                activeKey={activeKey}
+                items={items}
+                onChange={onChange}
+              />
+            </ConfigProvider>
+          </div>
+          <div className="w-max h-max absolute z-10 bottom-0 left-48 top-60">
+            <Avatar
+              shape="square"
+              size={135}
+              style={{
+                backgroundColor: '#FF8243',
+                boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
+              }}
+              src={profile?.avatarUrl}
+              alt="Profile Avatar"
+            ></Avatar>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
