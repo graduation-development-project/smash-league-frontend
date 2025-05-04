@@ -152,7 +152,7 @@ const CreateTourPage = ({ session }: any) => {
       console.log(response, 'create API');
       if (response?.statusCode === 200 || response?.statusCode === 201) {
         router.push('/tournaments/details/' + response?.data?.id);
-        toast.success(`${response?.data?.message}`, {
+        toast.success(`${response?.message}`, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -165,9 +165,17 @@ const CreateTourPage = ({ session }: any) => {
         return true;
       }
       throw new Error('Failed to create tournament');
-    } catch (error) {
-      console.error(error, 'createTourAPI');
-      // message.error("Created failed")
+    } catch (error: any) {
+      toast.error(`${error.response?.message}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
       router.push('/tournaments/create');
     }
   };
@@ -190,9 +198,10 @@ const CreateTourPage = ({ session }: any) => {
       checkIn,
       hasMerchandise,
       createTournamentEvent,
+      createCourts,
       ...rest
     } = finalValues;
-    console.log(createTournamentEvent, 'createTournamentEvent');
+    console.log(createCourts, 'createCourt');
 
     const registrationOpeningDate = registrationDate
       ? registrationDate[0].toISOString()
@@ -204,9 +213,12 @@ const CreateTourPage = ({ session }: any) => {
     const startDate = occurDate ? occurDate[0].toISOString() : null;
     const endDate = occurDate ? occurDate[1].toISOString() : null;
     const checkInBeforeStart = checkIn ? checkIn.toISOString() : null;
+    const createCourt = {createCourts : createCourts};
 
     const submitData = {
       ...rest,
+      createCourts: createCourt,
+      isRegister: true,
       createTournamentEvent,
       hasMerchandise,
       registrationOpeningDate,
