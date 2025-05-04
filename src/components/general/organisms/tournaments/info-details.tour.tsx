@@ -29,7 +29,7 @@ const InfoDetailsTour = ({
   const styleCard = 'w-full flex py-5 px-8 border rounded-md';
   const color = tour?.mainColor || '#FF8243';
   // const bgColor = `bg-[${color}]` || "bg-[#FF8243]";
-  console.log(tour);
+  // console.log(tour);
 
   const titleCard = (title: string) => {
     return (

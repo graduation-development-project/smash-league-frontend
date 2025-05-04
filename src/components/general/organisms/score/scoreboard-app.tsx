@@ -5,9 +5,11 @@ import ScoreDisplay from './score-display';
 import ScoreControls from './score-controls';
 import MatchSettings from '../matches/match-settings';
 import MatchHistory from '../matches/match-history';
-import { Clock, RotateCcw, Settings, List } from 'lucide-react';
+import { Clock, RotateCcw, Settings, List, AlertTriangle } from 'lucide-react';
 import { getMatchByIdAPI, updatePointAPI } from '@/services/match';
 import { toast } from 'react-toastify';
+import IncidentModal, { IncidentLog } from '../../atoms/score/incident-modal';
+import WinningShowModal from '../../atoms/score/winning-show.modal';
 
 export type Player = {
   id: string;
@@ -49,12 +51,16 @@ const ScoreboardApp = () => {
     sets: 0,
     serving: false,
   });
-
+  const [winningTeam, setWinningTeam] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [matchTime, setMatchTime] = useState<number>(0);
   const [isMatchActive, setIsMatchActive] = useState<boolean>(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [currentSet, setCurrentSet] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<string>('controls');
+  const [incidents, setIncidents] = useState<IncidentLog[]>([]);
+  const [isIncidentModalOpen, setIsIncidentModalOpen] =
+    useState<boolean>(false);
   const [gameSettings, setGameSettings] = useState<GameSettings>({
     pointsPerSet: 21,
     numberOfSets: 3,
@@ -151,15 +157,15 @@ const ScoreboardApp = () => {
     }
 
     try {
-      const response = await updatePointAPI(game.id, winningId);
-      console.log('check res', response.data.data);
+      const response = await updatePointAPI(game?.id, winningId);
+      console.log('check res', response?.data?.data);
 
       if (
-        response.data.statusCode === 200 ||
-        response.data.statusCode === 201
+        response?.data?.statusCode === 200 ||
+        response?.data?.statusCode === 201
       ) {
-        const data = response.data.data;
-        const currentPoint = data.currentPoint;
+        const data = response?.data?.data;
+        const currentPoint = data?.currentPoint;
 
         // Update per-set scores (e.g., point1 = set 1, point2 = set 2...)
         // setLeftPoint({
@@ -210,10 +216,9 @@ const ScoreboardApp = () => {
         // Match end check
         if (data.isEnd === true) {
           if (data.newGame === null) {
-            // setWinningTeam(data.winningCompetitor);
-            // setIsModalOpen(true);
+            setWinningTeam(data.winningCompetitor);
+            setIsModalOpen(true);
             setCurrentSet(3);
-
             toast(`${data.message}`, {
               position: 'top-right',
               autoClose: 2000,
@@ -227,15 +232,15 @@ const ScoreboardApp = () => {
             setPlayer1((prev) => ({
               ...prev,
               score: currentPoint[2]?.left ?? prev.score,
-            //   sets: 3,
-            //   serving: data.currentServerId === player1.id,
+              //   sets: 3,
+              //   serving: data.currentServerId === player1.id,
             }));
 
             setPlayer2((prev) => ({
               ...prev,
               score: currentPoint[2]?.right ?? prev.score,
-            //   sets: 3,
-            //   serving: data.currentServerId === player2.id,
+              //   sets: 3,
+              //   serving: data.currentServerId === player2.id,
             }));
 
             setIsMatchActive(false);
@@ -345,6 +350,33 @@ const ScoreboardApp = () => {
     ]);
   };
 
+  const handleLogIncident = (incident: IncidentLog) => {
+    setIncidents((prev) => [incident, ...prev]);
+
+    // Add to history
+    const historyEntry: HistoryEntry = {
+      timestamp: new Date(),
+      action: `Incident: ${incident.incidentType}${
+        incident.playerId
+          ? ` (${
+              incident.playerId === 'player1'
+                ? player1.name
+                : incident.playerId === 'player2'
+                ? player2.name
+                : 'Both Players'
+            })`
+          : ''
+      }`,
+      player1Score: player1.score,
+      player2Score: player2.score,
+      player1Sets: player1.sets,
+      player2Sets: player2.sets,
+      servingPlayer: player1.serving ? 1 : 2,
+    };
+
+    setHistory((prev) => [historyEntry, ...prev]);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="p-4 md:p-6 space-y-6">
@@ -360,6 +392,14 @@ const ScoreboardApp = () => {
               <Clock className="w-4 h-4 mr-2 text-gray-600" />
               <span className="font-medium">{formatTime(matchTime)}</span>
             </div>
+
+            <button
+              onClick={() => setIsIncidentModalOpen(true)}
+              className="flex items-center px-3 py-1 border border-yellow-300 bg-yellow-50 text-yellow-700 rounded-md hover:bg-yellow-100 transition-colors"
+            >
+              <AlertTriangle className="w-4 h-4 mr-1" />
+              <span>Incident</span>
+            </button>
             <button
               onClick={resetMatch}
               className="flex items-center px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
@@ -438,6 +478,21 @@ const ScoreboardApp = () => {
           {activeTab === 'history' && <MatchHistory history={history} />}
         </div>
       </div>
+      {/* Incident Modal */}
+      <IncidentModal
+        isOpen={isIncidentModalOpen}
+        onClose={() => setIsIncidentModalOpen(false)}
+        player1={player1}
+        player2={player2}
+        onLogIncident={handleLogIncident}
+        gameId = {game?.id}
+      />
+
+      <WinningShowModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        winningCompetitor={winningTeam}
+      />
     </div>
   );
 };

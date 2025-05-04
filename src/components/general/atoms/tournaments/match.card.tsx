@@ -15,11 +15,15 @@ const MatchCard = ({
   tournamentId,
   tournamentEventId,
   isOrganizer,
+  tour,
+  getMatchesOfTournamentEvent,
 }: {
   match: any;
   tournamentId: string | string[];
   tournamentEventId: string;
   isOrganizer: boolean;
+  tour: any;
+  getMatchesOfTournamentEvent: any;
 }) => {
   const mainColor = '#60a5fa';
   const bgColor = 'bg-[#60a5fa]';
@@ -62,7 +66,7 @@ const MatchCard = ({
       player2: 21,
     },
   ];
-  console.log('Check match', match);
+  // console.log('Check match', match);
 
   // console.log('Check', match.participants);
 
@@ -118,7 +122,9 @@ const MatchCard = ({
                     style={{ backgroundColor: 'white', color: '' }}
                     size={50}
                     src={
-                      'https://img.bwfbadminton.com/image/upload/w_308,h_359,c_thumb,g_face:center/v1697765036/assets/players/thumbnail/87442.png'
+                      players?.player1?.avatarUrl
+                        ? players?.player1?.avatarUrl
+                        : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
                     }
                   />
 
@@ -126,7 +132,9 @@ const MatchCard = ({
                     style={{ backgroundColor: 'white', color: '' }}
                     size={50}
                     src={
-                      'https://img.bwfbadminton.com/image/upload/w_308,h_359,c_thumb,g_face:center/v1697765036/assets/players/thumbnail/87442.png'
+                      players?.player2?.avatarUrl
+                        ? players?.player2?.avatarUrl
+                        : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
                     }
                   />
                 </div>
@@ -151,7 +159,9 @@ const MatchCard = ({
                   style={{ backgroundColor: 'white', color: '' }}
                   size={85}
                   src={
-                    'https://img.bwfbadminton.com/image/upload/w_308,h_359,c_thumb,g_face:center/v1697765036/assets/players/thumbnail/87442.png'
+                    players?.player1?.avatarUrl
+                      ? players?.player1?.avatarUrl
+                      : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
                   }
                 />
                 <div className="w-2/3 flex flex-col gap-4">
@@ -171,29 +181,32 @@ const MatchCard = ({
       </div>
     );
   };
-  const hasPoints = false;
   const sets = () => {
     return (
       <div className="flex flex-row gap-4 font-bold text-xl items-center">
         <div className="w-[3px] h-8 bg-[#8e8e8e] rounded-full" />
-        {setScore.map((item: any, index) => {
+        {match?.games.map((game: any) => {
           return (
-            <div key={index} className="flex items-center gap-4">
+            <div key={game.id} className="flex items-center gap-4">
               <div className="flex items-center gap-1 bg-[#ffffff2a] px-5 py-1 rounded-md">
                 <span
                   className={
-                    item.player1 > item.player2 ? 'text-[#93e093]' : ''
+                    game.leftCompetitorPoint > game.rightCompetitorPoint
+                      ? 'text-[#93e093]'
+                      : ''
                   }
                 >
-                  {item.player1}
+                  {game.leftCompetitorPoint}
                 </span>
                 -
                 <span
                   className={
-                    item.player2 > item.player1 ? 'text-[#93e093]' : ''
+                    game.rightCompetitorPoint > game.leftCompetitorPoint
+                      ? 'text-[#93e093]'
+                      : ''
                   }
                 >
-                  {item.player2}
+                  {game.rightCompetitorPoint}
                 </span>
               </div>
               <div className="w-[3px] h-8 bg-[#8e8e8e] rounded-full" />
@@ -260,7 +273,7 @@ const MatchCard = ({
             {/* <span className="font-bold">VS</span> */}
             {match.participants.length === 1 && player(false)}
           </div>
-          <div>{hasPoints && sets()}</div>
+          <div>{match?.games.length > 0 && sets()}</div>
           <div className={`w-1/2 h-1 rounded-full ${bgColor}`} />
         </div>
 
@@ -293,6 +306,8 @@ const MatchCard = ({
         tournamentId={tournamentId}
         matchId={match.id}
         playersOptions={participantsList}
+        tour={tour}
+        getMatchesOfTournamentEvent={getMatchesOfTournamentEvent}
       />
 
       <AssignPlayerInMatchModal

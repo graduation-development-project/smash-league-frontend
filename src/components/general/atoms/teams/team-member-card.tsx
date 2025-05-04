@@ -19,8 +19,8 @@ const TeamMemberCard = ({
   fetchMembers?: () => void;
 }) => {
   const { teamDetails, teamId } = useTeamContext();
-  const [user, setUser] = useState<any>({});
   const router = useRouter();
+  const [user, setUser] = useState<any>({});
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

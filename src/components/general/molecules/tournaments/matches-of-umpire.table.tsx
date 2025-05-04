@@ -82,7 +82,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
         user.access_token,
         tournamentId,
       );
-      console.log('Check res', response.data);
+      console.log('Check res', response?.data?.data);
       if (
         response?.data?.statusCode === 200 ||
         response?.data?.statusCode === 201

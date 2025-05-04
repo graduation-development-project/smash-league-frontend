@@ -90,8 +90,8 @@ const DashboardOrganizerProfile = () => {
   const items: MenuItem[] = [
     getItem('Dashboard', 'dashboard', <TfiBarChartAlt size={15} />),
     getItem(
-      'Tournaments',
-      'tournaments',
+      'Athletes',
+      'athletes',
       <TbTournament size={15} />,
       tournamentList?.flatMap((item: any) =>
         getItem(
@@ -158,6 +158,9 @@ const DashboardOrganizerProfile = () => {
         >
           <ConfigProvider
             theme={{
+              token: {
+                colorPrimary: '#FF8243',
+              },
               components: {
                 Menu: {
                   itemBg: 'white',

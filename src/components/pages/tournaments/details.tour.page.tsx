@@ -182,6 +182,7 @@ const DetailsTourPage = () => {
             eventId={activeKey}
             mainColor={detail?.mainColor || '#FF8243'}
             isOrganizer={isOrganizer}
+            tour={detail}
           />
         ) : null;
     }

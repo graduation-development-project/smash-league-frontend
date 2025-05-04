@@ -30,7 +30,7 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const MyTournaments = ({ profileRole }: { profileRole: string }) => {
   const content = {};
-  const [selectedKey, setSelectedKey] = useState('dashboard');
+  const [selectedKey, setSelectedKey] = useState('tour-registration');
 
   const menu: MenuItem[] = [
     {

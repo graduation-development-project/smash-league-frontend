@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react';
 import type { BadgeProps, CalendarProps } from 'antd';
 import { Badge, Calendar, Popover } from 'antd';
 import type { Dayjs } from 'dayjs';
-import { getAllAssignedMatchesAPI } from '../../../services/tournament';
+import {
+  getAllAssignedMatchesAPI,
+  getMatchesOfAthleteAPI,
+} from '../../../services/tournament';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { formatDateTime } from '@/utils/format';
@@ -77,13 +80,20 @@ export default function CalendarPage({ profileRole }: { profileRole: string }) {
   const getAllAssignedMatches = async () => {
     if (!user) return;
     try {
-      const response = await getAllAssignedMatchesAPI(user.access_token);
+      let response;
+      if (profileRole === 'UMPIRE') {
+        response = await getAllAssignedMatchesAPI(user?.access_token);
+      } else {
+        response = await getMatchesOfAthleteAPI(user?.access_token);
+      }
       const matches = response?.data?.data || [];
       setScheduleList(matches);
     } catch (error) {
       console.error('Failed to fetch matches:', error);
     }
   };
+
+  console.log('scheduleList', scheduleList);
 
   const getBadgeStatusByEvent = (event: string) => {
     switch (event) {
@@ -103,8 +113,8 @@ export default function CalendarPage({ profileRole }: { profileRole: string }) {
   const getListData = (value: Dayjs) => {
     const dateStr = value.format('YYYY-MM-DD');
     return scheduleList.filter((match) => {
-      if (!match.startedWhen) return false;
-      const matchDate = dayjs.utc(match.startedWhen).format('YYYY-MM-DD');
+      if (!match?.startedWhen) return false;
+      const matchDate = dayjs.utc(match?.startedWhen).format('YYYY-MM-DD');
       return matchDate === dateStr;
     });
   };
@@ -114,20 +124,25 @@ export default function CalendarPage({ profileRole }: { profileRole: string }) {
 
     return (
       <ul className="events">
-        {matches.map((match, idx) => (
+        {matches?.map((match, idx) => (
           <Popover
             key={match.id}
             title="Information"
             content={
               <div className="w-full flex flex-col">
-                <p>Start Time: {match.startedWhen ? formatDateTime(match.startedWhen) : 'N/A'}</p>
+                <p>
+                  Start Time:{' '}
+                  {match.startedWhen
+                    ? formatDateTime(match?.startedWhen)
+                    : 'N/A'}
+                </p>
               </div>
             }
           >
             <li>
               <Badge
-                color={getBadgeStatusByEvent(match.matchStatus)}
-                text={`${match.tournamentEvent.tournamentId} - ${match.tournamentEvent.tournamentEvent}`}
+                color={getBadgeStatusByEvent(match?.matchStatus)}
+                text={`${match?.tournamentEvent?.tournamentId} - ${match?.tournamentEvent?.tournamentEvent}`}
               />
             </li>
           </Popover>
