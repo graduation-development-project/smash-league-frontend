@@ -45,6 +45,8 @@ import RegisterTeamTourForm from '@/components/general/molecules/tournaments/reg
 import UpdateDetailsTour from '@/components/general/organisms/tournaments/update-details.tour';
 import Loaders from '@/components/general/atoms/loaders/loaders';
 import Spinner from '@/components/general/atoms/loaders/spinner';
+import FeedbackDetailsTour from '@/components/general/organisms/tournaments/feedback-details.tour';
+import SponsorsDetailsTour from '@/components/general/organisms/tournaments/sponsors-details.tour';
 
 const DetailsTourPage = () => {
   const param = useParams();
@@ -58,6 +60,7 @@ const DetailsTourPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [detail, setDetail] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -174,7 +177,11 @@ const DetailsTourPage = () => {
       case 'merchandise':
         return <MerchandiseDetailsTour />;
       case 'update':
-        return <UpdateDetailsTour detail={detail} />;
+        return <UpdateDetailsTour detail={detail} setDetail={setDetail} handleGetTourDetail= {handleGetTourDetail}/>;
+      case 'feedback':
+        return <FeedbackDetailsTour detail={detail} isOrganizer={isOrganizer} user={user}/>;
+      case 'sponsors':
+        return <SponsorsDetailsTour />;
       default:
         return isEventKey ? (
           <EventAgeDetails
@@ -228,7 +235,6 @@ const DetailsTourPage = () => {
               colorPrimaryHover: '#ffa97e',
               colorPrimaryActive: '#e7753c',
               colorPrimaryBgHover: '#ffebde',
-
               colorBgTextActive: '#ffebde',
             },
             Input: {
@@ -345,111 +351,122 @@ const DetailsTourPage = () => {
                           Edit
                         </Button>) : (<></>)
                     } */}
-                    </div>
-                  )}
-                </div>
+
+                  </div>
+                )}
               </div>
+
+
+
+
             </div>
-            <div className="w-full h-max flex flex-col py-8 px-5 gap-5 justify-center items-center shadow-shadowComp rounded-lg">
-              <div className="w-full px-10">
-                <Breadcrumb style={{ cursor: 'pointer' }}>
-                  <BreadcrumbItem onClick={() => router.push('/')}>
-                    Home
-                  </BreadcrumbItem>
-                  <BreadcrumbItem onClick={() => router.push('/tournaments')}>
-                    Tournaments
-                  </BreadcrumbItem>
-                  <BreadcrumbItem>{detail?.name}</BreadcrumbItem>
-                </Breadcrumb>
-              </div>
-              <div className="w-full">
-                <Layout style={{ display: 'flex', backgroundColor: 'white' }}>
-                  <Sider
-                    theme="light"
-                    style={{
-                      boxShadow: '2px 0px 4px 0px rgb(0 0 0 / 0.1)',
-                      backgroundColor: 'white',
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      padding: 10,
-                    }}
-                  >
-                    <div className="demo-logo-vertical" />
-                    <Menu
-                      // theme="dark"
-                      style={{ fontWeight: 500, color: '#2c2c2c' }}
-                      mode="inline"
-                      defaultSelectedKeys={[activeKey]}
-                      onClick={({ key }) => setActiveKey(key)}
-                      items={[
-                        {
-                          key: 'details',
-                          // icon: <UserOutlined />,
-                          label: 'Details',
-                        },
-                        {
-                          key: 'events',
-                          label: 'Events',
-                          children: eventList?.map(([name, event]) => ({
-                            key: name,
-                            label: EVENT_ENUM[name as keyof typeof EVENT_ENUM],
-                            // label: event?.tournamentEvent,
-                            type: 'group',
-                            children: event?.map((age: any) => ({
-                              key: `${name}-${age.id}`,
-                              label: `From ${age?.fromAge} to ${age?.toAge}`,
-                            })),
+          </div>
+          <div className="w-full h-max flex flex-col py-8 px-5 gap-5 justify-center items-center shadow-shadowComp rounded-lg">
+            <div className="w-full px-10">
+              <Breadcrumb style={{ cursor: 'pointer' }}>
+                <BreadcrumbItem onClick={() => router.push('/')}>
+                  Home
+                </BreadcrumbItem>
+                <BreadcrumbItem onClick={() => router.push('/tournaments')}>
+                  Tournaments
+                </BreadcrumbItem>
+                <BreadcrumbItem>{detail?.name}</BreadcrumbItem>
+              </Breadcrumb>
+            </div>
+            <div className="w-full">
+              <Layout style={{ display: 'flex', backgroundColor: 'white' }}>
+                <Sider
+                  theme="light"
+                  style={{
+                    boxShadow: '2px 0px 4px 0px rgb(0 0 0 / 0.1)',
+                    backgroundColor: 'white',
+                    borderTopLeftRadius: 10,
+                    borderBottomLeftRadius: 10,
+                    padding: 10,
+                  }}
+                >
+                  <div className="demo-logo-vertical" />
+                  <Menu
+                    // theme="dark"
+                    style={{ fontWeight: 500, color: '#2c2c2c' }}
+                    mode="inline"
+                    defaultSelectedKeys={[activeKey]}
+                    onClick={({ key }) => setActiveKey(key)}
+                    items={[
+                      {
+                        key: 'details',
+                        // icon: <UserOutlined />,
+                        label: 'Details',
+                      },
+                      {
+                        key: 'events',
+                        label: 'Events',
+                        children: eventList?.map(([name, event]) => ({
+                          key: name,
+                          label: EVENT_ENUM[name as keyof typeof EVENT_ENUM],
+                          // label: event?.tournamentEvent,
+                          type: 'group',
+                          children: event?.map((age: any) => ({
+                            key: `${name}-${age.id}`,
+                            label: `From ${age?.fromAge} to ${age?.toAge}`,
                           })),
-                        },
-                        {
-                          key: 'live',
-                          label: 'Live Stream',
-                          disabled: !detail?.hasLiveStream,
-                          children: detail?.liveStreamRooms?.map(
-                            (room: any) => ({
-                              key: room.id,
-                              label: 'Live Court 1',
-                            }),
-                          ),
-                        },
-                        {
-                          key: 'posts',
-                          label: 'Posts',
-                          disabled: !detail?.hasPost,
-                        },
-                        {
-                          key: 'merchandise',
-                          label: 'Merchandise',
-                          disabled: !detail?.hasMerchandise,
-                        },
-                        {
-                          key: 'update',
-                          label: 'Update Details',
-                        },
-                      ]}
-                    />
-                  </Sider>
-                  <Layout
+                        })),
+                      },
+                      {
+                        key: 'live',
+                        label: 'Live Stream',
+                        disabled: !detail?.hasLiveStream,
+                        children: detail?.liveStreamRooms?.map((room: any) => ({
+                          key: room.id,
+                          label: 'Live Court 1',
+                        })),
+                      },
+                      {
+                        key: 'posts',
+                        label: 'Posts',
+                        disabled: !detail?.hasPost,
+                      },
+                      {
+                        key: 'merchandise',
+                        label: 'Merchandise',
+                        disabled: !detail?.hasMerchandise,
+                      },
+                      {
+                        key: 'sponsors',
+                        label: 'Sponsors',
+                      },
+                      {
+                        key: 'feedback',
+                        label: 'Feedback',
+                      },
+                      ... (isOrganizer ? [{
+                        key: 'update',
+                        label: 'Update Details',
+                      }] : []),
+                    ]}
+                  />
+                </Sider>
+                <Layout
+                  style={{
+                    padding: 10,
+                    width: '100%',
+                    backgroundColor: 'white',
+                    borderTopRightRadius: 10,
+                    borderBottomRightRadius: 10,
+                  }}
+                >
+                  <Content
+                    key={activeKey}
                     style={{
-                      padding: 10,
-                      width: '100%',
-                      backgroundColor: 'white',
-                      borderTopRightRadius: 10,
-                      borderBottomRightRadius: 10,
+                      minHeight: 400,
+                      background: 'white',
+                      // borderRadius: 8,
                     }}
                   >
-                    <Content
-                      key={activeKey}
-                      style={{
-                        minHeight: 400,
-                        background: 'white',
-                        // borderRadius: 8,
-                      }}
-                    >
-                      {renderContent()}
-                    </Content>
-                  </Layout>
+                    {renderContent()}
+                  </Content>
                 </Layout>
+              </Layout>
 
                 {/* <Input placeholder="Search" style={{ width: "80%", marginTop: "20px" }} /> */}
               </div>

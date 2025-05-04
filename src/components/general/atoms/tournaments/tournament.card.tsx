@@ -29,11 +29,11 @@ const TournamentCard = ({ tour }: any) => {
     >
       <div className="w-full h-[200px]">
         <Image
-          className="w-full h-full object-cover rounded-lg"
-          width={282}
+          width={"100%"}
           height={200}
+          className="w-full h-full object-cover rounded-lg"
           src={tour?.backgroundTournament}
-          alt={tour?.name}
+          alt={tour?.name ? tour?.name : 'Badminton Summer Olympics'}
         />
       </div>
       <div
