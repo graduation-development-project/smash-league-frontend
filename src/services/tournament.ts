@@ -40,6 +40,7 @@ export const createTourAPI = async (accessToken: string, values: any) => {
         protestFeePerTime: values.protestFeePerTime,
         checkInBeforeStart: values.checkInBeforeStart,
         requiredAttachment: values.requiredAttachment,
+        createCourts: values.createCourts,
         isRecruit: values.isRecruit,
         isPrivate: values.isPrivate,
         isRegister: values.isRegister,

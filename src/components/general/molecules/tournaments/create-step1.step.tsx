@@ -6,6 +6,7 @@ import {
   CloseCircleOutlined,
   CloseOutlined,
   LoadingOutlined,
+  MinusCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
 import {
@@ -123,19 +124,17 @@ const CreateTourStep1 = ({
   const inputSerieRef = useRef<InputRef>(null);
   const inputImgMerchanRef = useRef<HTMLInputElement | null>(null);
 
-  const [organizerList, setOrganizerList] = useState([
-    'a10',
-    'c12',
-    'h17',
-    'j19',
-    'k20',
-  ]);
+
   const [attachmentList, setAttachmentList] = useState([]);
 
   const [isRecruit, setIsRecruit] = useState<boolean>(false);
 
   //Registration & Fee
   const [isRegister, setIsRegister] = useState(dataStep1?.isRegister || false);
+
+  const [winningPoint, setWinningPoint] = useState<number | null>(15);
+  const [lastPoint, setLastPoint] = useState(15);
+
   const [registerDate, setRegisterDate] = useState<Array<dayjs.Dayjs>>([]);
   const [drawDate, setDrawDate] = useState<Array<dayjs.Dayjs>>([]);
   const [occurDate, setOccurDate] = useState<Array<dayjs.Dayjs>>([]);
@@ -265,6 +264,11 @@ const CreateTourStep1 = ({
       fileImgMerchandiseList.filter((_: File, i: number) => i !== index),
     );
   };
+
+
+  //Events
+  // const onCha
+
 
   //Register, Occur, Draw
   const disabledRegisterDate = (current: dayjs.Dayjs) => {
@@ -424,11 +428,32 @@ const CreateTourStep1 = ({
           </div>
         </div>
         <div className="w-full h-max p-10">
-          <Form.Item label="Tournament Name" name="name" required>
-            <Input placeholder="Your tournament's name" required />
+          <Form.Item label="Tournament Name" name="name"
+            rules={[
+              {
+                required: true,
+                message: 'Tournament name is required!',
+              }
+            ]}
+          >
+            <Input placeholder="Your tournament's name" />
           </Form.Item>
-          <Form.Item label="Short name" name="shortName" required>
-            <Input placeholder="Short name" required />
+          <Form.Item label="Short name" name="shortName"
+            rules={[
+              {
+                required: true,
+                message: 'Short name is required!',
+              }, {
+                min: 5,
+                max: 10,
+                message: 'Short name must be 5 - 10 characters!',
+              }
+            ]}
+          >
+            <Input
+              placeholder="Short name"
+              maxLength={10}
+            />
           </Form.Item>
           <Form.Item label="Tournament URL" name="url" required>
             <Space.Compact block>
@@ -440,9 +465,14 @@ const CreateTourStep1 = ({
                 rules={[
                   { required: true, message: 'URL is required!' },
                   {
+                    min: 8,
+                    max: 40,
+                    message: 'URL must be 8 - 40 characters',
+                  },
+                  {
                     pattern: /^[a-zA-Z0-9-]{8,}$/,
                     message:
-                      'Must be at least 8 characters and no special characters',
+                      'URL must be no special characters',
                   },
                 ]}
               >
@@ -508,9 +538,25 @@ const CreateTourStep1 = ({
               showText={true}
             />
           </Form.Item>
-          <Form.Item name={'prizePool'} label="Prize pool" required>
+          <Form.Item
+            name={'prizePool'}
+            label="Prize pool"
+            rules={[
+              {
+                required: true,
+                message: 'Prize pool is required!',
+              },
+              {
+                type: 'number',
+                min: 0,
+                max: 1000000000,
+                message: 'Prize pool must be under 1.000.000.000VND'
+              }
+            ]}
+          >
             <InputNumber<number>
               min={0}
+              max={1000000000}
               suffix={'VND'}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -611,18 +657,23 @@ const CreateTourStep1 = ({
               <Input defaultValue={location} variant="borderless" readOnly />
             </Form.Item>
           </Form.Item>
-          <Form.Item name="introduction" label="Introduction" required>
+          <Form.Item name="introduction" label="Introduction"
+            rules={[
+            ]}
+          >
             <TextArea
               // value={value}
               // onChange={(e) => setValue(e.target.value)}
               placeholder="Tournament's introduction"
               autoSize={{ minRows: 3, maxRows: 5 }}
+              maxLength={1000}
             />
           </Form.Item>
           <Form.Item name="description" label="Description" required>
             <TextArea
               // value={value}
               // onChange={(e) => setValue(e.target.value)}
+              maxLength={1000}
               placeholder="Tournament description"
               autoSize={{ minRows: 3, maxRows: 5 }}
             />
@@ -730,9 +781,9 @@ const CreateTourStep1 = ({
             rules={[
               { required: true },
               {
-                pattern: new RegExp('^[0-9-+]{9,15}$'),
-                message: 'Please enter a valid phone number',
-              },
+                pattern: new RegExp("^(\\+84|84|0)(3|5|7|8|9)[0-9]{8}$"),
+                message: "Please enter a valid phone number"
+              }
             ]}
           >
             <Input placeholder="Phone Number" />
@@ -859,11 +910,16 @@ const CreateTourStep1 = ({
                                       <Form.Item
                                         noStyle
                                         name={[subField.name, 'fromAge']}
-                                        required
+                                        rules={[
+                                          {
+                                            required: true,
+                                            message: 'Please input minimum range age',
+                                          }
+                                        ]}
                                       >
                                         <InputNumber
-                                          min={5}
-                                          max={99}
+                                          min={7}
+                                          max={89}
                                           style={{ width: '150px' }}
                                           placeholder="Minimum age"
                                         />
@@ -872,11 +928,16 @@ const CreateTourStep1 = ({
                                       <Form.Item
                                         noStyle
                                         name={[subField.name, 'toAge']}
-                                        required
+                                        rules={[
+                                          {
+                                            required: true,
+                                            message: 'Please input maximum range age',
+                                          }
+                                        ]}
                                       >
                                         <InputNumber
-                                          min={5}
-                                          max={100}
+                                          min={7}
+                                          max={90}
                                           style={{ width: '150px' }}
                                           placeholder="Maximum age"
                                         />
@@ -910,10 +971,15 @@ const CreateTourStep1 = ({
                                   <Form.Item
                                     name={[subField.name, 'maximumAthlete']}
                                     label="Maximum athletes"
-                                    required
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Please input maximum athletes',
+                                      }
+                                    ]}
                                   >
                                     <InputNumber
-                                      min={0}
+                                      min={4}
                                       max={1000}
                                       style={{ width: '100%' }}
                                       placeholder="Maximum athletes"
@@ -922,11 +988,16 @@ const CreateTourStep1 = ({
                                   <Form.Item
                                     name={[subField.name, 'minimumAthlete']}
                                     label="Minimum athletes"
-                                    required
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Please input minimum athletes',
+                                      }
+                                    ]}
                                   >
                                     <InputNumber
-                                      min={4}
-                                      max={100}
+                                      min={0}
+                                      max={1000}
                                       style={{ width: '100%' }}
                                       placeholder="Maximum athletes"
                                     />
@@ -949,20 +1020,26 @@ const CreateTourStep1 = ({
                                     label="Winning points"
                                   >
                                     <InputNumber
-                                      min={15}
-                                      max={51}
+                                      min={11}
+                                      max={31}
                                       style={{ width: '100%' }}
                                       placeholder="Winning points"
+                                      onChange={(value) => setWinningPoint(value)}
                                     />
                                   </Form.Item>
 
                                   <Form.Item
                                     name={[subField.name, 'lastPoint']}
                                     label="Last points"
-                                    required
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Please input last points',
+                                      }
+                                    ]}
                                   >
                                     <InputNumber
-                                      min={15}
+                                      min={30}
                                       max={51}
                                       style={{ width: '100%' }}
                                       placeholder="Last points"
@@ -977,6 +1054,7 @@ const CreateTourStep1 = ({
                                     label="Rules"
                                   >
                                     <TextArea
+                                      maxLength={1000}
                                       placeholder="Enter rules"
                                       autoSize={{ minRows: 3, maxRows: 5 }}
                                     />
@@ -986,23 +1064,34 @@ const CreateTourStep1 = ({
                                   <Form.Item
                                     name={[subField.name, 'championshipPrize']}
                                     label="Champion Rewards"
-                                    required
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Champion rewards is required',
+                                      },
+                                    ]}
                                   >
-                                    <Input style={{ width: '100%' }} />
+                                    <Input maxLength={500} style={{ width: '100%' }} />
                                   </Form.Item>
 
                                   <Form.Item
                                     name={[subField.name, 'runnerUpPrize']}
                                     label="Runner-up"
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Runner-up rewards is required',
+                                      }
+                                    ]}
                                   >
-                                    <Input style={{ width: '100%' }} />
+                                    <Input maxLength={500} style={{ width: '100%' }} />
                                   </Form.Item>
 
                                   <Form.Item
                                     name={[subField.name, 'thirdPlacePrize']}
                                     label="Third Place"
                                   >
-                                    <Input style={{ width: '100%' }} />
+                                    <Input maxLength={500} style={{ width: '100%' }} />
                                   </Form.Item>
 
                                   {/* <Form.Item
@@ -1047,7 +1136,6 @@ const CreateTourStep1 = ({
         </div>
         <div className="w-full h-max p-10">
           <Form.Item
-            name="isRegister"
             label="Registration"
             style={{
               width: '100%',
@@ -1055,36 +1143,35 @@ const CreateTourStep1 = ({
               flexDirection: 'column',
               justifyContent: 'space-around',
             }}
-            initialValue={true}
-            required
+            initialValue={"Host a sign-up tournament — This will allow ahtletes to sign up"}
           >
-            <Radio.Group
-              onChange={(e) => {
-                setIsRegister(e.target.value);
-              }}
-              style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: 'column',
-                rowGap: '8px',
-              }}
-            >
-              {/* <Radio value={false}> Provide a list of participants </Radio> */}
-              <Radio value={true}>
-                {' '}
-                Host a sign-up tournament — This will allow ahtletes to sign up{' '}
-              </Radio>
-            </Radio.Group>
+            <Input
+              variant='borderless'
+              value={"Host a sign-up tournament — This will allow ahtletes to sign up"}
+              readOnly
+            />
           </Form.Item>
           <Form.Item
             name={'registrationFeePerPair'}
             label={'Registration Fee Per Pair'}
             // style={isRegister ? { display: 'block' } : { display: 'none' }}
             initialValue={0}
+            rules={[
+              {
+                required: true,
+                message: 'Registration fee per pair is required',
+              },
+              {
+                type: 'number',
+                min: 0,
+                max: 1000000000,
+                message: 'Registration fee per pair must be under 1.000.000.000VND'
+              }
+            ]}
           >
             <InputNumber<number>
               min={0}
+              max={1000000000}
               suffix={'VND'}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -1104,9 +1191,22 @@ const CreateTourStep1 = ({
             label={'Registration Fee Per Person'}
             // style={isRegister ? { display: 'block' } : { display: 'none' }}
             initialValue={0}
+            rules={[
+              {
+                required: true,
+                message: 'Registration fee per person is required',
+              },
+              {
+                type: 'number',
+                min: 0,
+                max: 1000000000,
+                message: 'Registration fee per person must be under 1.000.000.000VND'
+              }
+            ]}
           >
             <InputNumber<number>
               min={0}
+              max={1000000000}
               suffix={'VND'}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -1125,9 +1225,22 @@ const CreateTourStep1 = ({
             name={'protestFeePerTime'}
             label={'Potest Fee Per Time'}
             initialValue={0}
+            rules={[
+              {
+                required: true,
+                message: 'Protest fee per time is required',
+              },
+              {
+                type: 'number',
+                min: 0,
+                max: 1000000000,
+                message: 'Protest fee per time must be under 1.000.000.000VND'
+              }
+            ]}
           >
             <InputNumber<number>
               min={0}
+              max={1000000000}
               suffix={'VND'}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -1184,7 +1297,7 @@ const CreateTourStep1 = ({
             </h1>
           </div>
         </div>
-        <div className="w-full h-max p-10">
+        <div className="w-full h-max p-10 flex flex-col justify-center">
           <Form.Item
             name={'drawDate'}
             label="Draw Date"
@@ -1244,9 +1357,80 @@ const CreateTourStep1 = ({
           </Form.Item>
           <Divider />
           <Form.Item
-            name="umpirePerMatch"
-            label="Main umpires in a match"
+            label="Create courts"
             required
+          >
+            <Form.List
+              name="createCourts"
+              rules={[
+                {
+                  validator: async (_, courts) => {
+                    if (!courts || courts.length < 1) {
+                      return Promise.reject(new Error('Must add at least 1 court'));
+                    }
+                  },
+                },
+
+              ]}
+
+            >
+              {(fields, { add, remove }, { errors }) => (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    // rowGap: 16,
+                    width: '90%',
+                  }}
+                >
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space key={key} style={{ display: 'flex', marginBottom: 1 }} align="baseline">
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'courtCode']}
+                        rules={[
+                          {
+                            required: true, 
+                            message: 'Court code is required',
+                          }
+                        ]}
+                      >
+                        <Input placeholder="Court Code" />
+                      </Form.Item>
+                      {fields.length > 1 ? (
+                        <MinusCircleOutlined
+                          className="dynamic-delete-button"
+                          onClick={() => remove(name)}
+                        />
+                      ) : null}
+                    </Space>
+                  ))}
+                  <Form.Item>
+                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                      Add Court
+                    </Button>
+                    <Form.ErrorList errors={errors} />
+                  </Form.Item>
+                </div>
+              )}
+            </Form.List>
+          </Form.Item>
+
+          <Form.Item
+            name="umpirePerMatch"
+            label="Umpires per match"
+            rules={[
+              {
+                required: true,
+                message: 'Umpires per match is required',
+              },
+              {
+                type: 'number',
+                min: 1,
+                max: 3,
+                message: 'Umpires per match must be 1 - 3'
+              }
+            ]}
           >
             <InputNumber
               min={1}
@@ -1282,7 +1466,16 @@ const CreateTourStep1 = ({
           </div>
         </div>
         <div className="w-full h-max p-10">
-          <Form.Item name="hasMerchandise" label="Merchandise for audiences">
+          <Form.Item
+            name="hasMerchandise"
+            label="Merchandise for audiences"
+            rules={[
+              {
+                required: true,
+                message: 'Merchandise for audiences is required',
+              }
+            ]}
+          >
             <Radio.Group
               onChange={(e) => setHasMerchandise(e.target.value)}
               style={{
@@ -1300,12 +1493,17 @@ const CreateTourStep1 = ({
 
           <div style={{ display: hasMerchandise ? 'block' : 'none' }}>
             <Form.Item name={'merchandise'} label="Merchandise description">
-              <Input style={{ width: '100%' }} />
+              <Input style={{ width: '100%' }} maxLength={512} />
             </Form.Item>
             <Form.Item
               name={'numberOfMerchandise'}
               label="Number of merchandise"
-              required
+              rules={[
+                {
+                  required: true,
+                  message: 'Number of merchandise is required',
+                }
+              ]}
             >
               <InputNumber
                 min={1}
@@ -1410,6 +1608,7 @@ const CreateTourStep1 = ({
               />
             </Form.Item>
 
+
             {/* <div className='w-full h-max flex flex-col items-center justify-center'> */}
             {/* <div className='w-full '> */}
             {/* <Form.Item label="Umpires' List" name="umpireList">
@@ -1497,6 +1696,24 @@ const CreateTourStep1 = ({
                                             )}
                                         </Form.List>
                                     </Form.Item> */}
+          </div>
+          <div className='w-full flex-col shadow-shadowBtn hidden'>
+            <div className='w-full h-max flex bg-primaryColor rounded-t-md'>
+              <div className='w-full h-max flex justify-between items-center px-10 py-1'>
+                <h1 className='font-quicksand  text-base font-bold text-white'>Additional Options</h1>
+              </div>
+            </div>
+            <div className='w-full h-max p-8 flex flex-col'>
+              <Form.Item noStyle name="isPrivate" initialValue={false} >
+                <Checkbox value={true}>Private Tournament - Only who has URL can join</Checkbox>
+              </Form.Item>
+              <Form.Item noStyle name="isLiveDraw" initialValue={false}>
+                <Checkbox value={true}>Live Streaming Draw</Checkbox>
+              </Form.Item>
+              <Form.Item noStyle name="hasLiveStream" initialValue={false}>
+                <Checkbox value={true}>Live Streaming Matches</Checkbox>
+              </Form.Item>
+            </div>
           </div>
         </div>
       </section>
