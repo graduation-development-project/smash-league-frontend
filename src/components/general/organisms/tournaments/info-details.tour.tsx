@@ -30,7 +30,7 @@ const InfoDetailsTour = ({
   const color = tour?.mainColor.includes('#')? tour?.mainColor : "#FF8243";
     const textColor = '#FF8243';
   // const bgColor = `bg-[${color}]` || "bg-[#FF8243]";
-  console.log(tour);
+  // console.log(tour);
 
   const titleCard = (title: string) => {
     return (

@@ -66,7 +66,7 @@ const OverviewTeamDetails = () => {
       {/* Rating */}
 
       <div className="w-[40%] h-full flex flex-col gap-5 justify-center items-center">
-        <div className="w-full flex flex-col shadow-shadowBtn bg-white p-5 rounded-[5px] gap-2 ">
+        {/* <div className="w-full flex flex-col shadow-shadowBtn bg-white p-5 rounded-[5px] gap-2 ">
           <h1 className="w-max text-[20px] font-bold italic border-b-[2px] border-primaryColor hover:text-primaryColor hover:border-b-[3px] cursor-pointer">
             Rating
           </h1>
@@ -76,7 +76,7 @@ const OverviewTeamDetails = () => {
               ( 100 rates )
             </span>
           </div>
-        </div>
+        </div> */}
 
         {/* Description */}
         <div className="w-full h-max flex flex-col justify-center gap-4 shadow-shadowBtn bg-white p-5 rounded-[5px]">

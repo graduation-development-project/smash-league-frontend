@@ -341,7 +341,8 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       title: '',
       dataIndex: ['user', 'partner'],
       key: 'image',
-      fixed: 'left',
+      // fixed: 'left',
+      align: 'center',
       width: 150,
       render: (_, { user, partner }) => (
         <div className="flex flex-col gap-3">
@@ -351,7 +352,7 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
               border: '1px solid #FF8243',
               padding: '2px',
             }}
-            src={user?.avatarURL}
+            src={user?.avatarURL? user?.avatarURL : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'}
             width={50}
             height={50}
             alt="Athlete Image"
@@ -362,7 +363,7 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
               border: '1px solid #FF8243',
               padding: '2px',
             }}
-            src={partner?.avatarURL}
+            src={partner?.avatarURL? partner?.avatarURL : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'}
             width={50}
             height={50}
             alt="Athlete Image"
@@ -388,7 +389,7 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
     {
       title: 'Age',
       dataIndex: 'age',
-      align: 'center',
+      // align: 'center',
       key: 'age',
       width: 100,
       // ...getColumnSearchProps('age'),
@@ -407,7 +408,7 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       title: 'Email',
       dataIndex: ['user', 'partner'],
       key: 'email',
-      align: 'center',
+      // align: 'center',
       width: 100,
       // ...getColumnSearchProps('phoneNumber'),
       render: (_, { user, partner }) => (

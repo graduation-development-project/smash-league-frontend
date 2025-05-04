@@ -9,12 +9,14 @@ const MatchDetailsTour = ({
   eventId,
   tournamentId,
   isOrganizer,
+  tour
 }: {
   mainColor: string;
   matchList: any;
   eventId: string;
   tournamentId: string | string[];
   isOrganizer: boolean;
+  tour: any;
 }) => {
   const linearBgColor = `bg-[linear-gradient(180deg,_${mainColor}_0%,_#2c2c2c_50%)]`;
   const matchCourt = [
@@ -92,6 +94,8 @@ const MatchDetailsTour = ({
                     tournamentId={tournamentId}
                     tournamentEventId={eventUUID}
                     isOrganizer={isOrganizer}
+                    tour={tour}
+                    getMatchesOfTournamentEvent = {getMatchesOfTournamentEvent}
                   />
                 </div>
               );

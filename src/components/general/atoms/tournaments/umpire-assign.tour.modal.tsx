@@ -19,6 +19,8 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { DatePicker, Space } from 'antd';
 import type { DatePickerProps, GetProps } from 'antd';
+import dayjs from 'dayjs';
+import { getCourtsAvailableAPI } from '@/services/match';
 
 interface Option {
   label: string;
@@ -32,17 +34,24 @@ const UmpireAssignModal = ({
   tournamentId,
   matchId,
   playersOptions,
+  tour,
+  getMatchesOfTournamentEvent,
 }: {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   tournamentId: string | string[];
   matchId: string;
   playersOptions: any[];
+  tour: any;
+  getMatchesOfTournamentEvent: any;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [umpiresList, setUmpiresList] = useState<Option[]>([]);
+  const [courtList, setCourtList] = useState<Option[]>([]);
   const [form] = Form.useForm();
   const [user, setUser] = useState<any>(null);
+
+  // console.log('tour', tour);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -75,7 +84,7 @@ const UmpireAssignModal = ({
   const onOk = (
     value: DatePickerProps['value'] | RangePickerProps['value'],
   ) => {
-    console.log('onOk: ', value);
+    // console.log('onOk: ', value);
   };
 
   const getTournamentUmpiresParticipants = async () => {
@@ -84,7 +93,7 @@ const UmpireAssignModal = ({
       tournamentId,
     );
 
-    // console.log(res?.data.data, 'check umpires');
+    console.log(res?.data.data, 'check umpires');
     if (res?.data?.statusCode === 200 || res?.data?.statusCode === 201) {
       // Transform data into correct format
       const formatData = res.data.data.map((umpire: any) => ({
@@ -99,10 +108,27 @@ const UmpireAssignModal = ({
     }
   };
 
+  const getCourtsAvailable = async () => {
+    const res = await getCourtsAvailableAPI(user?.access_token, tournamentId);
+    if (res?.data?.statusCode === 200 || res?.data?.statusCode === 201) {
+      const formatData = res.data.data.map((court: any) => ({
+        value: court?.id,
+        label: court?.courtCode,
+        disabled: court?.courtAvailable ? false : true,
+      }));
+      setCourtList(formatData);
+    } else {
+      setCourtList([]);
+    }
+  };
+
   useEffect(() => {
     getTournamentUmpiresParticipants();
+    getCourtsAvailable();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen]);
+
+  // console.log('umpiresList', umpiresList);
 
   const handleAssignUmpire = async (values: any) => {
     const { umpireId } = values;
@@ -178,6 +204,8 @@ const UmpireAssignModal = ({
       ) {
         setIsModalOpen(false);
         setIsLoading(false);
+        getMatchesOfTournamentEvent();
+        getTournamentUmpiresParticipants();
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,
@@ -317,20 +345,7 @@ const UmpireAssignModal = ({
                           .toLowerCase()
                           .includes(input.toLowerCase())
                       }
-                      options={[
-                        {
-                          value: '16ed0de5-35d6-46d9-8911-c56df13aa8ae',
-                          label: 'Court 1',
-                        },
-                        {
-                          value: '76004619-e334-4efc-8d12-9feb4a812a93',
-                          label: 'Court 2',
-                        },
-                        {
-                          value: '6a395999-498e-4d93-b16c-b1e6f41f2c25',
-                          label: 'Court 3',
-                        },
-                      ]}
+                      options={courtList}
                     />
                   </Form.Item>
 
@@ -353,6 +368,8 @@ const UmpireAssignModal = ({
                   style={{ width: '100%' }}
                   showTime={{ format: 'HH:mm' }}
                   format="YYYY-MM-DD HH:mm"
+                  minDate={dayjs(tour?.startDate, 'YYYY-MM-DD')}
+                  maxDate={dayjs(tour?.endDate, 'YYYY-MM-DD')}
                   onChange={(value, dateString) => {
                     console.log('Selected Time: ', value);
                     console.log('Formatted Selected Time: ', dateString);

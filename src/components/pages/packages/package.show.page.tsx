@@ -18,7 +18,9 @@ const PackagePage = () => {
     }
   }, []);
 
-  const isHasOrganizerRole = user?.userRoles.includes('Organizer');
+  const isHasOrganizerRole = user
+    ? user?.userRoles?.includes('Organizer')
+    : false;
 
   const getAllPackages = async () => {
     setIsLoading(true);
@@ -45,8 +47,6 @@ const PackagePage = () => {
   useEffect(() => {
     getAllPackages();
   }, []);
-
-  const advantagesList = ['Hehe'];
   // console.log('Check Packages', packages);
   return (
     <div className="w-full h-full flex flex-col gap-6 rounded-[10px] shadow-shadowComp p-8">
@@ -61,7 +61,10 @@ const PackagePage = () => {
         {packages.map((item: PackageCardProps) => {
           return (
             <div key={item.id}>
-              <PackageCard pack={item} isHasOrganizerRole={isHasOrganizerRole} />
+              <PackageCard
+                pack={item}
+                isHasOrganizerRole={isHasOrganizerRole}
+              />
             </div>
           );
         })}

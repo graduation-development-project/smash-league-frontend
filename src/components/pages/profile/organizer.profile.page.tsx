@@ -180,7 +180,11 @@ const OrganizerProfilePage = (props: any) => {
                 backgroundColor: '#FF8243',
                 boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
               }}
-              src={profile?.avatarUrl}
+              src={
+                profile?.avatarUrl
+                  ? profile?.avatarUrl
+                  : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
+              }
               alt="Profile Avatar"
             ></Avatar>
           </div>

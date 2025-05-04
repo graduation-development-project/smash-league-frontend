@@ -378,6 +378,27 @@ export const getAllAssignedMatchesAPI = async (accessToken: string) => {
   }
 };
 
+export const getMatchesOfAthleteAPI = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/get-athlete-matches`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all assigned matches:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+}
+
 export const getParticipantsByTournamentEventAPI = async (
   tournamentId: string,
 ) => {

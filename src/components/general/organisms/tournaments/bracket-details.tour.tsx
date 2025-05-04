@@ -5,7 +5,10 @@ import Match from '@/components/match';
 import TeamMatch from '@/components/team-match';
 import { getParticipantListAPI } from '@/services/detail-tour';
 // import { simpleBracket, teamBrackets } from '@/mock-data/simple-data';
-import { getMatchesOfTournamentEventAPI, getTournamentEventDetailAPI } from '@/services/tournament';
+import {
+  getMatchesOfTournamentEventAPI,
+  getTournamentEventDetailAPI,
+} from '@/services/tournament';
 import { EVENT_ENUM, TYPE_OF_FORMAT_ENUM } from '@/utils/enum';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDraggable } from 'react-use-draggable-scroll';
@@ -45,7 +48,6 @@ const BracketDetailsTour = ({
     }
   };
 
-
   const fetchParticipantList = async () => {
     try {
       const res = await getParticipantListAPI(eventUUID);
@@ -55,30 +57,30 @@ const BracketDetailsTour = ({
     } catch (error: any) {
       console.log(error);
     }
-  }
+  };
   const fetchGetTournamentEventDetailAPI = async () => {
     try {
       const res = await getTournamentEventDetailAPI(tournamentId);
-      console.log("Check res", res.data);
-      console.log("eventUUID", (res?.data.find((event: any) => event.id === eventUUID)));
+      // console.log("Check res", res.data);
+      // console.log("eventUUID", (res?.data.find((event: any) => event.id === eventUUID)));
 
       setEventDetail(res?.data.find((event: any) => event.id === eventUUID));
-
     } catch (error: any) {
       console.log(error);
     }
-  }
+  };
   useEffect(() => {
     fetchParticipantList();
     fetchGetTournamentEventDetailAPI();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventUUID]);
-  console.log('Check eventDetail', eventDetail);
+  // console.log('Check eventDetail', eventDetail);
   useEffect(() => {
     getMatchesOfTournamentEvent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId]);
 
+  console.log('Check bracket', brackets);
   return (
     <div className="w-full h-max p-5">
       <div className="w-full h-max min-h-56 flex flex-col gap-6">
@@ -99,8 +101,14 @@ const BracketDetailsTour = ({
           </th>
 
           <td className="text-start flex flex-col gap-3">
-            <li className='font-bold'>{`From ${eventDetail?.fromAge} - ${eventDetail?.toAge} years old`}</li>
-            <li>{TYPE_OF_FORMAT_ENUM[eventDetail?.typeOfFormat as keyof typeof TYPE_OF_FORMAT_ENUM]}</li>
+            <li className="font-bold">{`From ${eventDetail?.fromAge} - ${eventDetail?.toAge} years old`}</li>
+            <li>
+              {
+                TYPE_OF_FORMAT_ENUM[
+                  eventDetail?.typeOfFormat as keyof typeof TYPE_OF_FORMAT_ENUM
+                ]
+              }
+            </li>
             <li>{numberOfParticipants}</li>
             <li>{EVENT_ENUM[eventName as keyof typeof EVENT_ENUM]}</li>
           </td>
@@ -125,7 +133,7 @@ const BracketDetailsTour = ({
           style={{ borderColor: `${color}` }}
           className={`w-2/3 flex flex-col gap-2 text-base text-white p-4 bg-[#2c2c2c] rounded-r-lg border-b-4 `}
         >
-          <span className='font-bold text-lg'>Rule of Event</span>
+          <span className="font-bold text-lg">Rule of Event</span>
           <p>{eventDetail?.ruleOfEventExtension}</p>
         </div>
 

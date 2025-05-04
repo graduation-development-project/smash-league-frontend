@@ -110,7 +110,7 @@ const AdminSideBar = () => {
       {
         key: 'manage-tournaments',
         label: 'Manage Tournaments',
-        icon: <MailOutlined />,
+        icon: <TbTournament />,
         children: [
           {
             key: 'group1',
@@ -132,6 +132,13 @@ const AdminSideBar = () => {
           },
         ],
       },
+
+      {
+        key: 'manage-package',
+        label: <Link href="/dashboard/package">Manage Packages</Link>,
+        icon: <MailOutlined />,
+      },
+
       {
         key: 'manage-transactions',
         label: 'Manage Transactions',

@@ -27,7 +27,7 @@ const MyTourListBoard = ({
     case 'my-schedule':
       return <CalendarPage profileRole={profileRole} />;
     default:
-      return <div>All Tournaments</div>;
+      return <TourRegistrationOfAthleteTable profileRole={profileRole} />;
   }
 };
 
