@@ -1,4 +1,5 @@
 'use client';
+import Spinner from '@/components/general/atoms/loaders/spinner';
 import PackageCard from '@/components/general/atoms/packages/package.card';
 import { getAllPackagesAPI } from '@/services/package';
 import React, { useEffect, useState } from 'react';
@@ -31,6 +32,7 @@ const PackagePage = () => {
     if (response.statusCode === 200 || response.statusCode === 201) {
       setIsLoading(false);
     } else {
+      setIsLoading(false);
       toast.error(`${response?.message}`, {
         position: 'top-right',
         autoClose: 5000,
@@ -57,18 +59,22 @@ const PackagePage = () => {
         </h1>
         <div className="w-24 h-[2px] rounded-[10px] bg-secondColor flex-end" />
       </div>
-      <div className="w-full h-full flex justify-between items-center gap-5 ">
-        {packages.map((item: PackageCardProps) => {
-          return (
-            <div key={item.id}>
-              <PackageCard
-                pack={item}
-                isHasOrganizerRole={isHasOrganizerRole}
-              />
-            </div>
-          );
-        })}
-      </div>
+      {isLoading ? (
+        <Spinner isLoading={isLoading} />
+      ) : (
+        <div className="w-full h-full flex justify-between items-center gap-5 ">
+          {packages.map((item: PackageCardProps) => {
+            return (
+              <div key={item.id}>
+                <PackageCard
+                  pack={item}
+                  isHasOrganizerRole={isHasOrganizerRole}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

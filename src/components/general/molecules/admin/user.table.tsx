@@ -1,55 +1,120 @@
-"use client";
-import { Button, Table } from "antd";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { Space, Table, Tag } from 'antd';
+import type { TableProps } from 'antd';
+import { getAllUsersAPI } from '@/services/user';
+import { colors } from '@mui/material';
+
+interface DataType {
+  key: string;
+  id: string;
+  email: string;
+  name: string;
+  phoneNumber: string;
+  isVerified: boolean;
+  role: string;
+  creditsRemain: number;
+}
 
 const UserTable = () => {
-  const dataSource = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-  ];
+  const [isLoading, setIsLoading] = useState(false);
+  const [usersList, setUsersList] = useState([]);
+  const [user, setUser] = useState<any>({});
 
-  const columns = [
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+      }
+    }
+  }, []);
+
+  const getAllUsers = async () => {
+    setIsLoading(true);
+    const response = await getAllUsersAPI(user?.access_token);
+    if (
+      response?.data?.statusCode === 200 ||
+      response?.data?.statusCode === 201
+    ) {
+      const formatData = response.data.data.map((user: any) => ({
+        key: user.id,
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        phoneNumber: user.phoneNumber,
+        isVerified: user.isVerified,
+        role: user.userRoles[0].role.roleName,
+        creditsRemain: user?.creditsRemain ? user.creditsRemain : 0,
+      }));
+      setUsersList(formatData);
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    getAllUsers();
+  }, [user]);
+
+  const columns: TableProps<DataType>['columns'] = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: 'Phone Number',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
     },
+    {
+      title: 'Status',
+      key: 'isVerified',
+      dataIndex: 'isVerified',
+      render: (_, { isVerified }) => (
+        <>
+          <Tag color={isVerified ? 'green' : 'red'}>
+            {isVerified ? 'Verified' : 'Not yet'}
+          </Tag>
+        </>
+      ),
+    },
+    // {
+    //   title: 'Action',
+    //   key: 'action',
+    //   render: (_, record) => (
+    //     <Space size="middle">
+    //       <a>Invite {record.name}</a>
+    //       <a>Delete</a>
+    //     </Space>
+    //   ),
+    // },
   ];
 
   return (
     <>
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           marginBottom: 20,
-          fontFamily: "inherit",
+          fontFamily: 'inherit',
         }}
-      >
-        <span>Manager Users</span>
-        <Button style={{fontFamily:"inherit"}}>Create User</Button>
-      </div>
-      <Table bordered dataSource={dataSource} columns={columns} style={{fontFamily:"inherit"}} />
+      ></div>
+      <Table<DataType>
+        columns={columns}
+        dataSource={usersList}
+        loading={isLoading}
+        bordered
+        style={{ fontFamily: 'inherit' }}
+      />
     </>
   );
 };

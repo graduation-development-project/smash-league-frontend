@@ -18,6 +18,8 @@ interface IncidentModalProps {
   player2: Player;
   onLogIncident: (incident: IncidentLog) => void;
   gameId: string;
+  setIsMatchActive: any;
+  getAllLogMessageOfMatch: any;
 }
 
 export interface IncidentLog {
@@ -85,13 +87,15 @@ export default function IncidentModal({
   player2,
   onLogIncident,
   gameId,
+  setIsMatchActive,
+  getAllLogMessageOfMatch,
 }: IncidentModalProps) {
   const [selectedIncidentType, setSelectedIncidentType] = useState<string>('');
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
   const [description, setDescription] = useState<string>('');
   const [currentTime, setCurrentTime] = useState<string>('');
-  const [user, setUser] = useState<any>({});
   const [logTypeList, setLogTypeList] = useState<any>([]);
+  const [user, setUser] = useState<any>({});
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -165,6 +169,10 @@ export default function IncidentModal({
       response?.data?.statusCode === 200 ||
       response?.data?.statusCode === 201
     ) {
+      if (selectedIncidentType === 'INTERVAL') {
+        setIsMatchActive(false);
+      }
+      getAllLogMessageOfMatch();
       toast.success(`${response?.data.message}`, {
         position: 'top-right',
         autoClose: 5000,
@@ -188,16 +196,16 @@ export default function IncidentModal({
       });
     }
 
-    const newIncident: IncidentLog = {
-      id: `incident-${Date.now()}`,
-      timestamp: new Date(),
-      incidentType: selectedIncidentType,
-      playerId: selectedPlayerId,
-      description,
-      matchTime: currentTime,
-    };
+    // const newIncident: IncidentLog = {
+    //   id: `incident-${Date.now()}`,
+    //   timestamp: new Date(),
+    //   incidentType: selectedIncidentType,
+    //   playerId: selectedPlayerId,
+    //   description,
+    //   matchTime: currentTime,
+    // };
 
-    onLogIncident(newIncident);
+    // onLogIncident(newIncident);
     resetForm();
     onClose();
   };

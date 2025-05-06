@@ -155,7 +155,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
         )}
       </div>
 
-      <div className="w-full h-full flex justify-between items-center gap-5">
+      {/* <div className="w-full h-full flex justify-between items-center gap-5">
         <div className="w-full h-full border-2 border-gray-300 p-4 rounded-[5px]">
           <BarChart
             title="Rainfall in New York"
@@ -186,7 +186,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
             {...chartSetting1}
           />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -5,7 +5,7 @@ import type { MenuProps } from 'antd';
 import { ConfigProvider, Layout, Menu } from 'antd';
 import { RiArrowLeftSLine } from 'react-icons/ri';
 import { TbTournament } from 'react-icons/tb';
-import { GrGroup } from 'react-icons/gr';
+// import { GrGroup } from 'react-icons/gr';
 import { HiOutlineUserGroup } from 'react-icons/hi';
 import { TfiBarChartAlt } from 'react-icons/tfi';
 import DashboardPage from '@/components/general/molecules/profile/organizer/dashboard.page';
@@ -72,6 +72,7 @@ const DashboardOrganizerProfile = () => {
           }),
         );
       }
+      setProfile(res.data);
     } catch (error: any) {
       console.log('error', error);
     }
@@ -199,7 +200,7 @@ const DashboardOrganizerProfile = () => {
           >
             <DashboardPage
               selectedKey={selectedKey}
-              credit={user?.creditsRemain}
+              credit={profile?.creditsRemain}
             />
           </div>
         </Content>

@@ -8,8 +8,8 @@ import AlertCreateTeamsModal from './alert-create-teams-modal';
 import { useProfileContext } from '@/context/profile.context';
 
 const TeamsBanner = (props: any) => {
-  const { session } = props;
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { session, setIsModalOpen, isModalOpen } = props;
+
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {

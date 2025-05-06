@@ -177,6 +177,22 @@ export const getAllLogMessageAPI = async () => {
   }
 };
 
+export const getAllLogMessageOfMatchAPI = async (matchId: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/get-all-match-log/${matchId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all log message of match:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
 export const createEventLogAPI = async (
   accessToken: string,
   gameId: string,
@@ -202,6 +218,22 @@ export const createEventLogAPI = async (
   } catch (error: any) {
     console.error(
       'Error create event log:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const continueGameAPI = async (matchId: string) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/continue-match/${matchId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error continue game:',
       error.response?.data || error.message,
     );
     return error.response?.data;

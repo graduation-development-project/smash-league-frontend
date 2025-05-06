@@ -7,6 +7,7 @@ import UmpireAssignModal from './umpire-assign.tour.modal';
 import AssignPlayerInMatchModal from './assign-player-in-match.modal';
 import {
   getParticipantsByTournamentEventAPI,
+  getTournamentEventDetailAPI,
   getTournamentEventParticipantsAPI,
 } from '@/services/tournament';
 
@@ -17,13 +18,15 @@ const MatchCard = ({
   isOrganizer,
   tour,
   getMatchesOfTournamentEvent,
+  eventUUID,
 }: {
   match: any;
-  tournamentId: string | string[];
+  tournamentId: string;
   tournamentEventId: string;
   isOrganizer: boolean;
   tour: any;
   getMatchesOfTournamentEvent: any;
+  eventUUID: string;
 }) => {
   const mainColor = '#60a5fa';
   const bgColor = 'bg-[#60a5fa]';
@@ -33,6 +36,7 @@ const MatchCard = ({
   const [isAssignAthleteModalOpen, setIsAssignAthleteModalOpen] =
     useState(false);
   const [participantsList, setParticipantsList] = useState([]);
+  const [eventDetails, setEventDetails] = useState<any>();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -66,6 +70,7 @@ const MatchCard = ({
       player2: 21,
     },
   ];
+  // console.log("check tour", tour);
   // console.log('Check match', match);
 
   // console.log('Check', match.participants);
@@ -102,10 +107,24 @@ const MatchCard = ({
     }
   };
 
+  const fetchGetTournamentEventDetailAPI = async () => {
+    try {
+      const res = await getTournamentEventDetailAPI(tournamentId);
+      // console.log("Check res", res.data);
+      // console.log("eventUUID", (res?.data.find((event: any) => event.id === eventUUID)));
+
+      setEventDetails(res?.data.find((event: any) => event.id === eventUUID));
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getTournamentEventParticipants();
+    fetchGetTournamentEventDetailAPI();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+  // console.log('Check eventDetails', eventDetails);
 
   // console.log('Check party', participantsList);
 
@@ -257,13 +276,25 @@ const MatchCard = ({
       <div className="relative w-full h-[300px]  bg-[#2c2c2c] rounded-xl text-white shadow-shadowBtn">
         <div className="w-full h-full flex flex-col justify-between items-center px-5 py-5 font-medium">
           <div className="flex w-max h-max text-base gap-3 items-center">
-            <span>MS</span>
+            <span>
+              {eventDetails?.tournamentEvent === 'MENS_SINGLE'
+                ? 'MS'
+                : eventDetails?.tournamentEvent === 'WOMENS_SINGLE'
+                ? 'WS'
+                : eventDetails?.tournamentEvent === 'MENS_DOUBLE'
+                ? 'MD'
+                : eventDetails?.tournamentEvent === 'WOMENS_DOUBLE'
+                ? 'WD'
+                : 'MXD'}
+            </span>
             <div className="w-[2px] h-5 bg-[#8e8e8e] rounded-full" />
-            <span>20-30</span>
+            <span>
+              {eventDetails?.fromAge} - {eventDetails?.toAge}
+            </span>
             <div className="w-[2px] h-5 bg-[#8e8e8e] rounded-full" />
-            <span>R16</span>
-            <div className="w-[2px] h-5 bg-[#8e8e8e] rounded-full" />
-            <span>Court 1</span>
+            <span>{match?.tournamentRoundText}</span>
+            {/* <div className="w-[2px] h-5 bg-[#8e8e8e] rounded-full" />
+            <span>Court 1</span> */}
           </div>
           <div className="w-full flex justify-between items-center text-white text-2xl px-5">
             {match.participants.map((item: any, index: number) => {
@@ -308,6 +339,7 @@ const MatchCard = ({
         playersOptions={participantsList}
         tour={tour}
         getMatchesOfTournamentEvent={getMatchesOfTournamentEvent}
+        match={match}
       />
 
       <AssignPlayerInMatchModal

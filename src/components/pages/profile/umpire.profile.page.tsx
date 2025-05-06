@@ -59,18 +59,14 @@ const UmpireProfilePage = (props: any) => {
         <OverviewUmpireProfile profile={profile} setProfile={setProfile} />
       ),
     },
-    {
-      key: '2',
-      label: 'Tournaments',
-      children: <MyTournaments profileRole="UMPIRE" />,
-    },
+
     ...(user?.id === profile?.id
       ? [
-          // {
-          //   key: '3',
-          //   label: 'Teams List',
-          //   children: <MyTeams />,
-          // },
+          {
+            key: '2',
+            label: 'Tournaments',
+            children: <MyTournaments profileRole="UMPIRE" />,
+          },
           {
             key: '4',
             label: 'Update Information',

@@ -120,3 +120,45 @@ export const payBackTournamentFeeAPI = async (
     return error.response?.data;
   }
 };
+
+export const getTotalTransactionsByDayAPI = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/payment/total-transactions-by-day`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      'Error get total transactions by day:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getAllTransactionsAPI = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/payment/get-all-transactions`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      'Error get all transactions:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

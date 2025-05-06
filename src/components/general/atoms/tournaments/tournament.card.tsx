@@ -15,7 +15,7 @@ import {
   UserPlus,
   Users,
 } from 'lucide-react';
-
+import { AiOutlineFieldTime } from 'react-icons/ai';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -29,7 +29,7 @@ const TournamentCard = ({ tour }: any) => {
     >
       <div className="w-full h-[200px]">
         <Image
-          width={"100%"}
+          width={'100%'}
           height={200}
           className="w-full h-full object-cover rounded-lg"
           src={tour?.backgroundTournament}
@@ -85,7 +85,12 @@ const TournamentCard = ({ tour }: any) => {
                 (firstUnit !== 'day' && firstValue > 0));
 
             if (!shouldShow) {
-              return <div className="h-6 text-green-600">Done</div>;
+              return (
+                <div className="h-6 text-green-600 flex gap-2">
+                  <AiOutlineFieldTime size={20} strokeWidth={3} className='mt-[3px]'/>{' '}
+                  <span>Expired</span>
+                </div>
+              );
             }
 
             return (

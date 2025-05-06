@@ -70,6 +70,7 @@ const OrganizerProfilePage = (props: any) => {
       label: 'Overview',
       children: (
         <OverviewOrganizerProfile
+          profile={profile}
           tournamentList={tournamentList}
           setTournamentList={setTournamentList}
         />

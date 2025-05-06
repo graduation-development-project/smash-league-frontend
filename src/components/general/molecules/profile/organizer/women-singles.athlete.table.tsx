@@ -118,6 +118,7 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   };
 
   const getTournamentEventParticipants = async () => {
+    setIsLoading(true);
     const res = await getTournamentEventParticipantsAPI(
       user?.access_token,
       eventId,
@@ -125,8 +126,10 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
     if (res?.data?.data?.listParticipants) {
       // Transform data into correct format
       setParticipantList(res.data.data.listParticipants);
+      setIsLoading(false);
     } else {
       setParticipantList([]);
+      setIsLoading(false);
     }
   };
 
@@ -134,7 +137,7 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
     if (!user) return;
     try {
       // console.log('API RUN');
-
+      setIsLoading(true);
       const response = await getTournamentRegistrationAPI(
         user?.access_token,
         eventId,
@@ -155,8 +158,10 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
         }));
 
         setVetificationList(formatData);
+        setIsLoading(false);
       } else {
         setVetificationList([]);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log('error', error);
@@ -633,6 +638,7 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
               // className={styles.customTable}
               columns={columnsVerification}
               dataSource={verificationList}
+              loading={isLoading}
               style={{
                 width: '100%',
                 height: '100%',
@@ -644,6 +650,7 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
               // className={styles.customTable}
               columns={columns}
               dataSource={participantList}
+              loading={isLoading}
               style={{
                 width: '100%',
                 height: '100%',

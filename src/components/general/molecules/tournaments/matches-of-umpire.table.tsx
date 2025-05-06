@@ -20,15 +20,6 @@ import { updateStatusOfMatchAPI } from '@/services/match';
 import { toast } from 'react-toastify';
 import { formatDateTime } from '@/utils/format';
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-  status: string;
-}
-
 interface TournamentEvent {
   key: string;
   id: string;
@@ -78,6 +69,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
   const getAssignedMatches = async () => {
     if (!user) return;
     try {
+      setIsLoading(true);
       const response = await getAssignedMatchesAPI(
         user.access_token,
         tournamentId,
@@ -89,7 +81,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
       ) {
         const formatData = response.data.data.map((match: any) => ({
           key: match.id,
-          courtId: match.courtId,
+          courtId: match.court.courtCode,
           forfeitCompetitorId: match.forfeitCompetitorId,
           id: match.id,
           isByeMatch: match.isByeMatch,
@@ -114,6 +106,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
           umpireId: match.umpireId,
         }));
         setMatchesList(formatData);
+        setIsLoading(false);
       }
     } catch (error: any) {
       console.log('Error', error);
@@ -266,7 +259,11 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
     <div>
       <ConfigProvider theme={{ token: { colorPrimary: '#FF8243' } }}>
         {' '}
-        <Table<MatchesType> columns={columns} dataSource={matchesList} />
+        <Table<MatchesType>
+          columns={columns}
+          dataSource={matchesList}
+          loading={isLoading}
+        />
       </ConfigProvider>
 
       <CheckAttendanceModal

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import MatchCard from '../../atoms/tournaments/match.card';
-import { match } from 'assert';
-import { getMatchesOfTournamentEventAPI } from '@/services/tournament';
+import {
+  getMatchesOfTournamentEventAPI,
+  getTournamentEventDetailAPI,
+} from '@/services/tournament';
 
 const MatchDetailsTour = ({
   mainColor,
@@ -9,12 +11,12 @@ const MatchDetailsTour = ({
   eventId,
   tournamentId,
   isOrganizer,
-  tour
+  tour,
 }: {
   mainColor: string;
   matchList: any;
   eventId: string;
-  tournamentId: string | string[];
+  tournamentId: string;
   isOrganizer: boolean;
   tour: any;
 }) => {
@@ -39,6 +41,7 @@ const MatchDetailsTour = ({
   ];
 
   const [matches, setMatches] = useState([]);
+  
 
   const eventName = eventId.split('-')[0];
   const eventUUID = eventId.slice(eventId.indexOf('-') + 1);
@@ -53,11 +56,12 @@ const MatchDetailsTour = ({
     }
   };
 
+
   useEffect(() => {
-    getMatchesOfTournamentEvent();
+    getMatchesOfTournamentEvent();;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId]);
-  console.log('matches', matches);
+  // console.log('eventDetails', eventDetails);
 
   return (
     <div className="w-full h-max">
@@ -95,7 +99,8 @@ const MatchDetailsTour = ({
                     tournamentEventId={eventUUID}
                     isOrganizer={isOrganizer}
                     tour={tour}
-                    getMatchesOfTournamentEvent = {getMatchesOfTournamentEvent}
+                    getMatchesOfTournamentEvent={getMatchesOfTournamentEvent}
+                    eventUUID={eventUUID}
                   />
                 </div>
               );
