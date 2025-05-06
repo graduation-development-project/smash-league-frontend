@@ -1,4 +1,4 @@
-import { getTourContactDetailsAPI, updateTourContactDetailsAPI } from '@/services/update-tour';
+import { getTourContactDetailsAPI, updateContactTourDetailsAPI, } from '@/services/update-tour';
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, Image, Input, InputNumber, Radio } from 'antd';
 import React, { useEffect, useRef, useState } from 'react'
@@ -54,7 +54,7 @@ const UpdateOrganizerMerchandiseDetailsTour = ({
 
   const fetchUpdateTourContact = async (updateData: any) => {
     {
-      const response = await updateTourContactDetailsAPI(updateData, user.access_token);
+      const response = await updateContactTourDetailsAPI(updateData, user.access_token);
       return response.data;
     }
   }

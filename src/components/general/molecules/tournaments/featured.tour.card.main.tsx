@@ -66,9 +66,9 @@ const FeaturedTourCardMain = () => {
     <div className="w-full flex flex-col">
       {
         slider?.map((slideItem: any) => {
-          const isActive = activeSlide === slideItem.id;
+          const isActive = activeSlide === slideItem?.id;
           return (
-            <div className="relative w-full h-full flex flex-col">
+            <div key={slideItem?.id} className="relative w-full h-full flex flex-col">
               <div className="absolute w-full h-full z-0 shadow-shadowComp rounded-lg">
                 <TourCardSliderMain backgroundImage={slideItem.backgroundTournament} />
                 <div className="w-[90%] flex items-center justify-center gap-2 mt-4">
