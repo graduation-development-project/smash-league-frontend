@@ -5,25 +5,35 @@ import React from 'react';
 import images from '@/assets/images';
 import { Button } from '../../ui/button';
 import TextGradientBtn from './text.gradient.btn';
+import { useRouter } from 'next/navigation';
 
-const TourCard = () => {
+const TourCard = (
+  {
+    tour
+  }: {
+    tour: any;
+  }
+) => {
+
+  console.log('tour', tour?.id);
+  
+  const router = useRouter();
+
   return (
     <div className="w-full h-full flex justify-between gap-5">
-      <div className="relative w-full flex justify-center items-center rounded-[15px]">
+      <div className="relative w-full flex justify-center items-center rounded-lg">
         {/* Image Background */}
-        <div className="absolute w-full h-full z-0 shadow-shadowComp rounded-[15px]">
-          <Image
-            src={images.featuredTourCard}
-            alt="FeaturedTournamentMain"
-            fill
-            quality={100}
-            priority
-            className="rounded object-cover"
+        <div className="absolute w-[366px] h-[140px] z-0 rounded-md">
+          <img
+            // src={tour?.backgroundTournament}
+            src="https://as1.ftcdn.net/v2/jpg/00/96/81/48/1000_F_96814823_4YZrsofbvFRuX7Uve3VB46aKln2BJOjD.jpg"
+            alt="FeaturedTournament"
+            className="rounded-md object-cover w-full h-full"
           />
         </div>
 
         {/* Name of the tournament */}
-        <div className="relative z-10 flex flex-col justify-center items-center p-10 gap-3 text-[18px] text-white font-bold leading-normal">
+        <div className="relative z-10 flex flex-col justify-center items-center py-10 gap-3 text-[18px] text-white font-bold leading-normal">
           <h1 className="">
             Smash Masters Championship:
             <br />
@@ -32,11 +42,11 @@ const TourCard = () => {
         </div>
 
         {/* Tags  */}
-        <div className="text-white text-right text-[16px] font-semibold absolute z-10 top-0 left-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-[3px] rounded-tl-[5px] rounded-br-[10px]">
+        <div className="text-white text-right text-[12px] font-semibold absolute z-10 top-0 left-0 bg-primaryColor px-2 py-[2px]  rounded-tl-md rounded-br-md">
           Ho Chi Minh
         </div>
 
-        <div className="text-white text-right text-[16px] font-semibold absolute z-10 top-0 right-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-[3px] rounded-bl-[10px]">
+        <div className="text-white text-right text-[12px] font-semibold absolute z-10 top-0 right-0 bg-primaryColor px-2 py-[2px] rounded-tr-md rounded-bl-md">
           22-25 Dec
         </div>
         {/* Sponsor Tag */}
@@ -55,7 +65,10 @@ const TourCard = () => {
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex justify-center">
-            <TextGradientBtn textColor="orange" size="sm">
+            <TextGradientBtn textColor="orange" size="sm"
+              onClick={() => {
+                router.push(`/tournaments/${tour?.id}`);
+              }}>
               More Details
             </TextGradientBtn>
           </div>

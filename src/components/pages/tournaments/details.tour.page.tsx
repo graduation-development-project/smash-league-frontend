@@ -194,6 +194,9 @@ const DetailsTourPage = () => {
           />
         );
       case 'sponsors':
+<<<<<<< HEAD
+        return <SponsorsDetailsTour tourId={detail?.id} />;
+=======
         return <SponsorsDetailsTour />;
       case 'reports':
         return (
@@ -203,6 +206,7 @@ const DetailsTourPage = () => {
             user={user}
           />
         );
+>>>>>>> b80b6b9ef0632f803bdd3eadd73b8564a52c7ded
       default:
         return isEventKey ? (
           <EventAgeDetails

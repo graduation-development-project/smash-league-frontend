@@ -14,11 +14,17 @@ export const formatMoney = (value: number) => {
   return formatted;
 };
 
-export const formatLocation = (value: string) => {
+export const formatLocation1 = (value: string) => {
   const parts = value.split(',');
   if (parts.length <= 2) return '';
   return parts.slice(1).join(',').trim();
 };
+export const formatLocation = (location: string) => {
+    const arr = location.split(',').map(part => part.trim());
+    if (arr.length < 3) return location;
+    return arr.slice(-2).join(', ');
+};
+
 
 
 
