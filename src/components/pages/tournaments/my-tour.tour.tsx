@@ -30,7 +30,7 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const MyTournaments = ({ profileRole }: { profileRole: string }) => {
   const content = {};
-  const [selectedKey, setSelectedKey] = useState('dashboard');
+  const [selectedKey, setSelectedKey] = useState('tour-registration');
 
   const menu: MenuItem[] = [
     {
@@ -148,21 +148,21 @@ const MyTournaments = ({ profileRole }: { profileRole: string }) => {
                     icon: <UserOutlined />,
                     label: 'All Tournaments',
                   },
-                  {
-                    key: 'my-series',
-                    icon: <CalendarOutlined />,
-                    label: 'Your Series',
-                    children: [
-                      {
-                        key: '5',
-                        label: 'Happy Summer',
-                      },
-                      {
-                        key: '6',
-                        label: 'Ice Breaker ',
-                      },
-                    ],
-                  },
+                  // {
+                  //   key: 'my-series',
+                  //   icon: <CalendarOutlined />,
+                  //   label: 'Your Series',
+                  //   children: [
+                  //     {
+                  //       key: '5',
+                  //       label: 'Happy Summer',
+                  //     },
+                  //     {
+                  //       key: '6',
+                  //       label: 'Ice Breaker ',
+                  //     },
+                  //   ],
+                  // },
                   {
                     key: 'tour-registration',
                     label: 'Tour Registration',
@@ -174,6 +174,12 @@ const MyTournaments = ({ profileRole }: { profileRole: string }) => {
                     label: 'My Schedule',
                     icon: <CalendarOutlined />,
                   },
+
+                  // {
+                  //   key: 'my-reports',
+                  //   label: 'My Reports',
+                  //   icon: <TbTournament size={15} />,
+                  // },
 
                   ...(user?.userRoles.includes('Umpire') &&
                   profileRole === 'UMPIRE'

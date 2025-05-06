@@ -25,9 +25,10 @@ const TourCardSliderMain = (
     <div className="w-full h-full flex flex-col gap-3 bg-transparent">
       <div className="w-full h-full">
         <img
-          src="https://as1.ftcdn.net/v2/jpg/00/96/81/48/1000_F_96814823_4YZrsofbvFRuX7Uve3VB46aKln2BJOjD.jpg"
-          // src={backgroundImage}
+          // src="https://as1.ftcdn.net/v2/jpg/00/96/81/48/1000_F_96814823_4YZrsofbvFRuX7Uve3VB46aKln2BJOjD.jpg"
+          src={backgroundImage || "https://as1.ftcdn.net/v2/jpg/00/96/81/48/1000_F_96814823_4YZrsofbvFRuX7Uve3VB46aKln2BJOjD.jpg"}
           alt="Featured Tournament"
+          className="rounded-lg object-cover w-full h-full"
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </div>

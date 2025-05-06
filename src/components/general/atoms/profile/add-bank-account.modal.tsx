@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
+import { useDebounce } from '@/hooks/use-debounce';
 import {
   addBankAccountAPI,
   checkBankAccountAPI,
@@ -25,6 +27,9 @@ const AddBankAccountModal = ({
   const [form] = Form.useForm();
   const [bankId, setBankId] = useState('');
   const [bankCode, setBankCode] = useState('');
+  const [ownerName, setOwnerName] = useState(null);
+  const [accountNumber, setAccountNumber] = useState('');
+  const debouncedAccountNumber = useDebounce(accountNumber, 1000);
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -52,6 +57,53 @@ const AddBankAccountModal = ({
     getBankList();
   }, []);
 
+  const handleCheckBankAccount = async (accountNumber: string) => {
+    try {
+      setIsLoading(true);
+      const checkResponse = await checkBankAccountAPI(bankCode, accountNumber);
+      console.log('Check bank account response', checkResponse.data);
+      if (
+        checkResponse?.data.statusCode === 200 ||
+        checkResponse?.data.statusCode === 201
+      ) {
+        setIsLoading(false);
+        setIsShowAccountNumber(true);
+        setOwnerName(checkResponse.data.data.data.ownerName);
+      } else {
+        setIsLoading(false);
+        toast.error(`${checkResponse?.data.message}`, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log('Error', error);
+      setIsLoading(false);
+      toast.error('Something went wrong.', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (debouncedAccountNumber && bankCode) {
+      handleCheckBankAccount(debouncedAccountNumber);
+    }
+  }, [debouncedAccountNumber, bankCode]);
+
   const handleSelectBank = (value: string) => {
     const [id, code] = value.split('_');
     console.log(id, code);
@@ -63,32 +115,6 @@ const AddBankAccountModal = ({
   const handleAddBankAccount = async (values: any) => {
     try {
       setIsLoading(true);
-
-      // First, check the bank account
-      console.log('Check bank code', bankCode);
-      const checkResponse = await checkBankAccountAPI(
-        bankCode,
-        values.accountNumber,
-      );
-      console.log('Check bank account response', checkResponse.data);
-
-      if (
-        checkResponse?.data.statusCode !== 200 &&
-        checkResponse?.data.statusCode !== 201
-      ) {
-        toast.error(`${checkResponse?.data.message}`, {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
-        setIsLoading(false);
-        return;
-      }
 
       // If check passed, proceed to add bank account
       const addResponse = await addBankAccountAPI(
@@ -212,9 +238,19 @@ const AddBankAccountModal = ({
 
               {isShowAccountNumber && (
                 <Form.Item label="Account Nummber" name="accountNumber">
-                  <Input placeholder="Enter your account number" />
+                  <Input
+                    placeholder="Enter your account number"
+                    onChange={(e) => setAccountNumber(e.target.value)}
+                  />
                 </Form.Item>
               )}
+
+              {ownerName && (
+                <Form.Item label="Owner Name" initialValue={ownerName}>
+                  <Input value={ownerName} disabled />
+                </Form.Item>
+              )}
+
               <Form.Item>
                 <div className="w-full flex justify-end gap-2">
                   <Button

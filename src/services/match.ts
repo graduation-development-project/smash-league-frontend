@@ -120,3 +120,122 @@ export const assignPlayerInMatchAPI = async (
     return error.response?.data;
   }
 };
+
+export const getCourtsAvailableAPI = async (
+  accessToken: string,
+  tournamentId: string | string[] | null,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/get-courts-available/${tournamentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get court available:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getAllLogTypeAPI = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/get-all-log-type`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all log type:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getAllLogMessageAPI = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/get-all-log-message`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all log message:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getAllLogMessageOfMatchAPI = async (matchId: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/get-all-match-log/${matchId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all log message of match:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const createEventLogAPI = async (
+  accessToken: string,
+  gameId: string,
+  logType: string,
+  log: string,
+) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/create-event-log`,
+      {
+        gameId,
+        logType,
+        log,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error create event log:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const continueGameAPI = async (matchId: string) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/continue-match/${matchId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error continue game:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

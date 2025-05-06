@@ -17,15 +17,18 @@ import { CirclePlus, CircleX } from 'lucide-react';
 import { IoSearch } from 'react-icons/io5';
 import { TbLoader2 } from 'react-icons/tb';
 import React from 'react';
+import { IoAdd } from 'react-icons/io5';
 
 const SearchTeamBar = ({
   searchTerms,
   setSearchTerms,
   isLoading,
+  setIsModalOpen,
 }: {
   searchTerms: string;
   setSearchTerms: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log('Check values', e.target);
@@ -84,14 +87,19 @@ const SearchTeamBar = ({
               isLoading ? (
                 <TbLoader2 className="animate-spin" size={20} />
               ) : (
-                <IoSearch size={20} className={searchTerms ? 'text-primaryColor' : 'text-gray-400'} />
+                <IoSearch
+                  size={20}
+                  className={
+                    searchTerms ? 'text-primaryColor' : 'text-gray-400'
+                  }
+                />
               )
             }
           />
         </ConfigProvider>
       </div>
       <div className="w-[15%] flex flex-col gap-4 ">
-        <h2 className="text-[16px] font-bold">Filter By Status</h2>
+        <h2 className="text-[16px] font-bold">Create New Team</h2>
         <ConfigProvider
           theme={{
             components: {
@@ -105,22 +113,21 @@ const SearchTeamBar = ({
             },
           }}
         >
-          <Dropdown menu={menuProps}>
-            <Button
-              size="large"
-              style={{
-                width: 'max-content',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              {/* <Space> */}
-              --- Choose Status ---
-              <DownOutlined />
-              {/* </Space> */}
-            </Button>
-          </Dropdown>
+          {/* <Dropdown menu={menuProps}> */}
+          <Button
+            size="large"
+            style={{
+              width: 'max-content',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              fontFamily: 'inherit',
+            }}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <IoAdd /> Create Team
+          </Button>
+          {/* </Dropdown> */}
         </ConfigProvider>
       </div>
     </div>

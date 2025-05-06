@@ -118,6 +118,7 @@ const MenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   };
 
   const getTournamentEventParticipants = async () => {
+    setIsLoading(true);
     const res = await getTournamentEventParticipantsAPI(
       user?.access_token,
       eventId,
@@ -125,8 +126,10 @@ const MenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
     if (res?.data?.data?.listParticipants) {
       // Transform data into correct format
       setParticipantList(res.data.data.listParticipants);
+      setIsLoading(false);
     } else {
       setParticipantList([]);
+      setIsLoading(false);
     }
   };
 
@@ -134,7 +137,7 @@ const MenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
     if (!user) return;
     try {
       // console.log('API RUN');
-
+      setIsLoading(true);
       const response = await getTournamentRegistrationAPI(
         user?.access_token,
         eventId,
@@ -155,8 +158,10 @@ const MenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
         }));
 
         setVetificationList(formatData);
+        setIsLoading(false);
       } else {
         setVetificationList([]);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log('error', error);
@@ -350,7 +355,11 @@ const MenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
             border: '1px solid #FF8243',
             padding: '2px',
           }}
-          src={user?.avatarURL}
+          src={
+            user?.avatarURL
+              ? user?.avatarURL
+              : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
+          }
           width={100}
           height={100}
           alt="Athlete Image"
@@ -631,6 +640,7 @@ const MenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
               // className={styles.customTable}
               columns={columnsVerification}
               dataSource={verificationList}
+              loading={isLoading}
               style={{
                 width: '100%',
                 height: '100%',
@@ -642,6 +652,7 @@ const MenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
               // className={styles.customTable}
               columns={columns}
               dataSource={participantList}
+              loading={isLoading}
               style={{
                 width: '100%',
                 height: '100%',

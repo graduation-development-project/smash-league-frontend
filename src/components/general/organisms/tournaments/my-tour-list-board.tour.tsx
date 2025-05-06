@@ -2,6 +2,7 @@ import React from 'react';
 import TourRegistrationOfAthleteTable from '../../molecules/tournaments/tour-registration-athlete.tour.table';
 import MatchesOfUmpireTable from '../../molecules/tournaments/matches-of-umpire.table';
 import CalendarPage from '@/components/pages/calendar/calendar.page';
+import MyParticipatedTournaments from '../../molecules/tournaments/my-participated-tournaments';
 
 const MyTourListBoard = ({
   selectedKey,
@@ -19,15 +20,17 @@ const MyTourListBoard = ({
   }
   switch (selectedKey) {
     case 'all-tournaments':
-      return <div>All-tournaments</div>;
+      return <MyParticipatedTournaments />;
     case 'my-series':
       return <div>My Series</div>;
     case 'tour-registration':
       return <TourRegistrationOfAthleteTable profileRole={profileRole} />;
     case 'my-schedule':
       return <CalendarPage profileRole={profileRole} />;
+    case 'my-reports':
+      return <div>My Reports</div>;
     default:
-      return <div>All Tournaments</div>;
+      return <TourRegistrationOfAthleteTable profileRole={profileRole} />;
   }
 };
 

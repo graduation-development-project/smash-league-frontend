@@ -10,11 +10,13 @@ const EventAgeDetails = ({
   eventId,
   mainColor,
   isOrganizer,
+  tour
 }: {
   tournamentId: string;
   eventId: string;
   mainColor: string;
   isOrganizer: boolean;
+  tour: any;
 }) => {
   const [bracket, setBracket] = useState({});
   const [playerList, setPlayerList] = useState([]);
@@ -44,6 +46,7 @@ const EventAgeDetails = ({
           eventId={eventId}
           tournamentId={tournamentId}
           isOrganizer={isOrganizer}
+          tour={tour}
         />
       ),
     },

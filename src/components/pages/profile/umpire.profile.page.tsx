@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
 import OverviewUmpireProfile from '../../general/organisms/profile/umpire/overview.umpire.profile';
 import MyTournaments from '../tournaments/my-tour.tour';
-import MyTeams from '@/components/general/organisms/teams/my-teams';
 import { getProfileAPI } from '@/services/user';
 import { useProfileContext } from '@/context/profile.context';
 
@@ -60,18 +59,14 @@ const UmpireProfilePage = (props: any) => {
         <OverviewUmpireProfile profile={profile} setProfile={setProfile} />
       ),
     },
-    {
-      key: '2',
-      label: 'Tournaments',
-      children: <MyTournaments profileRole="UMPIRE" />,
-    },
+
     ...(user?.id === profile?.id
       ? [
-          // {
-          //   key: '3',
-          //   label: 'Teams List',
-          //   children: <MyTeams />,
-          // },
+          {
+            key: '2',
+            label: 'Tournaments',
+            children: <MyTournaments profileRole="UMPIRE" />,
+          },
           {
             key: '4',
             label: 'Update Information',
@@ -107,7 +102,11 @@ const UmpireProfilePage = (props: any) => {
                 <Avatar
                   style={{ border: '3px solid #FF8243' }}
                   size={200}
-                  src={profile?.avatarURL}
+                  src={
+                    profile?.avatarURL
+                      ? profile?.avatarURL
+                      : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
+                  }
                   alt="Umpire Image"
                 />
                 <div className="flex flex-col gap-2">

@@ -74,6 +74,7 @@ const AthleteTransactionTable = () => {
       setPayBackFeeList(formatData.reverse());
       setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error(error);
     }
   };

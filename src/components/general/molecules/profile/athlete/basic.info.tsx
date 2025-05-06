@@ -6,7 +6,7 @@ import { Divider } from "antd";
 import React from "react";
 
 const BasicInfo = ({ info }: { info: any }) => {
-  console.log(info);
+  console.log("info", info);
 
   return (
     <div className="w-full h-full flex flex-col gap-4 rounded-[10px] shadow-shadowBtn p-6">

@@ -13,8 +13,8 @@ const OverviewUmpireProfile = ({
   return (
     <div className="w-full flex flex-col gap-20 py-10 px-14">
       <UmpireBasicInfo profile={profile} setProfile={setProfile}/>
-      <PreviousMatches />
-      <Gallery />
+      {/* <PreviousMatches /> */}
+      {/* <Gallery /> */}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import UmpireAssignModal from './umpire-assign.tour.modal';
 import AssignPlayerInMatchModal from './assign-player-in-match.modal';
 import {
   getParticipantsByTournamentEventAPI,
+  getTournamentEventDetailAPI,
   getTournamentEventParticipantsAPI,
 } from '@/services/tournament';
 
@@ -15,11 +16,17 @@ const MatchCard = ({
   tournamentId,
   tournamentEventId,
   isOrganizer,
+  tour,
+  getMatchesOfTournamentEvent,
+  eventUUID,
 }: {
   match: any;
-  tournamentId: string | string[];
+  tournamentId: string;
   tournamentEventId: string;
   isOrganizer: boolean;
+  tour: any;
+  getMatchesOfTournamentEvent: any;
+  eventUUID: string;
 }) => {
   const mainColor = '#60a5fa';
   const bgColor = 'bg-[#60a5fa]';
@@ -29,6 +36,7 @@ const MatchCard = ({
   const [isAssignAthleteModalOpen, setIsAssignAthleteModalOpen] =
     useState(false);
   const [participantsList, setParticipantsList] = useState([]);
+  const [eventDetails, setEventDetails] = useState<any>();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -62,7 +70,8 @@ const MatchCard = ({
       player2: 21,
     },
   ];
-  console.log('Check match', match);
+  // console.log("check tour", tour);
+  // console.log('Check match', match);
 
   // console.log('Check', match.participants);
 
@@ -98,10 +107,24 @@ const MatchCard = ({
     }
   };
 
+  const fetchGetTournamentEventDetailAPI = async () => {
+    try {
+      const res = await getTournamentEventDetailAPI(tournamentId);
+      // console.log("Check res", res.data);
+      // console.log("eventUUID", (res?.data.find((event: any) => event.id === eventUUID)));
+
+      setEventDetails(res?.data.find((event: any) => event.id === eventUUID));
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getTournamentEventParticipants();
+    fetchGetTournamentEventDetailAPI();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+  // console.log('Check eventDetails', eventDetails);
 
   // console.log('Check party', participantsList);
 
@@ -118,7 +141,9 @@ const MatchCard = ({
                     style={{ backgroundColor: 'white', color: '' }}
                     size={50}
                     src={
-                      'https://img.bwfbadminton.com/image/upload/w_308,h_359,c_thumb,g_face:center/v1697765036/assets/players/thumbnail/87442.png'
+                      players?.player1?.avatarUrl
+                        ? players?.player1?.avatarUrl
+                        : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
                     }
                   />
 
@@ -126,7 +151,9 @@ const MatchCard = ({
                     style={{ backgroundColor: 'white', color: '' }}
                     size={50}
                     src={
-                      'https://img.bwfbadminton.com/image/upload/w_308,h_359,c_thumb,g_face:center/v1697765036/assets/players/thumbnail/87442.png'
+                      players?.player2?.avatarUrl
+                        ? players?.player2?.avatarUrl
+                        : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
                     }
                   />
                 </div>
@@ -151,7 +178,9 @@ const MatchCard = ({
                   style={{ backgroundColor: 'white', color: '' }}
                   size={85}
                   src={
-                    'https://img.bwfbadminton.com/image/upload/w_308,h_359,c_thumb,g_face:center/v1697765036/assets/players/thumbnail/87442.png'
+                    players?.player1?.avatarUrl
+                      ? players?.player1?.avatarUrl
+                      : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
                   }
                 />
                 <div className="w-2/3 flex flex-col gap-4">
@@ -171,29 +200,32 @@ const MatchCard = ({
       </div>
     );
   };
-  const hasPoints = false;
   const sets = () => {
     return (
       <div className="flex flex-row gap-4 font-bold text-xl items-center">
         <div className="w-[3px] h-8 bg-[#8e8e8e] rounded-full" />
-        {setScore.map((item: any, index) => {
+        {match?.games.map((game: any) => {
           return (
-            <div key={index} className="flex items-center gap-4">
+            <div key={game.id} className="flex items-center gap-4">
               <div className="flex items-center gap-1 bg-[#ffffff2a] px-5 py-1 rounded-md">
                 <span
                   className={
-                    item.player1 > item.player2 ? 'text-[#93e093]' : ''
+                    game.leftCompetitorPoint > game.rightCompetitorPoint
+                      ? 'text-[#93e093]'
+                      : ''
                   }
                 >
-                  {item.player1}
+                  {game.leftCompetitorPoint}
                 </span>
                 -
                 <span
                   className={
-                    item.player2 > item.player1 ? 'text-[#93e093]' : ''
+                    game.rightCompetitorPoint > game.leftCompetitorPoint
+                      ? 'text-[#93e093]'
+                      : ''
                   }
                 >
-                  {item.player2}
+                  {game.rightCompetitorPoint}
                 </span>
               </div>
               <div className="w-[3px] h-8 bg-[#8e8e8e] rounded-full" />
@@ -244,13 +276,25 @@ const MatchCard = ({
       <div className="relative w-full h-[300px]  bg-[#2c2c2c] rounded-xl text-white shadow-shadowBtn">
         <div className="w-full h-full flex flex-col justify-between items-center px-5 py-5 font-medium">
           <div className="flex w-max h-max text-base gap-3 items-center">
-            <span>MS</span>
+            <span>
+              {eventDetails?.tournamentEvent === 'MENS_SINGLE'
+                ? 'MS'
+                : eventDetails?.tournamentEvent === 'WOMENS_SINGLE'
+                ? 'WS'
+                : eventDetails?.tournamentEvent === 'MENS_DOUBLE'
+                ? 'MD'
+                : eventDetails?.tournamentEvent === 'WOMENS_DOUBLE'
+                ? 'WD'
+                : 'MXD'}
+            </span>
             <div className="w-[2px] h-5 bg-[#8e8e8e] rounded-full" />
-            <span>20-30</span>
+            <span>
+              {eventDetails?.fromAge} - {eventDetails?.toAge}
+            </span>
             <div className="w-[2px] h-5 bg-[#8e8e8e] rounded-full" />
-            <span>R16</span>
-            <div className="w-[2px] h-5 bg-[#8e8e8e] rounded-full" />
-            <span>Court 1</span>
+            <span>{match?.tournamentRoundText}</span>
+            {/* <div className="w-[2px] h-5 bg-[#8e8e8e] rounded-full" />
+            <span>Court 1</span> */}
           </div>
           <div className="w-full flex justify-between items-center text-white text-2xl px-5">
             {match.participants.map((item: any, index: number) => {
@@ -260,7 +304,7 @@ const MatchCard = ({
             {/* <span className="font-bold">VS</span> */}
             {match.participants.length === 1 && player(false)}
           </div>
-          <div>{hasPoints && sets()}</div>
+          <div>{match?.games.length > 0 && sets()}</div>
           <div className={`w-1/2 h-1 rounded-full ${bgColor}`} />
         </div>
 
@@ -293,6 +337,9 @@ const MatchCard = ({
         tournamentId={tournamentId}
         matchId={match.id}
         playersOptions={participantsList}
+        tour={tour}
+        getMatchesOfTournamentEvent={getMatchesOfTournamentEvent}
+        match={match}
       />
 
       <AssignPlayerInMatchModal

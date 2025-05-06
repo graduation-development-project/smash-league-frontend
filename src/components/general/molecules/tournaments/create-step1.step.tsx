@@ -525,7 +525,7 @@ const CreateTourStep1 = ({
               }
             ]}
           >
-            <Input placeholder="Your tournament's name" maxLength={100} required />
+            <Input placeholder="Your tournament's name" maxLength={35} required />
           </Form.Item>
           <Form.Item label="Short name" name="shortName"
             rules={[

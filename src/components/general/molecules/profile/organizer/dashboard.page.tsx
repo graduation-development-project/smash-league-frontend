@@ -41,7 +41,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   switch (eventName) {
     case 'dashboard':
       return <DashboardOrganizer credit={credit}/>;
-    case 'tournaments':
+    case 'athletes':
       return <TournamentsListTable />;
     case 'MENS_SINGLE':
       return <MenSinglesAthleteTable eventId={eventId} />;

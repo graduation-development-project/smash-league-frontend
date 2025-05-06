@@ -1,12 +1,12 @@
-import AthleteTransactionTable from '@/components/pages/transactions/athlete-transaction.table';
-import React from 'react';
+import ManageTransactionsTable from '@/components/pages/transactions/manage-transactions.table'
+import React from 'react'
 
-const TransactionTable = () => {
+const ManageTransactions = () => {
   return (
     <div>
-      <AthleteTransactionTable />
+      <ManageTransactionsTable />
     </div>
-  );
-};
+  )
+}
 
-export default TransactionTable;
+export default ManageTransactions

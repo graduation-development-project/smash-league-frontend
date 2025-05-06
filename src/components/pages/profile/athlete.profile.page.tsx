@@ -62,13 +62,14 @@ const AthleteProfilePage = (props: any) => {
         <OverviewAthleteProfile info={profile} setProfile={setProfile} />
       ),
     },
-    {
-      key: '2',
-      label: 'Tournaments',
-      children: <MyTournaments profileRole="ATHLETE" />,
-    },
+
     ...(user?.id === profile?.id
       ? [
+          {
+            key: '2',
+            label: 'Tournaments',
+            children: <MyTournaments profileRole="ATHLETE" />,
+          },
           {
             key: '3',
             label: 'Teams List',
@@ -109,7 +110,11 @@ const AthleteProfilePage = (props: any) => {
                 <Avatar
                   style={{ border: '3px solid #FF8243' }}
                   size={200}
-                  src={profile?.avatarURL}
+                  src={
+                    profile?.avatarURL
+                      ? profile?.avatarURL
+                      : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
+                  }
                   alt="Athlete Image"
                 />
                 <div className="flex flex-col gap-2">

@@ -22,7 +22,11 @@ const FeaturedTourCardMain = () => {
   const route = useRouter();
   const { activeSlide, setActiveSlide } = useHomeContext();
   const [slider, setSlider] = useState<any>()
-  const slide = sliderImages.find((item) => item.id === activeSlide);
+  const slide = [
+    {
+      id: 1
+    }
+  ].find((item) => item.id === activeSlide);
   const [fadeInBottom, setFadeInBottom] = useState<boolean>(false);
 
 
@@ -37,7 +41,10 @@ const FeaturedTourCardMain = () => {
 
   const fetchFeaturedTourMain = async () => {
     const response = await getFeaturedTourAPI();
-    setSlider(response?.data);
+    const tourList = [response?.data[0]];
+
+    setSlider(tourList);
+    // setSlider(response?.data);
     // return response.data;
   }
 
@@ -65,15 +72,15 @@ const FeaturedTourCardMain = () => {
   return (
     <div className="w-full flex flex-col">
       {
-        slider?.map((slideItem: any) => {
-          const isActive = activeSlide === slideItem?.id;
+        slider?.map((slideItem: any, index: number) => {
+          const isActive = activeSlide === index;
           return (
             <div key={slideItem?.id} className="relative w-full h-full flex flex-col">
               <div className="absolute w-full h-full z-0 shadow-shadowComp rounded-lg">
                 <TourCardSliderMain backgroundImage={slideItem.backgroundTournament} />
                 <div className="w-[90%] flex items-center justify-center gap-2 mt-4">
                   <div className="flex items-center gap-3">
-                    {slider.map((item: any) => {
+                    {slider.map((item: any, index: number) => {
                       const isActive = activeSlide === item.id;
                       return (
                         <button

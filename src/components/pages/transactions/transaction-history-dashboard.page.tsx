@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider, Popconfirm, Space, Table, Tag } from 'antd';
-import type { TableProps } from 'antd';
-import { formatDateTime } from '@/utils/format';
+import type { TableProps } from 'antd';;
 import { getTransactionHistoryAPI } from '@/services/payment';
 import { GrView } from 'react-icons/gr';
 
@@ -17,6 +16,7 @@ interface DataType {
 }
 
 const TransactionHistoryDashboardPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [transactionList, setTransactionList] = useState([]);
   const [user, setUser] = useState<any>(null);
 
@@ -32,6 +32,7 @@ const TransactionHistoryDashboardPage = () => {
   const getTransactionHistory = async () => {
     if (!user) return;
     try {
+      setIsLoading(true);
       const response = await getTransactionHistoryAPI(user?.access_token);
       console.log(response?.data, 'check');
       if (response.statusCode === 200 || response.statusCode === 201) {
@@ -44,7 +45,9 @@ const TransactionHistoryDashboardPage = () => {
           status: transaction.status,
         }));
         setTransactionList(formatedData);
+        setIsLoading(false);
       } else {
+        setIsLoading(false);
         setTransactionList([]);
       }
     } catch (error: any) {
@@ -129,7 +132,7 @@ const TransactionHistoryDashboardPage = () => {
         theme={{ token: { colorPrimary: '#FF8243', fontFamily: 'inherit' } }}
       >
         {' '}
-        <Table<DataType> columns={columns} dataSource={transactionList} />
+        <Table<DataType> columns={columns} dataSource={transactionList} loading={isLoading}/>
       </ConfigProvider>
     </div>
   );

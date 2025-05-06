@@ -14,6 +14,8 @@ import { AdminContext } from '@/context/admin.context';
 import { ConfigProvider, type MenuProps } from 'antd';
 import Link from 'next/link';
 import { TbTournament } from 'react-icons/tb';
+import { TbReport } from "react-icons/tb";
+import { TbPackages } from "react-icons/tb";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -51,7 +53,7 @@ const AdminSideBar = () => {
       },
       {
         key: 'verification',
-        label: 'Verification',
+        label: 'Verifications',
         icon: <MailOutlined />,
         children: [
           {
@@ -71,14 +73,19 @@ const AdminSideBar = () => {
       },
 
       {
-        key: 'transactions',
-        label: <Link href="/staff/dashboard/transactions">Transactions</Link>,
-        icon: <BankOutlined />,
-      },
-      {
         key: 'tournaments',
         label: <Link href="/dashboard/tournaments">Tournaments</Link>,
         icon: <TbTournament />,
+      },
+      {
+        key: 'transactions',
+        label: <Link href="/dashboard/transactions">Transactions</Link>,
+        icon: <BankOutlined />,
+      },
+      {
+        key: 'reports',
+        label: <Link href="/dashboard/reports">Reports</Link>,
+        icon: <TbReport  />,
       },
     ];
   } else if (!isLoading) {
@@ -90,70 +97,51 @@ const AdminSideBar = () => {
       },
       {
         key: 'users',
-        label: 'Manage Users',
+        label: <Link href="/dashboard/user">Manage Users</Link>,
         icon: <TeamOutlined />,
-        children: [
-          {
-            key: 'athletes',
-            label: <Link href="/dashboard/user/athletes">Athletes</Link>,
-          },
-          {
-            key: 'organizers',
-            label: <Link href="/dashboard/user/organizers">Organizers</Link>,
-          },
-          {
-            key: 'umpires',
-            label: <Link href="/dashboard/user/umpires">Umpires</Link>,
-          },
-        ],
+        // children: [
+        //   {
+        //     key: 'athletes',
+        //     label: <Link href="/dashboard/user/athletes">Athletes</Link>,
+        //   },
+        //   {
+        //     key: 'organizers',
+        //     label: <Link href="/dashboard/user/organizers">Organizers</Link>,
+        //   },
+        //   {
+        //     key: 'umpires',
+        //     label: <Link href="/dashboard/user/umpires">Umpires</Link>,
+        //   },
+        // ],
       },
       {
         key: 'manage-tournaments',
-        label: 'Manage Tournaments',
-        icon: <MailOutlined />,
-        children: [
-          {
-            key: 'group1',
-            type: 'group',
-            label: 'Item 1',
-            children: [
-              { key: 'option1', label: 'Option 1' },
-              { key: 'option2', label: 'Option 2' },
-            ],
-          },
-          {
-            key: 'group2',
-            type: 'group',
-            label: 'Item 2',
-            children: [
-              { key: 'option3', label: 'Option 3' },
-              { key: 'option4', label: 'Option 4' },
-            ],
-          },
-        ],
+        label: <Link href="/dashboard/tournaments">Manage Tournaments</Link>,
+        icon: <TbTournament />,
       },
+
+      {
+        key: 'manage-packages',
+        label: <Link href="/dashboard/package">Manage Packages</Link>,
+        icon: <TbPackages />,
+      },
+
       {
         key: 'manage-transactions',
-        label: 'Manage Transactions',
-        icon: <AppstoreOutlined />,
-        children: [
-          { key: 'option5', label: 'Option 5' },
-          { key: 'option6', label: 'Option 6' },
-          {
-            key: 'subsubmenu',
-            label: 'Submenu',
-            children: [
-              { key: 'option7', label: 'Option 7' },
-              { key: 'option8', label: 'Option 8' },
-            ],
-          },
-        ],
+        label: <Link href="/dashboard/transactions">Manage Transactions</Link>,
+        icon: <BankOutlined />,
+      },
+
+      {
+        key: 'manage-reports',
+        label: <Link href="/dashboard/reports">Manage Reports</Link>,
+        icon: <TbReport/>,
       },
     ];
   }
 
   return (
-    <Sider collapsed={collapseMenu}>
+    <Sider collapsed={collapseMenu} style={{ fontFamily: 'inherit' }}>
       <ConfigProvider
         theme={{
           token: {

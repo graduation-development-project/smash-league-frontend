@@ -26,6 +26,8 @@ function Match({
   topText,
   topWon,
 }: MatchComponentProps) {
+  // console.log('Check topParty', topParty);
+  // console.log('Check match', match);
   return (
     <Wrapper>
       {/* Top Section */}
@@ -65,30 +67,33 @@ function Match({
             )}
             <p
               className={
-                topParty?.set1 > (bottomParty?.set1 || 0)
+                match?.games[0]?.leftCompetitorPoint >
+                (match?.games[0]?.rightCompetitorPoint || 0)
                   ? 'text-green-400'
-                  : 'text-red-600'
+                  : 'text-primaryColor'
               }
             >
-              {topParty?.set1 ?? ''}
+              {match?.games[0]?.leftCompetitorPoint ?? ''}
             </p>
             <p
               className={
-                topParty?.set2 > (bottomParty?.set2 || 0)
+                match?.games[1]?.leftCompetitorPoint >
+                (match?.games[1]?.rightCompetitorPoint || 0)
                   ? 'text-green-400'
-                  : 'text-red-600'
+                  : 'text-primaryColor'
               }
             >
-              {topParty?.set2 ?? ''}
+              {match?.games[1]?.leftCompetitorPoint ?? ''}
             </p>
             <p
               className={
-                topParty?.set3 > (bottomParty?.set3 || 0)
+                match?.games[2]?.leftCompetitorPoint >
+                (match?.games[2]?.rightCompetitorPoint || 0)
                   ? 'text-green-400'
-                  : 'text-red-600'
+                  : 'text-primaryColor'
               }
             >
-              {topParty?.set3 ?? ''}
+              {match?.games[2]?.leftCompetitorPoint ?? ''}
             </p>
           </Score>
         </Side>
@@ -113,30 +118,33 @@ function Match({
             )}
             <p
               className={
-                topParty?.set1 < (bottomParty?.set1 || 0)
+                match?.games[0]?.leftCompetitorPoint <
+                (match?.games[0]?.rightCompetitorPoint || 0)
                   ? 'text-green-400'
-                  : 'text-red-600'
+                  : 'text-primaryColor'
               }
             >
-              {bottomParty?.set1 ?? ''}
+              {match?.games[0]?.rightCompetitorPoint ?? ''}
             </p>
             <p
               className={
-                topParty?.set2 < (bottomParty?.set2 || 0)
+                match?.games[1]?.leftCompetitorPoint <
+                (match?.games[1]?.rightCompetitorPoint || 0)
                   ? 'text-green-400'
-                  : 'text-red-600'
+                  : 'text-primaryColor'
               }
             >
-              {bottomParty?.set2 ?? ''}
+              {match?.games[1]?.rightCompetitorPoint ?? ''}
             </p>
             <p
               className={
-                topParty?.set3 < (bottomParty?.set3 || 0)
+                match?.games[2]?.leftCompetitorPoint <
+                (match?.games[2]?.rightCompetitorPoint || 0)
                   ? 'text-green-400'
-                  : 'text-red-600'
+                  : 'text-primaryColor'
               }
             >
-              {bottomParty?.set3 ?? ''}
+              {match?.games[2]?.rightCompetitorPoint ?? ''}
             </p>
           </Score>
         </Side>

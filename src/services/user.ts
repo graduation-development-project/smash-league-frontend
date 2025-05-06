@@ -59,13 +59,13 @@ export const registerNewRoleAPI = async (
 
 export const getProfileAPI = async (id: string | string[]) => {
   try {
-  //  console.log("id", id);
-   
+    //  console.log("id", id);
+
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/id/${id}`,
     );
-    console.log( "getProfile", response);
-    
+    console.log('getProfile', response);
+
     // if(response.data.statusCode === 200 || response.data.statusCode === 201){
     //   return response.data;
     // }
@@ -78,14 +78,15 @@ export const getProfileAPI = async (id: string | string[]) => {
     return error.response?.data;
   }
 };
-export const getProfileAPI1 = async (accesToken : string) => {
-  try {  
+export const getProfileAPI1 = async (accesToken: string) => {
+  try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/profile`, {
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/profile`,
+      {
         headers: {
           Authorization: `Bearer ${accesToken}`,
         },
-      }
+      },
     );
     // console.log( "getProfile", response);
     return response.data;
@@ -99,7 +100,7 @@ export const getProfileAPI1 = async (accesToken : string) => {
 };
 
 export const updateProfileAPI = async (data: any, accessToken: string) => {
-  console.log('data', data);
+  // console.log('data', data);
   try {
     const response = await axios.patch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
@@ -121,7 +122,10 @@ export const updateProfileAPI = async (data: any, accessToken: string) => {
   }
 };
 
-export const uploadAvatarAPI = async (file: File | null, accessToken: string) => {
+export const uploadAvatarAPI = async (
+  file: File | null,
+  accessToken: string,
+) => {
   const formData = new FormData();
   formData.append('files', file ?? '');
   try {
@@ -142,5 +146,50 @@ export const uploadAvatarAPI = async (file: File | null, accessToken: string) =>
       'Error upload avatar profile:',
       error.response?.data || error.message,
     );
+  }
+};
+
+export const getLatestMatchesAPIByAthleteAPI = async (
+  accessToken: string,
+  athleteId: string,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/get-athlete-latest-matches/${athleteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get latest matches:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getAllUsersAPI = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all users:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
   }
 };

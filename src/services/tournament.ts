@@ -200,7 +200,7 @@ export const getTournamentUmpiresParticipantsAPI = async (
   }
 };
 
-export const getTournamentEventDetailAPI = async (tournamentId: string) => {
+export const getTournamentEventDetailAPI = async (tournamentId: string ) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-tournament-event/${tournamentId}`,
@@ -408,6 +408,27 @@ export const getAllAssignedMatchesAPI = async (accessToken: string) => {
   }
 };
 
+export const getMatchesOfAthleteAPI = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/match/get-athlete-matches`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all assigned matches:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
 export const getParticipantsByTournamentEventAPI = async (
   tournamentId: string,
 ) => {
@@ -456,6 +477,87 @@ export const updateMatchInfoAPI = async (
   } catch (error: any) {
     console.error(
       'Error update assigned players in match:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getParticipatedTournamentByAthleteAPI = async (
+  accessToken: string,
+  status?: string,
+  page?: number,
+  perPage?: number,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/participated-tournament`,
+      {
+        // params: {
+        //   status,
+        //   page,
+        //   perPage,
+        // },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get participated tournament by athlete:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const cancelTournamentByStaffAPI = async (
+  tournamentId: string,
+  accessToken: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/staff-cancel-tournament/${tournamentId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      'Error cancel tournament by staff:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const cancelTournamentByOrganizerAPI = async (
+  tournamentId: string,
+  accessToken: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/cancel-tournament/${tournamentId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error cancel tournament by staff:',
       error.response?.data || error.message,
     );
     return error.response?.data;
