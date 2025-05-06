@@ -10,39 +10,18 @@ export const getTourInfoDetailsAPI = async (
     const response = await axios.get(
       `${URL}/get-tournament-information/${tournamentId}`,
     );
-    if (response.data.statusCode === 200 || response.data.statusCode === 201) {
-      // toast.success(`${response?.data?.message}`, {
-      //   position: 'top-right',
-      //   autoClose: 3000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: 'light',
-      // });
+    if (response.data?.statusCode === 200 || response.data?.statusCode === 201) {
       return response.data;
     }
     throw new Error('Failed to update tournament information');
   } catch (error: any) {
-    toast.error(`${error?.response?.data?.message}`, {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
-    // console.error(
-    //   'Error update tournament information:',
-    //   error.response?.data || error.message,
-    // );
-    // throw new Error(
-    //   error.response?.data?.message ||
-    //     'Failed to update tournament information',
-    // );
+    console.error(
+      'Error get tournament information:',
+      error.response?.data || error.message,
+    );
+    throw new Error(
+      error.response?.data?.message || 'Failed to get tournament information',
+    );
   }
 };
 export const updateTourInfoDetailsAPI = async (
@@ -59,8 +38,6 @@ export const updateTourInfoDetailsAPI = async (
         },
       },
     );
-    console.log(response, 'response');
-
     if (response.data.statusCode === 200 || response.data.statusCode === 204) {
       toast.success(`${response?.data?.message}`, {
         position: 'top-right',
@@ -94,30 +71,18 @@ export const getRegistrationFeeDetailsAPI = async (tournamentId: any) => {
       `${URL}/get-tournament-registration-information/${tournamentId}`,
     );
     if (response.data.statusCode === 200 || response.data.statusCode === 201) {
-      // toast.success(`${response?.data?.message}`, {
-      //   position: 'top-right',
-      //   autoClose: 3000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: 'light',
-      // });
       return response.data;
     }
-    throw new Error('Failed to get tournament registration');
+    throw new Error('Failed to get tournament registration info: ');
   } catch (error: any) {
-    toast.error(`${error?.response?.data?.message}`, {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
+    console.error(
+      'Error get tour registeration fee details: ',
+      error.response?.data || error.message,
+    );
+    throw new Error(
+      error.response?.data?.message ||
+        'Failed to get tour registeration fee details',
+    );
   }
 };
 export const updateRegistrationFeeDetailsAPI = async (
@@ -147,37 +112,7 @@ export const updateRegistrationFeeDetailsAPI = async (
       });
       return response.data;
     }
-    throw new Error('Failed to upload tournament registration ');
-  } catch (error: any) {
-    console.error(
-      'Error update tournament registration fee:',
-      error.response?.data || error.message,
-    );
-    throw new Error(
-      error.response?.data?.message ||
-        'Failed to upload tournament registration fee',
-    );
-  }
-};
-export const getTourContactDetailsAPI = async (
-  tournamentId: string,
-) => {
-  try {
-    const response = await axios.get(`${URL}/get-tournament-contact/${tournamentId}`);
-    if (response.data.statusCode === 200 || response.data.statusCode === 201) {
-      // toast.success(`${response?.data?.message}`, {
-      //   position: 'top-right',
-      //   autoClose: 3000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: 'light',
-      // });
-      return response.data;
-    }
-    throw new Error('Failed to update tournament contact');
+    throw new Error('Failed to update tour registeration fee details: ');
   } catch (error: any) {
     toast.error(`${error?.response?.data?.message}`, {
       position: 'top-right',
@@ -191,7 +126,28 @@ export const getTourContactDetailsAPI = async (
     });
   }
 };
-export const updateTourContactDetailsAPI = async (
+export const getTourContactDetailsAPI = async (tournamentId: string) => {
+  try {
+    const response = await axios.get(
+      `${URL}/get-tournament-contact/${tournamentId}`,
+    );
+    if (response.data.statusCode === 200 || response.data.statusCode === 201) {
+      return response.data;
+    }
+    throw new Error('Failed to update tournament contact');
+  } catch (error: any) {
+    console.error(
+      'Error get tournament tour contact details:',
+      error.response?.data || error.message,
+    );
+    throw new Error(
+      error.response?.data?.message ||
+        'Failed to get tournament tour contact details',
+    );
+  }
+};
+
+export const updateContactTourDetailsAPI = async (
   data: any,
   accessToken: string,
 ) => {
@@ -267,12 +223,108 @@ export const updateScheduleMatchesTourAPI = async (
       progress: undefined,
       theme: 'light',
     });
+  }
+};
+
+export const getSponsorTourDetailsAPI = async (tournamentId: string) => {
+  try {
+    const response = await axios.get(
+      `${URL}/get-tournament-sponsor/${tournamentId}`,
+    );
+    if (response.data.statusCode === 200 || response.data.statusCode === 201) {
+      return response.data;
+    }
+    throw new Error('Failed to update tournament contact');
+  } catch (error: any) {
     console.error(
-      'Error update tournament registration fee:',
+      'Error get tournament tour contact details:',
       error.response?.data || error.message,
     );
     throw new Error(
-      error.response?.data?.message || 'Failed to update tournament contact',
+      error.response?.data?.message ||
+        'Failed to get tournament tour contact details',
     );
+  }
+};
+export const createSponsorsDetailsTourAPI = async (
+  data: any,
+  accessToken: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${URL}/edit-tournament-sponsor`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    if (response.data.statusCode === 200 || response.data.statusCode === 204) {
+      toast.success(`${response?.data?.message}`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      return response.data;
+    }
+    throw new Error('Failed to update tournament contact');
+  } catch (error: any) {
+    toast.error(`${error.response?.data?.message}`, {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+  }
+};
+export const deleteSponsorAPI = async (
+  tourId: string,
+  sponsorId: string,
+  accessToken: string,
+) => {
+  try {
+    const response = await axios.delete(
+      `${URL}/remove-tournament-sponsor/${tourId}/${sponsorId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    if (response.data.statusCode === 200 || response.data.statusCode === 204) {
+      toast.success(`${response?.data?.message}`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      return response.data;
+    }
+    throw new Error('Failed to update tournament contact');
+  } catch (error: any) {
+    toast.error(`${error.response?.data?.message}`, {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
   }
 };

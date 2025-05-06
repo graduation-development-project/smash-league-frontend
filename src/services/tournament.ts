@@ -1,5 +1,7 @@
 'use client';
 import axios from 'axios';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 const URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments`;
 
 export const createTourAPI = async (accessToken: string, values: any) => {
@@ -34,18 +36,19 @@ export const createTourAPI = async (accessToken: string, values: any) => {
         registrationFeePerPerson: values.registrationFeePerPerson,
         registrationFeePerPair: values.registrationFeePerPair,
         maxEventPerPerson: values.maxEventPerPerson,
-        umpirePerMatch: values.umpirePerMatch,
-        linemanPerMatch: values.linemanPerMatch,
+        // umpirePerMatch: values.umpirePerMatch,
+        // linemanPerMatch: values.linemanPerMatch,
         createTournamentEvent: values.createTournamentEvent,
         protestFeePerTime: values.protestFeePerTime,
         checkInBeforeStart: values.checkInBeforeStart,
         requiredAttachment: values.requiredAttachment,
         createCourts: values.createCourts,
-        isRecruit: values.isRecruit,
-        isPrivate: values.isPrivate,
-        isRegister: values.isRegister,
-        isLiveDraw: values.isLiveDraw,
-        hasLiveStream: values.hasLiveStream,
+        numberOfUmpires: values.numberOfUmpires,
+        isRecruit: true,
+        // isPrivate: values.isPrivate,
+        // isRegister: true,
+        // isLiveDraw: values.isLiveDraw,
+        // hasLiveStream: values.hasLiveStream,
       },
       {
         headers: {
@@ -57,10 +60,37 @@ export const createTourAPI = async (accessToken: string, values: any) => {
     return response.data;
   } catch (error: any) {
     console.error(
-      'Error creating team:',
+      'Error creating tour API:',
       error.response?.data || error.message,
     );
-    throw new Error(error.response?.data?.message || 'Failed to create team');
+    if (error.response?.data?.statusCode === 401) {
+      // router.push('/auth/login');
+      toast.error('Please login berfore creating a tournament', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    } else if (
+      error.response?.data?.statusCode === 400 ||
+      error.response?.data?.message.toLowerCase().includes('credit')
+    ) {
+      console.log('Status Code Create tour', error.response?.data?.statusCode);
+      toast.error(`${error.response?.data?.message}`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
   }
 };
 

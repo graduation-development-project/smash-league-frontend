@@ -2,10 +2,18 @@
 
 import React from "react";
 import { sliderImages } from "@/assets/data"; // Ensure sliderImages is correctly imported
-import Image from "next/image";
-import { useHomeContext } from "@/context/home.context";
 
-const TourCardSliderMain = () => {
+import { useHomeContext } from "@/context/home.context";
+import { Image } from "antd";
+
+
+const TourCardSliderMain = (
+  {
+    backgroundImage,
+  }: {
+    backgroundImage: string;
+  }
+) => {
   const { activeSlide } = useHomeContext(); // Ensure useHomeContext is correctly used
 
   if (!sliderImages || sliderImages.length === 0) {
@@ -16,22 +24,12 @@ const TourCardSliderMain = () => {
   return (
     <div className="w-full h-full flex flex-col gap-3 bg-transparent">
       <div className="w-full h-full">
-        {sliderImages.map((item) => (
-          <div
-            key={item.id}
-            className={`${
-              activeSlide === item.id ? "block" : "hidden"
-            } w-full h-full rounded-[0.5rem]`}
-          >
-            <Image
-              src={item.url}
-              alt={`Featured Tournament ${item.id}`}
-              quality={100}
-              priority
-              className="rounded shadow-lg w-full h-full object-cover animate-fadeInRight"
-            />
-          </div>
-        ))}
+        <img
+          src="https://as1.ftcdn.net/v2/jpg/00/96/81/48/1000_F_96814823_4YZrsofbvFRuX7Uve3VB46aKln2BJOjD.jpg"
+          // src={backgroundImage}
+          alt="Featured Tournament"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
       </div>
     </div>
   );

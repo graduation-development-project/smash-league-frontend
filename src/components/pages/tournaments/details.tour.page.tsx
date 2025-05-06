@@ -181,7 +181,7 @@ const DetailsTourPage = () => {
       case 'feedback':
         return <FeedbackDetailsTour detail={detail} isOrganizer={isOrganizer} user={user}/>;
       case 'sponsors':
-        return <SponsorsDetailsTour />;
+        return <SponsorsDetailsTour tourId={detail?.id} />;
       default:
         return isEventKey ? (
           <EventAgeDetails
