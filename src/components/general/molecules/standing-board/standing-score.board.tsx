@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import StandingMatchCard from '../../atoms/standing-match.card';
 import StandingScoreCard from '../../atoms/standing-score.card';
+import { getStandingBoardTourEventAPI } from '@/services/home-page';
 
-const StandingScoreBoard = ({ isVisible }: { isVisible: boolean }) => {
+const StandingScoreBoard = (
+  {
+    isVisible,
+    tourEvents,
+  }: {
+    isVisible: boolean;
+    tourEvents: any[];
+  }) => {
   if (!isVisible) return null;
 
-
-  const listStandingScoreCard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   const cateCard = [
     {
       id: 1,
@@ -245,15 +251,15 @@ const StandingScoreBoard = ({ isVisible }: { isVisible: boolean }) => {
   ]
   return (
     <div className='w-full h-max p-5 flex flex-row gap-5 overflow-x-auto scrollbar-webkit scrollbar-thin '>
-      <div>
+      {/* <div>
         <StandingMatchCard />
-      </div>
+      </div> */}
 
       {
-        cateCard.map((card: any, index) => {
+        tourEvents?.map((card: any, index) => {
           return (
             <div key={index} className='flex mb-2'>
-              <StandingScoreCard card={card} />
+              <StandingScoreCard eventId={card.id} card={card} />
             </div>
           )
         })

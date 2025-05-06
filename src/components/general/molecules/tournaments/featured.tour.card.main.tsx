@@ -77,14 +77,14 @@ const FeaturedTourCardMain = () => {
           return (
             <div key={slideItem?.id} className="relative w-full h-full flex flex-col">
               <div className="absolute w-full h-full z-0 shadow-shadowComp rounded-lg">
-                <TourCardSliderMain backgroundImage={slideItem.backgroundTournament} />
+                <TourCardSliderMain backgroundImage={slideItem?.backgroundTournament} />
                 <div className="w-[90%] flex items-center justify-center gap-2 mt-4">
                   <div className="flex items-center gap-3">
                     {slider.map((item: any, index: number) => {
-                      const isActive = activeSlide === item.id;
+                      const isActive = activeSlide === item?.id;
                       return (
                         <button
-                          key={item.id}
+                          key={item?.id}
                           onClick={() => handleSlideChange(item.id)}
                           className={`relative h-full w-full rounded-full shadow-md transition-all duration-300 flex justify-center items-center ${isActive
                             ? "border border-primaryColor scale-100"

@@ -14,8 +14,6 @@ const TourCard = (
     tour: any;
   }
 ) => {
-
-  console.log('tour', tour?.id);
   
   const router = useRouter();
 

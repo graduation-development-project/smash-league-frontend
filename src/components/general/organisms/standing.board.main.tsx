@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import StandingTourBoard from '../molecules/standing-board/standing.tour.board'
 import StandingScoreBoard from '../molecules/standing-board/standing-score.board'
-import { getStandingBoardTourAPI } from '@/services/home-page';
+import { getStandingBoardTourAPI, getStandingBoardTourEventAPI } from '@/services/home-page';
 
 const StandingBoardMain = () => {
   const [hiddenBoard, setHiddenBoard] = useState(true);
-  const [curIndex, setCurIndex] = useState<number | null>(null);
+  const [curIndex, setCurIndex] = useState<number>(0);
+  const [tourList, setTourList] = useState<any>([]);
 
   const handleToggleBoard = (index: number) => {
     console.log(index, hiddenBoard);
-    
+
     if (curIndex === index) {
       setHiddenBoard(prev => !prev);
     } else {
@@ -20,7 +21,9 @@ const StandingBoardMain = () => {
 
   const fetchStandingBoard = async () => {
     const response = await getStandingBoardTourAPI();
-    return response?.data;
+    const tours = [...response?.data, ...response?.data, ...response?.data];
+    console.log('tours', tours);
+    setTourList(tours);
   }
 
   useEffect(() => {
@@ -34,13 +37,22 @@ const StandingBoardMain = () => {
         <h1 className='text-[32px] font-bold text-textColor'>
           <span className='text-thirdColor'>Standings</span> Board
         </h1>
-        <span className='text-textColor2'>See the latest player rankings from every tournament.</span>
+        <span className='text-textColor2'>
+          See the latest player rankings from every tournament
+        </span>
       </div>
       <div>
-        <StandingTourBoard handleHiddenBoard={handleToggleBoard} />
+        <StandingTourBoard
+          tourList={tourList}
+          handleHiddenBoard={handleToggleBoard}
+        />
       </div>
       <div>
-        <StandingScoreBoard isVisible={!hiddenBoard} />
+        <StandingScoreBoard
+          tourEvents={tourList[curIndex]?.tournamentEvents}
+          // eventName={tourList[curIndex]?.name}
+          isVisible={!hiddenBoard}
+        />
       </div>
     </div>
   );
