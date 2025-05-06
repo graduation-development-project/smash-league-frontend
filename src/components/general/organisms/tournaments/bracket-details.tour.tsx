@@ -28,12 +28,9 @@ const BracketDetailsTour = ({
   const { events } = useDraggable(ref as React.MutableRefObject<HTMLElement>);
   const color = mainColor || '#FF8243';
   const [eventDetail, setEventDetail] = useState<any>();
-
   const [brackets, setBrackets] = useState([]);
-
   const eventName = eventId.split('-')[0];
   const eventUUID = eventId.slice(eventId.indexOf('-') + 1);
-
   const [numberOfParticipants, setNumberOfParticipants] = useState(0);
 
   // console.log('Check event', eventUUID);

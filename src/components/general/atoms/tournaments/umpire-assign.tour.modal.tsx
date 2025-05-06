@@ -36,6 +36,7 @@ const UmpireAssignModal = ({
   playersOptions,
   tour,
   getMatchesOfTournamentEvent,
+  match,
 }: {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -44,6 +45,7 @@ const UmpireAssignModal = ({
   playersOptions: any[];
   tour: any;
   getMatchesOfTournamentEvent: any;
+  match: any;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [umpiresList, setUmpiresList] = useState<Option[]>([]);
@@ -51,7 +53,7 @@ const UmpireAssignModal = ({
   const [form] = Form.useForm();
   const [user, setUser] = useState<any>(null);
 
-  // console.log('tour', tour);
+  // console.log('match', match);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -93,7 +95,7 @@ const UmpireAssignModal = ({
       tournamentId,
     );
 
-    console.log(res?.data.data, 'check umpires');
+    // console.log(res?.data.data, 'check umpires');
     if (res?.data?.statusCode === 200 || res?.data?.statusCode === 201) {
       // Transform data into correct format
       const formatData = res.data.data.map((umpire: any) => ({
@@ -293,6 +295,12 @@ const UmpireAssignModal = ({
                 <Col span={12}>
                   <Form.Item label="Left Competitor" name="leftCompetitorId">
                     <Select
+                      disabled={
+                        match?.participants.length > 0 &&
+                        match?.participants[0]?.player1
+                          ? true
+                          : false
+                      }
                       showSearch
                       placeholder="Select player/couple"
                       filterOption={(input, option) =>
@@ -325,6 +333,12 @@ const UmpireAssignModal = ({
                 <Col span={12}>
                   <Form.Item label="Right Competitor" name="rightCompetitorId">
                     <Select
+                      disabled={
+                        match?.participants.length > 0 &&
+                        match?.participants[1]?.player1
+                          ? true
+                          : false
+                      }
                       showSearch
                       placeholder="Select player/couple"
                       filterOption={(input, option) =>

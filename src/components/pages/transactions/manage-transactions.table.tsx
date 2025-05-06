@@ -1,8 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider, Popconfirm, Space, Table, Tag } from 'antd';
-import type { TableProps } from 'antd';;
-import { getTransactionHistoryAPI } from '@/services/payment';
+import type { TableProps } from 'antd';
+import { formatDateTime } from '@/utils/format';
+import {
+  getAllTransactionsAPI,
+} from '@/services/payment';
 import { GrView } from 'react-icons/gr';
 
 interface DataType {
@@ -12,10 +15,9 @@ interface DataType {
   transactionDetail: string;
   value: number;
   status: string;
-  // date: string;
+  createdAt: string;
 }
-
-const TransactionHistoryDashboardPage = () => {
+const ManageTransactionsTable = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [transactionList, setTransactionList] = useState([]);
   const [user, setUser] = useState<any>(null);
@@ -29,13 +31,13 @@ const TransactionHistoryDashboardPage = () => {
     }
   }, []);
 
-  const getTransactionHistory = async () => {
+  const getAllTransactions = async () => {
     if (!user) return;
     try {
       setIsLoading(true);
-      const response = await getTransactionHistoryAPI(user?.access_token);
+      const response = await getAllTransactionsAPI(user?.access_token);
       console.log(response?.data, 'check');
-      if (response.statusCode === 200 || response.statusCode === 201) {
+      if (response?.statusCode === 200 || response.statusCode === 201) {
         const formatedData = response.data.map((transaction: any) => ({
           id: transaction.id,
           orderId: transaction.orderId,
@@ -43,19 +45,21 @@ const TransactionHistoryDashboardPage = () => {
           transactionDetail: transaction.transactionDetail,
           value: transaction.value,
           status: transaction.status,
+          createdAt: transaction.createdAt,
         }));
-        setTransactionList(formatedData);
+        setTransactionList(formatedData.reverse());
         setIsLoading(false);
       } else {
-        setIsLoading(false);
         setTransactionList([]);
+        setIsLoading(false);
       }
     } catch (error: any) {
+      setIsLoading(false);
       console.log('Error', error);
     }
   };
   useEffect(() => {
-    getTransactionHistory();
+    getAllTransactions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
@@ -113,6 +117,14 @@ const TransactionHistoryDashboardPage = () => {
         </>
       ),
     },
+
+    {
+      title: 'Created At',
+      dataIndex: 'createdAt',
+      align: 'center',
+      key: 'createdAt',
+      render: (_, { createdAt }) => <p>{formatDateTime(createdAt)}</p>,
+    },
     {
       title: 'Action',
       key: 'action',
@@ -125,17 +137,19 @@ const TransactionHistoryDashboardPage = () => {
       ),
     },
   ];
-
   return (
     <div className="w-full h-full flex flex-col">
       <ConfigProvider
         theme={{ token: { colorPrimary: '#FF8243', fontFamily: 'inherit' } }}
       >
-        {' '}
-        <Table<DataType> columns={columns} dataSource={transactionList} loading={isLoading}/>
+        <Table<DataType>
+          columns={columns}
+          dataSource={transactionList.reverse()}
+          loading={isLoading}
+        />
       </ConfigProvider>
     </div>
   );
 };
 
-export default TransactionHistoryDashboardPage;
+export default ManageTransactionsTable;

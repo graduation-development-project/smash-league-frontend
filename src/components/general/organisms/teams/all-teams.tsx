@@ -26,7 +26,7 @@ const AllTeams = (props: any) => {
     setTotalPerPage,
   } = useTeamContext();
   const [searchTerms, setSearchTerms] = useState<string>('');
-
+ const [isModalOpen, setIsModalOpen] = useState(false);
   const debounceValue = useDebounce(searchTerms, 1000);
 
   // console.log("Check debounce", debounceValue);
@@ -56,6 +56,8 @@ const AllTeams = (props: any) => {
           searchTerms={searchTerms}
           setSearchTerms={setSearchTerms}
           isLoading={isLoading}
+          setIsModalOpen={setIsModalOpen}
+
         />
 
         {/* Centering Grid Items */}
@@ -86,7 +88,7 @@ const AllTeams = (props: any) => {
           </div>
         )}
 
-        <TeamsBanner session={session} />
+        <TeamsBanner session={session} setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} />
       </div>
     </>
   );

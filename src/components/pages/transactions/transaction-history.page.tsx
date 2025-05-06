@@ -13,10 +13,12 @@ interface DataType {
   transactionDetail: string;
   value: number;
   status: string;
+  createdAt: string;
   // date: string;
 }
 
 const TransactionHistoryPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [transactionList, setTransactionList] = useState([]);
   const [user, setUser] = useState<any>(null);
 
@@ -32,6 +34,7 @@ const TransactionHistoryPage = () => {
   const getTransactionHistory = async () => {
     if (!user) return;
     try {
+      setIsLoading(true);
       const response = await getTransactionHistoryAPI(user?.access_token);
       console.log(response?.data, 'check');
       if (response.statusCode === 200 || response.statusCode === 201) {
@@ -42,12 +45,16 @@ const TransactionHistoryPage = () => {
           transactionDetail: transaction.transactionDetail,
           value: transaction.value,
           status: transaction.status,
+          createdAt: transaction.createdAt,
         }));
-        setTransactionList(formatedData);
+        setTransactionList(formatedData.reverse());
+        setIsLoading(false);
       } else {
         setTransactionList([]);
+        setIsLoading(false);
       }
     } catch (error: any) {
+      setIsLoading(false);
       console.log('Error', error);
     }
   };
@@ -110,6 +117,14 @@ const TransactionHistoryPage = () => {
         </>
       ),
     },
+
+    {
+      title: 'Created At',
+      dataIndex: 'createdAt',
+      align: 'center',
+      key: 'createdAt',
+      render: (_, { createdAt }) => <p>{formatDateTime(createdAt)}</p>,
+    },
     {
       title: 'Action',
       key: 'action',
@@ -129,8 +144,11 @@ const TransactionHistoryPage = () => {
       <ConfigProvider
         theme={{ token: { colorPrimary: '#FF8243', fontFamily: 'inherit' } }}
       >
-        {' '}
-        <Table<DataType> columns={columns} dataSource={transactionList} />
+        <Table<DataType>
+          columns={columns}
+          dataSource={transactionList}
+          loading={isLoading}
+        />
       </ConfigProvider>
     </div>
   );

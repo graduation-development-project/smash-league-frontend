@@ -99,6 +99,7 @@ const UmpiresListTable = ({
 
   const [participantList, setParticipantList] = useState([]);
   const [verificationList, setVetificationList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = (
     selectedKeys: string[],
@@ -119,6 +120,7 @@ const UmpiresListTable = ({
   }, []); // Run only once on mount
 
   const getTournamentUmpiresParticipants = async () => {
+    setIsLoading(true);
     const res = await getTournamentUmpiresParticipantsAPI(
       user?.access_token,
       tourId,
@@ -133,7 +135,9 @@ const UmpiresListTable = ({
       }));
 
       setParticipantList(formatData);
+      setIsLoading(false);
     } else {
+      setIsLoading(false);
       setParticipantList([]);
     }
   };
@@ -142,7 +146,7 @@ const UmpiresListTable = ({
     if (!user) return;
     try {
       // console.log('API RUN');
-
+      setIsLoading(true);
       const response = await getUmpireRegistrationAPI(
         user?.access_token,
         tourId,
@@ -163,8 +167,10 @@ const UmpiresListTable = ({
         }));
 
         setVetificationList(formatData);
+        setIsLoading(false);
       } else {
         setVetificationList([]);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log('error', error);
@@ -325,7 +331,11 @@ const UmpiresListTable = ({
             border: '1px solid #FF8243',
             padding: '2px',
           }}
-          src={user?.avatarURL? user?.avatarURL : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'}
+          src={
+            user?.avatarURL
+              ? user?.avatarURL
+              : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
+          }
           width={100}
           height={100}
           alt="Umpire Image"
@@ -560,7 +570,7 @@ const UmpiresListTable = ({
             token: {
               /* here is your global tokens */
               colorPrimary: '#FF8243',
-              fontFamily: "inherit",
+              fontFamily: 'inherit',
             },
           }}
         >
@@ -569,6 +579,7 @@ const UmpiresListTable = ({
               // className={styles.customTable}
               columns={columnsVerification}
               dataSource={verificationList}
+              loading={isLoading}
               style={{
                 width: '100%',
                 height: '100%',
@@ -580,6 +591,7 @@ const UmpiresListTable = ({
               // className={styles.customTable}
               columns={columns}
               dataSource={participantList}
+              loading={isLoading}
               style={{
                 width: '100%',
                 height: '100%',

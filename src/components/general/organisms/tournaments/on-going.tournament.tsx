@@ -41,7 +41,7 @@ const OnGoingTournament = () => {
       setCurrentPage(currentPage);
       setTourList(res?.data?.data || []);
     } catch (error) {
-      console.error('Error fetching teams:', error);
+      console.error('Error fetching tournaments:', error);
     }
   };
 

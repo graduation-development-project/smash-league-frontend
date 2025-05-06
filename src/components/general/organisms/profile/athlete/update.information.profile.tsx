@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react';
 import ModalChangePassword from '../../auth/modal.change.password';
 import {
   getProfileAPI,
+  getProfileAPI1,
   updateProfileAPI,
   uploadAvatarAPI,
 } from '@/services/user';
@@ -58,7 +59,7 @@ const UpdateInformationProfile = ({
     if (!user) return;
     try {
       const response = await getProfileAPI(user?.id);
-      // console.log('Check profile', response);
+      console.log('Check profile', response);
       setProfile(response);
       form.setFieldsValue({
         name: response?.name,
@@ -82,6 +83,8 @@ const UpdateInformationProfile = ({
           response?.startPlayingSport === null
             ? ''
             : response?.startPlayingSport,
+        description:
+          response?.description === null ? '' : response?.description,
         avatarUrl: response?.avatarUrl === null ? '' : response?.avatarUrl,
       });
     } catch (error: any) {
@@ -319,13 +322,16 @@ const UpdateInformationProfile = ({
             <Input.TextArea placeholder="Write here" />
           </Form.Item>
 
-          {/* <Form.Item
-            label="When did you start playing sport?"
-            name="startPlayingSport"
-            initialValue={profile?.startPlayingSport}
+          <Form.Item
+            label="Description (For Organizers)"
+            name="description"
+            initialValue={profile?.description}
           >
-            <Input.TextArea placeholder="Write here" />
-          </Form.Item> */}
+            <Input.TextArea
+              placeholder="Write here"
+              disabled={user?.userRoles.includes('Organizer') ? false : true}
+            />
+          </Form.Item>
 
           <Form.Item name="avatarUrl" label="Avatar">
             <input

@@ -62,13 +62,14 @@ const AthleteProfilePage = (props: any) => {
         <OverviewAthleteProfile info={profile} setProfile={setProfile} />
       ),
     },
-    {
-      key: '2',
-      label: 'Tournaments',
-      children: <MyTournaments profileRole="ATHLETE" />,
-    },
+
     ...(user?.id === profile?.id
       ? [
+          {
+            key: '2',
+            label: 'Tournaments',
+            children: <MyTournaments profileRole="ATHLETE" />,
+          },
           {
             key: '3',
             label: 'Teams List',

@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/assets/icons/index.js", "server.mjs",  "types", "src/utils/settings.ts", "bracket-single/connectors.tsx", "src/core/calculate-svg-dimensions.ts", "src/core/match-functions.tsx", "bracket-single/calculate-match-position.tsx", "src/themes/themes.ts", "src/components/round-header.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/assets/icons/index.js", "server.mjs",  "types", "src/utils/settings.ts", "bracket-single/connectors.tsx", "src/core/calculate-svg-dimensions.ts", "src/core/match-functions.tsx", "bracket-single/calculate-match-position.tsx", "src/themes/themes.ts", "src/components/round-header.tsx", ".next/types/app/(staff)/staff/dashboard/transactions/page.tsx"],
   "exclude": ["node_modules"]
 }
