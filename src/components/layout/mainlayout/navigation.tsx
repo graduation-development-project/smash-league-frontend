@@ -84,17 +84,23 @@ const Navigation = (props: any) => {
   // const filteredNotifications = filterStatusNotifications();
 
   const items: MenuProps['items'] = [
-    {
-      key: 'athlete-profile',
-      label: 'Athlete Profile',
-      icon: <RiProfileFill size={15} />,
-      onClick: () => {
-        if (!user || !user.userRoles) return; // Avoid errors
-        localStorage.setItem('page', 'Home');
-        setRoute('Profile');
-        router.push(`/profile/athlete/${user?.id}`);
-      },
-    },
+    ...(!user?.userRoles?.includes('Organizer') ||
+    !session?.user?.userRoles?.includes('Organizer')
+      ? [
+          {
+            key: 'athlete-profile',
+            label: 'Athlete Profile',
+            icon: <RiProfileFill size={15} />,
+            onClick: () => {
+              if (!user || !user.userRoles) return; // Avoid errors
+              localStorage.setItem('page', 'Home');
+              setRoute('Profile');
+              router.push(`/profile/athlete/${user?.id}`);
+            },
+          },
+        ]
+      : []),
+
     ...(user?.userRoles?.includes('Organizer') ||
     session?.user?.userRoles?.includes('Organizer')
       ? [
@@ -134,7 +140,9 @@ const Navigation = (props: any) => {
     //   : []),
 
     ...(user?.userRoles?.includes('Umpire') ||
-    session?.user?.userRoles?.includes('Umpire')
+    session?.user?.userRoles?.includes('Umpire') ||
+    !user?.userRoles?.includes('Organizer') ||
+    !session?.user?.userRoles?.includes('Organizer')
       ? [
           {
             key: 'umpire-profile',
@@ -167,8 +175,10 @@ const Navigation = (props: any) => {
         ]
       : []),
 
-    ...(!user.userRoles?.includes('Umpire') ||
-    !session?.user?.userRoles?.includes('Umpire')
+    ...(user?.userRoles?.includes('Umpire') ||
+    session?.user?.userRoles?.includes('Umpire') ||
+    !user?.userRoles?.includes('Organizer') ||
+    !session?.user?.userRoles?.includes('Organizer')
       ? [
           {
             key: 'become-umpire',
