@@ -20,9 +20,9 @@ export const formatLocation1 = (value: string) => {
   return parts.slice(1).join(',').trim();
 };
 export const formatLocation = (location: string) => {
-    const arr = location.split(',').map(part => part.trim());
-    if (arr.length < 3) return location;
-    return arr.slice(-2).join(', ');
+    const arr = location?.split(',').map(part => part.trim());
+    if (arr?.length < 3) return location;
+    return arr?.slice(-2).join(', ');
 };
 
 

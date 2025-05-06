@@ -25,9 +25,9 @@ const HomePage = () => {
           <div className="flex flex-col items-center h-max w-full">
             <BannerMain />
           </div>
-          <div className="flex flex-col items-center h-max w-full">
+          {/* <div className="flex flex-col items-center h-max w-full">
             <NewsBulletinMain />
-          </div>
+          </div> */}
           <div className="flex flex-col items-center h-max w-full">
             <OrganizerZone />
           </div>
