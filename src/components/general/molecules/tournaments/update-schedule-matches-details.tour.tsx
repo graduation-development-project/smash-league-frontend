@@ -36,7 +36,7 @@ const UpdateScheduleMatchesDetailsTour = (
         return (
             current &&
             (current.isBefore(dayjs().add(1, "day").startOf("day"), "day") ||
-                (drawDate.length > 0 && current.isBefore(drawDate[1].add(1, "day").startOf("day"), "day")))
+                (drawDate.length > 0 && current.isBefore(drawDate[0].add(1, "day").startOf("day"), "day")))
         );
     };
 

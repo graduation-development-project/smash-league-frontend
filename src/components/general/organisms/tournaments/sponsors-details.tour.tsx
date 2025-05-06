@@ -1,7 +1,9 @@
 import { Separator } from '@/components/ui/separator'
+import { getSponsorTourDetailsAPI } from '@/services/update-tour'
 import { CardContent } from '@mui/material'
 import { Card, Image } from 'antd'
-import React from 'react'
+import { get } from 'http'
+import React, { useEffect, useState } from 'react'
 
 
 interface Sponsor {
@@ -49,7 +51,29 @@ const sponsors: SponsorGroups = {
     { id: "b6", name: "Bronze Sponsor 6", logo: "https://cdn.tgdd.vn/2020/04/GameApp/unnamed-200x200-18.png" },
   ],
 }
-const SponsorsDetailsTour = () => {
+const SponsorsDetailsTour = (
+  {
+    tourId,
+  }: {
+    tourId: string;
+  }
+
+) => {
+
+  const [sponsorList, setSponsorList] = useState<SponsorGroups>(sponsors);
+
+  const fetchGetSponsorsDetailTour = async () => {
+    const response = await getSponsorTourDetailsAPI(tourId);
+    setSponsorList(response.data);
+    // return response.data;
+  };
+
+  
+
+  useEffect(() => {
+    fetchGetSponsorsDetailTour();
+  }, []);
+
   return (
     <section className="py-12 bg-white">
       <div className="container px-4 mx-auto">

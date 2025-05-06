@@ -75,7 +75,7 @@ const UpdateBasicInfoDetailsTour = ({
 
   const fetchGetTourInfoDetailsTour = async () => {
     const response = await getTourInfoDetailsAPI(tournamentId);
-    setDetail(response.data);
+    setDetail(response?.data);
     setLocation(response?.data?.location);
     form.setFieldsValue({
       id: response?.data?.id,
@@ -173,7 +173,7 @@ const UpdateBasicInfoDetailsTour = ({
     fetchGetTourInfoDetailsTour();
     fetchGetAllSeries();
     fetchProvince();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -183,7 +183,7 @@ const UpdateBasicInfoDetailsTour = ({
       setDistrict("");
       fetchDistrict(provinceId);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceId]);
 
   useEffect(() => {
@@ -192,7 +192,7 @@ const UpdateBasicInfoDetailsTour = ({
       setWard("");
       fetchWard(districtId);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceId, districtId]);
 
   useEffect(() => {
@@ -358,7 +358,7 @@ const UpdateBasicInfoDetailsTour = ({
             name="backgroundTournament"
             label="Tournament's Image"
             initialValue={detail?.backgroundTournament}
-            // required
+          // required
           >
             <input
               type="file"
@@ -398,7 +398,9 @@ const UpdateBasicInfoDetailsTour = ({
             name={"prizePool"}
             label="Prize pool"
             initialValue={detail?.prizePool}
-            required
+            rules={[
+              
+            ]}
           >
             <InputNumber<number>
               min={0}
@@ -421,10 +423,10 @@ const UpdateBasicInfoDetailsTour = ({
                 noStyle
                 style={{ marginTop: '12px' }}
                 // initialValue={detail?.location}
-                required
+                rules={[{ required: true, message: 'Location is required' }]}
               >
 
-                <Input value={location}  readOnly />
+                <Input value={location} readOnly />
                 <Button
                   type="primary"
                   icon={<MdOutlineEditLocation />}
@@ -502,22 +504,26 @@ const UpdateBasicInfoDetailsTour = ({
                 </>
               )
             }
-
-
-
-
-
-
           </Form.Item>
           <Form.Item
             name="introduction"
             label="Introduction"
             initialValue={detail?.introduction}
-            required
+            rules={[
+              {
+                required: true,
+                message: 'Introduction is required',
+              },
+              {
+                max: 1000,
+                message: 'Introduction must be less than 1000 characters',
+              }
+            ]}
           >
             <TextArea
               // value={value}
               // onChange={(e) => setValue(e.target.value)}
+              maxLength={1000}
               placeholder="Tournament's introduction"
               autoSize={{ minRows: 3, maxRows: 5 }}
             />
@@ -526,16 +532,27 @@ const UpdateBasicInfoDetailsTour = ({
             name="description"
             label="Description"
             initialValue={detail?.description}
-            required
+            rules={[
+              {
+                required: true,
+                message: 'Description is required',
+              },
+              {
+                max: 1000,
+                message: 'Description must be less than 1000 characters',
+              }
+            ]}
           >
             <TextArea
+              required
+              maxLength={1000}
               // value={value}
               // onChange={(e) => setValue(e.target.value)}
               placeholder="Tournament description"
               autoSize={{ minRows: 3, maxRows: 5 }}
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             name="tournamentSerieId"
             label="Tournament Serie"
             initialValue={detail?.tournamentSerieId}>
@@ -585,13 +602,13 @@ const UpdateBasicInfoDetailsTour = ({
               )}
               options={serieList.map((serie: any) => ({ label: serie.tournamentSerieName, value: serie.id }))}
             />
-            {/* <Button style={{ marginTop: '10px' }} >New Event</Button> */}
-          </Form.Item>
+            <Button style={{ marginTop: '10px' }} >New Event</Button>
+          </Form.Item> */}
 
         </div>
 
         <Button style={{ padding: '22px 30px', fontSize: '18px', fontWeight: 'bold' }} type="primary" htmlType="submit">
-          Save {isLoading && <LoadingOutlined/>}
+          Save {isLoading && <LoadingOutlined />}
         </Button>
       </Form>
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import StandingTourBoard from '../molecules/standing-board/standing.tour.board'
 import StandingScoreBoard from '../molecules/standing-board/standing-score.board'
+import { getStandingBoardTourAPI } from '@/services/home-page';
 
 const StandingBoardMain = () => {
   const [hiddenBoard, setHiddenBoard] = useState(true);
@@ -16,6 +17,15 @@ const StandingBoardMain = () => {
       setCurIndex(index);
     }
   };
+
+  const fetchStandingBoard = async () => {
+    const response = await getStandingBoardTourAPI();
+    return response?.data;
+  }
+
+  useEffect(() => {
+    fetchStandingBoard();
+  }, [])
 
 
   return (

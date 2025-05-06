@@ -255,7 +255,6 @@ const StandingScoreBoard = ({ isVisible }: { isVisible: boolean }) => {
             <div key={index} className='flex mb-2'>
               <StandingScoreCard card={card} />
             </div>
-
           )
         })
       }

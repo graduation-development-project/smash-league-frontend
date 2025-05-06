@@ -2,6 +2,7 @@ interface TextGradientBtnProps {
   textColor: string; // Ensure this matches your styling framework
   size?: string;
   children: React.ReactNode;
+  onClick?: () => void;
 }
 
 interface TeamProps {

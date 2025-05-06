@@ -49,6 +49,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { generateUrlAPI, isExistedUrlAPI } from '@/services/create-tour';
 import { createTourSerieAPI, getAllMySeriesAPI } from '@/services/serie';
 
+
 interface SelectItemProps {
   label: string;
   value: string;
@@ -135,27 +136,19 @@ const CreateTourStep1 = ({
   const [winningPoint, setWinningPoint] = useState<number | null>(15);
   const [lastPoint, setLastPoint] = useState(15);
 
+
   const [registerDate, setRegisterDate] = useState<Array<dayjs.Dayjs>>([]);
   const [drawDate, setDrawDate] = useState<Array<dayjs.Dayjs>>([]);
   const [occurDate, setOccurDate] = useState<Array<dayjs.Dayjs>>([]);
 
+
   const [hasMerchandise, setHasMerchandise] = useState(false);
 
   const handleColorChange = (value: Color) => {
-    console.log(value, 'mainColorValue');
-
     const hexValue = typeof value === 'string' ? value : value?.toHexString();
-    console.log(hexValue, 'mainColor');
+
     if (hexValue) setColorHex(hexValue);
     form.setFieldValue('mainColor', hexValue);
-  };
-  const fetchGetAllSeries = async () => {
-    try {
-      const res = await getAllMySeriesAPI(accessToken);
-      if (res.statusCode === 200) setSerieList(res.data);
-    } catch (error: any) {
-      console.log(error);
-    }
   };
 
   const fetchCheckExistUrl = async () => {
@@ -176,8 +169,6 @@ const CreateTourStep1 = ({
     setIsLoadingCheckUrl(true);
     try {
       const response = await generateUrlAPI();
-      console.log(response, 'response');
-
       if (response?.statusCode === 200) {
         setUrl(response?.data);
         form.setFieldValue('id', response?.data);
@@ -221,7 +212,6 @@ const CreateTourStep1 = ({
     e.preventDefault();
     const createTour = await fetchCreateTourSerie(accessToken, addSerieName);
     if (createTour?.statusCode === 200 || createTour?.statusCode === 201) {
-      fetchGetAllSeries();
       setAddSerieName('');
       setTimeout(() => {
         inputSerieRef.current?.focus();
@@ -250,9 +240,7 @@ const CreateTourStep1 = ({
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (e.target.files) {
-      console.log(e.target.files);
       console.log(fileImgMerchandiseList);
-
       setFileImgMerchandiseList([
         ...fileImgMerchandiseList,
         ...Array.from(e.target.files),
@@ -271,31 +259,128 @@ const CreateTourStep1 = ({
 
 
   //Register, Occur, Draw
-  const disabledRegisterDate = (current: dayjs.Dayjs) => {
-    return (
-      current && current.isBefore(dayjs().add(1, 'day').startOf('day'), 'day')
-    );
+
+  // const disabledRegisterDate = (current: dayjs.Dayjs) => {
+  //   return (
+  //     current && current.isBefore(dayjs().add(1, 'day').startOf('day'), 'day')
+  //   );
+  // };
+
+  // const disabledDrawDate = (current: dayjs.Dayjs) => {
+  //   return (
+  //     current &&
+  //     (current.isBefore(dayjs().add(1, 'day').startOf('day'), 'day') ||
+  //       (registerDate.length > 0 &&
+  //         current.isBefore(
+  //           registerDate[1].add(1, 'day').startOf('day'),
+  //           'day',
+  //         )))
+  //   );
+  // };
+  // const disabledOccurDate = (current: dayjs.Dayjs) => {
+  //   return (
+  //     current &&
+  //     (current.isBefore(dayjs().add(1, 'day').startOf('day'), 'day') ||
+  //       (drawDate.length > 0 &&
+  //         current.isBefore(drawDate[0].add(1, 'day').startOf('day'), 'day')))
+  //   );
+  // };
+  const today = dayjs().add(1, 'day').startOf('day');
+
+  const disabledRegisterDate = (current: dayjs.Dayjs): boolean => {
+    const today = dayjs().add(1, 'day').startOf('day');
+
+    if (!drawDate.length && !occurDate.length) {
+      return current.isBefore(today, 'day');
+    }
+
+    let limitDate = drawDate[0] || occurDate[0];
+    if (drawDate.length && occurDate.length) {
+      limitDate = drawDate[0].isBefore(occurDate[0]) ? drawDate[0] : occurDate[0];
+    }
+
+    return current.isBefore(today, 'day') || current.isAfter(limitDate, 'day');
   };
 
-  const disabledDrawDate = (current: dayjs.Dayjs) => {
-    return (
-      current &&
-      (current.isBefore(dayjs().add(1, 'day').startOf('day'), 'day') ||
-        (registerDate.length > 0 &&
-          current.isBefore(
-            registerDate[1].add(1, 'day').startOf('day'),
-            'day',
-          )))
-    );
+  const disabledDrawDate = (current: dayjs.Dayjs): boolean => {
+    const today = dayjs().add(1, 'day').startOf('day');
+
+    if (!registerDate.length && !occurDate.length) {
+      return current.isBefore(today, 'day');
+    }
+
+    const minDate = registerDate.length ? registerDate[1] : today;
+    const maxDate = occurDate.length ? occurDate[0] : undefined;
+
+    const isBeforeMin = current.isBefore(minDate.add(1, 'day').startOf('day'), 'day');
+    const isAfterMax = maxDate ? current.isAfter(maxDate, 'day') : false;
+
+    return isBeforeMin || isAfterMax;
   };
-  const disabledOccurDate = (current: dayjs.Dayjs) => {
-    return (
-      current &&
-      (current.isBefore(dayjs().add(1, 'day').startOf('day'), 'day') ||
-        (drawDate.length > 0 &&
-          current.isBefore(drawDate[1].add(1, 'day').startOf('day'), 'day')))
-    );
+
+  const disabledOccurDate = (current: dayjs.Dayjs): boolean => {
+    const today = dayjs().add(1, 'day').startOf('day');
+
+    if (!registerDate.length && !drawDate.length) {
+      return current.isBefore(today, 'day');
+    }
+
+    const minDate = registerDate.length ? registerDate[1] : drawDate[0];
+
+    return current.isBefore(minDate.add(1, 'day').startOf('day'), 'day');
   };
+
+  // const disabledRegisterDate = (current: dayjs.Dayjs) => {
+  //   const today = dayjs().add(1, 'day').startOf('day');
+
+  //   let max: dayjs.Dayjs | null = null;
+
+  //   if (dayjs.isDayjs(drawDate)) {
+  //     max = drawDate;
+  //   }
+
+  //   if (occurDate.length && dayjs.isDayjs(occurDate[0])) {
+  //     if (!max || occurDate[0].isBefore(max)) {
+  //       max = occurDate[0];
+  //     }
+  //   }
+
+  //   return (
+  //     current &&
+  //     (current.isBefore(today, 'day') || (max && current.isAfter(max, 'day')))
+  //   );
+  // };
+
+  // const disabledDrawDate = (current: dayjs.Dayjs) => {
+  //   const today = dayjs().add(1, 'day').startOf('day');
+
+  //   const registerEnd = registerDate.length ? registerDate[1] : undefined;
+  //   const occurStart = occurDate.length ? occurDate[0] : undefined;
+
+  //   return (
+  //     current &&
+  //     (
+  //       current.isBefore(today, 'day') ||
+  //       (registerEnd && current.isBefore(registerEnd, 'day')) ||
+  //       (occurStart && current.isAfter(occurStart, 'day'))
+  //     )
+  //   );
+  // };
+
+  // const disabledOccurDate = (current: dayjs.Dayjs) => {
+  //   const today = dayjs().add(1, 'day').startOf('day');
+  //   const registerEnd = registerDate.length ? registerDate[1] : undefined;
+  //   const draw = drawDate[0];
+
+  //   return (
+  //     current &&
+  //     (
+  //       current.isBefore(today, 'day') ||
+  //       (registerEnd && current.isBefore(registerEnd, 'day')) ||
+  //       (draw && current.isBefore(draw, 'day'))
+  //     )
+  //   );
+  // };
 
   //------ Organizers & Umpirea Information ----------
   //Host Organizer
@@ -314,6 +399,7 @@ const CreateTourStep1 = ({
   selectAttachments.push(
     { label: 'Portrait Photo', value: 'PORTRAIT_PHOTO' },
     { label: 'Identity Card', value: 'IDENTIFICATION_CARD' },
+    { label: 'Other', value: 'OTHER' },
   );
 
   const sharedAttachmentProps: SelectProps = {
@@ -342,11 +428,11 @@ const CreateTourStep1 = ({
   const [eventList, setEventList] = useState<string[]>(defaultEventList);
 
   const checkAllEventList = eventOptions.length === eventList.length;
-  const indeterminate =
-    eventList.length > 0 && eventList.length < eventOptions.length;
+  const indeterminate = eventList.length > 0 && eventList.length < eventOptions.length;
   const onChangeEvent = (list: string[]) => {
     setEventList(list.length > 0 ? list : defaultEventList);
   };
+
   const onCheckAllEventChange: CheckboxProps['onChange'] = (e) => {
     setEventList(
       e.target.checked ? eventOptions.map((option) => option.value) : [],
@@ -360,7 +446,6 @@ const CreateTourStep1 = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchGetAllSeries();
     fetchProvince();
   }, []);
 
@@ -433,17 +518,22 @@ const CreateTourStep1 = ({
               {
                 required: true,
                 message: 'Tournament name is required!',
+              }, {
+                min: 10,
+                max: 100,
+                message: 'Tournament name must be 10 - 100 characters!',
               }
             ]}
           >
-            <Input placeholder="Your tournament's name" />
+            <Input placeholder="Your tournament's name" maxLength={35} required />
           </Form.Item>
           <Form.Item label="Short name" name="shortName"
             rules={[
               {
                 required: true,
                 message: 'Short name is required!',
-              }, {
+              },
+              {
                 min: 5,
                 max: 10,
                 message: 'Short name must be 5 - 10 characters!',
@@ -453,6 +543,7 @@ const CreateTourStep1 = ({
             <Input
               placeholder="Short name"
               maxLength={10}
+              required
             />
           </Form.Item>
           <Form.Item label="Tournament URL" name="url" required>
@@ -463,7 +554,9 @@ const CreateTourStep1 = ({
                 initialValue={url}
                 required
                 rules={[
-                  { required: true, message: 'URL is required!' },
+                  {
+                    required: true, message: 'URL is required!'
+                  },
                   {
                     min: 8,
                     max: 40,
@@ -477,10 +570,12 @@ const CreateTourStep1 = ({
                 ]}
               >
                 <Input
+                  maxLength={40}
                   addonBefore="https://smashit.com.vn/"
                   placeholder="Your tournament's URL"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
+                  required
                   suffix={
                     isLoadingCheckUrl ? (
                       <Spin indicator={<LoadingOutlined />} />
@@ -556,11 +651,12 @@ const CreateTourStep1 = ({
           >
             <InputNumber<number>
               min={0}
-              max={1000000000}
+              max={1000000100}
               suffix={'VND'}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
               }
+              required
               parser={(value) =>
                 value?.replace(/\$\s?|(,*)/g, '') as unknown as number
               }
@@ -570,12 +666,20 @@ const CreateTourStep1 = ({
               width={'100%'}
             />
           </Form.Item>
-          <Form.Item style={{ rowGap: '10px' }} label="Location" required>
+          <Form.Item
+            style={{ rowGap: '10px' }}
+            label="Location"
+            required
+          >
             <Space.Compact block>
               <Form.Item
                 name={'province'}
                 noStyle
-                rules={[{ required: true, message: 'Province is required' }]}
+                rules={[
+                  {
+                    required: true, message: 'Province is required'
+                  }
+                ]}
               >
                 <Select
                   onChange={handleProvinceChange}
@@ -598,12 +702,17 @@ const CreateTourStep1 = ({
               <Form.Item
                 name={'district'}
                 noStyle
-                rules={[{ required: true, message: 'District is required' }]}
+                rules={[
+                  {
+                    required: true, message: 'District is required'
+                  }
+                ]}
               >
                 <Select
                   onChange={handleDistrictChange}
                   value={districtName}
                   placeholder="Select district"
+
                 >
                   {districtList?.map((district: any) => {
                     return (
@@ -611,7 +720,6 @@ const CreateTourStep1 = ({
                         key={district.DistrictID}
                         value={`${district.DistrictID}|${district.DistrictName}`}
                       >
-                        {' '}
                         {district.DistrictName}
                       </Select.Option>
                     );
@@ -621,7 +729,11 @@ const CreateTourStep1 = ({
               <Form.Item
                 name={'ward'}
                 noStyle
-                rules={[{ required: true, message: 'Ward is required' }]}
+                rules={[
+                  {
+                    required: true, message: 'Ward is required'
+                  }
+                ]}
               >
                 <Select
                   onChange={(e) => setWard(e)}
@@ -642,7 +754,13 @@ const CreateTourStep1 = ({
             <Form.Item
               name={'street'}
               noStyle
-              rules={[{ required: true, message: 'Street is required' }]}
+              rules={
+                [
+                  {
+                    required: true, message: 'Street is required'
+                  }
+                ]
+              }
             >
               <Input
                 onChange={(e) => setStreet(e.target.value)}
@@ -653,12 +771,20 @@ const CreateTourStep1 = ({
 
             <br />
 
-            <Form.Item name="location" noStyle style={{ marginTop: '12px' }}>
-              <Input defaultValue={location} variant="borderless" readOnly />
+            <Form.Item name="location" noStyle style={{ marginTop: '12px' }} initialValue={location}>
+              <Input
+                defaultValue={location}
+                variant="borderless"
+                readOnly
+              />
             </Form.Item>
           </Form.Item>
           <Form.Item name="introduction" label="Introduction"
             rules={[
+              {
+                max: 1000,
+                message: 'Introduction must be under 1000 characters'
+              }
             ]}
           >
             <TextArea
@@ -669,7 +795,18 @@ const CreateTourStep1 = ({
               maxLength={1000}
             />
           </Form.Item>
-          <Form.Item name="description" label="Description" required>
+          <Form.Item name="description" label="Description"
+            rules={[
+              {
+                max: 1000,
+                message: 'Description must be under 1000 characters'
+              },
+              {
+                required: true,
+                message: 'Description is required'
+              }
+            ]}
+          >
             <TextArea
               // value={value}
               // onChange={(e) => setValue(e.target.value)}
@@ -678,13 +815,13 @@ const CreateTourStep1 = ({
               autoSize={{ minRows: 3, maxRows: 5 }}
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             name="tournamentSerieId"
             label="Tournament Serie"
             initialValue={null}
           >
             <Select
-              // style={{ width: 300 }}
+              style={{ width: 300 }}
               placeholder="Choose Tournament Serie"
               dropdownRender={(menu) => (
                 <>
@@ -708,7 +845,6 @@ const CreateTourStep1 = ({
                         onChange={onAddSerieChange}
                         onKeyDown={(e) => e.stopPropagation()}
                       />
-
                       <input
                         type="file"
                         required
@@ -744,50 +880,8 @@ const CreateTourStep1 = ({
                 value: serie.id,
               }))}
             />
-            {/* <Button style={{ marginTop: '10px' }} >New Event</Button> */}
-          </Form.Item>
-        </div>
-      </section>
-
-      {/* <div className='w-1/2  h-1 bg-primaryColor' /> */}
-
-      <section className="w-full flex flex-col shadow-shadowBtn">
-        <div className="w-full h-max flex bg-primaryColor rounded-t-md">
-          <div className="w-full h-max flex justify-between items-center px-10 py-1">
-            <h1 className="font-quicksand  text-base font-bold text-white">
-              Organizers & Umpires
-            </h1>
-          </div>
-        </div>
-        <div className="w-full h-max p-10">
-          <Form.Item
-            name="host"
-            label="Host"
-            initialValue={user?.name}
-            required
-          >
-            <Input disabled />
-          </Form.Item>
-          {/* <Form.Item name="organizers" label="Co-Organizers">
-                        <Select {...sharedOrganizerProps} {...selectOrganizerProps} />
-                    </Form.Item> */}
-          <Form.Item name="contactEmail" label="Contact Email" required>
-            <Input placeholder="Your email here" />
-          </Form.Item>
-          <Form.Item
-            label=" Contact Phone Number"
-            name="contactPhone"
-            required
-            rules={[
-              { required: true },
-              {
-                pattern: new RegExp("^(\\+84|84|0)(3|5|7|8|9)[0-9]{8}$"),
-                message: "Please enter a valid phone number"
-              }
-            ]}
-          >
-            <Input placeholder="Phone Number" />
-          </Form.Item>
+            <Button style={{ marginTop: '10px' }} >New Event</Button>
+          </Form.Item> */}
         </div>
       </section>
 
@@ -804,8 +898,14 @@ const CreateTourStep1 = ({
             <Form.Item
               name="maxEventPerPerson"
               label="Max events an athlete can register"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input max events an athlete can register!',
+                }
+              ]}
             >
-              <Select placeholder="Number events per athlete can join">
+              <Select placeholder="Max events per athlete can register">
                 {[1, 2, 3, 4, 5].map((num) => (
                   <Select.Option key={num} value={num}>
                     {num}
@@ -814,8 +914,9 @@ const CreateTourStep1 = ({
               </Select>
             </Form.Item>
 
-            <Form.Item label="Events" required>
-              <Divider />
+            <Form.Item
+              label="Events"
+            >
               <Checkbox
                 indeterminate={indeterminate}
                 onChange={onCheckAllEventChange}
@@ -834,7 +935,18 @@ const CreateTourStep1 = ({
           {/* <div className='w-full h-max flex justify-center items-center'> */}
 
           {/* <Form.Item noStyle name={['categories', 'min']}> */}
-          <Form.List name="createTournamentEvent">
+          <Form.List
+            name="createTournamentEvent"
+            rules={[
+              {
+                validator: async (_, createTournamentEvent) => {
+                  if (!createTournamentEvent || createTournamentEvent.length < 2) {
+                    return Promise.reject(new Error('At least 2 passengers'));
+                  }
+                },
+              },
+            ]}
+          >
             {(fields, { add, remove }) => (
               <div
                 style={{
@@ -914,14 +1026,26 @@ const CreateTourStep1 = ({
                                           {
                                             required: true,
                                             message: 'Please input minimum range age',
+                                          },
+                                          {
+                                            type: 'number',
+                                            min: 7,
+                                            message: 'Please input minimum range age at least 7 years old',
+                                          },
+                                          {
+                                            type: 'number',
+                                            max: 90,
+                                            message: 'Please input minimum range age under 90 years old',
                                           }
                                         ]}
                                       >
                                         <InputNumber
+                                          required
                                           min={7}
                                           max={89}
                                           style={{ width: '150px' }}
                                           placeholder="Minimum age"
+                                          changeOnWheel
                                         />
                                       </Form.Item>
                                       to
@@ -932,14 +1056,26 @@ const CreateTourStep1 = ({
                                           {
                                             required: true,
                                             message: 'Please input maximum range age',
+                                          },
+                                          {
+                                            type: 'number',
+                                            min: 7,
+                                            message: 'Please input maximum range age',
+                                          },
+                                          {
+                                            type: 'number',
+                                            max: 90,
+                                            message: 'Please input maximum range age',
                                           }
                                         ]}
                                       >
                                         <InputNumber
+                                          required
                                           min={7}
                                           max={90}
                                           style={{ width: '150px' }}
                                           placeholder="Maximum age"
+                                          changeOnWheel
                                         />
                                       </Form.Item>
                                     </Space>
@@ -969,39 +1105,64 @@ const CreateTourStep1 = ({
                                     </Select>
                                   </Form.Item>
                                   <Form.Item
-                                    name={[subField.name, 'maximumAthlete']}
-                                    label="Maximum athletes"
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: 'Please input maximum athletes',
-                                      }
-                                    ]}
-                                  >
-                                    <InputNumber
-                                      min={4}
-                                      max={1000}
-                                      style={{ width: '100%' }}
-                                      placeholder="Maximum athletes"
-                                    />
-                                  </Form.Item>
-                                  <Form.Item
                                     name={[subField.name, 'minimumAthlete']}
                                     label="Minimum athletes"
                                     rules={[
                                       {
                                         required: true,
                                         message: 'Please input minimum athletes',
+                                      },
+                                      {
+                                        type: 'number',
+                                        min: 0,
+                                        message: 'Minimum athletes must be at positive number',
+                                      },
+                                      {
+                                        type: 'number',
+                                        max: 1000,
+                                        message: 'Minimum athletes must be under 1000 athletes',
                                       }
                                     ]}
                                   >
                                     <InputNumber
+                                      required
                                       min={0}
                                       max={1000}
                                       style={{ width: '100%' }}
-                                      placeholder="Maximum athletes"
+                                      placeholder="Minimum athletes"
+                                      changeOnWheel
                                     />
                                   </Form.Item>
+                                  <Form.Item
+                                    name={[subField.name, 'maximumAthlete']}
+                                    label="Maximum athletes"
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Please input maximum athletes',
+                                      },
+                                      {
+                                        type: 'number',
+                                        min: 4,
+                                        message: 'Maximum athletes must be at least 4 athletes',
+                                      },
+                                      {
+                                        type: 'number',
+                                        max: 1000,
+                                        message: 'Maximum athletes must be at most 1000 athletes',
+                                      },
+                                    ]}
+                                  >
+                                    <InputNumber
+                                      required
+                                      min={4}
+                                      max={1000}
+                                      style={{ width: '100%' }}
+                                      placeholder="Maximum athletes"
+                                      changeOnWheel
+                                    />
+                                  </Form.Item>
+
 
                                   <Form.Item
                                     name={[subField.name, 'numberOfGames']}
@@ -1018,8 +1179,21 @@ const CreateTourStep1 = ({
                                   <Form.Item
                                     name={[subField.name, 'winningPoint']}
                                     label="Winning points"
+                                    rules={[
+                                      {
+                                        type: 'number',
+                                        min: 11,
+                                        message: 'Winning points must be at least 11 points',
+                                      },
+                                      {
+                                        type: 'number',
+                                        max: 31,
+                                        message: 'Winning points must be at most 31 points',
+                                      }
+                                    ]}
                                   >
                                     <InputNumber
+                                      required
                                       min={11}
                                       max={31}
                                       style={{ width: '100%' }}
@@ -1035,10 +1209,21 @@ const CreateTourStep1 = ({
                                       {
                                         required: true,
                                         message: 'Please input last points',
+                                      },
+                                      {
+                                        type: 'number',
+                                        min: 30,
+                                        message: 'Last points must be at least 30 points',
+                                      },
+                                      {
+                                        type: 'number',
+                                        max: 51,
+                                        message: 'Last points must be at most 51 points',
                                       }
                                     ]}
                                   >
                                     <InputNumber
+                                      required
                                       min={30}
                                       max={51}
                                       style={{ width: '100%' }}
@@ -1071,7 +1256,7 @@ const CreateTourStep1 = ({
                                       },
                                     ]}
                                   >
-                                    <Input maxLength={500} style={{ width: '100%' }} />
+                                    <Input maxLength={500} style={{ width: '100%' }} required />
                                   </Form.Item>
 
                                   <Form.Item
@@ -1084,7 +1269,7 @@ const CreateTourStep1 = ({
                                       }
                                     ]}
                                   >
-                                    <Input maxLength={500} style={{ width: '100%' }} />
+                                    <Input maxLength={500} style={{ width: '100%' }} required />
                                   </Form.Item>
 
                                   <Form.Item
@@ -1172,6 +1357,7 @@ const CreateTourStep1 = ({
             <InputNumber<number>
               min={0}
               max={1000000000}
+              required
               suffix={'VND'}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -1207,6 +1393,7 @@ const CreateTourStep1 = ({
             <InputNumber<number>
               min={0}
               max={1000000000}
+              required
               suffix={'VND'}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -1241,6 +1428,7 @@ const CreateTourStep1 = ({
             <InputNumber<number>
               min={0}
               max={1000000000}
+              required
               suffix={'VND'}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -1261,9 +1449,15 @@ const CreateTourStep1 = ({
             name={'registrationDate'}
             style={{ display: 'block' }}
             label="Registration Date"
-            required
+            rules={[
+              {
+                required: true,
+                message: 'Registration date is required',
+              }
+            ]}
           >
             <RangePicker
+              required
               placeholder={['Select Start Date', 'Select End Date']}
               disabledDate={disabledRegisterDate}
               showTime={{
@@ -1283,9 +1477,14 @@ const CreateTourStep1 = ({
           <Form.Item
             name={'requiredAttachment'}
             label="Required attachments"
-            required
+            rules={[
+              {
+                required: true,
+                message: 'Required attachments is required',
+              }
+            ]}
           >
-            <Select {...sharedAttachmentProps} {...selectAttachmentProps} />
+            <Select {...sharedAttachmentProps} {...selectAttachmentProps}  />
           </Form.Item>
         </div>
       </section>
@@ -1299,35 +1498,44 @@ const CreateTourStep1 = ({
         </div>
         <div className="w-full h-max p-10 flex flex-col justify-center">
           <Form.Item
-            name={'drawDate'}
+            name={"drawDate"}
             label="Draw Date"
-            style={{ display: 'block' }}
-            required
+            style={{ display: 'block', }}
+            rules={[
+              {
+                required: true,
+                message: 'Draw Date is required',
+              },
+            ]}
           >
-            <RangePicker
-              placeholder={['Select Start Date', 'Select End Date']}
+            <DatePicker
+              placeholder="Select Draw Date"
+              format="YYYY-MM-DD HH:mm:ss"
               disabledDate={disabledDrawDate}
+              required
               showTime={{
                 hideDisabledOptions: true,
-                defaultValue: [
-                  dayjs('00:00:00', 'HH:mm:ss'),
-                  dayjs('23:59:59', 'HH:mm:ss'),
-                ],
+                defaultValue: dayjs('00:00:00', 'HH:mm:ss')
               }}
               onChange={(date: any) => {
-                setDrawDate(date);
+                setDrawDate([date, date]);
               }}
-              format="YYYY-MM-DD HH:mm:ss"
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
             />
           </Form.Item>
           <Form.Item
             name={'occurDate'}
             label="Occur Date"
             style={{ display: 'block' }}
-            required
+            rules={[
+              {
+                required: true,
+                message: 'Occur Date is required',
+              }
+            ]}
           >
             <RangePicker
+              required
               placeholder={['Select Start Date', 'Select End Date']}
               disabledDate={disabledOccurDate}
               showTime={{
@@ -1348,17 +1556,33 @@ const CreateTourStep1 = ({
             name={'checkIn'}
             label="Check-in before start time"
             initialValue={dayjs('15:00', formatTimeCheckIn)}
-            required
+            rules={[
+              {
+                required: true,
+                message: 'Check-in before start time is required',
+              }
+            ]}
           >
             <TimePicker
+              required
               defaultValue={dayjs('15:00', formatTimeCheckIn)}
               format={formatTimeCheckIn}
             />
           </Form.Item>
           <Divider />
           <Form.Item
-            label="Create courts"
-            required
+            label="Court List"
+            rules={[
+              {
+                required: true,
+                message: 'Court List is required',
+              },
+              {
+                type: 'array',
+                min: 1,
+                message: 'Court List must be add at least 1 court',
+              }
+            ]}
           >
             <Form.List
               name="createCourts"
@@ -1366,13 +1590,14 @@ const CreateTourStep1 = ({
                 {
                   validator: async (_, courts) => {
                     if (!courts || courts.length < 1) {
-                      return Promise.reject(new Error('Must add at least 1 court'));
+                      return Promise.reject(new Error('Courts must be add at least 1 court'));
+                    }
+                    if (courts.length > 30) {
+                      return Promise.reject(new Error('Courts must be under 30 courts'));
                     }
                   },
                 },
-
               ]}
-
             >
               {(fields, { add, remove }, { errors }) => (
                 <div
@@ -1390,7 +1615,7 @@ const CreateTourStep1 = ({
                         name={[name, 'courtCode']}
                         rules={[
                           {
-                            required: true, 
+                            required: true,
                             message: 'Court code is required',
                           }
                         ]}
@@ -1419,6 +1644,7 @@ const CreateTourStep1 = ({
           <Form.Item
             name="umpirePerMatch"
             label="Umpires per match"
+            style={{ display: "hidden"}}
             rules={[
               {
                 required: true,
@@ -1431,8 +1657,10 @@ const CreateTourStep1 = ({
                 message: 'Umpires per match must be 1 - 3'
               }
             ]}
+            initialValue={1}
           >
             <InputNumber
+              required
               min={1}
               max={3}
               suffix={'Umpire(s)'}
@@ -1441,20 +1669,6 @@ const CreateTourStep1 = ({
               changeOnWheel
             />
           </Form.Item>
-          {/* <Form.Item
-            name="linemanPerMatch"
-            label="Linesman in a match"
-            required
-          >
-            <InputNumber
-              min={1}
-              max={5}
-              suffix={'Linemans'}
-              style={{ width: '100%', marginTop: '8px' }}
-              placeholder="Number of umpires"
-              changeOnWheel
-            />
-          </Form.Item> */}
         </div>
       </section>
       <section className="w-full flex flex-col shadow-shadowBtn">
@@ -1477,7 +1691,10 @@ const CreateTourStep1 = ({
             ]}
           >
             <Radio.Group
-              onChange={(e) => setHasMerchandise(e.target.value)}
+              onChange={(e) => {
+                setHasMerchandise(e.target.value);
+                form.setFieldsValue({ hasMerchandise: e.target.value });
+              }}
               style={{
                 width: '100%',
                 display: 'flex',
@@ -1492,22 +1709,34 @@ const CreateTourStep1 = ({
           </Form.Item>
 
           <div style={{ display: hasMerchandise ? 'block' : 'none' }}>
-            <Form.Item name={'merchandise'} label="Merchandise description">
-              <Input style={{ width: '100%' }} maxLength={512} />
+            <Form.Item
+              name={'merchandise'}
+              label="Merchandise description"
+              rules={[
+                {
+                  max: 500,
+                  message: 'Merchandise description must be less than 500 characters',
+                }
+              ]}
+            >
+              <Input style={{ width: '100%' }} maxLength={500} />
             </Form.Item>
             <Form.Item
               name={'numberOfMerchandise'}
               label="Number of merchandise"
               rules={[
                 {
-                  required: true,
-                  message: 'Number of merchandise is required',
+                  type: 'number',
+                  min: 0,
+                  max: 1000000,
+                  message: 'Number of merchandise must be under 1.000.000',
                 }
               ]}
             >
               <InputNumber
-                min={1}
-                max={1000}
+
+                min={0}
+                max={1000000}
                 style={{ width: '100%' }}
                 placeholder="Number of merchandise"
                 changeOnWheel
@@ -1563,6 +1792,140 @@ const CreateTourStep1 = ({
         </div>
       </section>
       <section className="w-full flex flex-col shadow-shadowBtn">
+        <div className="w-full h-max flex bg-primaryColor rounded-t-md">
+          <div className="w-full h-max flex justify-between items-center px-10 py-1">
+            <h1 className="font-quicksand  text-base font-bold text-white">
+              Organizers & Umpires
+            </h1>
+          </div>
+        </div>
+        <div className="w-full h-max p-10">
+          <Form.Item
+            name="host"
+            label="Host"
+            initialValue={user?.name}
+            required
+          >
+            <Input disabled />
+          </Form.Item>
+          {/* <Form.Item name="organizers" label="Co-Organizers">
+                        <Select {...sharedOrganizerProps} {...selectOrganizerProps} />
+                    </Form.Item> */}
+          <Form.Item
+            name="contactEmail"
+            label="Contact Email"
+            rules={[
+              {
+                type: 'email',
+                message: 'The input is not valid E-mail!'
+              },
+              {
+                required: true,
+                message: 'Please input your contact email!'
+              }
+            ]}
+          >
+            <Input placeholder="Your email here" required />
+          </Form.Item>
+          <Form.Item
+            label="Contact Phone Number"
+            name="contactPhone"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your contact phone number!'
+              },
+              {
+                pattern: new RegExp("^(\\+84|84|0)(3|5|7|8|9)[0-9]{8}$"),
+                message: "Please enter a valid Vietnamese phone number"
+              }
+            ]}
+          >
+            <Input placeholder="Phone Number" required />
+          </Form.Item>
+          <Divider />
+          <Form.Item
+            // name="isRecruit"
+            label="Umpires"
+            initialValue={"Registration umpires"}
+          >
+            <Input
+              variant='borderless'
+              readOnly
+              value={"Registration umpires"}
+            />
+            {/* <Radio.Group
+              onChange={(e) => {
+                setIsRecruit(true);
+                form.setFieldsValue({ isRecruit: true });
+              }}
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'column',
+                rowGap: '8px',
+              }}
+            >
+              <Radio value={false}>Already have umpires team </Radio>
+              <Radio value={true}> Recruit umpires </Radio>
+            </Radio.Group> */}
+          </Form.Item>
+          <Form.Item
+            name="isRecruit"
+            label="Umpires"
+            style={{ display: 'none',  }}
+            initialValue={"Registration umpires"}
+          >
+            <Input
+              variant='borderless'
+              readOnly
+              value={"Registration umpires"}
+            />
+            {/* <Radio.Group
+              onChange={(e) => {
+                setIsRecruit(true);
+                form.setFieldsValue({ isRecruit: true });
+              }}
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'column',
+                rowGap: '8px',
+              }}
+            >
+              <Radio value={false}>Already have umpires team </Radio>
+              <Radio value={true}> Recruit umpires </Radio>
+            </Radio.Group> */}
+          </Form.Item>
+          <Form.Item
+            // style={isRecruit ? { display: 'block' } : { display: 'none' }}
+            name="numberOfUmpires"
+            style={{ display: 'block' }}
+            label="Number of umpires"
+            initialValue={1}
+            rules={[
+              {
+                required: true,
+                message: 'Please input number of umpires!'
+              }
+            ]}
+          >
+            <InputNumber
+              required
+              min={1}
+              max={30}
+              suffix={'Umpires'}
+              style={{ width: '100%' }}
+              placeholder="Number of umpires"
+              changeOnWheel
+            />
+          </Form.Item>
+        </div>
+      </section>
+
+      <section className="w-full hidden flex-col shadow-shadowBtn">
         <div className="w-full flex flex-col shadow-shadowBtn">
           <div className="w-full h-max flex bg-primaryColor rounded-t-md">
             <div className="w-full h-max flex justify-between items-center px-10 py-1">
@@ -1577,36 +1940,6 @@ const CreateTourStep1 = ({
                                         <Select {...sharedSponsorProps} {...selectSponsorProps} placeholder="Select sponsors" />
                                     </Form.Item> */}
             <Divider />
-            <Form.Item name="isRecruit" label="Umpires" required>
-              <Radio.Group
-                onChange={(e) => setIsRecruit(e.target.value)}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  flexDirection: 'column',
-                  rowGap: '8px',
-                }}
-              >
-                <Radio value={false}>Already have umpires team </Radio>
-                <Radio value={true}> Recruit umpires </Radio>
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item
-              name="numberOfUmpires"
-              style={isRecruit ? { display: 'block' } : { display: 'none' }}
-              label="Number of umpires"
-              initialValue={1}
-            >
-              <InputNumber
-                min={1}
-                max={50}
-                suffix={'Umpires'}
-                style={{ width: '100%' }}
-                placeholder="Number of umpires"
-                changeOnWheel
-              />
-            </Form.Item>
 
 
             {/* <div className='w-full h-max flex flex-col items-center justify-center'> */}

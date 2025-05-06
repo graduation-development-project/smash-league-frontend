@@ -148,8 +148,10 @@ const CreateTourPage = ({ session }: any) => {
           message.error('Failed to upload merchandise images');
         }
       }
+      console.log();
+
       const response = await createTourAPI(accessToken, values);
-      console.log(response, 'create API');
+      console.log(response, 'create tour API');
       if (response?.statusCode === 200 || response?.statusCode === 201) {
         router.push('/tournaments/details/' + response?.data?.id);
         toast.success(`${response?.message}`, {
@@ -164,19 +166,29 @@ const CreateTourPage = ({ session }: any) => {
         });
         return true;
       }
+      if (response?.statusCode === 400 && response?.message.includes("Credit")) {
+        console.log("Status Code Create tour", response?.data?.statusCode);
+        toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
       throw new Error('Failed to create tournament');
     } catch (error: any) {
-      toast.error(`${error.response?.message}`, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
-      router.push('/tournaments/create');
+      console.error(
+        'Error creating tour API:',
+        error.response?.data || error.message,
+      );
+
+
+
+      // router.push('/tournaments/create');
     }
   };
 
@@ -209,11 +221,11 @@ const CreateTourPage = ({ session }: any) => {
     const registrationClosingDate = registrationDate
       ? registrationDate[1].toISOString()
       : null;
-    const drawStartDate = drawDate ? drawDate[0].toISOString() : null;
+    const drawStartDate = drawDate ? drawDate.toISOString() : null;
     const startDate = occurDate ? occurDate[0].toISOString() : null;
     const endDate = occurDate ? occurDate[1].toISOString() : null;
     const checkInBeforeStart = checkIn ? checkIn.toISOString() : null;
-    const createCourt = {createCourts : createCourts};
+    const createCourt = { createCourts: createCourts };
 
     const submitData = {
       ...rest,
