@@ -10,7 +10,7 @@ const OrganizerZone = () => {
       <main className="w-full h-max flex flex-col gap-[20px] bg-white p-[40px] shrink-0 items-start shadow-shadowComp mt-10 rounded-md">
         <div className="flex flex-col gap-2 items-start">
           <h1 className="text-[32px] text-center font-bold leading-normal text-black">
-            <span className="text-secondColor">Organizer</span> Zone
+            <span className="text-secondColor">Umpires</span> Zone
           </h1>
           <p className="text-[16px] text-[#6A6A6A] font-semibold leading-3">
             Become the Official Gamekeeper of Smash League Tournaments

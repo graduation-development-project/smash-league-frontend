@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { uploadBgTourImageAPI } from '@/services/create-tour';
 import { createSponsorsDetailsTourAPI, deleteSponsorAPI, getSponsorTourDetailsAPI } from '@/services/update-tour';
 import { InfoCircleOutlined, LoadingOutlined, PlusCircleOutlined } from '@ant-design/icons';
@@ -96,6 +97,7 @@ const UpdateSponsorsDetailsTour = ({
 
     useEffect(() => {
         fetchGetSponsorsDetailTour();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [detail?.id])
 
     const isLimitReached = (type: string) => {

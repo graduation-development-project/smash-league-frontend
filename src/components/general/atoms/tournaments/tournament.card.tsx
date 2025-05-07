@@ -21,7 +21,7 @@ import React from 'react';
 
 const TournamentCard = ({ tour }: any) => {
   const router = useRouter();
-  console.log(tour);
+  // console.log(tour);
   return (
     <div
       className="w-[300px] h-max flex flex-col gap-2 rounded-xl p-2 border cursor-pointer hover:shadow-shadowBtn"
@@ -86,7 +86,7 @@ const TournamentCard = ({ tour }: any) => {
 
             if (!shouldShow) {
               return (
-                <div className="h-6 text-green-600 flex gap-2">
+                <div className="h-6 text-gray-500 flex gap-2">
                   <AiOutlineFieldTime size={20} strokeWidth={3} className='mt-[3px]'/>{' '}
                   <span>Expired</span>
                 </div>

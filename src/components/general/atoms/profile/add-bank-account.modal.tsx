@@ -102,6 +102,7 @@ const AddBankAccountModal = ({
     if (debouncedAccountNumber && bankCode) {
       handleCheckBankAccount(debouncedAccountNumber);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedAccountNumber, bankCode]);
 
   const handleSelectBank = (value: string) => {
@@ -237,7 +238,7 @@ const AddBankAccountModal = ({
               </Form.Item>
 
               {isShowAccountNumber && (
-                <Form.Item label="Account Nummber" name="accountNumber">
+                <Form.Item label="Account Number" name="accountNumber">
                   <Input
                     placeholder="Enter your account number"
                     onChange={(e) => setAccountNumber(e.target.value)}

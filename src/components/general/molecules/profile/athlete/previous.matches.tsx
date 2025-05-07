@@ -27,6 +27,7 @@ const PreviousMatches = ({ info }: { info: any }) => {
 
   useEffect(() => {
     getMatches();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, info?.id]);
 
   return (

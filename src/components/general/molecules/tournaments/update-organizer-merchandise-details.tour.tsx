@@ -66,6 +66,7 @@ const UpdateOrganizerMerchandiseDetailsTour = ({
 
   useEffect(() => {
     fetchGetTourContactDetail();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onFinish = async (fieldsValue: any) => {
