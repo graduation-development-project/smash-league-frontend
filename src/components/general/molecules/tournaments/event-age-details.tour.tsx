@@ -60,7 +60,7 @@ const EventAgeDetails = ({
     {
       label: 'Standing Board',
       key: 'standing-board',
-      children: <StandingBoardDetailTour mainColor={mainColor} eventId={eventId} />,
+      children: <StandingBoardDetailTour  mainColor={mainColor}  eventId={eventId} />,
     },
     // {
     //   label: 'Check List',

@@ -32,6 +32,8 @@ export const getStandingBoardTourAPI = async () => {
 };
 export const getStandingBoardTourEventAPI = async (id : string) => {
   try {
+    console.log(id);
+    
     const response = await axios.get(`${URL}/tournaments/get-tournaments-event-standing-board/${id}`);
     if (response.data.statusCode === 200 || response.data.statusCode === 201) {
       return response.data;
