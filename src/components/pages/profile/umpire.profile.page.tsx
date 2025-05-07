@@ -11,6 +11,7 @@ import OverviewUmpireProfile from '../../general/organisms/profile/umpire/overvi
 import MyTournaments from '../tournaments/my-tour.tour';
 import { getProfileAPI } from '@/services/user';
 import { useProfileContext } from '@/context/profile.context';
+import BankAccountShow from '@/components/general/atoms/bank/bank-account';
 
 const UmpireProfilePage = (props: any) => {
   const { session } = props;
@@ -77,6 +78,11 @@ const UmpireProfilePage = (props: any) => {
                 setProfile={setProfile}
               />
             ),
+          },
+          {
+            key: '5',
+            label: 'Bank Account',
+            children: <BankAccountShow />,
           },
         ]
       : []),

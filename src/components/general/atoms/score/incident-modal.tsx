@@ -287,7 +287,7 @@ export default function IncidentModal({
                 <div className="flex items-center">
                   <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 mr-3">
                     <Image
-                      src="/placeholder.svg?height=80&width=80"
+                      src="https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg"
                       alt={player1.name}
                       fill
                       className="object-cover"
@@ -308,7 +308,7 @@ export default function IncidentModal({
                 <div className="flex items-center">
                   <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 mr-3">
                     <Image
-                      src="/placeholder.svg?height=80&width=80"
+                      src="https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg"
                       alt={player2.name}
                       fill
                       className="object-cover"

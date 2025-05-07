@@ -13,6 +13,7 @@ import { useProfileContext } from '@/context/profile.context';
 import { useParams } from 'next/navigation';
 import MyTournaments from '../tournaments/my-tour.tour';
 import MyTeams from '@/components/general/organisms/teams/my-teams';
+import BankAccountShow from '@/components/general/atoms/bank/bank-account';
 
 const AthleteProfilePage = (props: any) => {
   const { session } = props;
@@ -86,6 +87,11 @@ const AthleteProfilePage = (props: any) => {
               />
             ),
           },
+          {
+            key: '5',
+            label: 'Bank Account',
+           children: <BankAccountShow />,
+          }
         ]
       : []),
   ];
