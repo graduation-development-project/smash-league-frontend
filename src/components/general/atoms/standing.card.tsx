@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import images from "@/assets/images";
 import { formatLocation, formatOccurDate } from "@/utils/format";
 import { Image } from "antd";

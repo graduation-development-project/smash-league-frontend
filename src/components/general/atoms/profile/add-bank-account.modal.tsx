@@ -7,16 +7,19 @@ import {
   checkBankAccountAPI,
   getBankListAPI,
 } from '@/services/bank';
+import { getProfileAPI1 } from '@/services/user';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Form, Input, Modal, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const AddBankAccountModal = ({
+  session,
   isModalOpen,
   setIsModalOpen,
   accessToken,
 }: {
+  session: any;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   accessToken: string;
@@ -56,6 +59,24 @@ const AddBankAccountModal = ({
   useEffect(() => {
     getBankList();
   }, []);
+
+  const getProfile1 = async () => {
+    try {
+      const res = await getProfileAPI1(session.user?.access_token);
+      console.log('Check res profile', res);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            ...res.data,
+            access_token: session.user?.access_token,
+          }),
+        );
+      }
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
 
   const handleCheckBankAccount = async (accountNumber: string) => {
     try {
@@ -102,7 +123,7 @@ const AddBankAccountModal = ({
     if (debouncedAccountNumber && bankCode) {
       handleCheckBankAccount(debouncedAccountNumber);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedAccountNumber, bankCode]);
 
   const handleSelectBank = (value: string) => {
@@ -135,6 +156,7 @@ const AddBankAccountModal = ({
         setIsModalOpen(false);
         form.resetFields();
         setBankList([]);
+        getProfile1();
         toast.success(`${addResponse?.data?.message}`, {
           position: 'top-right',
           autoClose: 2000,
