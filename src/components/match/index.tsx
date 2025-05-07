@@ -56,8 +56,8 @@ function Match({
           onClick={() => onPartyClick?.(topParty, topWon)}
         >
           <Team>
-            <div className="flex flex-col gap-4 p-2">
-              <div>{topParty?.player1?.name || 'NO INFO'}</div>
+            <div className="flex flex-col p-2 text-[20px] font-quicksand">
+              <div>{topParty?.player1?.name || 'No Info'}</div>
               {/* <div>{topParty?.player2?.name || "N/A"}</div> */}
             </div>
           </Team>
@@ -107,8 +107,8 @@ function Match({
           onClick={() => onPartyClick?.(bottomParty, bottomWon)}
         >
           <Team>
-            <div className="flex flex-col gap-3 p-2">
-              <div>{bottomParty?.player1?.name || 'NO INFO'}</div>
+            <div className="flex flex-col p-2 text-[20px] font-quicksand">
+              <div>{bottomParty?.player1?.name || 'No Info'}</div>
               {/* <div>{bottomParty?.player2?.name || "N/A"}</div> */}
             </div>
           </Team>

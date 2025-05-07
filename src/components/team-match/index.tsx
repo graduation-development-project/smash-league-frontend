@@ -54,9 +54,9 @@ function TeamMatch({
           onClick={() => onPartyClick?.(topParty, topWon)}
         >
           <Team>
-            <div className="flex flex-col gap-4 p-2">
-              <div>{topParty?.player1?.name || 'NO INFO'}</div>
-              <div>{topParty?.player2?.name || 'NO INFO'}</div>
+            <div className="flex flex-col gap-2 p-2 text-[20px] font-quicksand">
+              <div>{topParty?.player1?.name || 'No Info'}</div>
+              <div>{topParty?.player2?.name || 'No Info'}</div>
             </div>
           </Team>
           <Score $won={topWon}>
@@ -105,9 +105,9 @@ function TeamMatch({
           onClick={() => onPartyClick?.(bottomParty, bottomWon)}
         >
           <Team>
-            <div className="flex flex-col gap-3 p-2">
-              <div>{bottomParty?.player1?.name || 'NO INFO'}</div>
-              <div>{bottomParty?.player2?.name || 'NO INFO'}</div>
+            <div className="flex flex-col gap-2 p-2 text-[20px] font-quicksand">
+              <div>{bottomParty?.player1?.name || 'No Info'}</div>
+              <div>{bottomParty?.player2?.name || 'No Info'}</div>
             </div>
           </Team>
           <Score $won={bottomWon}>
