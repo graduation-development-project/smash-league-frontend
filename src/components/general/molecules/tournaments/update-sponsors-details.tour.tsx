@@ -5,6 +5,7 @@ import { InfoCircleOutlined, LoadingOutlined, PlusCircleOutlined } from '@ant-de
 import { Button, Card, Col, ConfigProvider, DatePicker, Divider, Form, Input, InputNumber, Modal, Radio, Row, Select, Tooltip } from 'antd'
 import { AlertCircle, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
+import EmptyCard from '../empty/empty.card';
 
 const sponsorTypes = [
     { id: "diamond", name: "Kim Cương", limit: "1–2", color: "#9c59ff" },
@@ -39,9 +40,9 @@ const initialSponsors = {
         { id: "b1", name: "Bronze Sponsor 1", logo: "/placeholder.svg?height=100&width=100" },
         { id: "b2", name: "Bronze Sponsor 2", logo: "/placeholder.svg?height=100&width=100" },
         { id: "b3", name: "Bronze Sponsor 3", logo: "/placeholder.svg?height=100&width=100" },
-        { id: "b4", name: "Bronze Sponsor 4", logo: "/placeholder.svg?height=100&width=100" },
-        { id: "b5", name: "Bronze Sponsor 5", logo: "/placeholder.svg?height=100&width=100" },
-        { id: "b6", name: "Bronze Sponsor 6", logo: "/placeholder.svg?height=100&width=100" },
+        // { id: "b4", name: "Bronze Sponsor 4", logo: "/placeholder.svg?height=100&width=100" },
+        // { id: "b5", name: "Bronze Sponsor 5", logo: "/placeholder.svg?height=100&width=100" },
+        // { id: "b6", name: "Bronze Sponsor 6", logo: "/placeholder.svg?height=100&width=100" },
     ],
     other: [
         { id: "o1", name: "Other Sponsor 1", logo: "/placeholder.svg?height=100&width=100" },
@@ -62,20 +63,42 @@ const UpdateSponsorsDetailsTour = ({
     const [sponsorList, setSponsorList] = useState<any>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [sponsors, setSponsors] = useState(initialSponsors);
-    const [selectedType, setSelectedType] = useState("diamond")
+    const [selectedType, setSelectedType] = useState("diamond");
+    const mainColor = detail?.mainColor;
 
     const tierOptions = [
         {
             label: 'Diamond',
             value: 'DIAMOND',
+        },
+        {
+            label: 'Platinum',
+            value: 'PLATINUM',
+        },
+        {
+            label: 'Gold',
+            value: 'GOLD',
+        },
+        {
+            label: 'Silver',
+            value: 'SILVER',
+        },
+        {
+            label: 'Bronze',
+            value: 'BRONZE',
+        },
+        {
+            label: 'Other',
+            value: 'OTHER',
         }
+
     ]
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const storedUser = localStorage.getItem('user');
             if (storedUser) {
-                setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+                setUser(storedUser ? JSON.parse(storedUser) : {});
             }
         }
     }, []);
@@ -97,7 +120,7 @@ const UpdateSponsorsDetailsTour = ({
 
     useEffect(() => {
         fetchGetSponsorsDetailTour();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [detail?.id])
 
     const isLimitReached = (type: string) => {
@@ -115,7 +138,6 @@ const UpdateSponsorsDetailsTour = ({
     const onFinish = async (fieldValues: any) => {
         setIsLoading(true);
         const imageLink = await fetchUploadImage(fieldValues.logo);
-
         const data = [
             {
                 "name": fieldValues.name,
@@ -123,128 +145,95 @@ const UpdateSponsorsDetailsTour = ({
                 "tier": fieldValues.tier,
             },
         ]
-
         await fetchCreateSponsor(data);
         await fetchGetSponsorsDetailTour();
         setIsLoading(false);
     };
     return (
         <div>
-            {/* <Form
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 14 }}
-                layout="horizontal"
-                form={form}
-                onFinish={onFinish}
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '50px',
-                    minWidth: '100%',
-                    width: '100%',
-                    fontFamily: 'inherit',
-                    alignItems: 'center',
-                    // justifyContent: 'center'
-                }}
-            >
-                <div className='w-full h-max pt-10 px-3'>
-                    <Form.Item name='sponsors'>
-
-                    </Form.Item>
-                </div>
-
-                <Button style={{ padding: '22px 30px', fontSize: '18px', fontWeight: 'bold' }}
-                    type="primary"
-                    htmlType="submit"
+            {/* <div className="space-y-6"> */}
+            <div className="     p-4 rounded-md border">
+                <Form
+                    labelCol={{ span: 10 }}
+                    wrapperCol={{ span: 14 }}
+                    layout="horizontal"
+                    form={form}
+                    onFinish={onFinish}
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '50px',
+                        minWidth: '100%',
+                        width: '100%',
+                        fontFamily: 'inherit',
+                        alignItems: 'center',
+                        // justifyContent: 'center'
+                    }}
                 >
-                    Save
-                </Button>
+                    <h3 className="px-4 py-2 rounded-md text-lg font-bold mb-4 bg-[#ffeee6] border-[#ff8243] text-primaryColor "
 
-            </Form> */}
-            <div className="space-y-6">
-                <div className="bg-gray-50 p-4 rounded-md border">
-                    <Form
-                        labelCol={{ span: 4 }}
-                        wrapperCol={{ span: 14 }}
-                        layout="horizontal"
-                        form={form}
-                        onFinish={onFinish}
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '50px',
-                            minWidth: '100%',
-                            width: '100%',
-                            fontFamily: 'inherit',
-                            alignItems: 'center',
-                            // justifyContent: 'center'
-                        }}
-                    >
-                        <h3 className="text-lg font-medium mb-4">Thêm nhà tài trợ mới</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <Form.Item
-                                label={"Sponsor's Name"}
-                                name={"name"}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input sponsor name!',
+                    >Add new sponsor</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <Form.Item
+                            label={"Sponsor's Name"}
+                            name={"name"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input sponsor name!',
+                                }
+                            ]}
+                        >
+                            <Input
+                                maxLength={10}
+                                placeholder="Sponsor's Name"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            label={"Logo"}
+                            name={"logo"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please upload logo!',
+                                }
+                            ]}
+                        >
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        setLogoImage(file);
                                     }
-                                ]}
-                            >
-                                <Input
-                                    maxLength={50}
-                                    placeholder="Tên nhà tài trợ"
-                                />
-                            </Form.Item>
-                            <div>
-                                <Form.Item
-                                    label={"Logo"}
-                                    name={"logo"}
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please upload logo!',
-                                        }
-                                    ]}
-                                >
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) {
-                                                setLogoImage(file);
-                                            }
-                                        }}
-                                    />
-                                </Form.Item>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <Form.Item
-                                    label={"Sponsor Tier"}
-                                    name={"tier"}
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please select a tier!',
-                                        }
-                                    ]}
-                                >
-                                    <Select
+                                }}
+                            />
+                            {/* <span className="text-sm ">Chọn ảnh logo</span> */}
+                        </Form.Item>
+                        <Form.Item
+                            label={"Sponsor Tier"}
+                            name={"tier"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please select a tier!',
+                                }
+                            ]}
+                        >
+                            <Select
 
-                                        options={tierOptions}
-                                    >
-                                        {sponsorTypes.map((type) => (
-                                            <option key={type.id} value={type.id}>
-                                                {type.name} ({type.limit})
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-                            </div>
+                                options={tierOptions}
+                            >
+                                {sponsorTypes.map((type) => (
+                                    <option key={type.id} value={type.id}>
+                                        {type.name} ({type.limit})
+                                    </option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <div>
                             <div className="flex items-end">
                                 <Button
                                     type="primary"
@@ -255,83 +244,124 @@ const UpdateSponsorsDetailsTour = ({
                                     <PlusCircleOutlined className="w-4 h-4 mr-2" /> Add Sponsor
                                 </Button>
                                 {isLimitReached(selectedType) && (
-                                    // <TooltipContent>
-                                    //     <p>Đã đạt giới hạn tối đa cho loại tài trợ này</p>
-                                    // </TooltipContent>
-
                                     <Tooltip placement="bottomLeft" title={"Maximum limit reached for this type"} >
-                                        <Button icon={<InfoCircleOutlined className="w-4 h-4 text-gray-500" />}></Button>
+                                        <Button icon={<InfoCircleOutlined className="w-4 h-4 " />}></Button>
                                     </Tooltip>
-
-
                                 )}
                             </div>
                         </div>
-                    </Form>
-                </div>
+                    </div>
+                </Form>
+            </div>
 
 
-                {/* Sponsor categories */}
-                <div>
-                    {sponsorTypes.map((type) => (
-                        <div key={type.id} className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <h3
-                                        className="text-lg font-medium py-1 px-3 rounded-md text-white"
-                                        style={{ backgroundColor: type.color }}
-                                    >
-                                        {type.name} Sponsors
-                                    </h3>
-                                    <Tooltip placement="bottomLeft" title={`Maximum quantity: ${type.limit}`} >
-                                        <Button icon={<InfoCircleOutlined className="w-4 h-4 text-gray-500" />}></Button>
-                                    </Tooltip>
-                                </div>
-                                <div className="text-sm text-gray-500">
-                                    {sponsors[type.id as keyof typeof sponsors].length} /
-                                    {type.id === "bronze" || type.id === "other" ? "∞" : type.limit.split("–")[1]}
-                                </div>
-                            </div>
+            {/* Sponsor categories */}
+            <div className=''>
+                {sponsorTypes.map((type: any, index: number) => (
+                    // <div key={type.id} className="space-y-4">
+                    //     <div className="flex items-center justify-between">
+                    //         <div className="flex items-center gap-2">
+                    //             <h3
+                    //                 className="text-lg font-medium py-1 px-3 rounded-md text-white"
+                    //                 style={{ backgroundColor: type.color }}
+                    //             >
+                    //                 {type.name} Sponsors
+                    //             </h3>
+                    //             <Tooltip placement="bottomLeft" title={`Maximum quantity: ${type.limit}`} >
+                    //                 <Button icon={<InfoCircleOutlined className="w-4 h-4 text-gray-500" />}></Button>
+                    //             </Tooltip>
+                    //         </div>
+                    //         <div className="text-sm text-gray-500">
+                    //             {sponsors[type.id as keyof typeof sponsors].length} /
+                    //             {type.id === "bronze" || type.id === "other" ? "∞" : type.limit.split("–")[1]}
+                    //         </div>
+                    //     </div>
 
-                            <div className="overflow-x-auto pb-2">
-                                <div className={`flex gap-4 ${type.id === "bronze" || type.id === "other" ? "min-w-max" : ""}`}>
-                                    {sponsors[type.id as keyof typeof sponsors].map((sponsor) => (
-                                        <Card key={sponsor.id} className="w-[200px] flex-shrink-0">
-                                            <div className="p-4">
-                                                <div className="flex flex-col items-center">
-                                                    <div className="w-24 h-24 mb-4 flex items-center justify-center">
-                                                        <img
-                                                            src={sponsor.logo || "/placeholder.svg"}
-                                                            alt={sponsor.name}
-                                                            className="max-w-full max-h-full object-contain"
-                                                        />
-                                                    </div>
-                                                    <div className="text-center mb-4">
-                                                        <h4 className="font-medium">{sponsor.name}</h4>
-                                                        <p className="text-sm text-gray-500">{type.name} Sponsor</p>
-                                                    </div>
-                                                    <Button
-                                                        onClick={() => fetchDeleteSponsor(detail?.id, sponsor.id)}
-                                                        className="w-full"
-                                                    >
-                                                        <Trash2 className="w-4 h-4 mr-2" /> Delete
-                                                    </Button>
+                    //     <div className="overflow-x-auto pb-2">
+                    //         <div className={`flex gap-4 ${type.id === "bronze" || type.id === "other" ? "min-w-max" : ""}`}>
+                    //             {sponsors[type.id as keyof typeof sponsors].map((sponsor) => (
+                    //                 <Card key={sponsor.id} className="w-[200px] flex-shrink-0">
+                    //                     <div className="p-4">
+                    //                         <div className="flex flex-col items-center">
+                    //                             <div className="w-24 h-24 mb-4 flex items-center justify-center">
+                    //                                 <img
+                    //                                     src={sponsor.logo || "/placeholder.svg"}
+                    //                                     alt={sponsor.name}
+                    //                                     className="max-w-full max-h-full object-contain"
+                    //                                 />
+                    //                             </div>
+                    //                             <div className="text-center mb-4">
+                    //                                 <h4 className="font-medium">{sponsor.name}</h4>
+                    //                                 <p className="text-sm text-gray-500">{type.name} Sponsor</p>
+                    //                             </div>
+                    //                             <Button
+                    //                                 onClick={() => fetchDeleteSponsor(detail?.id, sponsor.id)}
+                    //                                 className="w-full"
+                    //                             >
+                    //                                 <Trash2 className="w-4 h-4 mr-2" /> Delete
+                    //                             </Button>
+                    //                         </div>
+                    //                     </div>
+                    //                 </Card>
+                    //             ))}
+                    //             {sponsors[type.id as keyof typeof sponsors].length === 0 && (
+                    //                 <div className="flex items-center justify-center w-full h-32 bg-gray-50 rounded-md border border-dashed">
+                    //                     <EmptyCard
+                    //                         description='No sponsors yet'
+                    //                         image='https://i.fbcd.co/products/resized/resized-750-500/1c6f55fb1e9a3eb4f7c93f4b659c11b2489de85652758322b4cb16cbf9d611d7.jpg'
+                    //                     />
+                    //                 </div>
+                    //             )}
+                    //         </div>
+                    //     </div>
+                    // </div>
+                    <div key={index} className="overflow-x-auto w-full pb-2">
+                        <div
+                            className={`
+            flex gap-4 w-full
+            ${["bronze", "other"].includes(type.id) ? "" : "flex-wrap"}
+        `}
+                        >
+                            {sponsorList[type.id as keyof typeof sponsors].length > 0 ? (
+                                sponsors[type.id as keyof typeof sponsors].map((sponsor) => (
+                                    <Card key={sponsor.id} className="w-[200px] flex-shrink-0">
+                                        <div className="p-4">
+                                            <div className="flex flex-col items-center">
+                                                <div className="w-24 h-24 mb-4 flex items-center justify-center">
+                                                    <img
+                                                        src={sponsor.logo || "/placeholder.svg"}
+                                                        alt={sponsor.name}
+                                                        className="max-w-full max-h-full object-contain"
+                                                    />
                                                 </div>
+                                                <div className="text-center mb-4">
+                                                    <h4 className="font-medium">{sponsor.name}</h4>
+                                                    <p className="text-sm text-gray-500">{type.name} Sponsor</p>
+                                                </div>
+                                                <Button
+                                                    onClick={() => fetchDeleteSponsor(detail?.id, sponsor.id)}
+                                                    className="w-full"
+                                                >
+                                                    <Trash2 className="w-4 h-4 mr-2" /> Delete
+                                                </Button>
                                             </div>
-                                        </Card>
-                                    ))}
-                                    {sponsors[type.id as keyof typeof sponsors].length === 0 && (
-                                        <div className="flex items-center justify-center w-full h-32 bg-gray-50 rounded-md border border-dashed">
-                                            <p className="text-gray-500">Chưa có nhà tài trợ {type.name}</p>
                                         </div>
-                                    )}
+                                    </Card>
+                                ))
+                            ) : (
+                                <div className="flex items-center justify-center w-full h-32 bg-gray-50 rounded-md border border-dashed">
+                                    <EmptyCard
+                                        description="No sponsors yet"
+                                        image="https://i.fbcd.co/products/resized/resized-750-500/1c6f55fb1e9a3eb4f7c93f4b659c11b2489de85652758322b4cb16cbf9d611d7.jpg"
+                                    />
                                 </div>
-                            </div>
+                            )}
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
+            </div>
 
-            </div >
+            {/* </div > */}
         </div >
     )
 }
