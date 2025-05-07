@@ -7,16 +7,18 @@ const OrganizerZoneCard = () => {
   const { getTours, tourList } = useTourContext();
 
   useEffect(() => {
-    getTours(1, 3, '');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    getTours(1, 8, '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const tournamentList = tourList?.slice(0, 3);
   return (
     <div className="w-full h-full flex flex-col gap-5 px-8">
       <header className="w-full flex items-start px-[20px] py-[10px] bg-secondColor text-white text-[20px] font-bold self-stretch rounded-tl-[10px] rounded-tr-[10px]">
         Upcoming Oppotunities
       </header>
       <div className="flex flex-col gap-4 ">
-        {tourList?.map((tour: any) => (
+        {tournamentList?.map((tour: any) => (
           <div key={tour.id}>
             <OrganizerCard tour={tour} />
           </div>

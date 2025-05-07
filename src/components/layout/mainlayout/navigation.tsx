@@ -140,9 +140,9 @@ const Navigation = (props: any) => {
     //   : []),
 
     ...(user?.userRoles?.includes('Umpire') ||
-    session?.user?.userRoles?.includes('Umpire') ||
-    !user?.userRoles?.includes('Organizer') ||
-    !session?.user?.userRoles?.includes('Organizer')
+    (session?.user?.userRoles?.includes('Umpire') &&
+      !user?.userRoles?.includes('Organizer') &&
+      !session?.user?.userRoles?.includes('Organizer'))
       ? [
           {
             key: 'umpire-profile',

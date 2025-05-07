@@ -30,7 +30,7 @@ const OnGoingTournament = () => {
   } = useTourContext();
   const [searchTerms, setSearchTerms] = useState<string>('');
   const debounceValue = useDebounce(searchTerms, 1000);
-
+  // console.log("Check totalPerPage", totalPerPage)
   useEffect(() => {
     getTours(currentPage, totalPerPage, debounceValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
