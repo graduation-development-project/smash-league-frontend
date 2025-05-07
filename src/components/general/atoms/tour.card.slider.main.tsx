@@ -1,36 +1,39 @@
-"use client";
+/* eslint-disable @next/next/no-img-element */
+'use client';
 
-import React from "react";
-import { sliderImages } from "@/assets/data"; // Ensure sliderImages is correctly imported
+import React from 'react';
+import { sliderImages } from '@/assets/data'; // Ensure sliderImages is correctly imported
 
-import { useHomeContext } from "@/context/home.context";
-import { Image } from "antd";
+import { useHomeContext } from '@/context/home.context';
+import { Image } from 'antd';
 
-
-const TourCardSliderMain = (
-  {
-    backgroundImage,
-  }: {
-    backgroundImage: string;
-  }
-) => {
+const TourCardSliderMain = ({ slider }: { slider: any }) => {
   const { activeSlide } = useHomeContext(); // Ensure useHomeContext is correctly used
 
-  if (!sliderImages || sliderImages.length === 0) {
-    console.error("sliderImages is not defined or empty.");
+  if (!slider || slider.length === 0) {
+    console.error('sliderImages is not defined or empty.');
     return <div>No images available</div>;
   }
 
   return (
     <div className="w-full h-full flex flex-col gap-3 bg-transparent">
       <div className="w-full h-full">
-        <img
-          // src="https://as1.ftcdn.net/v2/jpg/00/96/81/48/1000_F_96814823_4YZrsofbvFRuX7Uve3VB46aKln2BJOjD.jpg"
-          src={backgroundImage || "https://as1.ftcdn.net/v2/jpg/00/96/81/48/1000_F_96814823_4YZrsofbvFRuX7Uve3VB46aKln2BJOjD.jpg"}
-          alt="Featured Tournament"
-          className="rounded-lg object-cover w-full h-full"
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
+        {slider.map((item: any) => (
+          <div
+            key={item.id}
+            className={`${
+              activeSlide === item.id ? 'block' : 'hidden'
+            } w-full h-full rounded-[0.5rem]`}
+          >
+            <img
+              src={item.backgroundTournament}
+              alt={`Featured Tournament ${item.id}`}
+              // quality={100}
+              // priority
+              className="rounded shadow-lg w-full h-full object-cover animate-fadeInRight"
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

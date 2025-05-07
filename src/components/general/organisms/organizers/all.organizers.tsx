@@ -31,7 +31,7 @@ const AllOrganizers = () => {
     <div className="w-full h-full flex flex-col items-center justify-center gap-6 px-20 py-4">
       <div className="w-full h-full">
         {' '}
-        <SearchOrganizersZoneBar />
+        {/* <SearchOrganizersZoneBar /> */}
       </div>
       <div className="w-full grid grid-cols-4 gap-y-6 place-items-center justify-items-center px-5 py-8 bg-white shadow-shadowBtn rounded-[15px]">
         {organizersList.map((organizer:any) => (

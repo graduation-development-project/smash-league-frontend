@@ -21,11 +21,15 @@ const OrganizersZoneInfoCard = ({ organizer }: { organizer: any }) => {
         setOrganizerId(organizer?.id);
       }}
     >
-      <div className="w-full">
+      <div className="w-full h-full">
         <Image
-          src="https://i.pinimg.com/736x/44/cc/f5/44ccf596eb7e3552059b5c53d3986682.jpg"
+          src={
+            organizer?.avatarUrl
+              ? organizer?.avatarUrl
+              : 'https://assets.challonge.com/assets/community_default_banners/default-cover-3-redesign-2693250cf849ef7bcd3975c81ca64c06e6bdffd39d47ae0c454fd0d6e0006fb4.svg'
+          }
           alt="Organizer Image"
-          width={250}
+          width={300}
           height={150}
           className="object-cover rounded-[5px]"
         />
