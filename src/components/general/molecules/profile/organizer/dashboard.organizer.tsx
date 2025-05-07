@@ -11,6 +11,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { organizerDataset } from '@/assets/data';
 import { colors } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 type TickParamsSelectorProps = {
   tickPlacement: 'end' | 'start' | 'middle' | 'extremities';
@@ -130,6 +131,7 @@ const chartSetting1 = {
 };
 
 const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
+  const router = useRouter();
   const [tickPlacement, setTickPlacement] = React.useState<
     'start' | 'end' | 'middle' | 'extremities'
   >('middle');
@@ -146,7 +148,12 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
         {credit === null || credit === 0 ? (
           <h1 className="text-[14px] font-normal italic">
             You don&apos;t have any credit.{' '}
-            <span className="text-primaryColor not-italic hover:underline cursor-pointer">
+            <span
+              className="text-primaryColor not-italic hover:underline cursor-pointer"
+              onClick={() => {
+                router.push('/package');
+              }}
+            >
               View the tournaments packages
             </span>
           </h1>
