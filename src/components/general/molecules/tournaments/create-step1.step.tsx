@@ -1641,7 +1641,7 @@ const CreateTourStep1 = ({
             </Form.List>
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             name="umpirePerMatch"
             label="Umpires per match"
             style={{ display: "hidden"}}
@@ -1668,7 +1668,7 @@ const CreateTourStep1 = ({
               placeholder="Number of umpires"
               changeOnWheel
             />
-          </Form.Item>
+          </Form.Item> */}
         </div>
       </section>
       <section className="w-full flex flex-col shadow-shadowBtn">
@@ -1709,7 +1709,7 @@ const CreateTourStep1 = ({
           </Form.Item>
 
           <div style={{ display: hasMerchandise ? 'block' : 'none' }}>
-            <Form.Item
+            {/* <Form.Item
               name={'merchandise'}
               label="Merchandise description"
               rules={[
@@ -1720,7 +1720,7 @@ const CreateTourStep1 = ({
               ]}
             >
               <Input style={{ width: '100%' }} maxLength={500} />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               name={'numberOfMerchandise'}
               label="Number of merchandise"

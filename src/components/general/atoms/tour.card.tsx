@@ -13,14 +13,14 @@ const TourCard = ({ tour }: { tour: any }) => {
   const router = useRouter();
 
   return (
-    <div className="w-full h-full flex justify-between gap-5">
-      <div className="relative w-full flex justify-center items-center rounded-lg">
+    <div className="w-full h-[120px] flex justify-between gap-5 mt-5">
+      <div className="relative w-full flex justify-center items-center rounded-lg ">
         {/* Image Background */}
-        <div className="absolute w-[366px] h-[140px] z-0 rounded-md">
+        <div className="absolute w-[342px] h-[120px] z-0 rounded-md">
           <img
             src={tour?.backgroundTournament ? tour.backgroundTournament : ''}
             alt="FeaturedTournament"
-            className="rounded-md object-cover w-full h-full"
+            className="rounded-md object-cover w-full h-full "
           />
         </div>
 
@@ -63,7 +63,7 @@ const TourCard = ({ tour }: { tour: any }) => {
               More Details
             </TextGradientBtn>
           </div>
-          <Button size={'sm'}>Watch Live</Button>
+          {/* <Button size={'sm'}>Watch Live</Button> */}
         </div>
       </div>
     </div>
