@@ -206,6 +206,7 @@ const UpdateBasicInfoDetailsTour = ({
     };
     newLocationString(street, ward, districtName, provinceName);
     form.setFieldValue('location', location);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [street, provinceId, provinceName, districtId, districtName, ward]);
 
 

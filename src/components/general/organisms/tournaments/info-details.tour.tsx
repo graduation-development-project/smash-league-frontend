@@ -27,8 +27,8 @@ const InfoDetailsTour = ({
   isOrganizer: boolean;
 }) => {
   const styleCard = 'w-full flex py-5 px-8 border rounded-md';
-  const color = tour?.mainColor.includes('#')? tour?.mainColor : "#FF8243";
-    const textColor = '#FF8243';
+  const color = tour?.mainColor.includes('#') ? tour?.mainColor : '#FF8243';
+  const textColor = '#FF8243';
   // const bgColor = `bg-[${color}]` || "bg-[#FF8243]";
   // console.log(tour);
 
@@ -44,67 +44,98 @@ const InfoDetailsTour = ({
     );
   };
 
-    return (
-        <div className='w-full h-max flex flex-col gap-5 p-3'>
-            <div className={`w-full flex py-4 px-8 rounded-md  justify-between items-center text-2xl  `}
-                style={{ backgroundColor: `${color}`, color: `${textColor}`, }}
-            >
-                <h3  className='font-bold text-white'>{tour?.tournamentSerie?.tournamentSerieName}</h3>
-                <Button size={'sm'} colorBtn={'whiteBtn'} >View series</Button>
+  return (
+    <div className="w-full h-max flex flex-col gap-5 p-3">
+      <div
+        className={`w-full flex py-4 px-8 rounded-md  justify-between items-center text-2xl  `}
+        style={{ backgroundColor: `${color}`, color: `${textColor}` }}
+      >
+        <h3 className="font-bold text-white">
+          {tour?.tournamentSerie?.tournamentSerieName}
+        </h3>
+        <Button size={'sm'} colorBtn={'whiteBtn'}>
+          View series
+        </Button>
+      </div>
+      <div className={`${styleCard} flex-col gap-7 text-base `}>
+        {titleCard('Basic Info')}
+        <div className="w-full flex flex-row justify-between">
+          <div className="w-full flex gap-8">
+            <ul className=" flex flex-col gap-2 font-semibold">
+              <li className="flex gap-2 items-center">
+                <FaLocationDot color={`${color}`} size={18} />
+                Location
+              </li>
+              <li className="flex gap-2 items-center ">
+                <FaRegCalendar color={`${color}`} size={18} />
+                Occur Date
+              </li>
+              <li className="flex gap-2 items-center">
+                <FaUserCircle color={`${color}`} size={18} />
+                Host
+              </li>
+              <li className="flex gap-2 items-center">
+                <FaRegClock color={`${color}`} size={18} />
+                Date left
+              </li>
+            </ul>
+            <ul className="flex flex-col gap-2">
+              <li>{tour?.location}</li>
+              <li className="font-semibold">
+                {formatOccurDate(tour?.startDate, tour?.endDate)}
+              </li>
+              <li>{tour?.organizer?.name}</li>
+              <li className="text-[red] font-semibold">
+                {tour?.expiredTimeLeft}
+              </li>
+            </ul>
+          </div>
+          {/* <div className='h-40 w-[2px] rounded-full' style={{ backgroundColor: `${color}`,}} /> */}
+          <Card>
+            <div className="w-max flex gap-5">
+              <div className="rounded-full">
+                <Image
+                  style={{
+                    borderRadius: '20px',
+                    objectFit: 'contain',
+                  }}
+                  width={100}
+                  height={100}
+                  src={
+                    tour?.organizer?.avatarURL
+                      ? tour?.organizer?.avatarURL
+                      : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
+                  }
+                  alt="Organizer Avatar"
+                />
+              </div>
+              <ul className="flex flex-col gap-2 font-semibold">
+                <li className="flex gap-2 items-center">
+                  <FaUserCircle color={`${color}`} size={18} />
+                  Host
+                </li>
+                <li className="flex gap-2 items-center">
+                  <FaLocationDot color={`${color}`} size={18} />
+                  Contact Phone
+                </li>
+                <li className="flex gap-2 items-center">
+                  <FaRegCalendar color={`${color}`} size={18} />
+                  Contact Email
+                </li>
+              </ul>
+              <ul className="flex flex-col gap-2">
+                <li>{tour?.organizer?.name}</li>
+                <li>{tour?.contactPhone}</li>
+                <li>{tour?.contactEmail}</li>
+              </ul>
             </div>
-            <div className={`${styleCard} flex-col gap-7 text-base `}>
-                {titleCard('Basic Info')}
-                <div className='w-full flex flex-row justify-between'>
-                    <div className='w-full flex gap-8'>
-                        <ul className=' flex flex-col gap-2 font-semibold'>
-                            <li className='flex gap-2 items-center'><FaLocationDot color={`${color}`} size={18} />Location</li>
-                            <li className='flex gap-2 items-center '><FaRegCalendar color={`${color}`} size={18} />Occur Date</li>
-                            <li className='flex gap-2 items-center'><FaUserCircle color={`${color}`} size={18} />Host</li>
-                            <li className='flex gap-2 items-center'><FaRegClock color={`${color}`} size={18} />Date left</li>
-                        </ul>
-                        <ul className='flex flex-col gap-2'>
-                            <li>{tour?.location}</li>
-                            <li className='font-semibold'>{formatOccurDate(tour?.startDate, tour?.endDate)}</li>
-                            <li>{tour?.organizer?.name}</li>
-                            <li className='text-[red] font-semibold'>{tour?.expiredTimeLeft}</li>
-                        </ul>
-                    </div>
-                    {/* <div className='h-40 w-[2px] rounded-full' style={{ backgroundColor: `${color}`,}} /> */}
-                    <Card>
-                        <div className='w-max flex gap-5'>
-                            <div className='rounded-full'>
-                                <Image
-                                    style={{
-                                        borderRadius: "20px",
-                                        objectFit: "contain",
-                                    }}
-                                    width={100}
-                                    height={100}
-                                    src={tour?.organizer?.avatarURL}
-                                    alt='Organizer Avatar'
-                                />
-                            </div>
-                            <ul className='flex flex-col gap-2 font-semibold'>
-                                <li className='flex gap-2 items-center'><FaUserCircle color={`${color}`} size={18} />Host</li>
-                                <li className='flex gap-2 items-center'><FaLocationDot color={`${color}`} size={18} />Contact Phone</li>
-                                <li className='flex gap-2 items-center'><FaRegCalendar color={`${color}`} size={18} />Contact Email</li>
-                                
-                                
-
-                            </ul>
-                            <ul className='flex flex-col gap-2'>
-                                <li>{tour?.organizer?.name}</li>
-                                <li>{tour?.contactPhone}</li>
-                                <li>{tour?.contactEmail}</li>
-                                
-                                
-                            </ul>
-                        </div>
-                    </Card>
-
-                </div>
-                <div className='w-max flex py-2 px-8 gap-2 items-center bg-gradient-orange rounded-full text-white font-bold '><HiMiniTrophy color="#f3c900" size={25} />Prize Pool : {formatMoney(tour?.prizePool)}</div>
-            </div>
+          </Card>
+        </div>
+        <div className="w-max flex py-2 px-8 gap-2 items-center bg-gradient-orange rounded-full text-white font-bold ">
+          <HiMiniTrophy color="#f3c900" size={25} />
+          Prize Pool : {formatMoney(tour?.prizePool)}
+        </div>
+      </div>
 
       <div className={`${styleCard} flex-col gap-4 text-base `}>
         {titleCard('Registration & Fee')}

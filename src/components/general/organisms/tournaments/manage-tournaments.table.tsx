@@ -71,6 +71,7 @@ const ManageTournamentsTable = () => {
 
   useEffect(() => {
     getTours(1, 100, '');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleCancelTournamentByStaff = async (id: string) => {

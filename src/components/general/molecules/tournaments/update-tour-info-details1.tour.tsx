@@ -159,11 +159,13 @@ console.log("detail", detail);
     fetchGetTourInfoDetailsTour();
     fetchGetAllSeries();
     fetchProvince();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchGetAllSeries();
     fetchProvince();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -173,6 +175,7 @@ console.log("detail", detail);
       setDistrict("");
       fetchDistrict(provinceId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceId]);
 
   useEffect(() => {
@@ -181,12 +184,14 @@ console.log("detail", detail);
       setWard("");
       fetchWard(districtId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceId, districtId]);
 
   useEffect(() => {
     const newLocation = [street, ward, districtName, provinceName].join(', ');
     setLocation(newLocation);
     form.setFieldValue('location', newLocation);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [street, ward, districtName, provinceName]);
 
 

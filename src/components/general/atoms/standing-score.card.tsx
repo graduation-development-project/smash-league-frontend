@@ -27,6 +27,7 @@ const StandingScoreCard = ({
 
     useEffect(() => {
         fetchGetStandingBoardTourEventAPI(eventId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

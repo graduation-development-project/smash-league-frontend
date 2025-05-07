@@ -48,7 +48,7 @@ export const TourContextProvider = ({
     );
     const [total, setTotal] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [totalPerPage, setTotalPerPage] = useState<number>(12);
+    const [totalPerPage, setTotalPerPage] = useState<number>(8);
 
     // Load tourId from localStorage on mount (client-side only)
     useEffect(() => {

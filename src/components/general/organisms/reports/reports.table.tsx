@@ -138,6 +138,7 @@ const ReportsTable = () => {
 
   useEffect(() => {
     getAllReports();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const columns: TableProps<DataType>['columns'] = [
