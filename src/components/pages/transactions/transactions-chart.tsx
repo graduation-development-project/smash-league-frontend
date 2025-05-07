@@ -132,6 +132,7 @@ export default function TransactionChartMUI() {
 
   useEffect(() => {
     fetchTransactionData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (

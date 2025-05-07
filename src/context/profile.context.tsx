@@ -30,7 +30,7 @@ export const ProfileContextProvider = ({
   const [organizerId, setOrganizerIdState] = useState('');
   const [umpireId, setUmpireIdState] = useState('');
   const [teamLeaderId, setTeamLeaderIdState] = useState('');
-  const [activeKey, setActiveKey] = useState('1');
+  const [activeKey, setActiveKey] = useState('2');
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
 

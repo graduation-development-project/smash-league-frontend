@@ -193,3 +193,19 @@ export const getAllUsersAPI = async (accessToken: string) => {
     return error.response?.data;
   }
 };
+
+export const getUserByRoleAPI = async (role: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/get-user-by-role/${role}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all users:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

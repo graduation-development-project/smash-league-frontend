@@ -1,10 +1,14 @@
+'use client';
 import Image from 'next/image';
 import React from 'react';
 import { organizerImage } from '@/assets/data';
 import TextGradientBtn from '../../atoms/text.gradient.btn';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 const OrganizerZoneCardMain = () => {
+  const router = useRouter();
+
   return (
     <div className="w-full h-full flex flex-col ">
       <div className="relative w-full h-[85%] flex flex-col">
@@ -43,10 +47,18 @@ const OrganizerZoneCardMain = () => {
             })}
           </ul>
           <div className="flex gap-5 mt-10">
-            <Button size={'lg'} colorBtn={'gradientGreenBtn'}>
+            <Button
+              size={'lg'}
+              colorBtn={'gradientGreenBtn'}
+              onClick={() => router.push('/tournaments')}
+            >
               Participate now
             </Button>
-            <TextGradientBtn textColor="green" size="lg">
+            <TextGradientBtn
+              textColor="green"
+              size="lg"
+              onClick={() => router.push('/tournaments')}
+            >
               Read more
             </TextGradientBtn>
           </div>

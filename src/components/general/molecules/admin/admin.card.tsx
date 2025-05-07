@@ -58,6 +58,7 @@ const AdminCard = () => {
     getTours(1, 100, '');
     getAllUsers();
     getAllTransactions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   return (
     <Row gutter={16} style={{ fontFamily: 'inherit' }}>

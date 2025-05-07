@@ -457,10 +457,16 @@ const DetailsTourPage = () => {
                           key: 'feedback',
                           label: 'Feedback',
                         },
-                        {
-                          key: 'reports',
-                          label: 'Reports',
-                        },
+
+                        ...(!isOrganizer
+                          ? [
+                              {
+                                key: 'reports',
+                                label: 'Reports',
+                              },
+                            ]
+                          : []),
+
                         ...(isOrganizer
                           ? [
                               {

@@ -86,7 +86,7 @@ const TournamentCard = ({ tour }: any) => {
 
             if (!shouldShow) {
               return (
-                <div className="h-6 text-green-600 flex gap-2">
+                <div className="h-6 text-gray-500 flex gap-2">
                   <AiOutlineFieldTime size={20} strokeWidth={3} className='mt-[3px]'/>{' '}
                   <span>Expired</span>
                 </div>

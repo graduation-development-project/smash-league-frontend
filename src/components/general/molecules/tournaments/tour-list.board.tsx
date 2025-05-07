@@ -20,6 +20,7 @@ const TourListBoard = ({
   setTotalPerPage: (perPage: number) => void
   handlePageChange: (page: number) => void
 }) => {
+  // console.log("Check totalPerPage", totalPerPage);
   return (
     <div className='w-full h-max flex flex-col px-5 py-5 gap-5 bg-white shadow-shadowComp rounded-lg'>
       <h1 className='text-[32px] text-start px-5 font-bold leading-normal text-black'><span className='text-primaryColor'>Tournaments</span> List</h1>
