@@ -92,6 +92,24 @@ const UpdateInformationProfile = ({
     }
   };
 
+  const getProfile1 = async () => {
+    try {
+      const res = await getProfileAPI1(session.user?.access_token);
+      console.log('Check res profile', res);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            ...res.data,
+            access_token: session.user?.access_token,
+          }),
+        );
+      }
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
+
   useEffect(() => {
     getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,6 +184,7 @@ const UpdateInformationProfile = ({
         setFile(null);
         setAvatarImage('');
         setIsLoading(false);
+        getProfile1();
         toast.success('Update profile successfully', {
           position: 'top-right',
           autoClose: 3000,
@@ -404,6 +423,7 @@ const UpdateInformationProfile = ({
       />
 
       <AddBankAccountModal
+      session={session}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         accessToken={user?.access_token}

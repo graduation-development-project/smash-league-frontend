@@ -2,6 +2,7 @@
 import { registerNewRoleAPI } from '@/services/user';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Col, Form, Input, Row, Image, Button, ConfigProvider } from 'antd';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -13,6 +14,7 @@ const BecomeUmpireForm = () => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -57,6 +59,7 @@ const BecomeUmpireForm = () => {
       if (response?.status === 200 || response?.status === 201) {
         setIsLoading(false);
         form.resetFields();
+        router.push('/home');
         toast.success(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,

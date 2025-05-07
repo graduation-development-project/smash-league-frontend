@@ -15,10 +15,12 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const TournamentsOrganizerProfile = ({
+  profile,
   isOrganizer,
   tournamentList,
   setTournamentList,
 }: {
+  profile: any;
   isOrganizer: boolean;
   tournamentList: any[];
   setTournamentList: React.Dispatch<React.SetStateAction<never[]>>;
@@ -27,7 +29,7 @@ const TournamentsOrganizerProfile = ({
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
-  const { setActiveKey, organizerId } = useProfileContext();
+  const { setActiveKey, organizerId, activeKey } = useProfileContext();
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(4);
   const [total, setTotal] = useState(0);
@@ -39,11 +41,12 @@ const TournamentsOrganizerProfile = ({
         setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
       }
     }
-  }, []);
+  }, [activeKey]);
 
   const getTournamentsOfOrganizerId = async () => {
     if (!user) return;
     try {
+      setIsLoading(true);
       const response = await getTournamentsOfOrganizerIdAPI(
         user.access_token,
         organizerId,
@@ -55,7 +58,9 @@ const TournamentsOrganizerProfile = ({
       setTotal(response.data.data.meta.total);
       setPage(response.data.data.meta.currentPage);
       setPerPage(response.data.data.meta.totalPerPage);
+      setIsLoading(false);
     } catch (error: any) {
+      setIsLoading(false);
       console.error('Error fetching tournaments:', error.message);
     }
   };
