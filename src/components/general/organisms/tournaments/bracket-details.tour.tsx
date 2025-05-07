@@ -135,7 +135,7 @@ const BracketDetailsTour = ({
         </div>
 
         <div
-          className="w-[1200px] h-max bg-[#e2e2e2] rounded-lg overflow-x-auto overflow-y-auto cursor-grab"
+          className="w-[1000px] max-h-[4500px] bg-[#e2e2e2] rounded-lg overflow-x-auto overflow-y-auto cursor-grab"
           {...events}
           ref={ref}
         >
