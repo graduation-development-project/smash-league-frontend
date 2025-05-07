@@ -27,7 +27,7 @@ const MatchSettings = ({ settings, setSettings }: MatchSettingsProps) => {
                 Badminton
               </label>
             </div>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <input
                 id="pickleball"
                 name="sportType"
@@ -39,7 +39,7 @@ const MatchSettings = ({ settings, setSettings }: MatchSettingsProps) => {
               <label htmlFor="pickleball" className="ml-2 block text-sm text-gray-700">
                 Pickleball
               </label>
-            </div>
+            </div> */}
           </div>
         </div>
 
