@@ -175,7 +175,7 @@ const FeaturedTourCardMain = () => {
             </div>
           </div>
           <div
-            className={`text-white text-right text-[16px] font-semibold absolute z-10 top-0 right-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-[3px] rounded-bl-[10px] ${
+            className={`text-white text-right text-[16px] font-semibold absolute z-10 top-0 right-0 bg-primaryColor px-[15px] py-[5px] rounded-tr-md rounded-bl-md ${
               fadeInBottom ? 'opacity-100 animate-fadeInBottom' : 'opacity-0'
             }`}
           >
