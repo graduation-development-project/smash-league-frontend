@@ -86,6 +86,7 @@ const OrganizerProfilePage = (props: any) => {
       label: 'Tournaments',
       children: (
         <TournamentsOrganizerProfile
+        profile = {profile}
           isOrganizer={isOrganizer}
           tournamentList={tournamentList}
           setTournamentList={setTournamentList}
