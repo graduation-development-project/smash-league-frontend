@@ -12,6 +12,7 @@ import {
 } from '@/services/tournament';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const TournamentsOrganizerProfile = ({
   isOrganizer,
@@ -83,6 +84,8 @@ const TournamentsOrganizerProfile = ({
     }
   };
 
+  console.log('Check user', user);
+
   return (
     <div className="w-full h-full flex flex-col gap-8 items-center py-5 px-8">
       <div className="w-full flex justify-between items-center">
@@ -93,7 +96,13 @@ const TournamentsOrganizerProfile = ({
           <Button
             className="rounded-[5px]"
             onClick={() => {
-              router.push('/tournaments/create');
+              if (user && user?.UserBankAccount.length <= 0) {
+                toast.warning(
+                  'Please add a bank account in your profile before creating a tournament',
+                );
+              } else {
+                router.push('/tournaments/create');
+              }
             }}
           >
             {' '}

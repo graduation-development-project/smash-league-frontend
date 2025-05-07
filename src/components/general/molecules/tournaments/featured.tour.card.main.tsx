@@ -69,7 +69,7 @@ const FeaturedTourCardMain = () => {
             <TourCardSliderMain slider={slider} />
             <div className="w-[90%] flex items-center justify-center gap-2 mt-4">
               <div className="flex items-center gap-3">
-                {slider.length > 0 &&
+                {slider?.length > 0 &&
                   slider?.map((item: any) => {
                     const isActive = activeSlide === item.id;
                     return (
