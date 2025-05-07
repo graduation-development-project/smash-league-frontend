@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import BracketDetailsTour from '../../organisms/tournaments/bracket-details.tour';
 import MatchDetailsTour from '../../organisms/tournaments/match-details.tour';
 import PlayerDetailTour from '../../organisms/tournaments/player-detail.tour';
+import StandingBoardDetailTour from '../../organisms/tournaments/standing-board-detail.tour';
+
 
 const EventAgeDetails = ({
   tournamentId,
@@ -54,6 +56,11 @@ const EventAgeDetails = ({
       label: 'Players',
       key: 'players',
       children: <PlayerDetailTour mainColor={mainColor} eventId={eventId} />,
+    },
+    {
+      label: 'Standing Board',
+      key: 'standing-board',
+      children: <StandingBoardDetailTour  mainColor={mainColor}  eventId={eventId} />,
     },
     // {
     //   label: 'Check List',

@@ -180,8 +180,7 @@ const InfoDetailsTour = ({
             <li>
               {tour?.requiredAttachments?.map(
                 (attach: string) =>
-                  `${
-                    ATTACHMENTS_ENUM[attach as keyof typeof ATTACHMENTS_ENUM]
+                  `${ATTACHMENTS_ENUM[attach as keyof typeof ATTACHMENTS_ENUM]
                   } `,
               )}
             </li>
@@ -227,15 +226,17 @@ const InfoDetailsTour = ({
             <li>
               {tour?.requiredAttachments?.map(
                 (attach: string) =>
-                  `${
-                    ATTACHMENTS_ENUM[attach as keyof typeof ATTACHMENTS_ENUM]
+                  `${ATTACHMENTS_ENUM[attach as keyof typeof ATTACHMENTS_ENUM]
                   }, `,
               )}
             </li>
           </ul>
         </div>
       </div>
-      <div className={`${styleCard} flex-col gap-4 text-base `}>
+      <div
+        className={`${styleCard} flex-col gap-4 text-base `}
+        style={{ display: tour?.introduction ? 'block' : 'none' }}
+      >
         {titleCard('Introduction')}
         <p>{tour?.introduction}</p>
         {/* <p>
@@ -250,41 +251,21 @@ const InfoDetailsTour = ({
       <div className={`${styleCard} flex-col gap-4 text-base `}>
         {titleCard('Description')}
         <p>{tour?.description}</p>
-        {/* <p>
-                    1. Scoring System
-                    A match is played best of three games to 21 points.
-                    A player/team scores a point when they win a rally.
-                    If the score reaches 20-20, a player must lead by 2 points to win.
-                    If the score reaches 29-29, the first to 30 points wins the game.
-                    <br />
-                    2. Serving Rules
-                    The shuttle must be hit below the server’s waist.
-                    The serve must be diagonal to the opponent’s service court.
-                    Players switch service courts after every point won while serving.
-                    In doubles, only one player serves per turn until the opposing team wins a rally.
-                    <br />
-                    3. Faults (Errors)
-                    A player commits a fault if:
-                    The shuttle lands outside the court boundaries.
-                    The shuttle passes under the net.
-                    The shuttle touches the ceiling or walls.
-                    The player touches the net with their racket or body.
-                    The player hits the shuttle twice in one stroke.
-                    <br />
-                    4. Change of Ends
-                    Players switch sides:
+      </div>
+      <div
+        className={`${styleCard} flex-col gap-4 text-base `}
+        style={{ display: tour?.hasMerchandise ? 'block' : 'none' }}
+      >
+        {titleCard('Merchandise')}
+        <p>{tour?.description}</p>
+        <div>
+          <img
+            src=""
+            alt=""
+            className="w-full h-full object-contain"
+          />
+        </div>
 
-                    After the first game.
-                    After the second game, if a third game is needed.
-                    In the third game, when the leading player/team reaches 11 points.
-                    <br />
-                    5. Let (Rally Replay)
-                    A rally is replayed (let) if:
-
-                    The shuttle gets stuck on the net after a serve.
-                    Both players are unsure whether the shuttle landed in or out.
-                    A player is distracted by an unexpected disturbance.
-                </p> */}
       </div>
     </div>
   );

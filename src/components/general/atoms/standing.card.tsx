@@ -24,13 +24,10 @@ const StandingCard = (
   return (
     <div className="flex flex-col w-[300px] h-max shadow-shadowBtn rounded-lg p-2 gap-1">
       <div className="h-[160px] w-[284px] ">
-        <Image
-          className="w-[284px] h-[200px] object-cover rounded-md border border-primaryColor"
-          style={{ objectFit: 'cover' }}
+        <img
           src={tour?.backgroundTournament}
           alt={tour?.name}
-        // width={192}
-        // height={192}
+          className="w-full h-full object-cover border border-primaryColor rounded-md"
         />
       </div>
       <div className="flex flex-col gap-2">
