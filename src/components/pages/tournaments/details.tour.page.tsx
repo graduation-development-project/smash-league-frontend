@@ -428,22 +428,22 @@ const DetailsTourPage = () => {
                             })),
                           })),
                         },
-                        {
-                          key: 'live',
-                          label: 'Live Stream',
-                          disabled: !detail?.hasLiveStream,
-                          children: detail?.liveStreamRooms?.map(
-                            (room: any) => ({
-                              key: room.id,
-                              label: 'Live Court 1',
-                            }),
-                          ),
-                        },
-                        {
-                          key: 'posts',
-                          label: 'Posts',
-                          disabled: !detail?.hasPost,
-                        },
+                        // {
+                        //   key: 'live',
+                        //   label: 'Live Stream',
+                        //   disabled: !detail?.hasLiveStream,
+                        //   children: detail?.liveStreamRooms?.map(
+                        //     (room: any) => ({
+                        //       key: room.id,
+                        //       label: 'Live Court 1',
+                        //     }),
+                        //   ),
+                        // },
+                        // {
+                        //   key: 'posts',
+                        //   label: 'Posts',
+                        //   disabled: !detail?.hasPost,
+                        // },
                         {
                           key: 'merchandise',
                           label: 'Merchandise',
