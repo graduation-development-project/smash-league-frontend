@@ -30,7 +30,7 @@ const TourCardSliderMain = ({ slider }: { slider: any }) => {
               alt={`Featured Tournament ${item.id}`}
               // quality={100}
               // priority
-              className="rounded shadow-lg w-full h-full object-cover animate-fadeInRight"
+              className="rounded-lg shadow-lg w-full h-full object-cover animate-fadeInRight"
             />
           </div>
         ))}

@@ -12,7 +12,7 @@ const FeaturedTourCard = () => {
 
   const fetchFeaturedTour = async () => {
     const response = await getFeaturedTourAPI();
-    const tourList = [response?.data[0], response?.data[0]];
+    const tourList = [response?.data[3], response?.data[2]];
     setTour(tourList);
     // setTour(response.data);
   }
@@ -21,11 +21,11 @@ const FeaturedTourCard = () => {
   }, [])
 
   return (
-    <div className="w-full h-full flex flex-col gap-5">
-      <header className="w-full flex items-start px-[20px] py-[10px] bg-primaryColor text-white text-[20px] font-bold self-stretch rounded-tl-[10px] rounded-tr-[10px]">
+    <div className="w-full h-full flex flex-col gap-5 shadow-md rounded-bl-md rounded-br-md">
+      <header className="w-full flex items-start px-6 py-2  bg-primaryColor text-white text-[20px] font-bold self-stretch rounded-tl-[10px] rounded-tr-[10px]">
         Featured Tournaments
       </header>
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8 px-3 ">
         {
           tour?.map((item: any) => (
             <TourCard key={item?.id} tour={item} />
