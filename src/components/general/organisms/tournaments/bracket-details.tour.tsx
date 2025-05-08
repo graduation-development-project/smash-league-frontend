@@ -39,7 +39,12 @@ const BracketDetailsTour = ({
     try {
       const res = await getMatchesOfTournamentEventAPI(eventUUID);
       // console.log('Cgheck res', res);
-      setBrackets(res?.data?.data);
+      const allMacthes = res?.data?.data;
+     allMacthes.shift();
+
+      console.log("Check", allMacthes);
+
+      setBrackets(allMacthes);
     } catch (error: any) {
       console.log('error', error);
     }
