@@ -1,32 +1,32 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from 'react';
 
 // import { Card, CardContent } from "@/components/ui/card"
-import { ArrowUp, ArrowDown } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
-import { cn } from "@/lib/utils"
-import { Card, Input } from "antd"
-import { getStandingBoardTourEventAPI } from "@/services/home-page"
-import { format } from "path"
-import { formatYearOfBirth } from "@/utils/format"
-import { useRouter } from "next/navigation"
-import { useProfileContext } from "@/context/profile.context"
-import { HiMiniTrophy } from "react-icons/hi2";
-import { LuMedal } from "react-icons/lu";
-import EmptyCard from "../../molecules/empty/empty.card"
-
+import { ArrowUp, ArrowDown } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+import { Card, Input } from 'antd';
+import { getStandingBoardTourEventAPI } from '@/services/home-page';
+import { format } from 'path';
+import { formatYearOfBirth } from '@/utils/format';
+import { useRouter } from 'next/navigation';
+import { useProfileContext } from '@/context/profile.context';
+import { HiMiniTrophy } from 'react-icons/hi2';
+import { LuMedal } from 'react-icons/lu';
+import EmptyCard from '../../molecules/empty/empty.card';
+import { calculateAge } from '@/utils/calculateAge';
 
 type RankingItem = {
-  id: string
-  avatar?: string
-  name: string,
-  dateOfBirth?: string
-  rank: number
+  id: string;
+  avatar?: string;
+  name: string;
+  dateOfBirth?: string;
+  rank: number;
   // totalPoints: number
   // totalWins: number
   // totalLosses: number
   // rankChange?: number
-}
+};
 
 const StandingBoardDetailTour = ({
   eventId,
@@ -68,9 +68,9 @@ const StandingBoardDetailTour = ({
   };
 
   const rankingArray = [
-    { rank: 1, label: "championship" },
-    { rank: 2, label: "runnerUp" },
-    { rank: 3, label: "thirdPlace" },
+    { rank: 1, label: 'championship' },
+    { rank: 2, label: 'runnerUp' },
+    { rank: 3, label: 'thirdPlace' },
   ]
     .map(({ rank, label }) => {
       const item = raw?.[label];
@@ -78,23 +78,23 @@ const StandingBoardDetailTour = ({
       return {
         id: item.user.id,
         name: item.user.name,
-        avatar: item.user.avatarURL || "",
-        age: formatYearOfBirth(item.user.dateOfBirth),
+        avatar: item.user.avatarURL || '',
+        age: calculateAge(item.user.dateOfBirth),
         rank,
         partner: item.partner
           ? {
-            id: item.partner.id,
-            name: item.partner.name,
-            avatar: item.partner.avatarURL || "",
-            age: formatYearOfBirth(item.partner.dateOfBirth),
-            rank,
-          }
+              id: item.partner.id,
+              name: item.partner.name,
+              avatar: item.partner.avatarURL || '',
+              age: calculateAge(item.partner.dateOfBirth),
+              rank,
+            }
           : null,
       };
-    }).filter(Boolean)
+    })
+    .filter(Boolean);
 
-  console.log("rankingArray", rankingArray);
-
+  console.log('rankingArray', rankingArray);
 
   const tableRowSingle = () => {
     return (
@@ -104,10 +104,10 @@ const StandingBoardDetailTour = ({
           style={{ background: mainColor }}
         >
           <tr className="rounded-lg py-2">
-            <th className='rounded-tl-md py-2'>No.</th>
-            <th className='py-2'>Avatar</th>
-            <th className='py-2'>Name</th>
-            <th className='rounded-tr-md'>Age</th>
+            <th className="rounded-tl-md py-2">No.</th>
+            <th className="py-2">Avatar</th>
+            <th className="py-2">Name</th>
+            <th className="rounded-tr-md">Age</th>
             {/* <th>Height</th> */}
             {/* <th>Hand</th> */}
           </tr>
@@ -120,19 +120,19 @@ const StandingBoardDetailTour = ({
                 className="h-max pt-10 text-lg font-medium text-center"
               >
                 <td className="h-32 flex justify-center items-center gap-1 font-bold">
-                  {
-                    index + 1 === 1 ?
-                      <div className="flex items-center gap-1">
-                        1 <HiMiniTrophy className="text-yellow-500" />
-                      </div>
-                      : (index + 1) === 2 ?
-                        <div className="flex items-center gap-1">
-                          2 <LuMedal className="text-[#bdc3c7] mt-1" />
-                        </div> :
-                        <div className="flex items-center gap-1">
-                          3 <LuMedal className="text-[#cd7f36] mt-1" />
-                        </div>
-                  }
+                  {index + 1 === 1 ? (
+                    <div className="flex items-center gap-1">
+                      1 <HiMiniTrophy className="text-yellow-500" />
+                    </div>
+                  ) : index + 1 === 2 ? (
+                    <div className="flex items-center gap-1">
+                      2 <LuMedal className="text-[#bdc3c7] mt-1" />
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      3 <LuMedal className="text-[#cd7f36] mt-1" />
+                    </div>
+                  )}
                   {/* {index + 1} <HiMiniTrophy className="text-yellow-500" /> */}
                 </td>
                 <td className="w-32 h-32 pt-5 pb-3">
@@ -152,7 +152,7 @@ const StandingBoardDetailTour = ({
                 >
                   {player?.name}
                 </td>
-                <td>{player?.age || "-"}</td>
+                <td>{player?.age || '-'}</td>
                 {/* <td>{formatHeight(player?.user?.height)}</td> */}
                 {/* <td>{player?.user?.hands || 'N/A'}</td> */}
               </tr>
@@ -188,19 +188,19 @@ const StandingBoardDetailTour = ({
                   className="h-max pt-10 text-lg font-medium text-center"
                 >
                   <td className="h-32 flex justify-center items-center gap-1 font-bold">
-                    {
-                      index + 1 === 1 ?
-                        <div className="flex items-center gap-1">
-                          1 <HiMiniTrophy className="text-yellow-500" />
-                        </div>
-                        : (index + 1) === 2 ?
-                          <div className="flex items-center gap-1">
-                            2 <LuMedal className="text-[#bdc3c7] mt-1" />
-                          </div> :
-                          <div className="flex items-center gap-1">
-                            3 <LuMedal className="text-[#cd7f36] mt-1" />
-                          </div>
-                    }
+                    {index + 1 === 1 ? (
+                      <div className="flex items-center gap-1">
+                        1 <HiMiniTrophy className="text-yellow-500" />
+                      </div>
+                    ) : index + 1 === 2 ? (
+                      <div className="flex items-center gap-1">
+                        2 <LuMedal className="text-[#bdc3c7] mt-1" />
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        3 <LuMedal className="text-[#cd7f36] mt-1" />
+                      </div>
+                    )}
                     {/* {index + 1} <HiMiniTrophy className="text-yellow-500" /> */}
                   </td>
                   <td className="w-32 h-32 pt-5 rounded-md">
@@ -251,16 +251,18 @@ const StandingBoardDetailTour = ({
   return (
     <div>
       <div className="w-full h-full">
-        {rankingArray?.length > 0
-          ? rankingArray[0]?.partner
-            ? tableRowDouble()
-            : tableRowSingle()
-          : (
-            <EmptyCard
-              description="No players yet"
-              image="https://static-00.iconduck.com/assets.00/trophy-icon-2048x2048-qzkx1nrp.png"
-            />
-          )}
+        {rankingArray?.length > 0 ? (
+          rankingArray[0]?.partner ? (
+            tableRowDouble()
+          ) : (
+            tableRowSingle()
+          )
+        ) : (
+          <EmptyCard
+            description="No players yet"
+            image="https://static-00.iconduck.com/assets.00/trophy-icon-2048x2048-qzkx1nrp.png"
+          />
+        )}
       </div>
     </div>
   );
