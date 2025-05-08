@@ -11,6 +11,7 @@ import DashboardOrganizerProfile from '@/components/general/organisms/profile/or
 import { getProfileAPI } from '@/services/user';
 import UpdateInformationProfile from '@/components/general/organisms/profile/athlete/update.information.profile';
 import Loaders from '@/components/general/atoms/loaders/loaders';
+import BankAccountShow from '@/components/general/atoms/bank/bank-account';
 
 const OrganizerProfilePage = (props: any) => {
   const { session } = props;
@@ -111,6 +112,12 @@ const OrganizerProfilePage = (props: any) => {
               />
             ),
           },
+
+          {
+            key: '7',
+            label: 'Bank Account',
+           children: <BankAccountShow />,
+          }
         ]
       : []),
   ];

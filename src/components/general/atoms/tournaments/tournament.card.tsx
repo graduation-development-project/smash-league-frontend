@@ -67,6 +67,27 @@ const TournamentCard = ({ tour }: any) => {
             <CalendarX size={16} color="#ff8243" strokeWidth={2} /> Expired on{' '}
             {formatDate(tour?.registrationClosingDate)}
           </li>
+
+          <li className="flex flex-row items-center gap-2 font-semibold ">
+            {/* <CalendarX size={16} color="#ff8243" strokeWidth={2} /> Status{' '} */}
+            <span
+              className={`${
+                tour.status === 'CREATED'
+                  ? 'text-gray-700'
+                  : tour.status === 'ON_GOING'
+                  ? 'text-green-600'
+                  : tour.status === 'OPENING_FOR_REGISTRATION'
+                  ? 'text-orange-600'
+                  : tour.status === 'DRAWING'
+                  ? 'text-purple-600'
+                  : tour.status === 'FINISHED'
+                  ? 'text-blue-600'
+                  : 'text-red-500'
+              }`}
+            >
+              {tour.status}
+            </span>
+          </li>
         </ul>
         <span className="flex flex-row items-center gap-2 text-base text-red-600 font-bold">
           {(() => {
@@ -87,7 +108,11 @@ const TournamentCard = ({ tour }: any) => {
             if (!shouldShow) {
               return (
                 <div className="h-6 text-gray-500 flex gap-2">
-                  <AiOutlineFieldTime size={20} strokeWidth={3} className='mt-[3px]'/>{' '}
+                  <AiOutlineFieldTime
+                    size={20}
+                    strokeWidth={3}
+                    className="mt-[3px]"
+                  />{' '}
                   <span>Expired</span>
                 </div>
               );
