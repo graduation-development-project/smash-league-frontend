@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import CertificateImageShowModal from './certificate.image.show.modal';
 import { calculateAge } from '@/utils/calculateAge';
 import { formatDate, formatHeight } from '@/utils/format';
+import { IoIosArrowRoundBack } from 'react-icons/io';
 
 const UmpireBasicInfo = ({
   profile,
@@ -71,19 +72,35 @@ const UmpireBasicInfo = ({
               ))}
               {/* Show "View More" only if there are more than 3 certificates */}
               {certificates.length > 3 && !showAllCertificates ? (
-                <p
-                  className="text-primaryColor font-semibold cursor-pointer hover:underline"
-                  onClick={() => setShowAllCertificates(true)}
-                >
-                  View More
-                </p>
+                <div className="w-full h-full flex justify-between items-center">
+                  <div
+                    className="flex items-center text-primaryColor text-[15px] hover:underline hover:font-semibold cursor-pointer"
+                    onClick={() => window.history.back()}
+                  >
+                    <IoIosArrowRoundBack size={22} className="" /> Previous Page
+                  </div>
+                  <p
+                    className="text-primaryColor font-semibold cursor-pointer hover:underline"
+                    onClick={() => setShowAllCertificates(true)}
+                  >
+                    View More
+                  </p>
+                </div>
               ) : (
-                <p
-                  className="text-secondColor font-semibold cursor-pointer hover:underline"
-                  onClick={() => setShowAllCertificates(false)}
-                >
-                  Show Less
-                </p>
+                <div className="w-full h-full flex justify-between items-center">
+                  <div
+                    className="flex items-center text-primaryColor text-[15px] hover:underline hover:font-semibold cursor-pointer"
+                    onClick={() => window.history.back()}
+                  >
+                    <IoIosArrowRoundBack size={22} className="" /> Previous Page
+                  </div>
+                  <p
+                    className="text-secondColor font-semibold cursor-pointer hover:underline"
+                    onClick={() => setShowAllCertificates(false)}
+                  >
+                    Show Less
+                  </p>
+                </div>
               )}
             </div>
             <CertificateImageShowModal

@@ -38,9 +38,11 @@ const RegisterAthleteTournamentForm = ({
   const [filePartner, setFilePartner] = useState<File>();
   const [isHasPartner, setIsHasPartner] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
-  const [tournamentEvent, setTournamentEvent] = useState([]);
+  const [tournamentEvent, setTournamentEvent] = useState<any>([]);
   const [form] = Form.useForm();
   const [userList, setUserList] = useState<any>([]);
+  const [partner, setPartner] = useState<any>({});
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -151,37 +153,74 @@ const RegisterAthleteTournamentForm = ({
   };
 
   const handleChange = (value: string, option: any) => {
+    setSelectedEventId(value);
     if (option.label.toUpperCase().includes('DOUBLE')) {
       setIsHasPartner(true);
     } else {
       setIsHasPartner(false);
     }
   };
-
   const searchUserByEmail = async () => {
-    if (!user) return;
+    if (!user || !selectedEventId) return;
+
     try {
       const response = await searchUserByEmailAPI(user.access_token, '');
-      console.log(response?.data, 'response');
+
       if (
         response?.data?.statusCode === 200 ||
         response?.data?.statusCode === 201
       ) {
-        const fomatData = response.data.data.map((us: any) => ({
-          label: us.email,
-          value: us.email,
-        }));
-        setUserList(fomatData);
+        const selectedEvent = tournamentEvent?.find(
+          (e: any) => e.id === selectedEventId,
+        );
+
+        if (!selectedEvent) return;
+
+        const athleteData = response.data.data.filter(
+          (us: any) =>
+            us.email &&
+            !us.email.includes('admin') &&
+            !us.email.includes('staff'),
+        );
+
+        const formattedData = athleteData.map((us: any) => {
+          const age = calculateAge(us.dateOfBirth);
+          const eventName = selectedEvent.tournamentEvent.toUpperCase();
+
+          // Determine gender eligibility per user
+          let isNotGender = false;
+
+          if (eventName.startsWith('WOMENS')) {
+            isNotGender = us.gender !== 'FEMALE';
+          } else if (eventName.startsWith('MENS')) {
+            isNotGender = us.gender !== 'MALE';
+          } else if (eventName.startsWith('MIXED')) {
+            isNotGender = false; // All genders allowed
+          } else {
+            isNotGender = true; // Default to disabled if unknown event
+          }
+
+          return {
+            label: us.email,
+            value: us.email,
+            disabled:
+              isNotGender ||
+              age < selectedEvent.fromAge ||
+              age > selectedEvent.toAge,
+          };
+        });
+
+        setUserList(formattedData);
       }
     } catch (error: any) {
-      console.log('Error', error);
+      console.error('Error searching user by email:', error);
     }
   };
 
   useEffect(() => {
     searchUserByEmail();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, selectedEventId]);
   const handleRegisterTournament = async (values: any) => {
     if (!user) return;
     const { tournamentId, registrationRole, tournamentEventId, partnerEmail } =

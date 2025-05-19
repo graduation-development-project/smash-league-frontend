@@ -9,6 +9,7 @@ import {
   PlusCircleIcon,
 } from 'lucide-react';
 import { useProfileContext } from '@/context/profile.context';
+import EmptyCard from '../../molecules/empty/empty.card';
 
 // Sample bank data with logos
 // const bankLogos: Record<string, string> = {
@@ -135,8 +136,8 @@ const BankAccount = ({
 };
 
 export default function BankAccountShow() {
-  const [user, setUser] = useState<any>({});
   const { activeKey } = useProfileContext();
+  const [user, setUser] = useState<any>({});
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -172,7 +173,10 @@ export default function BankAccountShow() {
             isVerified={true}
           />
         ) : (
-          <p className="text-gray-500">No bank account found.</p>
+          <EmptyCard
+            description="You have not connected any bank accounts yet"
+            image="https://cdn-icons-png.flaticon.com/512/5614/5614873.png"
+          />
         )}
       </div>
     </div>

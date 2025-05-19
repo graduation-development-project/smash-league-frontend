@@ -175,11 +175,11 @@ const MyTournaments = ({ profileRole }: { profileRole: string }) => {
                     icon: <CalendarOutlined />,
                   },
 
-                  // {
-                  //   key: 'my-reports',
-                  //   label: 'My Reports',
-                  //   icon: <TbTournament size={15} />,
-                  // },
+                  {
+                    key: 'my-reports',
+                    label: 'My Reports',
+                    icon: <TbTournament size={15} />,
+                  },
 
                   ...(user?.userRoles.includes('Umpire') &&
                   profileRole === 'UMPIRE'

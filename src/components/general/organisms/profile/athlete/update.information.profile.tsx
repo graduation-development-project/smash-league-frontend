@@ -68,6 +68,8 @@ const UpdateInformationProfile = ({
         gender: response?.gender,
         hands: response?.hands === null ? '' : response?.hands,
         height: response?.height === null ? '' : response?.height,
+        level: response?.level === null ? '' : response?.level,
+        experience: response?.experience === null ? '' : response?.experience,
         location: response?.location === null ? '' : response?.location,
         phoneNumber:
           response?.phoneNumber === null ? '' : response?.phoneNumber,
@@ -301,6 +303,31 @@ const UpdateInformationProfile = ({
             <Input placeholder="Enter your height" />
           </Form.Item>
 
+          <Form.Item label="Level" name="level" initialValue={profile?.level}>
+            <Select
+              placeholder="Select your level"
+              options={[
+                { value: 'professional', label: 'Professional' },
+                { value: 'amateur', label: 'Amateur' },
+                // { value: 'beginner', label: 'Beginner' },
+                // { value: 'intermediate', label: 'Intermediate' },
+                // { value: 'advanced', label: 'Advanced' },
+              ]}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Experience"
+            name="experience"
+            // initialValue={profile?.dateOfBirth}
+          >
+            <DatePicker
+              format={'YYYY'}
+              style={{ width: '100%' }}
+              picker="year"
+            />
+          </Form.Item>
+
           <Form.Item
             label="Location"
             name="location"
@@ -423,7 +450,7 @@ const UpdateInformationProfile = ({
       />
 
       <AddBankAccountModal
-      session={session}
+        session={session}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         accessToken={user?.access_token}

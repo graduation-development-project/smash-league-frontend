@@ -7,6 +7,7 @@ import WomenDoublesAthleteTable from './women-doubles.athlete.table';
 import MixedDoublesAthleteTable from './mixed-doubles.athlete.table';
 import UmpiresListTable from './umpires-list.organizer.table';
 import MenDoublesAthleteTable from './men-doubles.athlete.table';
+import ReportsTable from '@/components/general/organisms/reports/reports.table';
 
 interface DashboardPageProps {
   selectedKey: string;
@@ -40,9 +41,11 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
 
   switch (eventName) {
     case 'dashboard':
-      return <DashboardOrganizer credit={credit}/>;
+      return <DashboardOrganizer credit={credit} />;
     case 'athletes':
       return <TournamentsListTable />;
+    case 'reports':
+      return <ReportsTable />;
     case 'MENS_SINGLE':
       return <MenSinglesAthleteTable eventId={eventId} />;
     case 'WOMENS_SINGLE':
@@ -54,7 +57,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
     case 'MIXED_DOUBLE':
       return <MixedDoublesAthleteTable eventId={eventId} />;
     default:
-      return <DashboardOrganizer credit={credit}/>;
+      return <DashboardOrganizer credit={credit} />;
   }
 };
 

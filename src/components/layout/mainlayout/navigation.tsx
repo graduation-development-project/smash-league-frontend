@@ -175,10 +175,8 @@ const Navigation = (props: any) => {
         ]
       : []),
 
-    ...(user?.userRoles?.includes('Umpire') ||
-    session?.user?.userRoles?.includes('Umpire') ||
-    !user?.userRoles?.includes('Organizer') ||
-    !session?.user?.userRoles?.includes('Organizer')
+    ...(!user?.userRoles?.includes('Umpire') ||
+    !session?.user?.userRoles?.includes('Umpire')
       ? [
           {
             key: 'become-umpire',

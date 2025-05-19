@@ -12,13 +12,14 @@ import MyTournaments from '../tournaments/my-tour.tour';
 import { getProfileAPI } from '@/services/user';
 import { useProfileContext } from '@/context/profile.context';
 import BankAccountShow from '@/components/general/atoms/bank/bank-account';
+import UmpireDegrees from '@/components/general/organisms/profile/umpire/update-degree';
+import DegreesList from '@/components/general/organisms/profile/umpire/degrees-list';
 
 const UmpireProfilePage = (props: any) => {
   const { session } = props;
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { umpireId } = useProfileContext();
-
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -54,22 +55,33 @@ const UmpireProfilePage = (props: any) => {
 
   const items: TabsProps['items'] = [
     {
-      key: '1',
+      key: 'umpire-overview',
       label: 'Overview',
       children: (
         <OverviewUmpireProfile profile={profile} setProfile={setProfile} />
       ),
     },
+    {
+      key: 'umpire-qualifications',
+      label: 'Qualifications',
+      children: <DegreesList />,
+    },
 
-    ...(user?.id === profile?.id
+    ...(user?.id === umpireId
       ? [
           {
-            key: '2',
+            key: 'umpire-tournaments',
             label: 'Tournaments',
             children: <MyTournaments profileRole="UMPIRE" />,
           },
+
           {
-            key: '4',
+            key: 'umpire-bank-account',
+            label: 'Bank Account',
+            children: <BankAccountShow />,
+          },
+          {
+            key: 'umpire-update-information',
             label: 'Update Information',
             children: (
               <UpdateInformationProfile
@@ -79,10 +91,11 @@ const UmpireProfilePage = (props: any) => {
               />
             ),
           },
+
           {
-            key: '5',
-            label: 'Bank Account',
-            children: <BankAccountShow />,
+            key: 'umpire-update-qualifications',
+            label: 'Update Qualifications',
+            children: <UmpireDegrees />,
           },
         ]
       : []),

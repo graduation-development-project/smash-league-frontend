@@ -30,6 +30,7 @@ import {
 } from '@/services/tour-registration';
 import { toast } from 'react-toastify';
 import { calculateAge } from '@/utils/calculateAge';
+import { useRouter } from 'next/navigation';
 
 const useStyle = createStyles(({ css }) => ({
   customTable: css`
@@ -94,6 +95,7 @@ const MenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   const [participantList, setParticipantList] = useState([]);
   const [verificationList, setVetificationList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
@@ -461,7 +463,7 @@ const MenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       // ...getColumnSearchProps('name'),
       render: (_, { user, partner }) => (
         <div className="flex flex-col gap-3">
-          <h1 className="font-semibold text-[16px]">{user?.name}</h1>
+          <h1 className="font-semibold text-[16px]" onClick={() => { router.push(`/profile/athlete/${user?.id}`)}}>{user?.name}</h1>
           {/* <h1 className="font-semibold text-[16px]">{partner?.name}</h1> */}
         </div>
       ),
@@ -477,7 +479,7 @@ const MenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       render: (_, { user, partner }) => (
         <div className="flex flex-col gap-3">
           {/* <h1 className="font-semibold text-[16px]">{user?.name}</h1> */}
-          <h1 className="font-semibold text-[16px]">{partner?.name}</h1>
+          <h1 className="font-semibold text-[16px]" onClick={() => { router.push(`/profile/athlete/${partner?.id}`)}}>{partner?.name}</h1>
         </div>
       ),
     },

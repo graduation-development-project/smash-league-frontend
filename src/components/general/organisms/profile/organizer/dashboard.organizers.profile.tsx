@@ -124,6 +124,7 @@ const DashboardOrganizerProfile = () => {
         getItem(item?.name, `${item?.id}_umpires`, <TbTournament size={15} />),
       ) || [],
     ),
+    getItem('Reports', 'reports', <TfiBarChartAlt size={15} />),
   ];
 
   return (
