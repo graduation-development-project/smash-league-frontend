@@ -48,6 +48,7 @@ import Spinner from '@/components/general/atoms/loaders/spinner';
 import FeedbackDetailsTour from '@/components/general/organisms/tournaments/feedback-details.tour';
 import SponsorsDetailsTour from '@/components/general/organisms/tournaments/sponsors-details.tour';
 import ReportDetails from '@/components/general/organisms/tournaments/report-details.tour';
+import PostestForm from '@/components/general/organisms/tournaments/postest-form';
 
 const DetailsTourPage = () => {
   const param = useParams();

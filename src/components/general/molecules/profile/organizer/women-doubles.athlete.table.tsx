@@ -30,6 +30,7 @@ import {
 } from '@/services/tour-registration';
 import { toast } from 'react-toastify';
 import { calculateAge } from '@/utils/calculateAge';
+import { useRouter } from 'next/navigation';
 
 const useStyle = createStyles(({ css }) => ({
   customTable: css`
@@ -94,6 +95,7 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   const [participantList, setParticipantList] = useState([]);
   const [verificationList, setVetificationList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
@@ -136,7 +138,7 @@ const WomenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
     if (!user) return;
     try {
       // console.log('API RUN');
-setIsLoading(true);
+      setIsLoading(true);
       const response = await getTournamentRegistrationAPI(
         user?.access_token,
         eventId,
@@ -357,7 +359,11 @@ setIsLoading(true);
               border: '1px solid #FF8243',
               padding: '2px',
             }}
-            src={user?.avatarURL? user?.avatarURL : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'}
+            src={
+              user?.avatarURL
+                ? user?.avatarURL
+                : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
+            }
             width={50}
             height={50}
             alt="Athlete Image"
@@ -368,7 +374,11 @@ setIsLoading(true);
               border: '1px solid #FF8243',
               padding: '2px',
             }}
-            src={partner?.avatarURL? partner?.avatarURL : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'}
+            src={
+              partner?.avatarURL
+                ? partner?.avatarURL
+                : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
+            }
             width={50}
             height={50}
             alt="Athlete Image"
@@ -453,7 +463,14 @@ setIsLoading(true);
       // ...getColumnSearchProps('name'),
       render: (_, { user, partner }) => (
         <div className="flex flex-col gap-3">
-          <h1 className="font-semibold text-[16px]">{user?.name}</h1>
+          <h1
+            className="font-semibold text-[16px]"
+            onClick={() => {
+              router.push(`/profile/athlete/${user?.id}`);
+            }}
+          >
+            {user?.name}
+          </h1>
           {/* <h1 className="font-semibold text-[16px]">{partner?.name}</h1> */}
         </div>
       ),
@@ -469,7 +486,14 @@ setIsLoading(true);
       render: (_, { user, partner }) => (
         <div className="flex flex-col gap-3">
           {/* <h1 className="font-semibold text-[16px]">{user?.name}</h1> */}
-          <h1 className="font-semibold text-[16px]">{partner?.name}</h1>
+          <h1
+            className="font-semibold text-[16px]"
+            onClick={() => {
+              router.push(`/profile/athlete/${partner?.id}`);
+            }}
+          >
+            {partner?.name}
+          </h1>
         </div>
       ),
     },
@@ -782,7 +806,7 @@ setIsLoading(true);
                 width: '100%',
                 height: '100%',
                 fontFamily: 'inherit',
-                overflow: "auto"
+                overflow: 'auto',
               }}
             />
           )}

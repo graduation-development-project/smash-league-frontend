@@ -16,12 +16,13 @@ const buttonVariants = cva(
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline:
           'border border-primaryColor text-primaryColor bg-transparent ',
-        // secondary:
-        //   "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        // ghost: "hover:bg-accent hover:text-accent-foreground font-quicksand font-bold",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground font-quicksand",
         link: 'text-primary underline-offset-4 hover:underline bg-transparent',
         icons:
           'w-[108px] h-[44px] flex items-center justify-center gap-[5px] text-white font-quicksand text-[16px] font-bold border-none rounded-[20px] px-[20px] py-[40px]',
+        
       },
       shadow: {
         shadowBtn: 'shadow-shadowBtn',
@@ -51,7 +52,6 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: 'default',
       size: 'default',
-
       shadow: 'shadowBtn',
       colorBtn: 'gradientOrangeBtn',
     },

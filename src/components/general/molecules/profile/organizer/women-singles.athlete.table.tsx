@@ -30,6 +30,7 @@ import {
 } from '@/services/tour-registration';
 import { toast } from 'react-toastify';
 import { calculateAge } from '@/utils/calculateAge';
+import { useRouter } from 'next/router';
 
 const useStyle = createStyles(({ css }) => ({
   customTable: css`
@@ -50,6 +51,7 @@ const useStyle = createStyles(({ css }) => ({
 
 const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   // const { styles } = useStyle();
+  const router = useRouter();
 
   interface ParticipantInfo {
     avatarURL: string;
@@ -422,6 +424,15 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       dataIndex: 'name', // Dùng key đã map sẵn
       key: 'name',
       fixed: 'left',
+
+      render: (_, { name, userId }) => (
+        <h1
+          className="font-semibold text-[16px]"
+          onClick={() => router.push(`/profile/athlete/${userId}`)}
+        >
+          {name}
+        </h1>
+      ),
       // ...getColumnSearchProps('name'),
     },
     {

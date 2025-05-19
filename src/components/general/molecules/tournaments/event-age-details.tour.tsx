@@ -5,14 +5,14 @@ import BracketDetailsTour from '../../organisms/tournaments/bracket-details.tour
 import MatchDetailsTour from '../../organisms/tournaments/match-details.tour';
 import PlayerDetailTour from '../../organisms/tournaments/player-detail.tour';
 import StandingBoardDetailTour from '../../organisms/tournaments/standing-board-detail.tour';
-
+import PostestForm from '../../organisms/tournaments/postest-form';
 
 const EventAgeDetails = ({
   tournamentId,
   eventId,
   mainColor,
   isOrganizer,
-  tour
+  tour,
 }: {
   tournamentId: string;
   eventId: string;
@@ -60,13 +60,20 @@ const EventAgeDetails = ({
     {
       label: 'Standing Board',
       key: 'standing-board',
-      children: <StandingBoardDetailTour  mainColor={mainColor}  eventId={eventId} />,
+      children: (
+        <StandingBoardDetailTour mainColor={mainColor} eventId={eventId} />
+      ),
     },
-    // {
-    //   label: 'Check List',
-    //   key: 'attendants-check-list',
-    //   children: <AttendantsCheck />,
-    // },
+
+    ...(!isOrganizer
+      ? [
+          {
+            label: 'Postest',
+            key: 'postest',
+            children: <PostestForm eventId={eventId} tournamentId={tournamentId} />,
+          },
+        ]
+      : []),
   ]);
   return (
     <div className="px-3 w-full h-full">

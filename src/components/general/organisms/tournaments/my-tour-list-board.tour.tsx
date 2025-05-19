@@ -3,6 +3,7 @@ import TourRegistrationOfAthleteTable from '../../molecules/tournaments/tour-reg
 import MatchesOfUmpireTable from '../../molecules/tournaments/matches-of-umpire.table';
 import CalendarPage from '@/components/pages/calendar/calendar.page';
 import MyParticipatedTournaments from '../../molecules/tournaments/my-participated-tournaments';
+import ReportsTable from '../reports/reports.table';
 
 const MyTourListBoard = ({
   selectedKey,
@@ -28,7 +29,7 @@ const MyTourListBoard = ({
     case 'my-schedule':
       return <CalendarPage profileRole={profileRole} />;
     case 'my-reports':
-      return <div>My Reports</div>;
+      return <ReportsTable profileRole={profileRole} />;
     default:
       return <TourRegistrationOfAthleteTable profileRole={profileRole} />;
   }

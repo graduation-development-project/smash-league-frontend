@@ -1,14 +1,19 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Button, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import {
   approveReportAPI,
   getAllReportsAPI,
+  getAllReportsByUserIdAPI,
+  payFeeForReportAPI,
   rejectReportAPI,
 } from '@/services/report';
 import { formatDateTime } from '../../../../utils/format';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import { GrView } from 'react-icons/gr';
 
 interface DataType {
   key: string;
@@ -16,11 +21,13 @@ interface DataType {
   reason: string;
   status: string;
   tournamentName: string;
-  contactEmail: string;
+  contactEmail?: string;
+  reportUser?: string;
   createAt: string;
 }
-const ReportsTable = () => {
-  const userRef = useRef<any>(null);
+
+const ReportsTable = ({ profileRole }: { profileRole?: string }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [reports, setReports] = useState<DataType[]>([]);
   const [user, setUser] = useState<any>({});
@@ -29,29 +36,47 @@ const ReportsTable = () => {
     if (typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
-        setUser(storedUser ? JSON.parse(storedUser) : {}); // Only parse if not null
+        setUser(JSON.parse(storedUser));
       }
     }
   }, []);
 
   const getAllReports = async () => {
-    setIsLoading(true);
+    if (!user) return;
     try {
-      const response = await getAllReportsAPI(user?.access_token);
-      console.log('response', response);
-      if (response?.statusCode === 200 || response?.statusCode === 201) {
-        const formattedReports = response.data.map((report: any) => ({
-          key: report.id,
-          id: report.id,
-          reason: report.reason,
-          status: report.status,
-          tournamentName: report.tournament.name,
-          contactEmail: report.tournament.contactEmail,
-          createAt: report.createdAt,
-        }));
-        setReports(formattedReports);
+      setIsLoading(true);
+      let response;
+
+      if (profileRole === 'UMPIRE' || profileRole === 'ATHLETE') {
+        response = await getAllReportsByUserIdAPI(user?.access_token);
+        if ([200, 201].includes(response?.data?.statusCode)) {
+          const formattedReports = response.data.data.map((report: any) => ({
+            key: report.id,
+            id: report.id,
+            reason: report.reason,
+            status: report.status,
+            tournamentName: report.tournament.name,
+            reportUser: report.reportUser.name,
+            createAt: report.createdAt,
+          }));
+          setReports(formattedReports);
+        }
+      } else {
+        response = await getAllReportsAPI(user?.access_token);
+        if ([200, 201].includes(response?.statusCode)) {
+          const formattedReports = response.data.map((report: any) => ({
+            key: report.id,
+            id: report.id,
+            reason: report.reason,
+            status: report.status,
+            tournamentName: report.tournament.name,
+            contactEmail: report.tournament.contactEmail,
+            createAt: report.createdAt,
+          }));
+          setReports(formattedReports);
+        }
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -59,86 +84,56 @@ const ReportsTable = () => {
   };
 
   const handleApprove = async (id: string) => {
-    // const token = userRef.current?.access_token;
-    // if (!token) return toast.error('No access token found');
     try {
       const response = await approveReportAPI(id, user?.access_token);
-      console.log('response approve', response);
-      if (
-        response?.statusCode === 200 ||
-        response?.statusCode === 201 ||
-        response?.statusCode === 204
-      ) {
+      if ([200, 201, 204].includes(response?.statusCode)) {
         getAllReports();
-        toast.success(`${response?.message}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+        toast.success(response?.message || 'Approved successfully');
       } else {
-        toast.error(`${response?.message}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+        toast.error(response?.message || 'Failed to approve');
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
     }
   };
 
   const handleReject = async (id: string) => {
-    const token = userRef.current?.access_token;
-    if (!token) return toast.error('No access token found');
+    if (!user?.access_token) return toast.error('No access token found');
     try {
-      const response = await rejectReportAPI(id, token);
-      console.log('response reject', response);
-      if (
-        response?.statusCode === 200 ||
-        response?.statusCode === 201 ||
-        response?.statusCode === 204
-      ) {
+      const response = await rejectReportAPI(id, user?.access_token);
+      if ([200, 201, 204].includes(response?.statusCode)) {
         getAllReports();
-        toast.success(`${response?.message}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+        toast.success(response?.message || 'Rejected successfully');
       } else {
-        toast.error(`${response?.message}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+        toast.error(response?.message || 'Failed to reject');
       }
-    } catch (error: any) {
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handlePayReportFee = async (id: string) => {
+    if (!user?.access_token) return;
+    try {
+      const response = await payFeeForReportAPI(id, user?.access_token);
+
+      console.log('Check response pay fee', response?.data);
+      if ([200, 201, 204].includes(response?.statusCode)) {
+        // getAllReports();
+        toast.success(response?.message || 'Rejecetd successfully');
+        window.location.href =
+          response?.data?.checkoutDataResponse?.checkoutUrl;
+      } else {
+        toast.error(response?.message || 'Failed to reject');
+      }
+    } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
     getAllReports();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const columns: TableProps<DataType>['columns'] = [
@@ -146,66 +141,104 @@ const ReportsTable = () => {
       title: 'Tournament Name',
       dataIndex: 'tournamentName',
       key: 'tournamentName',
+      render: (_, { tournamentName, id }) => (
+        <p
+          className="cursor-pointer hover:underline"
+          onClick={() => router.push(`/tournaments/details/${id}`)}
+        >
+          {tournamentName}
+        </p>
+      ),
     },
     {
       title: 'Reason',
       dataIndex: 'reason',
       key: 'reason',
     },
-    {
-      title: 'Contact Email',
-      dataIndex: 'contactEmail',
-      key: 'contactEmail',
-    },
+    ...(profileRole === 'UMPIRE' || profileRole === 'ATHLETE'
+      ? [
+          {
+            title: 'Report User',
+            dataIndex: 'reportUser',
+            key: 'reportUser',
+          },
+        ]
+      : [
+          {
+            title: 'Contact Email',
+            dataIndex: 'contactEmail',
+            key: 'contactEmail',
+          },
+        ]),
     {
       title: 'Status',
       key: 'status',
       dataIndex: 'status',
-      render: (_, { status }) => (
-        <>
-          {status === 'PENDING' ? (
-            <Tag color="blue">{status}</Tag>
-          ) : status === 'HANDLED' ? (
-            <Tag color="green">{status}</Tag>
-          ) : (
-            <Tag color="red">{status}</Tag>
-          )}
-        </>
-      ),
+      render: (_, { status }) => {
+        const color =
+          status === 'PENDING'
+            ? 'blue'
+            : status === 'HANDLED'
+            ? 'green'
+            : 'red';
+        return <Tag color={color}>{status}</Tag>;
+      },
     },
-
     {
       title: 'Created At',
       dataIndex: 'createAt',
       key: 'createAt',
       render: (_, { createAt }) => <p>{formatDateTime(createAt)}</p>,
     },
-    {
-      title: 'Actions',
-      key: 'action',
-      render: (_, { id, status }) => (
-        <>
-          <Space size="middle">
-            <Button
-              disabled={status !== 'PENDING'}
-              type="primary"
-              onClick={() => {
-                console.log('id', id);
-                handleApprove(id);
-              }}
-            >
-              Approve
-            </Button>
-            <Button
-              disabled={status !== 'PENDING'}
-              onClick={() => handleReject(id)}
-            >
-              Reject
-            </Button>
-          </Space>
-        </>
-      ),
-    },
+    ...(profileRole === 'UMPIRE' || profileRole === 'ATHLETE'
+      ? [
+          {
+            title: 'Actions',
+            key: 'action',
+            render: (_: any, { id, status }: any) => {
+              if (status === 'WAITING_PAYING_FEE') {
+                return (
+                  <Space size="middle">
+                    <Button onClick={() => handlePayReportFee(id)}>
+                      Pay Fee
+                    </Button>
+                  </Space>
+                );
+              } else {
+                return (
+                  <Space size="middle">
+                    <p className="cursor-pointer text-[14px] transition-all duration-200 hover:text-secondColor">
+                      <GrView size={20} />
+                    </p>
+                  </Space>
+                );
+              }
+            },
+          },
+        ]
+      : [
+          {
+            title: 'Actions',
+            key: 'action',
+            render: (_: any, { id, status }: any) => (
+              <Space size="middle">
+                <Button
+                  disabled={status !== 'PENDING'}
+                  type="primary"
+                  onClick={() => handleApprove(id)}
+                >
+                  Approve
+                </Button>
+                <Button
+                  disabled={status !== 'PENDING'}
+                  onClick={() => handleReject(id)}
+                >
+                  Reject
+                </Button>
+              </Space>
+            ),
+          },
+        ]),
   ];
 
   return (
@@ -215,6 +248,7 @@ const ReportsTable = () => {
         columns={columns}
         dataSource={reports}
         loading={isLoading}
+        pagination={{ pageSize: 10 }}
       />
     </div>
   );

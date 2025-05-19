@@ -31,6 +31,8 @@ import {
 } from '@/services/tour-registration';
 import { toast } from 'react-toastify';
 import { calculateAge } from '@/utils/calculateAge';
+import { useProfileContext } from '@/context/profile.context';
+import { useRouter } from 'next/navigation';
 
 const useStyle = createStyles(({ css }) => ({
   customTable: css`
@@ -100,6 +102,8 @@ const UmpiresListTable = ({
   const [participantList, setParticipantList] = useState([]);
   const [verificationList, setVetificationList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { setUmpireId } = useProfileContext();
+  const router = useRouter();
 
   const handleSearch = (
     selectedKeys: string[],
@@ -400,6 +404,19 @@ const UmpiresListTable = ({
       dataIndex: 'name', // Dùng key đã map sẵn
       key: 'name',
       fixed: 'left',
+
+      render: (_, { name, userId }) => (
+        <h1
+          className="font-semibold text-[16px]"
+          onClick={() => {
+            localStorage.setItem('umpireId', userId);
+            setUmpireId(userId);
+            router.push(`/profile/umpire/${name.toLowerCase()}`);
+          }}
+        >
+          {name}
+        </h1>
+      ),
       // ...getColumnSearchProps('name'),
     },
     {
