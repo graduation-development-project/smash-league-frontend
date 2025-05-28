@@ -39,6 +39,7 @@ export const createTourAPI = async (accessToken: string, values: any) => {
         // umpirePerMatch: values.umpirePerMatch,
         // linemanPerMatch: values.linemanPerMatch,
         createTournamentEvent: values.createTournamentEvent,
+        createTournamentRequirements: values.createTournamentRequirements,
         protestFeePerTime: values.protestFeePerTime,
         checkInBeforeStart: values.checkInBeforeStart,
         requiredAttachment: values.requiredAttachment,
