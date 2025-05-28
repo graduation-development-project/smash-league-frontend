@@ -23,3 +23,13 @@ export enum TIER_SPONSOR_ENUM {
   DIAMOND = 'Diamond',
   PLATINUM = 'Platinum',
 }
+
+export enum TOURNAMENT_STATUS_ENUM {
+  CREATED = 'Created',
+  OPENING_FOR_REGISTRATION = 'Opening For Registration',
+  CLOSING_FOR_REGISTRATION = 'Closing For Registration',
+  DRAWING = 'Drawing',
+  ON_GOING = 'On Going',
+  FINISHED = 'Finished',
+  CANCELLED = 'Cancelled',
+}
