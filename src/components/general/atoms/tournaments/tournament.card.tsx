@@ -18,6 +18,7 @@ import {
 import { AiOutlineFieldTime } from 'react-icons/ai';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { TOURNAMENT_STATUS_ENUM } from '@/utils/enum';
 
 const TournamentCard = ({ tour }: any) => {
   const router = useRouter();
@@ -83,9 +84,9 @@ const TournamentCard = ({ tour }: any) => {
                   : tour.status === 'FINISHED'
                   ? 'text-blue-600'
                   : 'text-red-500'
-              }`}
+              } border px-3 py-1`}
             >
-              {tour.status}
+              {TOURNAMENT_STATUS_ENUM[tour.status as keyof typeof TOURNAMENT_STATUS_ENUM]}
             </span>
           </li>
         </ul>

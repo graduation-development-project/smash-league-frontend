@@ -9,7 +9,7 @@ import {
   theme,
   Typography,
 } from 'antd';
-import CreateTourStep1 from '@/components/general/molecules/tournaments/create-step1.step';
+
 import CreateTourStep2 from '@/components/general/molecules/tournaments/create-step2.step';
 import { createTourAPI } from '@/services/tournament';
 import {
@@ -19,6 +19,37 @@ import {
 import Loaders from '@/components/general/atoms/loaders/loaders';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import CreateTourStep1 from '@/components/general/molecules/tournaments/create-step1-1.step';
+
+
+
+
+interface Prize {
+  award: string;
+  nameOfAward: "championship" | "runnerUp" | "thirdPlace" | "jointThirdPlace" | string;
+}
+
+interface AgeGroup {
+  fromAge: number;
+  toAge: number;
+  championship?: string;
+  runnerUp?: string;
+  thirdPlace?: string;
+  jointThirdPlace?: string;  
+  createPrizes: {
+    createPrize: Prize[]
+  };
+  createTournamentRequirements: any
+}
+
+type TournamentEventKey = string; // e.g., "MEN_SINGLE", "WOMEN_SINGLE"
+
+type TournamentEvent = {
+  [key in TournamentEventKey]: AgeGroup[];
+};
+
+type CreateTournamentEvent = TournamentEvent[];
+
 
 const CreateTourPage = ({ session }: any) => {
   const accessToken = session?.user?.access_token;
@@ -192,6 +223,281 @@ const CreateTourPage = ({ session }: any) => {
     }
   };
 
+  function transformCreateTournamentEventData(
+    createTournamentEventData: any
+  ): any[] {
+    // Ensure the input is an array before proceeding
+    if (!Array.isArray(createTournamentEventData)) {
+      console.error("Input data is not an array.Returning empty array");
+      return [];
+    }
+
+    // Use map to create a new array with the transformed data
+    const transformedData: any[] = createTournamentEventData.map(
+      (eventCategory: any) => {
+        const newEventCategory: any = {};
+
+        // Iterate over each category in the event (e.g., MEN_SINGLE, WOMEN_SINGLE)
+        for (const categoryName in eventCategory) {
+          if (Object.prototype.hasOwnProperty.call(eventCategory, categoryName)) {
+            const categoryDetails: any[] = eventCategory[categoryName];
+
+            // Transform each detail object within the category
+            newEventCategory[categoryName] = categoryDetails.map(
+              (detail: any) => {
+                // Create the new structure for createTournamentRequirements
+                // Ensure 'detail.createTournamentRequirements' exists and is an array
+                const requirementsArray = Array.isArray(detail.createTournamentRequirements)
+                  ? detail.createTournamentRequirements
+                  : [];
+
+                const newRequirements = {
+                  createTournamentRequirements: requirementsArray,
+                };
+
+                // Return a new detail object with the transformed requirements
+                return {
+                  ...detail, // Spread existing properties
+                  createTournamentRequirements: newRequirements, // Override with the new structure
+                };
+              }
+            );
+          }
+        }
+        console.log("Check newEventCategory", newEventCategory);
+
+        return newEventCategory;
+      }
+
+
+    );
+
+    return transformedData;
+  }
+
+  //   function formatTournamentDataWithPrizes(createTournamentEventData: any) {
+  //   // Check if the input is a valid array
+  //   if (!Array.isArray(createTournamentEventData)) {
+  //     console.error("Input data is not an array. Please provide a valid array.");
+  //     return []; // Return empty or throw an error, depending on desired handling
+  //   }
+
+  //   // Map over each event category object in the main array
+  //   return createTournamentEventData.map(eventCategory => {
+  //     const newEventCategory = {}; // Create a new object for the transformed category
+
+  //     // Iterate over the keys in the event category (e.g., "MENS_SINGLE", "WOMENS_SINGLE")
+  //     for (const categoryName in eventCategory) {
+  //       if (Object.prototype.hasOwnProperty.call(eventCategory, categoryName)) {
+  //         const detailsArray = eventCategory[categoryName];
+
+  //         // Check if the detailsArray is actually an array
+  //         if (!Array.isArray(detailsArray)) {
+  //           console.warn(`Expected an array for category "${categoryName}", but received ${typeof detailsArray}. Preserving as is.`);
+  //           newEventCategory[categoryName] = detailsArray; // Preserve non-array data
+  //           continue;
+  //         }
+
+  //         // Map over each detail object within the category's array
+  //         newEventCategory[categoryName] = detailsArray.map(detail => {
+  //           // Shallow copy the original detail object to preserve all other properties
+  //           const transformedDetail = { ...detail };
+
+  //           const prizeFieldNames = [
+  //             "championshipPrize",
+  //             "runnerUpPrize",
+  //             "thirdPlacePrize",
+  //             "jointThirdPlacePrize"
+  //           ];
+  //           const prizesFromFields = [];
+
+  //           // Extract prizes from the specified fields
+  //           for (const fieldName of prizeFieldNames) {
+  //             if (Object.prototype.hasOwnProperty.call(transformedDetail, fieldName)) {
+  //               prizesFromFields.push({
+  //                 prizeName: fieldName, // Use the original field name as prizeName
+  //                 prize: transformedDetail[fieldName]
+  //               });
+  //               delete transformedDetail[fieldName]; // Remove the original field from the detail object
+  //             }
+  //           }
+
+  //           // Get the existing createPrizes array, or initialize an empty one if it doesn't exist or isn't an array
+  //           const existingPrizesArray = Array.isArray(transformedDetail.createPrizes)
+  //             ? transformedDetail.createPrizes
+  //             : [];
+
+  //           // Combine existing prizes with the newly extracted prizes
+  //           const finalPrizesArray = [...existingPrizesArray, ...prizesFromFields];
+
+  //           // Restructure the createPrizes property
+  //           transformedDetail.createPrizes = {
+  //             createPrizes: finalPrizesArray
+  //           };
+
+  //           return transformedDetail;
+  //         });
+  //       }
+  //     }
+  //     return newEventCategory;
+  //   });
+  // }
+
+  function formatTournamentDataWithPrizesSimplified(
+    createTournamentEventData: any
+  ) {
+    // Check if the input is a valid array
+    if (!Array.isArray(createTournamentEventData)) {
+      console.error("Input data is not an array. Please provide a valid array.");
+      return []; // Return empty or throw an error, depending on desired handling
+    }
+
+    // Map over each event category object in the main array
+    return createTournamentEventData.map((eventCategory) => {
+      const newEventCategory: Record<string, any> = {}; // Create a new object for the transformed category
+
+      // Iterate over the keys in the event category (e.g., "MENS_SINGLE", "WOMENS_SINGLE")
+      for (const categoryName in eventCategory) {
+        if (Object.prototype.hasOwnProperty.call(eventCategory, categoryName)) {
+          const detailsArray = eventCategory[categoryName];
+
+          // Check if the detailsArray is actually an array
+          if (!Array.isArray(detailsArray)) {
+            console.warn(
+              `Expected an array for category "${categoryName}", but received ${typeof detailsArray}. Preserving as is.`
+            );
+            newEventCategory[categoryName] = detailsArray; // Preserve non-array data
+            continue;
+          }
+
+          // Map over each detail object within the category's array
+          newEventCategory[categoryName] = detailsArray.map((detail) => {
+            // Shallow copy the original detail object to preserve all other properties
+            const transformedDetail = { ...detail };
+
+            const prizeFieldNames = [
+              "championshipPrize",
+              "runnerUpPrize",
+              "thirdPlacePrize",
+              "jointThirdPlacePrize",
+            ];
+            const prizesFromFields = [];
+
+            // Extract prizes from the specified fields
+            for (const fieldName of prizeFieldNames) {
+              if (Object.prototype.hasOwnProperty.call(transformedDetail, fieldName) && transformedDetail[fieldName] !== undefined) {
+                prizesFromFields.unshift({
+                  prizeName: fieldName, // Use the original field name as prizeName
+                  prize: transformedDetail[fieldName],
+                });
+                delete transformedDetail[fieldName]; // Remove the original field from the detail object
+              }
+            }
+
+            // Get the existing createPrizes array, or initialize an empty one
+            let existingPrizesArray = [];
+            if (Array.isArray(transformedDetail.createPrizes)) {
+              existingPrizesArray = transformedDetail.createPrizes;
+            } else if (typeof transformedDetail.createPrizes === 'object' &&
+              transformedDetail.createPrizes !== null &&
+              Array.isArray(transformedDetail.createPrizes.createPrizes)) {
+              // Handle if it's already in the nested structure (though logic implies it shouldn't be at this stage)
+              existingPrizesArray = transformedDetail.createPrizes.createPrizes;
+            }
+
+
+            // Combine existing prizes with the newly extracted prizes
+            const finalPrizesArray = [...existingPrizesArray, ...prizesFromFields];
+
+            // Restructure the createPrizes property
+            transformedDetail.createPrizes = {
+              createPrizes: finalPrizesArray,
+            };
+
+            return transformedDetail;
+          });
+        }
+      }
+      return newEventCategory;
+    });
+  }
+  function formatTournamentDataWithPrizesSimplified2(
+  createTournamentEventData: any
+) {
+  // Check if the input is a valid array
+  if (!Array.isArray(createTournamentEventData)) {
+    console.error("Input data is not an array. Please provide a valid array.");
+    return []; // Return empty or throw an error, depending on desired handling
+  }
+
+  // Map over each event category object in the main array
+  return createTournamentEventData.map((eventCategory) => {
+    const newEventCategory: Record<string, any> = {}; // Create a new object for the transformed category
+
+    // Iterate over the keys in the event category (e.g., "MENS_SINGLE", "WOMENS_SINGLE")
+    for (const categoryName in eventCategory) {
+      if (Object.prototype.hasOwnProperty.call(eventCategory, categoryName)) {
+        const detailsArray = eventCategory[categoryName];
+
+        // Check if the detailsArray is actually an array
+        if (!Array.isArray(detailsArray)) {
+          console.warn(
+            `Expected an array for category "${categoryName}", but received ${typeof detailsArray}. Preserving as is.`
+          );
+          newEventCategory[categoryName] = detailsArray; // Preserve non-array data
+          continue;
+        }
+
+        // Map over each detail object within the category's array
+        newEventCategory[categoryName] = detailsArray.map((detail) => {
+          // Shallow copy the original detail object to preserve all other properties
+          const transformedDetail = { ...detail };
+
+          const prizeFieldNames = [
+            "championshipPrize",
+            "runnerUpPrize",
+            "thirdPlacePrize",
+            "jointThirdPlacePrize",
+          ];
+          const prizesFromFields = []; // This will store prizes in the order of prizeFieldNames
+
+          // Extract prizes from the specified fields
+          for (const fieldName of prizeFieldNames) {
+            if (Object.prototype.hasOwnProperty.call(transformedDetail, fieldName) && transformedDetail[fieldName] !== undefined) {
+              prizesFromFields.push({
+                prizeName: fieldName,
+                prize: transformedDetail[fieldName],
+              });
+              delete transformedDetail[fieldName]; // Remove the original field from the detail object
+            }
+          }
+
+          // Get the existing createPrizes array, or initialize an empty one
+          let existingPrizesArray = [];
+          if (Array.isArray(transformedDetail.createPrizes)) {
+            existingPrizesArray = transformedDetail.createPrizes;
+          } else if (typeof transformedDetail.createPrizes === 'object' &&
+                     transformedDetail.createPrizes !== null &&
+                     Array.isArray(transformedDetail.createPrizes.createPrizes) ) {
+            // Handle if it's already in the nested structure
+             existingPrizesArray = transformedDetail.createPrizes.createPrizes;
+          }
+
+          // Combine prizes: prizesFromFields (championship, runnerUp, etc.) first, then other existing prizes.
+          const finalPrizesArray = [...prizesFromFields, ...existingPrizesArray];
+
+          // Restructure the createPrizes property
+          transformedDetail.createPrizes = {
+            createPrizes: finalPrizesArray,
+          };
+
+          return transformedDetail;
+        });
+      }
+    }
+    return newEventCategory;
+  });
+}
   const handleFinish = async () => {
     setIsLoadingCreateTour(true);
     const valuesStep2 = await form.validateFields();
@@ -211,6 +517,7 @@ const CreateTourPage = ({ session }: any) => {
       hasMerchandise,
       createTournamentEvent,
       createCourts,
+      createTournamentRequirements,
       ...rest
     } = finalValues;
     console.log(createCourts, 'createCourt');
@@ -227,12 +534,22 @@ const CreateTourPage = ({ session }: any) => {
     const checkInBeforeStart = checkIn ? checkIn.toISOString() : null;
     const createCourt = { createCourts: createCourts };
 
+    const formatCreateTourEventPrizes = formatTournamentDataWithPrizesSimplified2(createTournamentEvent);
+    console.log(formatCreateTourEventPrizes, 'formatCreateTourEventPrizes');
+
+    // addPrizeList1(createTournamentEvent);
+    const createTournamentEventUpdate = transformCreateTournamentEventData(formatCreateTourEventPrizes); 
+    console.log(createTournamentEventUpdate, 'createTournamentEvent');
+
+
+
     const submitData = {
       ...rest,
       createCourts: createCourt,
       isRegister: true,
-      createTournamentEvent,
+      createTournamentEvent: createTournamentEventUpdate,
       hasMerchandise,
+      createTournamentRequirements: { createTournamentRequirements },
       registrationOpeningDate,
       registrationClosingDate,
       drawStartDate,
@@ -247,6 +564,87 @@ const CreateTourPage = ({ session }: any) => {
     setIsLoadingCreateTour(false);
   };
 
+  const addPrizeList = (createTournamentEvent: CreateTournamentEvent) => {
+    createTournamentEvent.forEach((eventObj) => {
+      // Lấy key đầu tiên (tên event)
+      const eventKey = Object.keys(eventObj)[0] as TournamentEventKey;
+      const ageGroups = eventObj[eventKey];
+
+      ageGroups.forEach((group) => {
+        // Đảm bảo prize là mảng
+        if (!Array.isArray(group.createPrizes.createPrize)) {
+          group.createPrizes.createPrize = [];
+        }
+      }
+      );
+
+      const prizesToAdd: Prize[] = [];
+    })
+    return createTournamentEvent;
+  }
+
+  // const addPrizeList1 = (createTournamentEvent: CreateTournamentEvent): void => {
+  //   console.log("createTournamentEventdwdd: ",createTournamentEvent);
+
+  //   createTournamentEvent.forEach((eventObj) => {
+  //     // Lấy key đầu tiên (tên event)
+  //     const eventKey = Object.keys(eventObj)[0] as TournamentEventKey;
+  //     const ageGroups = eventObj[eventKey];
+
+  //     ageGroups.forEach((group) => {
+  //       // Đảm bảo prize là mảng
+  //       if (!Array.isArray(group.createPrizes.createPrize)) {
+  //         group.createPrizes.createPrize = [];
+  //       }
+
+  //       const existingAwards = new Set(group.createPrizes.createPrize?.map((p) => p.nameOfAward));
+  //       console.log("prizes: ",existingAwards);
+
+  //       // Tạo mảng prize mới cần thêm (theo thứ tự để unshift ngược lại)
+  //       const prizesToAdd: Prize[] = [];
+
+  //       if (group.jointThirdPlace && !existingAwards.has("jointThirdPlace")) {
+  //         prizesToAdd.push({
+  //           award: group.jointThirdPlace,
+  //           nameOfAward: "jointThirdPlace",
+  //         });
+  //       }
+
+  //       if (group.thirdPlace && !existingAwards.has("thirdPlace")) {
+  //         prizesToAdd.push({
+  //           award: group.thirdPlace,
+  //           nameOfAward: "thirdPlace",
+  //         });
+  //       }
+
+  //       if (group.runnerUp && !existingAwards.has("runnerUp")) {
+  //         prizesToAdd.push({
+  //           award: group.runnerUp,
+  //           nameOfAward: "runnerUp",
+  //         });
+  //       }
+
+  //       if (group.championship && !existingAwards.has("championship")) {
+  //         prizesToAdd.push({
+  //           award: group.championship,
+  //           nameOfAward: "championship",
+  //         });
+  //       }
+  //       console.log('prizesToAdd', prizesToAdd);
+
+  //       prizesToAdd.forEach((prize) => {
+  //         group.createPrizes.createPrize?.unshift(prize);
+  //       });
+  //       console.log('group.createPrizes.createPrizes', group.createPrizes.createPrize);
+  //       // prizesToAdd = {
+  //       //   createPrizes: {
+  //       //     createPrizes: prizesToAdd
+  //       //   }
+  //       // };
+  //     });
+  //   });
+  // };
+
   return (
     <>
       {isLoadingCreateTour ? (
@@ -256,7 +654,7 @@ const CreateTourPage = ({ session }: any) => {
           <div className="w-full h-max flex flex-col rounded-md shadow-shadowBtn py-10 px-10 gap-5">
             <div className="w-max border-b-4 border-primaryColor">
               <h1 className="text-[32px] font-bold leading-normal text-textColor  px-4">
-                New<span className="text-primaryColor"> Tournaments</span>{' '}
+                New<span className="text-primaryColor"> Tournaments</span>
               </h1>
             </div>
             <ConfigProvider

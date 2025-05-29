@@ -63,7 +63,7 @@ type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 dayjs.extend(customParseFormat);
 const formatTimeCheckIn = 'mm:ss';
 
-const CreateTourStep1 = ({
+const CreateTourStep11 = ({
   dataStep1,
   form,
   accessToken,
@@ -252,40 +252,6 @@ const CreateTourStep1 = ({
       fileImgMerchandiseList.filter((_: File, i: number) => i !== index),
     );
   };
-
-
-  //Events
-  // const onCha
-
-
-  //Register, Occur, Draw
-
-  // const disabledRegisterDate = (current: dayjs.Dayjs) => {
-  //   return (
-  //     current && current.isBefore(dayjs().add(1, 'day').startOf('day'), 'day')
-  //   );
-  // };
-
-  // const disabledDrawDate = (current: dayjs.Dayjs) => {
-  //   return (
-  //     current &&
-  //     (current.isBefore(dayjs().add(1, 'day').startOf('day'), 'day') ||
-  //       (registerDate.length > 0 &&
-  //         current.isBefore(
-  //           registerDate[1].add(1, 'day').startOf('day'),
-  //           'day',
-  //         )))
-  //   );
-  // };
-  // const disabledOccurDate = (current: dayjs.Dayjs) => {
-  //   return (
-  //     current &&
-  //     (current.isBefore(dayjs().add(1, 'day').startOf('day'), 'day') ||
-  //       (drawDate.length > 0 &&
-  //         current.isBefore(drawDate[0].add(1, 'day').startOf('day'), 'day')))
-  //   );
-  // };
-  const today = dayjs().add(1, 'day').startOf('day');
 
   const disabledRegisterDate = (current: dayjs.Dayjs): boolean => {
     const today = dayjs().add(1, 'day').startOf('day');
@@ -915,6 +881,101 @@ const CreateTourStep1 = ({
             </Form.Item>
 
             <Form.Item
+              label="Conditions of Tournament"
+              name="createTournamentRequirements"
+            >
+              <Form.List
+                // name="conditionTournaments"
+                name="createTournamentRequirements"
+              >
+                {(fields, { add, remove }) => (
+                  <div style={{ display: 'flex', rowGap: 16, flexDirection: 'column' }}>
+                    {fields.map((field) => (
+                      <Card
+                        size="small"
+                        title={`Condition ${field.name + 1}`}
+                        key={field.key}
+                        extra={
+                          <CloseOutlined
+                            onClick={() => {
+                              remove(field.name);
+                            }}
+                          />
+                        }
+                        style={{ display: 'flex', flexDirection: 'column', rowGap: 16, }}
+                      >
+                        <Form.Item
+                          label="Name of Tournament Condition"
+                          // name={[field.name, 'nameOfCondition']}
+                          name={[field.name, 'requirementName']}
+                          rules={
+                            [
+                              {
+                                required: true,
+                                message: 'Please input question of tournament condition!'
+                              }
+                            ]
+                          }
+                        >
+                          <Input maxLength={65} placeholder='Name of Tournament Condition' />
+                        </Form.Item>
+                        <Form.Item
+                          label="Condition Description"
+                          name={[field.name, 'requirementDescription']}
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please input tournament condition description!'
+                            }
+                          ]}
+                        >
+                          <Input maxLength={65} placeholder='Tournament Condition Description' />
+                        </Form.Item>
+                        <Form.Item
+                          label="Condition Type"
+                          name={[field.name, 'requirementType']}
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please input tournament condition description!'
+                            }
+                          ]}
+                          initialValue={'FillIn'}
+                        >
+                          <Select
+                            defaultValue="FillIn"
+                            placeholder="Select Condition Type"
+                            style={{ width: 120 }}
+                            options={[
+                              { value: 'FillIn', label: 'Fill In' },
+                              { value: 'Selection', label: 'Select (Yes, No)' },
+                              { value: 'None', label: 'None' },
+                            ]}
+                          />
+                        </Form.Item>
+
+
+                        {/* <Form.Item
+                          label="Input Tournament Condition"
+                          name={[field.name, 'inputCondition']}
+                          initialValue={false}
+                        >
+                          <Checkbox style={{ width: '90%' }} />
+                        </Form.Item> */}
+                      </Card>
+                    ))}
+                    <Form.Item>
+                      <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                        Add Event Condition
+                      </Button>
+                    </Form.Item>
+                  </div>
+                )}
+              </Form.List>
+            </Form.Item>
+
+
+            <Form.Item
               label="Events"
             >
               <Checkbox
@@ -932,175 +993,82 @@ const CreateTourStep1 = ({
               />
             </Form.Item>
           </div>
-          {/* <div className='w-full h-max flex justify-center items-center'> */}
-
-          {/* <Form.Item noStyle name={['categories', 'min']}> */}
           <Form.List
             name="createTournamentEvent"
-            rules={[
-              {
-                validator: async (_, createTournamentEvent) => {
-                  if (!createTournamentEvent || createTournamentEvent.length < 1) {
-                    return Promise.reject(new Error('At least 1 events'));
-                  }
-                },
+            rules={[{
+              validator: async (_, value) => {
+                if (!value || value.length < 1) {
+                  return Promise.reject(new Error('At least 1 event is required'));
+                }
               },
-            ]}
+            }]}
           >
             {(fields, { add, remove }) => (
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  rowGap: 16,
-                  width: '90%',
-                }}
-              >
-                {eventList?.map((event, index) => {
-                  const field = fields.find((f) => f.name === index);
-                  if (!field) add();
-
+              <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16, width: '100%' }}>
+                {eventList.map((event, eventIndex) => {
+                  if (!fields[eventIndex]) add();
                   return (
                     <Card
-                      size="small"
-                      title={
-                        eventOptions?.find((e) => e.value === event)?.label ||
-                        event
-                      }
                       key={event}
-                      style={{
-                        borderWidth: 2,
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        rowGap: 16,
-                        alignSelf: 'center',
-                      }}
-                      extra={
-                        eventList.length > 1 && (
-                          <CloseOutlined
-                            onClick={() => {
-                              remove(index);
-                              setEventList(
-                                eventList.filter((item) => item !== event),
-                              );
-                            }}
-                          />
-                        )
-                      }
+                      title={eventOptions.find(e => e.value === event)?.label || event}
+                      extra={eventList.length > 1 && (
+                        <CloseOutlined onClick={() => {
+                          remove(eventIndex);
+                          setEventList(eventList.filter(e => e !== event));
+                        }} />
+                      )}
+                      style={{ borderWidth: 2 }}
                     >
-                      <Form.List name={[index, event]}>
+                      <Form.List name={[eventIndex, event]}>
                         {(subFields, subOpt) => {
-                          if (subFields.length === 0) {
-                            subOpt.add();
-                          }
-
                           return (
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                rowGap: 16,
-                                width: '100%',
-                              }}
-                            >
+                            <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16 }}>
                               {subFields.map((subField) => (
                                 <Card
-                                  size="small"
-                                  style={{
-                                    borderWidth: 2,
-                                    width: '90%',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    rowGap: 16,
-                                    alignSelf: 'center',
-                                  }}
                                   key={subField.key}
-                                  title={
-                                    <Space key={subField.key}>
-                                      From
+                                  title={(
+                                    <Space>
+                                      From age
                                       <Form.Item
                                         noStyle
                                         name={[subField.name, 'fromAge']}
                                         rules={[
-                                          {
-                                            required: true,
-                                            message: 'Please input minimum range age',
-                                          },
-                                          {
-                                            type: 'number',
-                                            min: 7,
-                                            message: 'Please input minimum range age at least 7 years old',
-                                          },
-                                          {
-                                            type: 'number',
-                                            max: 90,
-                                            message: 'Please input minimum range age under 90 years old',
-                                          }
+                                          { required: true, message: 'Please input minimum age' },
+                                          { type: 'number', min: 7, max: 90, message: 'Age must be 7-90' }
                                         ]}
                                       >
-                                        <InputNumber
-                                          required
-                                          min={7}
-                                          max={89}
-                                          style={{ width: '150px' }}
-                                          placeholder="Minimum age"
-                                          changeOnWheel
-                                        />
+                                        <InputNumber min={7} max={89} placeholder="Min age" style={{ width: '100px' }} />
                                       </Form.Item>
-                                      to
+                                      to age
                                       <Form.Item
                                         noStyle
                                         name={[subField.name, 'toAge']}
                                         rules={[
-                                          {
-                                            required: true,
-                                            message: 'Please input maximum range age',
-                                          },
-                                          {
-                                            type: 'number',
-                                            min: 7,
-                                            message: 'Please input maximum range age',
-                                          },
-                                          {
-                                            type: 'number',
-                                            max: 90,
-                                            message: 'Please input maximum range age',
-                                          }
+                                          { required: true, message: 'Please input maximum age' },
+                                          { type: 'number', min: 7, max: 90, message: 'Age must be 7-90' }
                                         ]}
                                       >
-                                        <InputNumber
-                                          required
-                                          min={7}
-                                          max={90}
-                                          style={{ width: '150px' }}
-                                          placeholder="Maximum age"
-                                          changeOnWheel
-                                        />
+                                        <InputNumber min={7} max={90} placeholder="Max age" style={{ width: '100px' }} />
                                       </Form.Item>
                                     </Space>
-                                  }
-                                  extra={
-                                    subFields.length > 1 && (
-                                      <CloseOutlined
-                                        onClick={() =>
-                                          subOpt.remove(subField.name)
-                                        }
-                                      />
-                                    )
-                                  }
+                                  )}
+                                  extra={subFields.length > 1 && (
+                                    <CloseOutlined onClick={() => subOpt.remove(subField.name)} />
+                                  )}
                                 >
                                   <Form.Item
                                     name={[subField.name, 'typeOfFormat']}
                                     label="Type of format"
                                     initialValue={'SINGLE_ELIMINATION'}
-                                    required
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Please select type of format',
+                                      }
+                                    ]}
                                   >
-                                    <Select placeholder="Number of game(s)">
-                                      <Select.Option value="SINGLE_ELIMINATION">
-                                        Single Elimination
-                                      </Select.Option>
-                                      {/* <Select.Option value="ROUND_ROBIN">Round Robin</Select.Option> */}
+                                    <Select placeholder="Type">
+                                      <Select.Option value="SINGLE_ELIMINATION">Single Elimination</Select.Option>
                                     </Select>
                                   </Form.Item>
                                   <Form.Item
@@ -1164,15 +1132,19 @@ const CreateTourStep1 = ({
                                   <Form.Item
                                     name={[subField.name, 'numberOfGames']}
                                     label="Number of games"
-                                    required
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Please input number of games',
+                                      }
+                                    ]}
                                   >
-                                    <Select placeholder="Number of game(s)">
-                                      <Select.Option value="1">1</Select.Option>
-                                      <Select.Option value="3">3</Select.Option>
-                                      <Select.Option value="5">5</Select.Option>
+                                    <Select>
+                                      {[1, 3, 5].map(num => (
+                                        <Select.Option key={num} value={num.toString()}>{num}</Select.Option>
+                                      ))}
                                     </Select>
                                   </Form.Item>
-
                                   <Form.Item
                                     name={[subField.name, 'winningPoint']}
                                     label="Winning points"
@@ -1198,7 +1170,6 @@ const CreateTourStep1 = ({
                                       onChange={(value) => setWinningPoint(value)}
                                     />
                                   </Form.Item>
-
                                   <Form.Item
                                     name={[subField.name, 'lastPoint']}
                                     label="Last points"
@@ -1228,6 +1199,85 @@ const CreateTourStep1 = ({
                                     />
                                   </Form.Item>
 
+
+                                  <Divider />
+
+
+                                  <Form.Item
+                                    label="Event Conditions"
+                                    name={[subField.name, 'createTournamentRequirements']}
+                                  >
+                                    <Form.List name={[subField.name, 'createTournamentRequirements']}>
+                                      {(fields, { add, remove }) => (
+                                        <div style={{ display: 'flex', flexDirection: 'column', rowGap: 20, }}>
+                                          {fields.map(({ key, name, ...restField }) => (
+                                            <Card
+                                              size="small"
+                                              title={`Condition ${name + 1}`}
+                                              key={key}
+                                              extra={
+                                                <CloseOutlined
+                                                  onClick={() => {
+                                                    remove(name);
+                                                  }}
+                                                />
+                                              }
+                                              style={{ display: 'flex', flexDirection: 'column', rowGap: 16, }}
+                                            >
+                                              <Form.Item
+                                                {...restField}
+                                                label="Name of Event Condition"
+                                                name={[name, 'requirementName']}
+                                                rules={
+                                                  [
+                                                    {
+                                                      required: true,
+                                                      message: 'Please input Question of Event Condition!'
+                                                    }
+                                                  ]
+                                                }
+                                              >
+                                                <Input maxLength={55} style={{ width: '90%' }} placeholder='Name of Event Condition' />
+                                              </Form.Item>
+                                              <Form.Item
+                                                {...restField}
+                                                label="Event Condition Description"
+                                                name={[name, 'requirementDescription']}
+                                                rules={[
+                                                  {
+                                                    required: true,
+                                                    message: 'Please input Event Condition Description!'  
+                                                  }
+                                                ]}
+                                              >
+                                                <Input maxLength={55} style={{ width: '90%' }} placeholder='Event Condition Description' />
+                                              </Form.Item>
+                                              <Form.Item
+                                                label="Event Condition Type"
+                                                name={[name, 'requirementType']}
+                                                initialValue={'FillIn'}
+                                              >
+                                                <Select
+                                                  defaultValue="FillIn"
+                                                  style={{ width: 120 }}
+                                                  options={[
+                                                    { value: 'FillIn', label: 'Fill In' },
+                                                    { value: 'Selection', label: 'Select (Yes, No)' },
+                                                    { value: 'None', label: 'None' },
+                                                  ]}
+                                                />
+                                              </Form.Item>
+                                            </Card>
+                                          ))}
+                                          <Form.Item>
+                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                              Add Event Condition
+                                            </Button>
+                                          </Form.Item>
+                                        </div>
+                                      )}
+                                    </Form.List>
+                                  </Form.Item>
                                   <Form.Item
                                     name={[
                                       subField.name,
@@ -1241,93 +1291,85 @@ const CreateTourStep1 = ({
                                       autoSize={{ minRows: 3, maxRows: 5 }}
                                     />
                                   </Form.Item>
-
                                   <Divider />
-                                  <Form.Item
-                                    label="Prizes"
-                                  >
-                                    <Form.List name={[subField.name, 'createPrizes']}>
-                                      {(fields, { add, remove }) => (
-                                        <>
-                                          {fields.map(({ key, name, ...restField }) => (
-                                            <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                              <Form.Item
-                                                {...restField}
-                                                name={[name, 'first']}
-                                                rules={[{ required: true, message: 'Missing first name' }]}
-                                              >
-                                                <Input placeholder="First Name" />
-                                              </Form.Item>
-                                              <Form.Item
-                                                {...restField}
-                                                name={[name, 'last']}
-                                                rules={[{ required: true, message: 'Missing last name' }]}
-                                              >
-                                                <Input placeholder="Last Name" />
-                                              </Form.Item>
-                                              <MinusCircleOutlined onClick={() => remove(name)} />
-                                            </Space>
-                                          ))}
-                                          <Form.Item>
-                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                              Add field
-                                            </Button>
-                                          </Form.Item>
-                                        </>
-                                      )}
-                                    </Form.List>
-                                  </Form.Item>
 
+                                  <Form.Item label="Award Recipients">
+                                    {/* <Input placeholder="Prize name" /> */}
+                                    <div>List of Award Recipients</div>
+                                  </Form.Item>
                                   <Form.Item
                                     name={[subField.name, 'championshipPrize']}
                                     label="Champion Award"
                                     rules={[
                                       {
                                         required: true,
-                                        message: 'Champion rewards is required',
-                                      },
-                                    ]}
-                                  >
-                                    <Input maxLength={500} style={{ width: '100%' }} required />
-                                  </Form.Item>
-
-                                  <Form.Item
-                                    name={[subField.name, 'runnerUpPrize']}
-                                    label="Runner-up"
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: 'Runner-up rewards is required',
+                                        message: 'Champion Award is required'
                                       }
                                     ]}
                                   >
-                                    <Input maxLength={500} style={{ width: '100%' }} required />
+                                    <Input placeholder="Champion Award" />
                                   </Form.Item>
+                                  <Form.Item name={[subField.name, 'runnerUpPrize']} label="Runner-up Award">
+                                    <Input placeholder="Runner-up Award" />
+                                  </Form.Item>
+                                  <Form.Item name={[subField.name, 'thirdPlacePrize']} label="Third Place Award">
+                                    <Input placeholder="Third Place Award" />
+                                  </Form.Item>
+                                  <Form.Item name={[subField.name, 'jointThirdPlacePrize']} label="Joint Third Place Award">
+                                    <Input placeholder="Joint Third Place Award" />
+                                  </Form.Item>
+
+                                  {/* <Divider /> */}
 
                                   <Form.Item
-                                    name={[subField.name, 'thirdPlacePrize']}
-                                    label="Third Place"
+                                    label="Other Prizes"
                                   >
-                                    <Input maxLength={500} style={{ width: '100%' }} />
+                                    <Form.List name={[subField.name, 'createPrizes']}>
+                                      {(fields, { add, remove }) => (
+                                        <>
+                                          {fields.map(({ key, name, ...restField }) => (
+                                            <Space key={key} align="baseline" style={{ marginBottom: 8, }}>
+                                              <Form.Item
+                                                {...restField}
+                                                name={[name, 'prizeName']}
+                                                style={{ width: '200px' }}
+                                                rules={[
+                                                  {
+                                                    required: true,
+                                                    message: 'Please input name of award!'
+                                                  }
+                                                ]}
+                                              >
+                                                <Input placeholder="Name of award" />
+                                              </Form.Item>
+                                              <Form.Item
+                                                {...restField}
+                                                name={[name, 'prize']}
+                                                style={{ width: '500px' }}
+                                                rules={[
+                                                  {
+                                                    required: true
+                                                  }
+                                                ]}
+                                              >
+                                                <Input placeholder="Award Description" />
+                                              </Form.Item>
+                                              <MinusCircleOutlined onClick={() => remove(name)} />
+                                            </Space>
+                                          ))}
+                                          <Form.Item>
+                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                              Add other prizes
+                                            </Button>
+                                          </Form.Item>
+                                        </>
+                                      )}
+                                    </Form.List>
                                   </Form.Item>
-
-                                  {/* <Form.Item
-                                    name={[
-                                      subField.name,
-                                      'jointThirdPlacePrize',
-                                    ]}
-                                    label="Third Place (Tie)"
-                                  >
-                                    <Input style={{ width: '100%' }} />
-                                  </Form.Item> */}
                                 </Card>
                               ))}
-                              <Button
-                                type="dashed"
-                                onClick={() => subOpt.add()}
-                                block
-                              >
-                                + Add Range Age
+                              <Button type="dashed" onClick={() => subOpt.add()} icon={<PlusOutlined />} block>
+                                Add Range/Format
                               </Button>
                             </div>
                           );
@@ -1339,8 +1381,7 @@ const CreateTourStep1 = ({
               </div>
             )}
           </Form.List>
-          {/* </Form.Item> */}
-          {/* </div> */}
+
         </div>
       </section>
       <section className="w-full h-max flex flex-col shadow-shadowBtn ">
@@ -1402,12 +1443,12 @@ const CreateTourStep1 = ({
               changeOnWheel
               width={'100%'}
             />
-            {/* <span className='text-[12px] text-textColor2 flex items-center gap-1 mt-2 ml-3'><Info size={15} /> Refund policy <a href="">here</a></span> */}
+
           </Form.Item>
           <Form.Item
             name={'registrationFeePerPerson'}
             label={'Registration Fee Per Person'}
-            // style={isRegister ? { display: 'block' } : { display: 'none' }}
+
             initialValue={0}
             rules={[
               {
@@ -1438,7 +1479,6 @@ const CreateTourStep1 = ({
               changeOnWheel
               width={'100%'}
             />
-            {/* <span className='text-[12px] text-textColor2 flex items-center gap-1 mt-2 ml-3'><Info size={15} /> Refund policy <a href="">here</a></span> */}
           </Form.Item>
           <Form.Item
             name={'protestFeePerTime'}
@@ -1473,7 +1513,6 @@ const CreateTourStep1 = ({
               changeOnWheel
               width={'100%'}
             />
-            {/* <span className='text-[12px] text-textColor2 flex items-center gap-1 mt-2 ml-3'><Info size={15} /> Refund policy <a href="">here</a></span> */}
           </Form.Item>
           <Divider />
 
@@ -2086,4 +2125,4 @@ const CreateTourStep1 = ({
   );
 };
 
-export default CreateTourStep1;
+export default CreateTourStep11;
