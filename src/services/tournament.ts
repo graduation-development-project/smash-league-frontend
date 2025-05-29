@@ -201,7 +201,7 @@ export const getTournamentUmpiresParticipantsAPI = async (
   }
 };
 
-export const getTournamentEventDetailAPI = async (tournamentId: string ) => {
+export const getTournamentEventDetailAPI = async (tournamentId: string) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-tournament-event/${tournamentId}`,
@@ -559,6 +559,37 @@ export const cancelTournamentByOrganizerAPI = async (
   } catch (error: any) {
     console.error(
       'Error cancel tournament by staff:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const banAthleteAPI = async (
+  tournamentId: string | null,
+  participantId: string,
+  reason: string,
+  accessToken: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/organizers/ban-user`,
+      {
+        tournamentId,
+        participantId,
+        reason,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error ban user by organizer:',
       error.response?.data || error.message,
     );
     return error.response?.data;

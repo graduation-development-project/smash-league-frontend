@@ -13,7 +13,7 @@ export default function RegistrationsChart({
   toDate: string;
 }) {
   const [registrationCounts, setRegistrationCounts] = useState<
-  [string, number][]
+    [string, number][]
   >([]);
   const [user, setUser] = useState<any>({});
 
@@ -60,11 +60,24 @@ export default function RegistrationsChart({
   return (
     <div className="w-full h-full flex items-end gap-2">
       {registrationCounts.map(([month, count], i) => (
-        <div key={month} className="flex-1 flex flex-col items-center">
+        <div
+          key={month}
+          className="flex-1 flex flex-col items-center group relative"
+        >
+          {/* Bar */}
           <div
-            className="w-full max-w-[30px] bg-primaryColor rounded-t-sm"
-            style={{ height: `${count * 2}px` }}
+            className="w-full max-w-[30px] bg-primaryColor rounded-t-sm transition-all duration-300"
+            style={{ height: `${count * 10}px` }}
           />
+
+          {/* Tooltip on hover */}
+          {count > 0 && (
+            <div className="w-max absolute bottom-full mb-1 hidden group-hover:flex items-center justify-center bg-gray-700 text-white text-xs px-2 py-1 rounded">
+              {count} {count === 1 ? 'registration' : 'registrations'}
+            </div>
+          )}
+
+          {/* Month label */}
           <span className="text-xs mt-2">{month.split('-')[1]}</span>
         </div>
       ))}

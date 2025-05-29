@@ -48,10 +48,14 @@ const formSchema = z.object({
     }),
 });
 
-export function UmpireDegreeForm() {
+export function UmpireDegreeForm({
+  getAllUmpireQualifications,
+}: {
+  getAllUmpireQualifications: any;
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<any>({});
   const [qualificationsTypes, setQualificationsTypes] = useState([]);
+  const [user, setUser] = useState<any>({});
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -95,13 +99,14 @@ export function UmpireDegreeForm() {
         values.name,
         user?.access_token,
       );
-      console.log('Check update response', response.data);
+      // console.log('Check update response', response.data);
       if (
         response?.data?.statusCode === 200 ||
         response?.data?.statusCode == 201
       ) {
         setTimeout(() => {
           console.log(values);
+          getAllUmpireQualifications();
           toast.success('Qualification added successfully', {
             position: 'top-right',
             autoClose: 2000,
@@ -156,18 +161,11 @@ export function UmpireDegreeForm() {
                         ? 'Umpire Degree'
                         : item?.value === 'HealthCertificate'
                         ? 'Health Certificate'
-                        : 'Foreign Language Certificate'}
+                        : item?.value === 'ForeignLanguageCertificate'
+                        ? 'Foreign Language Certificate'
+                        : 'Others'}
                     </SelectItem>
                   ))}
-                  {/* <SelectItem value="national_degree">
-                    National Degree
-                  </SelectItem>
-                  <SelectItem value="international_degree">
-                    International Degree
-                  </SelectItem>
-                  <SelectItem value="certification">Certification</SelectItem>
-                  <SelectItem value="workshop">Workshop Certificate</SelectItem>
-                  <SelectItem value="other">Other</SelectItem> */}
                 </SelectContent>
               </Select>
               <FormDescription>

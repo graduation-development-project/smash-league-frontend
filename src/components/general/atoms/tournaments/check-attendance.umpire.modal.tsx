@@ -9,12 +9,14 @@ const CheckAttendanceModal = ({
   isModalOpen,
   setIsModalOpen,
   matchId,
-  setIsCheckAttendance
+  setIsCheckAttendance,
+  getAssignedMatches,
 }: {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   matchId: string;
   setIsCheckAttendance: React.Dispatch<React.SetStateAction<boolean>>;
+  getAssignedMatches: any;
 }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -56,7 +58,6 @@ const CheckAttendanceModal = ({
           },
         ];
         setAttendance(formatData);
-        
       }
     } catch (error: any) {
       console.log('check error', error);
@@ -73,8 +74,8 @@ const CheckAttendanceModal = ({
 
   const handleSubmit = async (values: any) => {
     const { attendance } = values;
-    const left = attendance.includes('left');
-    const right = attendance.includes('right');
+    const left = attendance?.includes('left');
+    const right = attendance?.includes('right');
     setIsLoading(true);
     try {
       const response = await checkAttendanceAPI(matchId, left, right);
@@ -83,6 +84,7 @@ const CheckAttendanceModal = ({
         response?.data?.statusCode === 204 ||
         response?.data?.statusCode === 200
       ) {
+        await getAssignedMatches();
         setIsLoading(false);
         setIsModalOpen(false);
         setIsCheckAttendance(true);
@@ -118,7 +120,7 @@ const CheckAttendanceModal = ({
 
   useEffect(() => {
     getMatchById();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchId]);
   return (
     <div>

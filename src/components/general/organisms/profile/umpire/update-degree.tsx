@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-export default function UpdateUmpireDegrees() {
+export default function UpdateUmpireDegrees({getAllUmpireQualifications}: {getAllUmpireQualifications: any}) {
   return (
     <div className="container mx-auto py-10 space-y-8">
       <div className="flex flex-col space-y-2">
@@ -28,7 +28,7 @@ export default function UpdateUmpireDegrees() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <UmpireDegreeForm />
+            <UmpireDegreeForm getAllUmpireQualifications = {getAllUmpireQualifications} />
           </CardContent>
         </Card>
       </div>

@@ -303,7 +303,7 @@ const UpdateInformationProfile = ({
             <Input placeholder="Enter your height" />
           </Form.Item>
 
-          <Form.Item label="Level" name="level" initialValue={profile?.level}>
+          {/* <Form.Item label="Level" name="level" initialValue={profile?.level}>
             <Select
               placeholder="Select your level"
               options={[
@@ -326,7 +326,7 @@ const UpdateInformationProfile = ({
               style={{ width: '100%' }}
               picker="year"
             />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             label="Location"

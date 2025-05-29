@@ -23,10 +23,12 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   let eventId = null;
   let verifications = false;
   let tourId = null;
+  let tournamentId = null;
 
   if (selectedKey.includes('_')) {
     eventName = selectedKey.split('_').slice(0, 2).join('_');
     eventId = selectedKey.split('_')[4] || '';
+    tournamentId = selectedKey.split('_')[5];
     verifications = selectedKey.includes('verifications');
     tourId =
       selectedKey
@@ -34,6 +36,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
         .filter((part) => part !== 'umpires')
         .join('_') || '';
   }
+  
 
   if (selectedKey.includes('umpires')) {
     return <UmpiresListTable tourId={tourId} />;
@@ -45,17 +48,17 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
     case 'athletes':
       return <TournamentsListTable />;
     case 'reports':
-      return <ReportsTable />;
+      return <ReportsTable profileRole="ORGANIZER" />;
     case 'MENS_SINGLE':
-      return <MenSinglesAthleteTable eventId={eventId} />;
+      return <MenSinglesAthleteTable eventId={eventId} tournamentId = {tournamentId}/>;
     case 'WOMENS_SINGLE':
-      return <WomenSinglesAthleteTable eventId={eventId} />;
+      return <WomenSinglesAthleteTable eventId={eventId} tournamentId = {tournamentId}/>;
     case 'MENS_DOUBLE':
-      return <MenDoublesAthleteTable eventId={eventId} />;
+      return <MenDoublesAthleteTable eventId={eventId} tournamentId = {tournamentId}/>;
     case 'WOMENS_DOUBLE':
-      return <WomenDoublesAthleteTable eventId={eventId} />;
+      return <WomenDoublesAthleteTable eventId={eventId} tournamentId = {tournamentId}/>;
     case 'MIXED_DOUBLE':
-      return <MixedDoublesAthleteTable eventId={eventId} />;
+      return <MixedDoublesAthleteTable eventId={eventId} tournamentId = {tournamentId}/>;
     default:
       return <DashboardOrganizer credit={credit} />;
   }

@@ -44,7 +44,7 @@ const FeaturedTournamentMain = () => {
         </p>
       </div>
       <div className="flex w-full h-full justify-between items-start gap-5">
-        {slider.length > 0 ? (
+        {slider?.length > 0 ? (
           <>
             <FeaturedTourCardMain />
             <FeaturedTourCard />

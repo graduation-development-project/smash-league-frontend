@@ -137,8 +137,8 @@ const DetailsTourPage = () => {
       setIsLoading(true);
       if (typeof url === 'string') {
         const response = await getTourDetailAPI(url);
-        setDetail(response.data);
-        setEventList(Object.entries(response.data.tournamentEvents));
+        setDetail(response?.data);
+        setEventList(Object.entries(response?.data?.tournamentEvents));
       }
       setIsLoading(false);
       throw new Error('Failed to get detail tour');

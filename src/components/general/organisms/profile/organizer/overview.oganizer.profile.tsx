@@ -57,7 +57,7 @@ const OverviewOrganizerProfile = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // console.log("Check tournament per page", tournamentList);
+  console.log("Check tournament per page", tournamentList);
 
   return (
     <div className="w-full h-full flex justify-around px-2 py-4 gap-3">

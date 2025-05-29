@@ -89,7 +89,7 @@ const TournamentsOrganizerProfile = ({
     }
   };
 
-  console.log('Check user', user);
+  // console.log('Check user', user);
 
   return (
     <div className="w-full h-full flex flex-col gap-8 items-center py-5 px-8">

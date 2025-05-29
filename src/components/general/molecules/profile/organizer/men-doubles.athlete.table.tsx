@@ -21,6 +21,7 @@ import {
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
 import {
+  banAthleteAPI,
   generateBracketsAPI,
   getTournamentEventParticipantsAPI,
 } from '@/services/tournament';
@@ -49,7 +50,13 @@ const useStyle = createStyles(({ css }) => ({
   `,
 }));
 
-const MenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
+const MenDoublesAthleteTable = ({
+  eventId,
+  tournamentId,
+}: {
+  eventId: string | null;
+  tournamentId: string | null;
+}) => {
   // const { styles } = useStyle();
 
   interface ParticipantInfo {
@@ -65,6 +72,7 @@ const MenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   }
 
   interface BaseDataType {
+    id: string;
     user: ParticipantInfo;
     partner: ParticipantInfo;
   }
@@ -245,6 +253,51 @@ const MenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       } else {
         setIsLoading(false);
         toast.error(`${response?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log('Check error', error);
+    }
+  };
+
+  const handleBan = async (
+    tournamentId: string | null,
+    participantId: string,
+  ) => {
+    try {
+      const response = await banAthleteAPI(
+        tournamentId,
+        participantId,
+        '',
+        user?.access_token,
+      );
+      console.log('Check response', response.data);
+      if (
+        response?.data.statusCode === 200 ||
+        response?.data?.statusCode === 201 ||
+        response?.data?.statusCode === 204
+      ) {
+        getTournamentEventParticipants();
+        toast.success(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        toast.error(`${response?.data?.message}`, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -452,6 +505,26 @@ const MenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
         </div>
       ),
     },
+
+    {
+      title: 'Actions',
+      align: 'center',
+      dataIndex: ['id', 'status'],
+      key: 'operation',
+      fixed: 'left',
+      width: 80,
+      render: (_, { user, partner, id }) => {
+        return (
+          <Button
+            variant="outlined"
+            danger
+            onClick={() => handleBan(tournamentId, id)}
+          >
+            Ban
+          </Button>
+        );
+      },
+    },
   ];
   const columnsVerification: TableProps<VerificationDataType>['columns'] = [
     {
@@ -463,7 +536,14 @@ const MenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       // ...getColumnSearchProps('name'),
       render: (_, { user, partner }) => (
         <div className="flex flex-col gap-3">
-          <h1 className="font-semibold text-[16px]" onClick={() => { router.push(`/profile/athlete/${user?.id}`)}}>{user?.name}</h1>
+          <h1
+            className="font-semibold text-[16px]"
+            onClick={() => {
+              router.push(`/profile/athlete/${user?.id}`);
+            }}
+          >
+            {user?.name}
+          </h1>
           {/* <h1 className="font-semibold text-[16px]">{partner?.name}</h1> */}
         </div>
       ),
@@ -479,7 +559,14 @@ const MenDoublesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       render: (_, { user, partner }) => (
         <div className="flex flex-col gap-3">
           {/* <h1 className="font-semibold text-[16px]">{user?.name}</h1> */}
-          <h1 className="font-semibold text-[16px]" onClick={() => { router.push(`/profile/athlete/${partner?.id}`)}}>{partner?.name}</h1>
+          <h1
+            className="font-semibold text-[16px]"
+            onClick={() => {
+              router.push(`/profile/athlete/${partner?.id}`);
+            }}
+          >
+            {partner?.name}
+          </h1>
         </div>
       ),
     },

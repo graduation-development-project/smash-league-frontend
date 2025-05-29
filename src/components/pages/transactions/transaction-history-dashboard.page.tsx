@@ -118,7 +118,7 @@ const TransactionHistoryDashboardPage = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <p className="text-secondColor hover:underline  cursor-pointer text-[14px] transition-all duration-200">
+          <p className="text-secondColor hover:underline cursor-pointer text-[14px] transition-all duration-200">
             <GrView size={20} />
           </p>
         </Space>
