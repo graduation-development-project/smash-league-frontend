@@ -14,13 +14,16 @@ import { useProfileContext } from '@/context/profile.context';
 import BankAccountShow from '@/components/general/atoms/bank/bank-account';
 import UmpireDegrees from '@/components/general/organisms/profile/umpire/update-degree';
 import DegreesList from '@/components/general/organisms/profile/umpire/degrees-list';
+import { getAllUmpireQualificationsAPI } from '@/services/qualification';
 
 const UmpireProfilePage = (props: any) => {
   const { session } = props;
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { umpireId } = useProfileContext();
+  const [degrees, setDegrees] = useState<any>([]);
   const [user, setUser] = useState<any>(null);
+  const { setActiveKey, activeKey } = useProfileContext();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -43,10 +46,29 @@ const UmpireProfilePage = (props: any) => {
     }
   };
 
+  const getAllUmpireQualifications = async () => {
+    try {
+      const response = await getAllUmpireQualificationsAPI(user?.id);
+      console.log('Check response', response.data.data);
+      const formatData = response.data.data.map((degree: any) => ({
+        id: degree?.id,
+        type: degree?.typeOfDegree,
+        name: degree?.degreeTitle,
+        description: degree?.description,
+        imageUrl: degree?.degree[0],
+        // issueDate: degree?.issueDate,
+      }));
+      setDegrees(formatData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
     getProfile();
+    getAllUmpireQualifications();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [umpireId]);
+  }, [umpireId, user, activeKey]);
   // console.log('Check profile umpire', profile);
 
   const onChange = (key: string) => {
@@ -64,7 +86,7 @@ const UmpireProfilePage = (props: any) => {
     {
       key: 'umpire-qualifications',
       label: 'Qualifications',
-      children: <DegreesList />,
+      children: <DegreesList qualifications={degrees} getAllUmpireQualifications ={getAllUmpireQualifications}/>,
     },
 
     ...(user?.id === umpireId
@@ -95,7 +117,7 @@ const UmpireProfilePage = (props: any) => {
           {
             key: 'umpire-update-qualifications',
             label: 'Update Qualifications',
-            children: <UmpireDegrees />,
+            children: <UmpireDegrees getAllUmpireQualifications = {getAllUmpireQualifications}/>,
           },
         ]
       : []),

@@ -234,3 +234,37 @@ export const removeTournamentRegistrationAPI = async (
     return error.response?.data;
   }
 };
+
+export const getRequirementsOfTournamentAPI = async (tournamentId: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-requirements-of-tournament/${tournamentId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get requirements of tournament:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getRequirementsOfTournamentEventAPI = async (
+  tournamentEventId: string,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-requirements-of-tournament-event/${tournamentEventId}`,
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get requirements of tournament event:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

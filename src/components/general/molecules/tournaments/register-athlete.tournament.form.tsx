@@ -1,7 +1,11 @@
 'use client';
-import { registerTournamentByAthleteAPI } from '@/services/tour-registration';
+import {
+  getRequirementsOfTournamentAPI,
+  getRequirementsOfTournamentEventAPI,
+  registerTournamentByAthleteAPI,
+} from '@/services/tour-registration';
 import { calculateAge } from '@/utils/calculateAge';
-import { LoadingOutlined } from '@ant-design/icons';
+import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
 import {
   Button,
   ConfigProvider,
@@ -43,6 +47,11 @@ const RegisterAthleteTournamentForm = ({
   const [userList, setUserList] = useState<any>([]);
   const [partner, setPartner] = useState<any>({});
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [tournamentConditionList, setTournamentConditionList] = useState<any>(
+    [],
+  );
+  const [tournamentEventConditionList, setTournamentEventConditionList] =
+    useState<any>([]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -150,6 +159,7 @@ const RegisterAthleteTournamentForm = ({
     setFilePartner(undefined);
     form.resetFields();
     setIsHasPartner(false);
+    setSelectedEventId(null); 
   };
 
   const handleChange = (value: string, option: any) => {
@@ -158,6 +168,31 @@ const RegisterAthleteTournamentForm = ({
       setIsHasPartner(true);
     } else {
       setIsHasPartner(false);
+    }
+  };
+
+  console.log('check detail', detail);
+
+  const getTournamentCondition = async () => {
+    if (!detail) return;
+    try {
+      console.log('Check detail id', detailId);
+      const response = await getRequirementsOfTournamentAPI(detailId);
+      console.log('Check response tour condition', response.data);
+    } catch (error: any) {
+      console.log('Error', error);
+    }
+  };
+
+  const getTournamentEventCondition = async () => {
+    if (!selectedEventId) return;
+    try {
+      const response = await getRequirementsOfTournamentEventAPI(
+        selectedEventId,
+      );
+      console.log('Check response tour eventcondition', response.data);
+    } catch (error: any) {
+      console.log('Error', error);
     }
   };
   const searchUserByEmail = async () => {
@@ -219,8 +254,10 @@ const RegisterAthleteTournamentForm = ({
 
   useEffect(() => {
     searchUserByEmail();
+    getTournamentCondition();
+    getTournamentEventCondition();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, selectedEventId]);
+  }, [user, selectedEventId, detailId, detail]);
   const handleRegisterTournament = async (values: any) => {
     if (!user) return;
     const { tournamentId, registrationRole, tournamentEventId, partnerEmail } =

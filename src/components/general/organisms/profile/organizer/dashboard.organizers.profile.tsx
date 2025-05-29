@@ -107,7 +107,7 @@ const DashboardOrganizerProfile = () => {
               (Array.isArray(events) ? events : []).map((event: any) =>
                 getItem(
                   `From ${event.fromAge} - to ${event.toAge}`,
-                  `${name}_${event.fromAge}_${event.toAge}_${event.id}`,
+                  `${name}_${event.fromAge}_${event.toAge}_${event.id}_${item.id}`,
                   <TbTournament size={15} />,
                 ),
               ),

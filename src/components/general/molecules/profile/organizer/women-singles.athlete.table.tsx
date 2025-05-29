@@ -21,6 +21,7 @@ import {
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
 import {
+  banAthleteAPI,
   generateBracketsAPI,
   getTournamentEventParticipantsAPI,
 } from '@/services/tournament';
@@ -49,7 +50,13 @@ const useStyle = createStyles(({ css }) => ({
   `,
 }));
 
-const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
+const WomenSinglesAthleteTable = ({
+  eventId,
+  tournamentId,
+}: {
+  eventId: string | null;
+  tournamentId: string | null;
+}) => {
   // const { styles } = useStyle();
   const router = useRouter();
 
@@ -66,6 +73,7 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
   }
 
   interface BaseDataType {
+    id: string;
     user: ParticipantInfo;
     partner: ParticipantInfo | null;
   }
@@ -258,6 +266,52 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
       console.log('Check error', error);
     }
   };
+
+  const handleBan = async (
+    tournamentId: string | null,
+    participantId: string,
+  ) => {
+    try {
+      const response = await banAthleteAPI(
+        tournamentId,
+        participantId,
+        '',
+        user?.access_token,
+      );
+      console.log('Check response', response.data);
+      if (
+        response?.data.statusCode === 200 ||
+        response?.data?.statusCode === 201 ||
+        response?.data?.statusCode === 204
+      ) {
+        getTournamentEventParticipants();
+        toast.success(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      } else {
+        toast.error(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+    } catch (error: any) {
+      console.log('Check error', error);
+    }
+  };
+
   const getColumnSearchProps = (
     dataIndex: string,
   ): TableColumnType<BaseDataType> => ({
@@ -415,6 +469,26 @@ const WomenSinglesAthleteTable = ({ eventId }: { eventId: string | null }) => {
           {user?.hands ? user?.hands : 'No Infomation'}
         </h1>
       ),
+    },
+
+    {
+      title: 'Actions',
+      align: 'center',
+      dataIndex: ['id', 'status'],
+      key: 'operation',
+      fixed: 'left',
+      width: 80,
+      render: (_, { user, partner, id }) => {
+        return (
+          <Button
+            variant="outlined"
+            danger
+            onClick={() => handleBan(tournamentId, id)}
+          >
+            Ban
+          </Button>
+        );
+      },
     },
   ];
   const columnsVerification: TableProps<VerificationDataType>['columns'] = [

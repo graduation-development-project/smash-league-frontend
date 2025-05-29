@@ -1,7 +1,7 @@
 import React from 'react';
 import { UmpireDegreeList } from '@/components/general/molecules/profile/umpire/umpire-degree-list';
 
-const DegreesList = () => {
+const DegreesList = ({qualifications, getAllUmpireQualifications}: {qualifications: any, getAllUmpireQualifications: any}) => {
   return (
     <div className="container mx-auto py-10 space-y-8">
       <div className="flex flex-col space-y-2">
@@ -14,7 +14,7 @@ const DegreesList = () => {
       </div>
 
       <div className="mt-6">
-        <UmpireDegreeList />
+        <UmpireDegreeList qualifications = {qualifications} getAllUmpireQualifications = {getAllUmpireQualifications}/>
       </div>
     </div>
   );

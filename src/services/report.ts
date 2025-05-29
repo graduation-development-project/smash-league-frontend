@@ -24,6 +24,7 @@ export const createReportAPI = async (data: any, accessToken: string) => {
 
 export const getAllReportsAPI = async (accessToken: string) => {
   try {
+    console.log('accessToken', accessToken);
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/report/get-all-reports`,
       {
@@ -161,6 +162,26 @@ export const getAllReportsByUserIdAPI = async (accessToken: string) => {
   } catch (error: any) {
     console.error(
       'Error get all report by user id:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+export const getAllReportsByOrganizerAPI = async (accessToken: string) => {
+  try {
+    // console.log('accessToken', accessToken);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/report/get-all-reports-for-organizer`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get all report by organizer:',
       error.response?.data || error.message,
     );
     return error.response?.data;

@@ -21,10 +21,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { toast } from 'react-toastify';
-import { getAllUmpireQualificationsAPI } from '@/services/qualification';
+import {
+  deleteUmpireDegreeAPI,
+  getAllUmpireQualificationsAPI,
+} from '@/services/qualification';
 import { Image } from 'antd';
 import { useProfileContext } from '@/context/profile.context';
 import EmptyCard from '../../empty/empty.card';
+import { UpdateDegreeModal, type Degree } from './update-degree-modal';
 
 // Sample data - in a real app this would come from your database
 const sampleDegrees = [
@@ -70,16 +74,23 @@ const typeLabels: Record<
     label: 'Foreign Language Certificate',
     variant: 'outline',
   },
-  workshop: { label: 'Workshop', variant: 'outline' },
   other: { label: 'Other', variant: 'outline' },
 };
 
-export function UmpireDegreeList() {
+export function UmpireDegreeList({
+  qualifications,
+  getAllUmpireQualifications,
+}: {
+  qualifications: any;
+  getAllUmpireQualifications: any;
+}) {
   const [degrees, setDegrees] = useState<any>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedDegreeId, setSelectedDegreeId] = useState<string | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedDegree, setSelectedDegree] = useState<Degree | null>(null);
+  const { setActiveKey, activeKey } = useProfileContext();
   const [user, setUser] = useState<any>({});
-  const { setActiveKey } = useProfileContext();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -88,43 +99,58 @@ export function UmpireDegreeList() {
         setUser(JSON.parse(storedUser));
       }
     }
-  }, []);
-
-  const getAllUmpireQualifications = async () => {
-    try {
-      const response = await getAllUmpireQualificationsAPI(user?.id);
-      console.log('Check response', response.data.data);
-      const formatData = response.data.data.map((degree: any) => ({
-        id: degree?.id,
-        type: degree?.typeOfDegree,
-        name: degree?.degreeTitle,
-        description: degree?.description,
-        imageUrl: degree?.degree[0],
-        // issueDate: degree?.issueDate,
-      }));
-      setDegrees(formatData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+  }, [activeKey]);
 
   const handleDelete = (id: string) => {
     setSelectedDegreeId(id);
     setDeleteDialogOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedDegreeId) {
-      setDegrees(
-        degrees.filter((degree: any) => degree.id !== selectedDegreeId),
+      const response = await deleteUmpireDegreeAPI(
+        selectedDegreeId,
+        user?.access_token,
       );
-      toast('Qualification deleted', {
-        type: 'success',
-        position: 'top-right',
-        autoClose: 3000,
-      });
-      setDeleteDialogOpen(false);
+      if (
+        response?.data?.statusCode === 200 ||
+        response?.data?.statusCode == 201
+      ) {
+        setTimeout(() => {
+          getAllUmpireQualifications();
+          toast('Qualification deleted', {
+            type: 'success',
+            position: 'top-right',
+            autoClose: 3000,
+          });
+          setDeleteDialogOpen(false);
+        }, 1000);
+      } else {
+        toast.error(`${response?.data?.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
     }
+  };
+
+  const handleEdit = (degree: Degree) => {
+    setSelectedDegree(degree);
+    setEditDialogOpen(true);
+  };
+
+  const handleSave = (updatedDegree: Degree) => {
+    setDegrees(
+      qualifications.map((qualification: any) =>
+        qualification.id === updatedDegree.id ? updatedDegree : qualification,
+      ),
+    );
   };
 
   const formatDate = (dateString: string) => {
@@ -137,9 +163,9 @@ export function UmpireDegreeList() {
 
   useEffect(() => {
     getAllUmpireQualifications();
-  }, [user]);
+  }, [user, activeKey]);
 
-  if (degrees.length === 0) {
+  if (qualifications.length === 0) {
     return (
       <Card className="w-full">
         <CardContent className="flex flex-col items-center justify-center py-10">
@@ -152,7 +178,10 @@ export function UmpireDegreeList() {
           >
             Add Your First Qualification
           </Button> */}
-          <EmptyCard description="You haven't added any qualifications yet." image="https://cdn-icons-png.freepik.com/512/8386/8386437.png" />
+          <EmptyCard
+            description="You haven't added any qualifications yet."
+            image="https://cdn-icons-png.freepik.com/512/8386/8386437.png"
+          />
         </CardContent>
       </Card>
     );
@@ -160,7 +189,7 @@ export function UmpireDegreeList() {
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {degrees.map((degree: any) => (
+      {qualifications.map((degree: any) => (
         <Card key={degree.id} className="overflow-hidden">
           <div className="aspect-[3/2] relative">
             <Image
@@ -193,6 +222,7 @@ export function UmpireDegreeList() {
               colorBtn={'whiteBtn'}
               className="rounded-sm text-secondColor hover:bg-transparent hover:underline"
               size="sm"
+              onClick={() => handleEdit(degree)}
             >
               <Edit className="h-4 w-4 mr-2" />
               Edit
@@ -245,6 +275,14 @@ export function UmpireDegreeList() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <UpdateDegreeModal
+        degree={selectedDegree}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onSave={handleSave}
+        getAllUmpireQualifications={getAllUmpireQualifications}
+      />
     </div>
   );
 }

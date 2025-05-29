@@ -18,18 +18,18 @@ const UmpireBasicInfo = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
 
-  const certificates = [
-    'The Certificate of Umpire From The Badminton Association Of Vietnam',
-    'The Certificate of Umpire From The International Badminton Federation',
-    'The Certificate of Umpire From The Asian Badminton Confederation',
-    'Advanced Umpire Certification From National Sports Academy',
-    'World Badminton Umpire Accreditation',
-  ];
+  // const certificates = [
+  //   'The Certificate of Umpire From The Badminton Association Of Vietnam',
+  //   'The Certificate of Umpire From The International Badminton Federation',
+  //   'The Certificate of Umpire From The Asian Badminton Confederation',
+  //   'Advanced Umpire Certification From National Sports Academy',
+  //   'World Badminton Umpire Accreditation',
+  // ];
 
-  // Show only 3 certificates unless "View More" is clicked
-  const displayedCertificates = showAllCertificates
-    ? certificates
-    : certificates.slice(0, 3);
+  // // Show only 3 certificates unless "View More" is clicked
+  // const displayedCertificates = showAllCertificates
+  //   ? certificates
+  //   : certificates.slice(0, 3);
 
   return (
     <div className="w-full h-full flex flex-col gap-4 rounded-[10px] shadow-shadowBtn p-6">
@@ -56,57 +56,11 @@ const UmpireBasicInfo = ({
           </div>
 
           {/* Certificates Section */}
-          <div className="w-full h-full flex flex-col gap-2 justify-center rounded-[5px] mt-5">
-            <h1 className="text-[28px] font-bold text-primaryColor underline w-full h-full">
-              CERTIFICATE
-            </h1>
-            <div className="w-[80%] h-full flex flex-col text-[16px] gap-2 cursor-pointer text-justify transition-all duration-300 ease-in-out">
-              {displayedCertificates.map((certificate, index) => (
-                <p
-                  key={index}
-                  className="hover:underline hover:text-primaryColor transition-all duration-300 ease-in-out overflow-hidden whitespace-nowrap text-ellipsis"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  {certificate}
-                </p>
-              ))}
-              {/* Show "View More" only if there are more than 3 certificates */}
-              {certificates.length > 3 && !showAllCertificates ? (
-                <div className="w-full h-full flex justify-between items-center">
-                  <div
-                    className="flex items-center text-primaryColor text-[15px] hover:underline hover:font-semibold cursor-pointer"
-                    onClick={() => window.history.back()}
-                  >
-                    <IoIosArrowRoundBack size={22} className="" /> Previous Page
-                  </div>
-                  <p
-                    className="text-primaryColor font-semibold cursor-pointer hover:underline"
-                    onClick={() => setShowAllCertificates(true)}
-                  >
-                    View More
-                  </p>
-                </div>
-              ) : (
-                <div className="w-full h-full flex justify-between items-center">
-                  <div
-                    className="flex items-center text-primaryColor text-[15px] hover:underline hover:font-semibold cursor-pointer"
-                    onClick={() => window.history.back()}
-                  >
-                    <IoIosArrowRoundBack size={22} className="" /> Previous Page
-                  </div>
-                  <p
-                    className="text-secondColor font-semibold cursor-pointer hover:underline"
-                    onClick={() => setShowAllCertificates(false)}
-                  >
-                    Show Less
-                  </p>
-                </div>
-              )}
-            </div>
-            <CertificateImageShowModal
-              isModalOpen={isModalOpen}
-              setIsModalOpen={setIsModalOpen}
-            />
+          <div
+            className="flex items-center text-primaryColor text-[15px] hover:underline hover:font-semibold cursor-pointer"
+            onClick={() => window.history.back()}
+          >
+            <IoIosArrowRoundBack size={22} className="" /> Previous Page
           </div>
         </div>
 

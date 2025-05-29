@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Activity,
@@ -44,8 +44,31 @@ import RevenueChart from '@/components/general/atoms/dashboard/revenue-chart.org
 import { DatePicker, DatePickerProps } from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { formatMoney } from '../../../../../utils/format';
+import {
+  countMatchesStatusAPI,
+  countTournamentStatusAPI,
+  getCountMatchInCurrentWeekAPI,
+  getCountRegistrationInCurrentMonthAPI,
+  getCountTourInCurrentMonthAPI,
+  getCurrentMonthRevenueAPI,
+  getUmpiresInOwnedTourAPI,
+} from '@/services/org-dashboard';
+import { FaMoneyBillTransfer } from 'react-icons/fa6';
 
 dayjs.extend(utc);
+
+interface Revenue {
+  currentRevenue: number;
+  previousRevenue: number;
+  changeRate: number;
+}
+
+interface TournamentAndMatch {
+  currentCount: number;
+  previousCount: number;
+  changeRate: number;
+}
 
 const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
   const router = useRouter();
@@ -56,7 +79,40 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
   const [fromDate, setFromDate] = useState<string>('');
   const [toDate, setToDate] = useState<string>('');
   const [revenueFromDate, setRevenueFromDate] = useState<string>('');
+  const [tournamentStatusList, setTournamentStatusList] = useState([]);
+  const [matchStatusList, setMatchStatusList] = useState([]);
+  const [umpireList, setUmpireList] = useState([]);
+  const [currentMonthRevenue, setCurrentMonthRevenue] = useState<Revenue>({
+    currentRevenue: 0,
+    previousRevenue: 0,
+    changeRate: 0,
+  });
+  const [currentMonthTour, setCurrentMonthTour] = useState<TournamentAndMatch>({
+    currentCount: 0,
+    previousCount: 0,
+    changeRate: 0,
+  });
+  const [currentWeekMatch, setCurrentWeekMatch] = useState<TournamentAndMatch>({
+    currentCount: 0,
+    previousCount: 0,
+    changeRate: 0,
+  });
+  const [currentMonthRegistration, setCurrentMonthRegistration] =
+    useState<TournamentAndMatch>({
+      currentCount: 0,
+      previousCount: 0,
+      changeRate: 0,
+    });
+  const [user, setUser] = useState<any>({});
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }
+  }, []);
   const onFromDateChange: DatePickerProps['onChange'] = (date, dateString) => {
     if (date) {
       const formatted = dayjs(date).utc().format('YYYY-MM-DDT00:00:00.000[Z]');
@@ -73,13 +129,109 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
     }
   };
 
-    const onRevenueFromDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+  const onRevenueFromDateChange: DatePickerProps['onChange'] = (
+    date,
+    dateString,
+  ) => {
     if (date) {
       const formatted = dayjs(date).utc().format('YYYY-MM-DDT00:00:00.000[Z]');
       console.log(formatted);
       setRevenueFromDate(formatted);
     }
   };
+
+  const getTournamentStatus = async () => {
+    try {
+      const response = await countTournamentStatusAPI(user.access_token);
+      // console.log('response count tournament', response.data.data);
+      setTournamentStatusList(response.data.data);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const getMatchStatus = async () => {
+    try {
+      const response = await countMatchesStatusAPI(user.access_token);
+      // console.log('response count matches', response.data.data);
+      setMatchStatusList(response.data.data);
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
+
+  const getUmpireList = async () => {
+    try {
+      const response = await getUmpiresInOwnedTourAPI(user.access_token);
+      // console.log('response umpire list', response.data);
+      setUmpireList(response.data.data);
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
+
+  const getCurrentMonthRevenue = async () => {
+    try {
+      const response = await getCurrentMonthRevenueAPI(user?.access_token);
+      // console.log('response current month revenue', response.data.data);
+      setCurrentMonthRevenue(response.data.data);
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
+
+  const getCurrentMonthTour = async () => {
+    try {
+      const response = await getCountTourInCurrentMonthAPI(user.access_token);
+      // console.log('response current month tour', response.data.data);
+      setCurrentMonthTour(response.data.data);
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
+
+  const getCurrentWeekMatch = async () => {
+    try {
+      const response = await getCountMatchInCurrentWeekAPI(user.access_token);
+      // console.log('response current week match', response.data.data);
+      setCurrentWeekMatch(response.data.data);
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
+
+  const getCurrentMonthRegistration = async () => {
+    try {
+      const response = await getCountRegistrationInCurrentMonthAPI(
+        user.access_token,
+      );
+      // console.log('response current month registration', response.data.data);
+      setCurrentMonthRegistration(response.data.data);
+    } catch (error: any) {
+      console.log('error', error);
+    }
+  };
+
+  useEffect(() => {
+    getTournamentStatus();
+    getMatchStatus();
+    getUmpireList();
+    getCurrentMonthRevenue();
+    getCurrentMonthTour();
+    getCurrentWeekMatch();
+    getCurrentMonthRegistration();
+  }, [user]);
+
+  const totalTournament = Object.entries(tournamentStatusList).find(
+    ([status, count]) => status === 'TOTAL',
+  );
+
+  const totalMatch = Object.entries(matchStatusList).find(
+    ([status, count]) => status === 'TOTAL',
+  );
+
+  console.log('check currentMonthRegistration', currentMonthRegistration);
+  // console.log('Check total tournament', totalTournament?.[1]);
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-[32px] font-bold">Dashboard</h1>
@@ -142,18 +294,28 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Total Athletes
+                    Total Registrations
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold">1,248</div>
+                    <div className="text-3xl font-bold">
+                      {currentMonthRegistration.currentCount}
+                    </div>
                     <User className="h-8 w-8 text-emerald-500" />
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    <span className="text-emerald-500 font-medium">↑ 12%</span>{' '}
-                    from last month
-                  </p>
+                  {currentMonthRegistration?.changeRate > 0 ? (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      <span className="text-emerald-500 font-medium">
+                        ↑ {currentMonthRegistration?.changeRate}%
+                      </span>{' '}
+                      new this month
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      No Change from last month
+                    </p>
+                  )}
                 </CardContent>
               </Card>
 
@@ -165,13 +327,23 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold">24</div>
+                    <div className="text-3xl font-bold">
+                      {currentMonthTour?.currentCount}
+                    </div>
                     <Trophy className="h-8 w-8 text-emerald-500" />
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    <span className="text-emerald-500 font-medium">↑ 4</span>{' '}
-                    new this month
-                  </p>
+                  {currentMonthTour?.changeRate > 0 ? (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      <span className="text-emerald-500 font-medium">
+                        ↑ {currentMonthTour?.changeRate}%
+                      </span>{' '}
+                      new this month
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      No Change from last month
+                    </p>
+                  )}
                 </CardContent>
               </Card>
 
@@ -183,13 +355,23 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold">$24,389</div>
-                    <DollarSign className="h-8 w-8 text-emerald-500" />
+                    <div className="text-3xl font-bold">
+                      {formatMoney(currentMonthRevenue?.currentRevenue)}
+                    </div>
+                    <FaMoneyBillTransfer className="h-8 w-8 text-emerald-500" />
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    <span className="text-emerald-500 font-medium">↑ 18%</span>{' '}
-                    from last month
-                  </p>
+                  {currentMonthRevenue?.changeRate > 0 ? (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      <span className="text-emerald-500 font-medium">
+                        ↑ {currentMonthRevenue?.changeRate}%
+                      </span>
+                      from last month
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      No Change from last month
+                    </p>
+                  )}
                 </CardContent>
               </Card>
 
@@ -201,13 +383,23 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold">842</div>
+                    <div className="text-3xl font-bold">
+                      {currentWeekMatch?.currentCount}
+                    </div>
                     <Medal className="h-8 w-8 text-emerald-500" />
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    <span className="text-emerald-500 font-medium">↑ 86</span>{' '}
-                    this week
-                  </p>
+                  {currentWeekMatch?.changeRate > 0 ? (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      <span className="text-emerald-500 font-medium">
+                        ↑ {currentWeekMatch?.changeRate}%
+                      </span>
+                      from last week
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      No Change from last week
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -229,7 +421,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 </div>
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle>Athlete Registrations</CardTitle>
+                    <CardTitle>Tournament Registrations</CardTitle>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -270,7 +462,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                     </DropdownMenu>
                   </div>
                   <CardDescription>
-                    Athlete registrations{' '}
+                    Tournament registrations{' '}
                     {registrationPeriod ? 'for ' + registrationPeriod : ''}
                   </CardDescription>
                 </CardHeader>
@@ -348,7 +540,10 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 </CardHeader>
                 <CardContent>
                   <div className="h-[250px] w-full">
-                    <RevenueChart period={revenuePeriod} fromDate={revenueFromDate} />
+                    <RevenueChart
+                      period={revenuePeriod}
+                      fromDate={revenueFromDate}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -362,55 +557,40 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                        <span>On Going</span>
-                      </div>
-                      <span className="font-medium">8</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                        <span>Created</span>
-                      </div>
-                      <span className="font-medium">12</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                        <span>Registration Open</span>
-                      </div>
-                      <span className="font-medium">6</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-orange-700"></div>
-                        <span>Registration Close</span>
-                      </div>
-                      <span className="font-medium">6</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                        <span>Drawing</span>
-                      </div>
-                      <span className="font-medium">6</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-gray-500"></div>
-                        <span>Finished</span>
-                      </div>
-                      <span className="font-medium">42</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <span>Cancelled</span>
-                      </div>
-                      <span className="font-medium">2</span>
-                    </div>
+                    {Object.entries(tournamentStatusList).map(
+                      ([status, count]) => (
+                        <div
+                          key={status}
+                          className="flex items-center justify-between"
+                        >
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`w-3 h-3 rounded-full ${
+                                status === 'ON_GOING'
+                                  ? 'bg-emerald-500'
+                                  : status === 'CREATED'
+                                  ? 'bg-amber-500'
+                                  : status === 'OPENING'
+                                  ? 'bg-yellow-300'
+                                  : status === 'OPENING_FOR_REGISTRATION'
+                                  ? 'bg-blue-500'
+                                  : status === 'CLOSING_FOR_REGISTRATION'
+                                  ? 'bg-orange-700'
+                                  : status === 'DRAWING'
+                                  ? 'bg-purple-500'
+                                  : status === 'FINISHED'
+                                  ? 'bg-gray-500'
+                                  : status === 'CANCELED'
+                                  ? 'bg-red-500'
+                                  : ''
+                              }`}
+                            ></div>
+                            <span>{status}</span>
+                          </div>
+                          <span className="font-medium">{count}</span>
+                        </div>
+                      ),
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -422,34 +602,30 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                        <span>Completed</span>
+                    {Object.entries(matchStatusList).map(([status, count]) => (
+                      <div
+                        key={status}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`w-3 h-3 rounded-full ${
+                              status === 'NOT_STARTED'
+                                ? 'bg-amber-500'
+                                : status === 'ON_GOING'
+                                ? 'bg-emerald-500'
+                                : status === 'INTERVAL'
+                                ? 'bg-gray-500'
+                                : status === 'ENDED'
+                                ? 'bg-red-500'
+                                : ''
+                            }`}
+                          ></div>
+                          <span>{status}</span>
+                        </div>
+                        <span className="font-medium">{count}</span>
                       </div>
-                      <span className="font-medium">624</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                        <span>Scheduled</span>
-                      </div>
-                      <span className="font-medium">156</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                        <span>In Progress</span>
-                      </div>
-                      <span className="font-medium">32</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <span>Cancelled</span>
-                      </div>
-                      <span className="font-medium">30</span>
-                    </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -461,54 +637,35 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback>JD</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">John Doe</p>
-                          <p className="text-xs text-gray-500">Senior Umpire</p>
+                    {umpireList.map((umpire: any) => (
+                      <div
+                        key={umpire.id}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-8 w-8">
+                            <AvatarFallback>
+                              {umpire.user.name.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="text-sm font-medium">
+                              {umpire.user.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {umpire.tournamentId}
+                            </p>
+                          </div>
                         </div>
+                        <Badge
+                          variant={`${
+                            umpire.isAvailable ? 'default' : 'outline'
+                          }`}
+                        >
+                          {umpire.isAvailable ? 'Available' : 'Unavailable'}
+                        </Badge>
                       </div>
-                      <Badge>Active</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback>JS</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">Jane Smith</p>
-                          <p className="text-xs text-gray-500">Senior Umpire</p>
-                        </div>
-                      </div>
-                      <Badge>Active</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback>RJ</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">Robert Johnson</p>
-                          <p className="text-xs text-gray-500">Junior Umpire</p>
-                        </div>
-                      </div>
-                      <Badge variant="outline">Standby</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback>ML</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">Maria Lee</p>
-                          <p className="text-xs text-gray-500">Junior Umpire</p>
-                        </div>
-                      </div>
-                      <Badge variant="outline">Standby</Badge>
-                    </div>
+                    ))}
                   </div>
                   <Button
                     variant="ghost"

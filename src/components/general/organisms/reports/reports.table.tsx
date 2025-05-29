@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Button, Space, Table, Tag } from 'antd';
+import { Button, ConfigProvider, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import {
   approveReportAPI,
   getAllReportsAPI,
+  getAllReportsByOrganizerAPI,
   getAllReportsByUserIdAPI,
   payFeeForReportAPI,
   rejectReportAPI,
@@ -14,6 +15,7 @@ import { formatDateTime } from '../../../../utils/format';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { GrView } from 'react-icons/gr';
+import { FaRegTrashCan } from 'react-icons/fa6';
 
 interface DataType {
   key: string;
@@ -51,6 +53,21 @@ const ReportsTable = ({ profileRole }: { profileRole?: string }) => {
         response = await getAllReportsByUserIdAPI(user?.access_token);
         if ([200, 201].includes(response?.data?.statusCode)) {
           const formattedReports = response.data.data.map((report: any) => ({
+            key: report.id,
+            id: report.id,
+            reason: report.reason,
+            status: report.status,
+            tournamentName: report.tournament.name,
+            reportUser: report.reportUser.name,
+            createAt: report.createdAt,
+          }));
+          setReports(formattedReports);
+        }
+      } else if (profileRole === 'ORGANIZER') {
+        response = await getAllReportsByOrganizerAPI(user?.access_token);
+        console.log('response organizer', response.data.data);
+        if ([200, 201].includes(response?.data?.statusCode)) {
+          const formattedReports = response?.data.data.map((report: any) => ({
             key: report.id,
             id: report.id,
             reason: report.reason,
@@ -143,8 +160,8 @@ const ReportsTable = ({ profileRole }: { profileRole?: string }) => {
       key: 'tournamentName',
       render: (_, { tournamentName, id }) => (
         <p
-          className="cursor-pointer hover:underline"
-          onClick={() => router.push(`/tournaments/details/${id}`)}
+        // className="cursor-pointer hover:underline"
+        // onClick={() => router.push(`/tournaments/details/${id}`)}
         >
           {tournamentName}
         </p>
@@ -155,7 +172,9 @@ const ReportsTable = ({ profileRole }: { profileRole?: string }) => {
       dataIndex: 'reason',
       key: 'reason',
     },
-    ...(profileRole === 'UMPIRE' || profileRole === 'ATHLETE'
+    ...(profileRole === 'UMPIRE' ||
+    profileRole === 'ATHLETE' ||
+    profileRole === 'ORGANIZER'
       ? [
           {
             title: 'Report User',
@@ -206,19 +225,41 @@ const ReportsTable = ({ profileRole }: { profileRole?: string }) => {
                 );
               } else {
                 return (
-                  <Space size="middle">
+                  <div className="flex items-center gap-8 px-3">
                     <p className="cursor-pointer text-[14px] transition-all duration-200 hover:text-secondColor">
-                      <GrView size={20} />
+                      <GrView size={18} />
                     </p>
-                  </Space>
+                    <p className="cursor-pointer text-[14px] transition-all duration-200 hover:text-red-500">
+                      <FaRegTrashCan size={18} />
+                    </p>
+                  </div>
                 );
               }
             },
           },
         ]
+      : profileRole === 'ORGANIZER'
+      ? [
+          {
+            title: 'Actions',
+            dataIndex: 'action',
+            key: 'action',
+            render: (_: any, { id, status }: any) => (
+              <div className="flex items-center gap-8 px-3">
+                <p className="cursor-pointer text-[14px] transition-all duration-200 hover:text-secondColor">
+                  <GrView size={18} />
+                </p>
+                <p className="cursor-pointer text-[14px] transition-all duration-200 hover:text-red-500">
+                  <FaRegTrashCan size={18} />
+                </p>
+              </div>
+            ),
+          },
+        ]
       : [
           {
             title: 'Actions',
+            dataIndex: 'action',
             key: 'action',
             render: (_: any, { id, status }: any) => (
               <Space size="middle">
@@ -244,12 +285,14 @@ const ReportsTable = ({ profileRole }: { profileRole?: string }) => {
   return (
     <div className="w-full flex flex-col gap-3">
       <h1 className="text-2xl font-bold">Reports List</h1>
-      <Table<DataType>
-        columns={columns}
-        dataSource={reports}
-        loading={isLoading}
-        pagination={{ pageSize: 10 }}
-      />
+      <ConfigProvider theme={{ token: { colorPrimary: '#FF8243' } }}>
+        <Table<DataType>
+          columns={columns}
+          dataSource={reports}
+          loading={isLoading}
+          pagination={{ pageSize: 10 }}
+        />
+      </ConfigProvider>
     </div>
   );
 };

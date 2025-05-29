@@ -49,13 +49,20 @@ export default function RevenueChart({
   }, [user, period, fromDate]);
 
   return (
-    <div className="w-full h-full flex items-end">
-      {revenueCounts.map(([month, count], i) => (
-        <div key={month} className="flex-1 flex flex-col items-center">
+    <div className="w-full h-full flex items-end gap-2">
+      {revenueCounts.map(([month, count]) => (
+        <div
+          key={month}
+          className="flex-1 flex flex-col items-center relative group"
+        >
           <div
-            className="w-full max-w-[30px] bg-secondColor rounded-t-sm"
-            style={{ height: `${count / 10}px` }}
+            className="w-full max-w-[30px] bg-secondColor rounded-t-sm transition-all duration-300"
+            style={{ height: `${count * 10}px` }}
           ></div>
+          {/* Tooltip on hover */}
+          <span className="absolute -top-6 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            {count}
+          </span>
           <span className="text-xs mt-2">{month.split('-')[1]}</span>
         </div>
       ))}

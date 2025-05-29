@@ -19,10 +19,12 @@ import ChooseStartPlayerModal from '../../atoms/tournaments/choose-start-player.
 import { updateStatusOfMatchAPI } from '@/services/match';
 import { toast } from 'react-toastify';
 import { formatDateTime } from '@/utils/format';
+import { useRouter } from 'next/navigation';
 
 interface TournamentEvent {
   key: string;
   id: string;
+  tournamentId: string;
   tournamentName: string;
   tournamentEvent: string;
   typeOfFormat: string;
@@ -56,6 +58,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckAttendance, setIsCheckAttendance] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -74,7 +77,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
         user.access_token,
         tournamentId,
       );
-      console.log('Check res', response?.data?.data);
+      console.log('Check res tournament', response?.data?.data);
       if (
         response?.data?.statusCode === 200 ||
         response?.data?.statusCode === 201
@@ -98,6 +101,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
           tournamentEvent: {
             key: match.tournamentEventId,
             id: match.tournamentEventId,
+            tournamentId: match.tournamentEvent.tournament.id,
             tournamentName: match.tournamentEvent.tournament.name,
             tournamentEvent: match.tournamentEvent.tournamentEvent,
             typeOfFormat: match.tournamentEvent.typeOfFormat,
@@ -113,7 +117,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
     }
   };
 
-  // console.log('Check matchesList', matchesList);
+  console.log('Check matchesList', matchesList);
   // console.log('check matchStatus', matchStatus);
 
   useEffect(() => {
@@ -169,7 +173,13 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
       dataIndex: 'tournamentEvent',
       key: 'tourName',
       render: (_, { tournamentEvent }) => (
-        <h1>{tournamentEvent.tournamentName}</h1>
+        <h1
+          onClick={() =>
+            router.push(`/tournaments/details/${tournamentEvent.tournamentId}`)
+          }
+        >
+          {tournamentEvent.tournamentName}
+        </h1>
       ),
     },
     {
@@ -209,15 +219,15 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
       key: 'status',
       render: (_, { matchStatus, id }) => (
         <Select
-          defaultValue={matchStatus}
+          value={matchStatus}
           disabled={matchStatus === 'ENDED' || isCheckAttendance === false}
           style={{ width: 150 }}
           onChange={(value) => updateStatusOfMatch(value, id)}
           options={[
-            { value: 'NOT_STARTED', label: 'Not Started' },
+            // { value: 'NOT_STARTED', label: 'Not Started' },
             { value: 'ON_GOING', label: 'On Going' },
-            { value: 'INTERVAL', label: 'Interval' },
-            { value: 'ENDED', label: 'Ended' },
+            // { value: 'INTERVAL', label: 'Interval' },
+            // { value: 'ENDED', label: 'Ended' },
           ]}
         />
       ),
@@ -225,7 +235,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
     {
       title: 'Action',
       key: 'action',
-      render: (_, { matchStatus, id }) => (
+      render: (_, { matchStatus, id, tournamentEvent }) => (
         <div className="w-full flex gap-4">
           {matchStatus === 'NOT_STARTED' ? (
             <Button
@@ -248,7 +258,16 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
               Score Match
             </Button>
           ) : (
-            <Button type="primary">View Score</Button>
+            <Button
+              type="primary"
+              onClick={() =>
+                router.push(
+                  `/tournaments/details/${tournamentEvent.tournamentId}`,
+                )
+              }
+            >
+              View Score
+            </Button>
           )}
         </div>
       ),
@@ -271,6 +290,7 @@ const MatchesOfUmpireTable = ({ tournamentId }: { tournamentId: string }) => {
         setIsModalOpen={setIsModalOpen}
         matchId={matchId}
         setIsCheckAttendance={setIsCheckAttendance}
+        getAssignedMatches={getAssignedMatches}
       />
 
       <ChooseStartPlayerModal

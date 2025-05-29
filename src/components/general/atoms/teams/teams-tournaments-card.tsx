@@ -11,7 +11,7 @@ import { formatMoney } from '../../../../utils/format';
 
 const TeamsTournamentsCard = ({ tour }: { tour?: any }) => {
   const router = useRouter();
-  // console.log('Check tour', tour);
+  console.log('Check tour', tour);
   const membersRelated = (
     <div className="flex gap-2">
       <Avatar style={{ backgroundColor: 'green' }}>S</Avatar>
@@ -58,9 +58,9 @@ const TeamsTournamentsCard = ({ tour }: { tour?: any }) => {
           </p>
         </div>
       </div>
-      <div className="absolute top-0 right-0 text-white text-[16px] font-semibold bg-primaryColor px-[15px] py-[5px] rounded-tr-[10px] rounded-tl-[3px]  rounded-br-[5px] rounded-bl-[3px]">
+      {/* <div className="absolute top-0 right-0 text-white text-[16px] font-semibold bg-primaryColor px-[15px] py-[5px] rounded-tr-[10px] rounded-tl-[3px]  rounded-br-[5px] rounded-bl-[3px]">
         On-going
-      </div>
+      </div> */}
     </div>
   );
 };
