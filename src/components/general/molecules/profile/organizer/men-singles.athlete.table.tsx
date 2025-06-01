@@ -154,7 +154,7 @@ const MenSinglesAthleteTable = ({
         user?.access_token,
         eventId,
       );
-      // console.log(response?.data, 'check');
+      console.log(response?.data, 'check registration');
 
       if (
         response?.data?.statusCode === 200 ||
@@ -381,9 +381,9 @@ const MenSinglesAthleteTable = ({
     onFilter: (value: any, record: any) =>
       record[dataIndex]
         ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes((value as string).toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase())
         : false,
     render: (text: any) =>
       searchedColumn === dataIndex ? (
