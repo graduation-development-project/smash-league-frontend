@@ -9,9 +9,18 @@ export const registerTournamentByAthleteAPI = async (
   tournamentEventId?: string,
   partnerEmail?: string,
   partnerImages?: any,
+  submittedAnswerForTournament?: any,
+  submittedAnswerForEvent?: any,
 ) => {
   try {
     const formData = new FormData();
+
+    const submittedAnswerForEvent1 = [
+      {
+        name: 'Nguyen',
+      },
+    ];
+
     formData.append('tournamentId', tournanmentId);
     if (tournamentEventId) {
       formData.append('tournamentEventId', tournamentEventId);
@@ -21,15 +30,25 @@ export const registerTournamentByAthleteAPI = async (
     formData.append('idCardBack', images[1]);
     formData.append('cardPhoto', images[2]);
     formData.append('registrationRole', registrationRole);
+    console.log('submittedAnswerForTournament', submittedAnswerForTournament);
 
-    if (partnerEmail) {
-      formData.append('partnerEmail', partnerEmail);
-    }
+    submittedAnswerForTournament &&
+      formData.append(
+        'submittedAnswerForTournament',
+        JSON.stringify(submittedAnswerForTournament),
+      );
+    partnerEmail && formData.append('partnerEmail', partnerEmail);
+    submittedAnswerForEvent1 &&
+      formData.append(
+        'submittedAnswerForEvent',
+        JSON.stringify(submittedAnswerForEvent1),
+      );
     if (partnerImages?.length > 0) {
       formData.append('partnerIdCardFront', partnerImages[0]);
       formData.append('partnerIdCardBack', partnerImages[1]);
       formData.append('partnerCardPhoto', partnerImages[2]);
     }
+
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/register-tournament`,
       formData,

@@ -6,6 +6,8 @@ import MatchDetailsTour from '../../organisms/tournaments/match-details.tour';
 import PlayerDetailTour from '../../organisms/tournaments/player-detail.tour';
 import StandingBoardDetailTour from '../../organisms/tournaments/standing-board-detail.tour';
 import PostestForm from '../../organisms/tournaments/postest-form';
+import { getOtherPrizeOfEventAPI, getTournamentEventDetailAPI } from '@/services/tournament';
+import AwardEventForm from './award-event.form';
 
 const EventAgeDetails = ({
   tournamentId,
@@ -23,7 +25,63 @@ const EventAgeDetails = ({
   const [bracket, setBracket] = useState({});
   const [playerList, setPlayerList] = useState([]);
   const [matchList, setMatchList] = useState([]);
-  // console.log('check ', eventId);
+  const [eventDetail, setEventDetail] = useState<any>();
+  const eventUUID = eventId.slice(eventId.indexOf('-') + 1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [prizeEventList, setPrizeEventList] = useState<any[]>([]);
+
+  // console.log('check tour details ', tour);
+
+  const fetchGetTournamentEventDetailAPI = async () => {
+    try {
+      const res = await getTournamentEventDetailAPI(tournamentId);
+      // console.log("Check res", res.data);
+      // console.log("eventUUID", (res?.data.find((event: any) => event.id === eventUUID)));
+
+      setEventDetail(res?.data.find((event: any) => event.id === eventUUID));
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const getOtherPrizeOfEvent = async () => {
+    try {
+      const res = await getOtherPrizeOfEventAPI(eventUUID);
+      console.log("Check all prize of event", res?.data);
+      if (res.statusCode === 200 || res.statusCode === 201) {
+        const excludedPrizeNames = [
+          "championshipPrize",
+          "runnerUpPrize",
+          "thirdPlacePrize",
+          "jointThirdPlacePrize",
+        ];
+
+        const otherPrizes = res?.data?.filter(
+          (item: any) => !excludedPrizeNames.includes(item.prizeName)
+        );
+
+        setPrizeEventList(otherPrizes);
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGetTournamentEventDetailAPI();
+
+  }, [isOrganizer]);
+
+
+  useEffect(() => {
+    if (isOrganizer && eventDetail?.tournamentEventStatus === 'ENDED') {
+      setIsModalOpen(true);
+      getOtherPrizeOfEvent();
+    }
+  }, [eventDetail?.tournamentEventStatus, isOrganizer]);
+
+  console.log("Check prizeEventList", prizeEventList);
+
 
   const [tabs, setTabs] = useState<TabsProps['items']>([
     {
@@ -67,12 +125,12 @@ const EventAgeDetails = ({
 
     ...(!isOrganizer
       ? [
-          {
-            label: 'Postest',
-            key: 'postest',
-            children: <PostestForm eventId={eventId} tournamentId={tournamentId} />,
-          },
-        ]
+        {
+          label: 'Postest',
+          key: 'postest',
+          children: <PostestForm eventId={eventId} tournamentId={tournamentId} />,
+        },
+      ]
       : []),
   ]);
   return (
@@ -83,8 +141,15 @@ const EventAgeDetails = ({
         size={'small'}
         style={{ marginBottom: 32, fontWeight: 600 }}
         items={tabs}
-        // onClick={}
+      // onClick={}
       />
+
+      {prizeEventList && prizeEventList?.length > 0 && <AwardEventForm
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        eventUUID={eventUUID}
+        prizeEventList={prizeEventList}
+      />}
     </div>
   );
 };
