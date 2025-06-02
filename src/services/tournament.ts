@@ -596,6 +596,66 @@ export const banAthleteAPI = async (
   }
 };
 
+export const getAllPrizeOfEventAPI = async (tournamentEventId: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-all-prize-of-event/${tournamentEventId}`,
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      'Error get all prize of event:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getOtherPrizeOfEventAPI = async (tournamentEventId: string) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-other-prizes-of-event/${tournamentEventId}`,
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      'Error get other prize of event:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const updateEventPrizeWinnerAPI = async (
+  prizeId: string,
+  participantId: string,
+  accessToken: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/update-event-prize-winner/${prizeId}`,
+      {
+        participantId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error update event prize winner:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
 export const cancelTournamentAPI = async (
   tournamentId: string,
   accessToken: string,

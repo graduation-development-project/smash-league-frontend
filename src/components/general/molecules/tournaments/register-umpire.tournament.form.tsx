@@ -86,6 +86,9 @@ const RegisterUmpireTournamentForm = ({
         tournamentId,
         registrationRole,
         imageList,
+        '',
+        '',
+        '',
         [
           {
             name: 'Nguyen',

@@ -42,8 +42,8 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
   const { roundHeader, columnWidth, canvasPadding, rowHeight, width } =
     getCalculatedStyles(style);
 
-  const lastGame: Match | undefined = matches.find(
-    (match) => !match.nextMatchId,
+  const lastGame: Match | undefined = matches?.find(
+    (match) => !match?.nextMatchId,
   );
 
 

@@ -5,7 +5,7 @@ import {
   registerTournamentByAthleteAPI,
 } from '@/services/tour-registration';
 import { calculateAge } from '@/utils/calculateAge';
-import { ConsoleSqlOutlined, LoadingOutlined } from '@ant-design/icons';
+import { ConsoleSqlOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Button,
   ConfigProvider,
@@ -14,11 +14,13 @@ import {
   Input,
   Modal,
   Select,
+  Space,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getTournamentEventDetailAPI } from '@/services/tournament';
 import { searchUserByEmailAPI } from '@/services/user';
+import { set } from 'react-hook-form';
 
 const RegisterAthleteTournamentForm = ({
   isModalOpen,
@@ -47,7 +49,7 @@ const RegisterAthleteTournamentForm = ({
   const [userList, setUserList] = useState<any>([]);
   const [partner, setPartner] = useState<any>({});
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-  const [tournamentConditionList, setTournamentConditionList] = useState<any>(
+  const [tournamentConditionList, setTournamentConditionList] = useState<any[]>(
     [],
   );
   const [tournamentEventConditionList, setTournamentEventConditionList] =
@@ -82,6 +84,12 @@ const RegisterAthleteTournamentForm = ({
     tournamentEventReal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailId]);
+
+  useEffect(() => {
+    getTournamentEventCondition();
+  }, [selectedEventId])
+
+  console.log("check conditions", tournamentEventConditionList)
 
   const tournamentEventsOptions = tournamentEvent
     ?.sort((a: any, b: any) => {
@@ -159,11 +167,12 @@ const RegisterAthleteTournamentForm = ({
     setFilePartner(undefined);
     form.resetFields();
     setIsHasPartner(false);
-    setSelectedEventId(null); 
+    setSelectedEventId(null);
   };
 
-  const handleChange = (value: string, option: any) => {
+  const handleChangeEvent = (value: string, option: any) => {
     setSelectedEventId(value);
+    getTournamentEventCondition();
     if (option.label.toUpperCase().includes('DOUBLE')) {
       setIsHasPartner(true);
     } else {
@@ -171,14 +180,15 @@ const RegisterAthleteTournamentForm = ({
     }
   };
 
-  console.log('check detail', detail);
+  // console.log('check detail', detail);
 
   const getTournamentCondition = async () => {
     if (!detail) return;
     try {
-      console.log('Check detail id', detailId);
+      // console.log('Check detail id', detailId);
       const response = await getRequirementsOfTournamentAPI(detailId);
-      console.log('Check response tour condition', response.data);
+      setTournamentConditionList(response?.data?.data);
+      // console.log('Check response tour condition', response.data);
     } catch (error: any) {
       console.log('Error', error);
     }
@@ -190,7 +200,12 @@ const RegisterAthleteTournamentForm = ({
       const response = await getRequirementsOfTournamentEventAPI(
         selectedEventId,
       );
-      console.log('Check response tour eventcondition', response.data);
+
+      const conditionEvent = response?.data?.data.filter(
+        (condition: any) => condition.tournamentEventId === selectedEventId);
+      setTournamentEventConditionList(conditionEvent);
+
+      console.log('Check response tour eventcondition', response.data.data);
     } catch (error: any) {
       console.log('Error', error);
     }
@@ -260,12 +275,25 @@ const RegisterAthleteTournamentForm = ({
   }, [user, selectedEventId, detailId, detail]);
   const handleRegisterTournament = async (values: any) => {
     if (!user) return;
-    const { tournamentId, registrationRole, tournamentEventId, partnerEmail } =
+
+    const { tournamentId, registrationRole, tournamentEventId, partnerEmail, submittedAnswerTour, submittedAnswerForEvent } =
       values;
     const imageList = [...identificationCardFiles, file];
     const imageListPartner = [...identificationCardFilesPartner, filePartner];
     // console.log('Check image', imageListPartner);
-    // console.log(values, 'values');
+
+    const submittedAnswerForTournamentArray = Object.entries(submittedAnswerTour)?.map(
+      ([key, value]) => ({
+        [key]: value,
+      })
+    ) || [];
+    // const submittedAnswerForEventArray = Object.entries(submittedAnswerForEvent)?.map(
+    //   ([key, value]) => ({
+    //     [key]: value,
+    //   })
+    // ) || [];
+    console.log('submittedAnswerForTournament asdsa', submittedAnswerForTournamentArray);
+    console.log(values, 'valuesRegister');
     try {
       setIsLoading(true);
       const response = await registerTournamentByAthleteAPI(
@@ -275,7 +303,9 @@ const RegisterAthleteTournamentForm = ({
         imageList,
         tournamentEventId,
         partnerEmail,
-        imageListPartner as any,
+        imageListPartner,
+        submittedAnswerForTournamentArray,
+        // submittedAnswerForEventArray,
       );
       if (response?.status === 200 || response?.status === 201) {
         setIsModalOpen(false);
@@ -380,6 +410,77 @@ const RegisterAthleteTournamentForm = ({
                 <Input placeholder="Registration Role" disabled />
               </Form.Item>
 
+              <Form.Item label="Tournament Conditions">
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '90%',
+                  }}
+                >
+                  {tournamentConditionList?.map((condition: any) => (
+                    condition?.requirementType === 'FillIn' ? (
+                      <Form.Item
+                        key={condition.id}
+                        name={['submittedAnswerTour', condition.requirementName]}
+                        label={condition.requirementName}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'This field is required',
+                          },
+                        ]}
+                      >
+                        <Input placeholder={condition?.requirementDescription} />
+                      </Form.Item>
+                    ) : (
+                      condition?.requirementType === 'Selection' ? (
+                        <Form.Item
+                          key={condition.id}
+                          name={['submittedAnswerTour', condition.requirementName]}
+                          label={condition.requirementName}
+                          rules={[
+                            {
+                              required: true,
+                              message: 'This field is required',
+                            },
+                          ]}
+                        >
+                          <Select
+                            placeholder={condition.requirementDescription}
+                            style={{ width: '100%' }}
+                            options={[{
+                              label: "Yes",
+                              value: "true"
+                            }, {
+                              label: "No",
+                              value: "false"
+                            }]}
+                          />
+                        </Form.Item>
+                      ) : (
+                        <Form.Item
+                          key={condition.id}
+                          name={['submittedAnswerTour', condition.requirementName]}
+                          label={condition.requirementName}
+                          // initialValue={condition?.requirementDescription}
+                        >
+                          <Input
+                            variant="borderless"
+                            readOnly
+                            placeholder={condition?.requirementDescription}
+                            defaultValue={condition?.requirementDescription}
+                            style={{ color: 'gray' }}
+                          />
+                        </Form.Item>
+                      )
+                    )
+
+                  ))}
+                </div>
+              </Form.Item>
+
+
               <Form.Item
                 name="tournamentEventId"
                 label="Tournament Events"
@@ -388,9 +489,79 @@ const RegisterAthleteTournamentForm = ({
                 <Select
                   defaultValue="Select tournament event"
                   style={{ width: '100%' }}
-                  onChange={handleChange}
+                  onChange={handleChangeEvent}
                   options={tournamentEventsOptions}
                 />
+              </Form.Item>
+
+              <Form.Item label="Event Conditions">
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '90%',
+                  }}
+                >
+                  {/* <span>{tournamentEventConditionList[0]?.requirementType}</span> */}
+
+                  {tournamentEventConditionList?.map((condition: any) => (
+                    condition?.requirementType === 'FillIn' ? (
+                      <Form.Item
+                        key={condition.id}
+                        name={['submittedAnswerTour', condition.requirementName]}
+                        label={condition.requirementName}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'This field is required',
+                          },
+                        ]}
+                      >
+                        <Input placeholder={condition?.requirementDescription} />
+                      </Form.Item>
+                    ) : (
+                      condition?.requirementType === 'Selection' ? (
+                        <Form.Item
+                          key={condition.id}
+                          name={['submittedAnswerTour', condition.requirementName]}
+                          label={condition.requirementName}
+                          rules={[
+                            {
+                              required: true,
+                              message: 'This field is required',
+                            },
+                          ]}
+                        >
+                          <Select
+                            placeholder={condition.requirementDescription}
+                            style={{ width: '100%' }}
+                            options={[{
+                              label: "Yes",
+                              value: "true"
+                            }, {
+                              label: "No",
+                              value: "false"
+                            }]}
+                          />
+                        </Form.Item>
+                      ) : (
+                        <Form.Item
+                          key={condition.id}
+                          name={['submittedAnswerTour', condition.requirementName]}
+                          label={condition.requirementName}
+                          initialValue={""}
+                        >
+                          <Input
+                            variant="borderless"
+                            readOnly
+                            placeholder={condition?.requirementDescription}
+                          />
+                        </Form.Item>
+                      )
+                    )
+
+                  ))}
+                </div>
               </Form.Item>
 
               {/* <Form.Item
