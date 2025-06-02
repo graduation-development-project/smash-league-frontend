@@ -84,6 +84,8 @@ const WomenDoublesAthleteTable = ({
     registrationDocumentCreator: string[];
     registrationDocumentPartner: string[];
     isPayForTheRegistrationFee: boolean;
+    submittedAnswersForEvent: [];
+    submittedAnswersForTournament: [];
     status: string;
   }
 
@@ -164,6 +166,8 @@ const WomenDoublesAthleteTable = ({
           registrationDocumentCreator: regis.registrationDocumentCreator,
           registrationDocumentPartner: regis.registrationDocumentPartner,
           isPayForTheRegistrationFee: regis.isPayForTheRegistrationFee,
+          submittedAnswersForEvent: regis.submittedAnswersForEvent,
+          submittedAnswersForTournament: regis.submittedAnswersForTournament,
           status: regis.status,
         }));
         // console.log(response?.data, 'check');
@@ -716,6 +720,70 @@ const WomenDoublesAthleteTable = ({
           />
         );
       },
+    },
+    {
+      title: 'Tournament Answers',
+      dataIndex: 'submittedAnswersForTournament',
+      key: 'tournamentAnswers',
+      width: 250,
+      render: (_, record) => (
+        <div className="flex flex-col gap-1">
+          {record.submittedAnswersForTournament?.length > 0 ? (
+            record.submittedAnswersForTournament.map((answer, index) => (
+              <div key={index} className="text-xs text-gray-800">
+                {Object.keys(answer).length > 0
+                  ? Object.entries(answer)
+                      .filter(
+                        ([key, value]) => value !== 'Nguyen' && key !== 'name',
+                      )
+                      .map(([key, value]) => (
+                        <div
+                          key={key}
+                          className="text-xs text-gray-800 flex gap-1"
+                        >
+                          {key}: {value as string}
+                        </div>
+                      ))
+                  : null}
+              </div>
+            ))
+          ) : (
+            <div>None</div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Event Answers',
+      dataIndex: 'submittedAnswersForEvent',
+      key: 'eventAnswers',
+      width: 250,
+      render: (_, record) => (
+        <div className="flex flex-col gap-1">
+          {record.submittedAnswersForEvent?.length > 0 ? (
+            record.submittedAnswersForEvent.map((answer, index) => (
+              <div key={index} className="text-xs text-gray-800">
+                {Object.keys(answer).length > 0
+                  ? Object.entries(answer)
+                      .filter(
+                        ([key, value]) => value !== 'Nguyen' && key !== 'name',
+                      )
+                      .map(([key, value]) => (
+                        <div
+                          key={key}
+                          className="text-xs text-gray-800 flex gap-1"
+                        >
+                          {key}: {value as string}
+                        </div>
+                      ))
+                  : null}
+              </div>
+            ))
+          ) : (
+            <div>None</div>
+          )}
+        </div>
+      ),
     },
 
     {
