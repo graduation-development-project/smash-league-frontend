@@ -39,7 +39,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   
 
   if (selectedKey.includes('umpires')) {
-    return <UmpiresListTable tourId={tourId} />;
+    return <UmpiresListTable tourId={tourId} tournamentId = {tournamentId}/>;
   }
 
   switch (eventName) {

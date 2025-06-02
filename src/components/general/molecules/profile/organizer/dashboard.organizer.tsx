@@ -113,7 +113,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
       }
     }
   }, []);
-  const onFromDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+  const onFromDateChange = (date: any) => {
     if (date) {
       const formatted = dayjs(date).utc().format('YYYY-MM-DDT00:00:00.000[Z]');
       console.log(formatted);
@@ -121,7 +121,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
     }
   };
 
-  const onToDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+  const onToDateChange = (date: any) => {
     if (date) {
       const formatted = dayjs(date).utc().format('YYYY-MM-DDT00:00:00.000[Z]');
       console.log(formatted);
@@ -129,10 +129,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
     }
   };
 
-  const onRevenueFromDateChange: DatePickerProps['onChange'] = (
-    date,
-    dateString,
-  ) => {
+  const onRevenueFromDateChange = (date: any) => {
     if (date) {
       const formatted = dayjs(date).utc().format('YYYY-MM-DDT00:00:00.000[Z]');
       console.log(formatted);
@@ -408,13 +405,25 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
               <Card>
                 <div className="mt-2 flex items-center justify-between px-4 pt-2">
                   <DatePicker
-                    onChange={onFromDateChange}
+                    onChange={(value) => {
+                      if (value === null || value === undefined) {
+                        onFromDateChange(null);
+                      } else {
+                        onFromDateChange(value);
+                      }
+                    }}
                     format={'YYYY-MM-DD'}
                     placeholder="From Date"
                   />
 
                   <DatePicker
-                    onChange={onToDateChange}
+                    onChange={(value) => {
+                      if (value === null || value === undefined) {
+                        onToDateChange(null);
+                      } else {
+                        onToDateChange(value);
+                      }
+                    }}
                     format={'YYYY-MM-DD'}
                     placeholder="To Date"
                   />
@@ -422,7 +431,8 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Tournament Registrations</CardTitle>
-                    <DropdownMenu>
+
+                    {/* <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="ghost"
@@ -459,7 +469,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                           Yearly
                         </DropdownMenuItem>
                       </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu> */}
                   </div>
                   <CardDescription>
                     Tournament registrations{' '}
@@ -480,7 +490,13 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
               <Card>
                 <div className="mt-2 flex items-center justify-between px-4 pt-2">
                   <DatePicker
-                    onChange={onRevenueFromDateChange}
+                    onChange={(value) => {
+                      if (value === null || value === undefined) {
+                        onRevenueFromDateChange(null);
+                      } else {
+                        onRevenueFromDateChange(value);
+                      }
+                    }}
                     format={'YYYY-MM-DD'}
                     placeholder="From Date"
                   />
@@ -494,7 +510,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Revenue</CardTitle>
-                    <DropdownMenu>
+                    {/* <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="ghost"
@@ -531,7 +547,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                           Yearly
                         </DropdownMenuItem>
                       </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu> */}
                   </div>
                   <CardDescription>
                     Total money collected for{' '}

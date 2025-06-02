@@ -10,8 +10,8 @@ const AdminCard = () => {
   const { getTours, tourList } = useTourContext();
   const [isLoading, setIsLoading] = useState(false);
   const [usersList, setUsersList] = useState([]);
-  const [user, setUser] = useState<any>({});
   const [transactionList, setTransactionList] = useState([]);
+  const [user, setUser] = useState<any>({});
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

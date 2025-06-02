@@ -26,8 +26,6 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
   theme = defaultTheme,
   options: { style: inputStyle } = { style: defaultStyle },
 }) => {
-  // console.log(matches);
-
   const style = {
     ...defaultStyle,
     ...inputStyle,
@@ -44,9 +42,11 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
   const { roundHeader, columnWidth, canvasPadding, rowHeight, width } =
     getCalculatedStyles(style);
 
-  const lastGame: Match | undefined = matches.find(
-    (match) => !match.nextMatchId,
+  const lastGame: Match | undefined = matches?.find(
+    (match) => !match?.nextMatchId,
   );
+
+
 
   const generateColumn = (matchesColumn: Match[]): Match[][] => {
     const previousMatchesColumn = matchesColumn.reduce<Match[]>(
@@ -81,6 +81,7 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
     currentRound,
   );
 
+
   return (
     <ThemeProvider theme={theme}>
       <SvgWrapper
@@ -106,7 +107,6 @@ const SingleTeamEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
                       rowHeight: rowHeight || 0,
                     },
                   );
-                  // console.log("Check columns", columns)
                   const previousBottomPosition = (rowIndex + 1) * 2 - 1;
                   const { previousTopMatch, previousBottomMatch } =
                     getPreviousMatches(

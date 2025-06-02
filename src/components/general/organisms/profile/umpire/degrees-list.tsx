@@ -3,7 +3,7 @@ import { UmpireDegreeList } from '@/components/general/molecules/profile/umpire/
 
 const DegreesList = ({qualifications, getAllUmpireQualifications}: {qualifications: any, getAllUmpireQualifications: any}) => {
   return (
-    <div className="container mx-auto py-10 space-y-8">
+    <div className="container mx-auto py-10 space-y-8 px-5">
       <div className="flex flex-col space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">
           Umpire Qualifications
@@ -14,7 +14,7 @@ const DegreesList = ({qualifications, getAllUmpireQualifications}: {qualificatio
       </div>
 
       <div className="mt-6">
-        <UmpireDegreeList qualifications = {qualifications} getAllUmpireQualifications = {getAllUmpireQualifications}/>
+        <UmpireDegreeList qualifications={qualifications} getAllUmpireQualifications = {getAllUmpireQualifications}/>
       </div>
     </div>
   );

@@ -34,7 +34,7 @@ import LiveDetailsTour from '@/components/general/organisms/tournaments/live-det
 import PostDetailsTour from '@/components/general/organisms/tournaments/post-details.tour';
 import PlayerDetailTour from '@/components/general/organisms/tournaments/player-detail.tour';
 import MatchDetailsTour from '@/components/general/organisms/tournaments/match-details.tour';
-import { getTourDetailAPI } from '@/services/tournament';
+import { cancelTournamentAPI, getTourDetailAPI } from '@/services/tournament';
 import { EVENT_ENUM } from '@/utils/enum';
 import EventAgeDetails from '@/components/general/molecules/tournaments/event-age-details.tour';
 import RegisterAthleteTournamentForm from '@/components/general/molecules/tournaments/register-athlete.tournament.form';
@@ -49,6 +49,8 @@ import FeedbackDetailsTour from '@/components/general/organisms/tournaments/feed
 import SponsorsDetailsTour from '@/components/general/organisms/tournaments/sponsors-details.tour';
 import ReportDetails from '@/components/general/organisms/tournaments/report-details.tour';
 import PostestForm from '@/components/general/organisms/tournaments/postest-form';
+import { toast } from 'react-toastify';
+import { useTourContext } from '@/context/tour.context';
 
 const DetailsTourPage = () => {
   const param = useParams();
@@ -62,7 +64,7 @@ const DetailsTourPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [detail, setDetail] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const { getTours } = useTourContext();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -219,6 +221,43 @@ const DetailsTourPage = () => {
 
   const isOrganizer = user?.id === detail?.organizer?.id;
 
+  const handleCancelTour = async (tournamentId: string) => {
+    if (!user) return;
+    try {
+      const res = await cancelTournamentAPI(tournamentId, user?.access_token);
+      console.log('check cancel tour', res.data);
+      if (
+        res.data.statusCode === 200 ||
+        res.data.statusCode === 201 ||
+        res.data.statusCode === 204
+      ) {
+        toast.success(`${res.data.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'light',
+        });
+        getTours(1, 100, '');
+        router.push('/tournaments');
+      } else {
+        toast.error(`${res.data.message}`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'light',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // console.log("check isRecruit", detail);
   return (
     <HomeContextProvider>
@@ -304,7 +343,15 @@ const DetailsTourPage = () => {
                 </div>
                 <div>
                   {isOrganizer ? (
-                    <div></div>
+                    <div>
+                      <Button
+                        shadow={'shadowNone'}
+                        className="border border-red-500 bg-transparent text-red-500 hover:bg-red-500 hover:text-white"
+                        onClick={() => handleCancelTour(detail?.id)}
+                      >
+                        Cancel Tournament
+                      </Button>
+                    </div>
                   ) : (
                     <div className="flex gap-3 justify-center items-center">
                       <Dropdown

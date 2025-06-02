@@ -24,7 +24,7 @@ const SingleEliminationBracket: React.FC<SingleElimLeaderboardProps> = ({
   theme = defaultTheme,
   options: { style: inputStyle } = { style: defaultStyle },
 }) => {
-  // console.log(matches);
+  console.log(matches);
 
   const style = {
     ...defaultStyle,

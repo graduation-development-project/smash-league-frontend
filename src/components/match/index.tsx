@@ -26,7 +26,8 @@ function Match({
   topText,
   topWon,
 }: MatchComponentProps) {
-  // console.log('Check topParty', topParty);
+  console.log('Check topParty', topParty);
+
   // console.log('Check match', match);
   return (
     <Wrapper>
@@ -56,7 +57,11 @@ function Match({
           onClick={() => onPartyClick?.(topParty, topWon)}
         >
           <Team>
-            <div className="flex flex-col p-2 text-[20px] font-quicksand">
+            <div
+              className={`flex flex-col p-2 text-[20px] font-quicksand ${
+                topWon ? 'text-green-400' : ''
+              }`}
+            >
               <div>{topParty?.player1?.name || 'No Info'}</div>
               {/* <div>{topParty?.player2?.name || "N/A"}</div> */}
             </div>
@@ -107,7 +112,11 @@ function Match({
           onClick={() => onPartyClick?.(bottomParty, bottomWon)}
         >
           <Team>
-            <div className="flex flex-col p-2 text-[20px] font-quicksand">
+            <div
+              className={`flex flex-col p-2 text-[20px] font-quicksand ${
+                bottomWon ? 'text-green-400' : ''
+              }`}
+            >
               <div>{bottomParty?.player1?.name || 'No Info'}</div>
               {/* <div>{bottomParty?.player2?.name || "N/A"}</div> */}
             </div>
