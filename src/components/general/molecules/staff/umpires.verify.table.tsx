@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -27,6 +28,7 @@ import {
 } from '@/services/verification';
 import { useProfileContext } from '@/context/profile.context';
 import { toast } from 'react-toastify';
+import VerifyUmpireDegreeModal from './verify-umpire-degree-image.modal';
 
 const useStyle = createStyles(({ css }) => ({
   customTable: css`
@@ -46,6 +48,16 @@ const useStyle = createStyles(({ css }) => ({
   `,
 }));
 
+interface UmpireDegree {
+  degree: string[];
+  degreeTitle: string;
+  description: string;
+  id: string;
+  typeOfDegree: string;
+  userId: string;
+  userVerificationId: string;
+}
+
 interface DataType {
   IDCardBack: string;
   IDCardFront: string;
@@ -54,6 +66,7 @@ interface DataType {
   id: string;
   status: string;
   role: string;
+  umpireDegrees: UmpireDegree[];
   userName: string;
   userId: string;
 }
@@ -65,6 +78,8 @@ const UmpiresVerifyTable = () => {
   const searchInput = useRef<InputRef>(null);
   const [user, setUser] = useState<any>(null);
   const [status, setStatus] = useState('PENDING');
+  const [isVerifyModal, setIsVerifyModal] = useState(false);
+  const [umpireDegree, setUmpireDegree] = useState<any>({});
   const [filterVerifications, setFilterVerifications] = useState<DataType[]>(
     [],
   );
@@ -87,9 +102,11 @@ const UmpiresVerifyTable = () => {
     setIsLoading(true);
     try {
       const response = await getAllVerificationsAPI(user?.access_token);
+
+      console.log('Chek response umpire', response.data.data);
       setVerifications(
         response?.data?.data
-          .filter((veri: any) => veri.role === 'Umpire')
+          // .filter((veri: any) => veri.role === 'Umpire')
           .map((veri: any) => ({
             ...veri,
             userName: veri.user?.name || 'N/A', // Thêm key userName để tránh lỗi undefined
@@ -97,7 +114,7 @@ const UmpiresVerifyTable = () => {
       );
       setFilterVerifications(
         response?.data?.data
-          .filter((veri: any) => veri.role === 'Umpire')
+          // .filter((veri: any) => veri.role === 'Umpire')
           .map((veri: any) => ({
             ...veri,
             userName: veri.user?.name || 'N/A', // Thêm key userName để tránh lỗi undefined
@@ -141,6 +158,7 @@ const UmpiresVerifyTable = () => {
         reason,
         user?.access_token,
       );
+      console.log('Check value', id, option, reason);
       console.log('Check response', response);
       if (response?.status === 200 || response?.status === 201) {
         setIsLoading(false);
@@ -331,6 +349,41 @@ const UmpiresVerifyTable = () => {
         />
       ),
     },
+    {
+      title: 'Umpire Degrees',
+      dataIndex: 'umpireDegrees',
+      key: 'umpireDegrees',
+      width: 300,
+      render: (_, { umpireDegrees }) => (
+        <div className="flex flex-col gap-2">
+          {umpireDegrees?.length > 0 ? (
+            umpireDegrees.map((degree, index) => (
+              <div key={index} className="flex flex-col gap-1">
+                {/* <div className="font-semibold">{degree.degreeTitle}</div> */}
+                <div className="flex flex-wrap gap-2">
+                  {degree.degree.map((imgUrl, imgIndex) => (
+                    <img
+                      key={imgIndex}
+                      src={imgUrl}
+                      alt={degree.degreeTitle}
+                      width={150}
+                      height={150}
+                      style={{ objectFit: 'cover', borderRadius: '4px' }}
+                      onClick={() => {
+                        setUmpireDegree(degree);
+                        setIsVerifyModal(true);
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <span>N/A</span>
+          )}
+        </div>
+      ),
+    },
 
     {
       title: 'Actions',
@@ -437,6 +490,12 @@ const UmpiresVerifyTable = () => {
           />
         </ConfigProvider>
       </div>
+      <VerifyUmpireDegreeModal
+        umpireDegrees={umpireDegree}
+        isOpen={isVerifyModal}
+        setIsOpen={setIsVerifyModal}
+        setUmpireDegree={setUmpireDegree}
+      />
     </div>
   );
 };

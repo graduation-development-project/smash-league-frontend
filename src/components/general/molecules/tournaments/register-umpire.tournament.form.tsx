@@ -86,6 +86,16 @@ const RegisterUmpireTournamentForm = ({
         tournamentId,
         registrationRole,
         imageList,
+        [
+          {
+            name: 'Nguyen',
+          },
+        ],
+        [
+          {
+            name: 'Nguyen',
+          },
+        ],
       );
       if (response?.status === 200 || response?.status === 201) {
         setIsRegisterModalOpen(false);

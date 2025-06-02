@@ -595,3 +595,44 @@ export const banAthleteAPI = async (
     return error.response?.data;
   }
 };
+
+export const cancelTournamentAPI = async (
+  tournamentId: string,
+  accessToken: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/cancel-tournament/${tournamentId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error cancel tournament by staff:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
+export const getBracketsOfTournamentEventAPI = async (
+  tournamentEventId: string,
+) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/get-bracket/${tournamentEventId}`,
+    );
+    return response;
+  } catch (error: any) {
+    console.error(
+      'Error get brackets of tournament event:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};

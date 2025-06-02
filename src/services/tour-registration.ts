@@ -6,6 +6,8 @@ export const registerTournamentByAthleteAPI = async (
   tournanmentId: string,
   registrationRole: string,
   images: any,
+  submittedAnswerForTournament?: any,
+  submittedAnswerForEvent?: any,
   tournamentEventId?: string,
   partnerEmail?: string,
   partnerImages?: any,
@@ -30,6 +32,14 @@ export const registerTournamentByAthleteAPI = async (
       formData.append('partnerIdCardBack', partnerImages[1]);
       formData.append('partnerCardPhoto', partnerImages[2]);
     }
+    formData.append(
+      'submittedAnswerForTournament',
+      JSON.stringify(submittedAnswerForTournament),
+    );
+    formData.append(
+      'submittedAnswerForEvent',
+      JSON.stringify(submittedAnswerForEvent),
+    );
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/register-tournament`,
       formData,

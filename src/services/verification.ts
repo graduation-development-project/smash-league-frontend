@@ -33,7 +33,7 @@ export const verifyInformationAPI = async (
       {
         verificationID,
         option,
-        rejectionReason,
+        rejectionReason: 'ko thich',
       },
       {
         headers: {

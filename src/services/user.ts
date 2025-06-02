@@ -57,6 +57,28 @@ export const registerNewRoleAPI = async (
   }
 };
 
+export const registerUmpireRoleAPI = async (data: any, accessToken: string) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/athletes/register-role-umpire`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      'Error register new role:',
+      error.response?.data || error.message,
+    );
+    return error.response?.data;
+  }
+};
+
 export const getProfileAPI = async (id: string | string[]) => {
   try {
     //  console.log("id", id);

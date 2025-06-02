@@ -275,7 +275,7 @@ const RegisterAthleteTournamentForm = ({
         imageList,
         tournamentEventId,
         partnerEmail,
-        imageListPartner,
+        imageListPartner as any,
       );
       if (response?.status === 200 || response?.status === 201) {
         setIsModalOpen(false);

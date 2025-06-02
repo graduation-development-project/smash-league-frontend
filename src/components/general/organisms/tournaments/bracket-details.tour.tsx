@@ -6,6 +6,7 @@ import TeamMatch from '@/components/team-match';
 import { getParticipantListAPI } from '@/services/detail-tour';
 // import { simpleBracket, teamBrackets } from '@/mock-data/simple-data';
 import {
+  getBracketsOfTournamentEventAPI,
   getMatchesOfTournamentEventAPI,
   getTournamentEventDetailAPI,
 } from '@/services/tournament';
@@ -37,12 +38,12 @@ const BracketDetailsTour = ({
 
   const getMatchesOfTournamentEvent = async () => {
     try {
-      const res = await getMatchesOfTournamentEventAPI(eventUUID);
+      const res = await getBracketsOfTournamentEventAPI(eventUUID);
       // console.log('Cgheck res', res);
       const allMacthes = res?.data?.data;
-     allMacthes.shift();
+      // allMacthes.shift();
 
-      console.log("Check", allMacthes);
+      // console.log("Check", allMacthes);
 
       setBrackets(allMacthes);
     } catch (error: any) {
@@ -95,14 +96,14 @@ const BracketDetailsTour = ({
           style={{ borderColor: `${color}` }}
           className={`w-1/2 flex gap-10 text-base text-white p-5 bg-[#2c2c2c] rounded-r-lg border-b-4 `}
         >
-          <th className="text-start flex flex-col gap-3">
+          <div className="text-start flex flex-col gap-3">
             <li>Range age:</li>
             <li>Format:</li>
             <li>Number of Participants:</li>
             <li>Event:</li>
-          </th>
+          </div>
 
-          <td className="text-start flex flex-col gap-3">
+          <div className="text-start flex flex-col gap-3">
             <li className="font-bold">{`From ${eventDetail?.fromAge} - ${eventDetail?.toAge} years old`}</li>
             <li>
               {
@@ -113,23 +114,24 @@ const BracketDetailsTour = ({
             </li>
             <li>{numberOfParticipants}</li>
             <li>{EVENT_ENUM[eventName as keyof typeof EVENT_ENUM]}</li>
-          </td>
+          </div>
         </div>
+
         <div
           style={{ borderColor: `${color}` }}
           className={`w-1/2 flex gap-10 text-base text-white p-5 bg-[#2c2c2c] rounded-r-lg border-b-4 `}
         >
-          <th className="text-start flex flex-col gap-3">
+          <div className="text-start flex flex-col gap-3">
             <li>Number of Games:</li>
             <li>Winning Point:</li>
             <li>Last Point:</li>
-          </th>
+          </div>
 
-          <td className="text-start flex flex-col gap-3">
+          <div className="text-start flex flex-col gap-3">
             <li>{eventDetail?.numberOfGames}</li>
             <li>{eventDetail?.winningPoint}</li>
             <li>{eventDetail?.lastPoint}</li>
-          </td>
+          </div>
         </div>
         <div
           style={{ borderColor: `${color}` }}

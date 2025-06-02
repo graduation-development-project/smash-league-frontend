@@ -48,7 +48,7 @@ const UmpireProfilePage = (props: any) => {
 
   const getAllUmpireQualifications = async () => {
     try {
-      const response = await getAllUmpireQualificationsAPI(user?.id);
+      const response = await getAllUmpireQualificationsAPI(umpireId);
       console.log('Check response', response.data.data);
       const formatData = response.data.data.map((degree: any) => ({
         id: degree?.id,
@@ -86,7 +86,12 @@ const UmpireProfilePage = (props: any) => {
     {
       key: 'umpire-qualifications',
       label: 'Qualifications',
-      children: <DegreesList qualifications={degrees} getAllUmpireQualifications ={getAllUmpireQualifications}/>,
+      children: (
+        <DegreesList
+          qualifications={degrees}
+          getAllUmpireQualifications={getAllUmpireQualifications}
+        />
+      ),
     },
 
     ...(user?.id === umpireId
@@ -117,7 +122,11 @@ const UmpireProfilePage = (props: any) => {
           {
             key: 'umpire-update-qualifications',
             label: 'Update Qualifications',
-            children: <UmpireDegrees getAllUmpireQualifications = {getAllUmpireQualifications}/>,
+            children: (
+              <UmpireDegrees
+                getAllUmpireQualifications={getAllUmpireQualifications}
+              />
+            ),
           },
         ]
       : []),

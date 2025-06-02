@@ -4,7 +4,7 @@ import React, { JSX, ReactElement } from 'react';
 export type Participant = {
   id: string | number;
 
-  isWinner?: boolean;
+  isWinner: boolean;
 
   name?: string;
 
@@ -24,7 +24,7 @@ export type TeamMember = {
 export type TeamParticipant = {
   id: string | number;
 
-  isWinner?: boolean;
+  isWinner: boolean;
 
   teamName?: string;
 
@@ -39,6 +39,7 @@ export type TeamParticipant = {
 };
 
 export type Match = {
+  game: [];
   id: number | string;
 
   /** Link to this match. While onClick() can be used, providing an href
@@ -260,27 +261,27 @@ export type RegisterAthleteTournamentFormProps = {
   fromTeamId: string;
   tournamentId: string;
   tournamentEventId: string;
-  registrationDocumentCreator: Record<string, File[]>
-}
+  registrationDocumentCreator: Record<string, File[]>;
+};
 export type RegisterAthleteTournamentBeforeSubmitFormProps = {
   playerId: string;
   playerName: string;
   fromTeamId: string;
   tournamentId: string;
   tournamentEventId: string;
-  registrationDocumentCreator: Record<string, File[]>
+  registrationDocumentCreator: Record<string, File[]>;
   partnerId?: string;
   partnerName?: string;
-  registrationDocumentPartner?: Record<string, File[]>
-}
+  registrationDocumentPartner?: Record<string, File[]>;
+};
 export type RegisterAthleteTournamentSubmitFormProps = {
   playerId: string;
   playerName: string;
   fromTeamId: string;
   tournamentId: string;
   tournamentEventId: string;
-  registrationDocumentCreator: string[]
+  registrationDocumentCreator: string[];
   partnerId?: string;
   partnerName?: string;
-  registrationDocumentPartner?: string[]
-}
+  registrationDocumentPartner?: string[];
+};

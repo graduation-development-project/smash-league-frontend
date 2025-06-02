@@ -91,6 +91,7 @@ export function UmpireDegreeList({
   const [selectedDegree, setSelectedDegree] = useState<Degree | null>(null);
   const { setActiveKey, activeKey } = useProfileContext();
   const [user, setUser] = useState<any>({});
+  const { umpireId } = useProfileContext();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -165,6 +166,8 @@ export function UmpireDegreeList({
     getAllUmpireQualifications();
   }, [user, activeKey]);
 
+  console.log('Check umpireId', umpireId);
+
   if (qualifications.length === 0) {
     return (
       <Card className="w-full">
@@ -215,30 +218,32 @@ export function UmpireDegreeList({
               {degree?.description}
             </p>
           </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button
-              variant="default"
-              shadow={'shadowNone'}
-              colorBtn={'whiteBtn'}
-              className="rounded-sm text-secondColor hover:bg-transparent hover:underline"
-              size="sm"
-              onClick={() => handleEdit(degree)}
-            >
-              <Edit className="h-4 w-4 mr-2" />
-              Edit
-            </Button>
-            <Button
-              variant="default"
-              shadow={'shadowNone'}
-              colorBtn={'whiteBtn'}
-              size="sm"
-              className="text-destructive hover:text-destructive rounded-sm hover:bg-transparent hover:underline"
-              onClick={() => handleDelete(degree.id)}
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
-            </Button>
-          </CardFooter>
+          {user?.id === umpireId && (
+            <CardFooter className="flex justify-between">
+              <Button
+                variant="default"
+                shadow={'shadowNone'}
+                colorBtn={'whiteBtn'}
+                className="rounded-sm text-secondColor hover:bg-transparent hover:underline"
+                size="sm"
+                onClick={() => handleEdit(degree)}
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+              <Button
+                variant="default"
+                shadow={'shadowNone'}
+                colorBtn={'whiteBtn'}
+                size="sm"
+                className="text-destructive hover:text-destructive rounded-sm hover:bg-transparent hover:underline"
+                onClick={() => handleDelete(degree.id)}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </Button>
+            </CardFooter>
+          )}
         </Card>
       ))}
 
