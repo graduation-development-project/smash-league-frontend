@@ -6,7 +6,10 @@ import MatchDetailsTour from '../../organisms/tournaments/match-details.tour';
 import PlayerDetailTour from '../../organisms/tournaments/player-detail.tour';
 import StandingBoardDetailTour from '../../organisms/tournaments/standing-board-detail.tour';
 import PostestForm from '../../organisms/tournaments/postest-form';
-import { getOtherPrizeOfEventAPI, getTournamentEventDetailAPI } from '@/services/tournament';
+import {
+  getOtherPrizeOfEventAPI,
+  getTournamentEventDetailAPI,
+} from '@/services/tournament';
 import AwardEventForm from './award-event.form';
 
 const EventAgeDetails = ({
@@ -47,17 +50,17 @@ const EventAgeDetails = ({
   const getOtherPrizeOfEvent = async () => {
     try {
       const res = await getOtherPrizeOfEventAPI(eventUUID);
-      console.log("Check all prize of event", res?.data);
+      console.log('Check all prize of event', res?.data);
       if (res.statusCode === 200 || res.statusCode === 201) {
         const excludedPrizeNames = [
-          "championshipPrize",
-          "runnerUpPrize",
-          "thirdPlacePrize",
-          "jointThirdPlacePrize",
+          'championshipPrize',
+          'runnerUpPrize',
+          'thirdPlacePrize',
+          'jointThirdPlacePrize',
         ];
 
         const otherPrizes = res?.data?.filter(
-          (item: any) => !excludedPrizeNames.includes(item.prizeName)
+          (item: any) => !excludedPrizeNames.includes(item.prizeName),
         );
 
         setPrizeEventList(otherPrizes);
@@ -69,9 +72,7 @@ const EventAgeDetails = ({
 
   useEffect(() => {
     fetchGetTournamentEventDetailAPI();
-
   }, [isOrganizer]);
-
 
   useEffect(() => {
     if (isOrganizer && eventDetail?.tournamentEventStatus === 'ENDED') {
@@ -80,8 +81,7 @@ const EventAgeDetails = ({
     }
   }, [eventDetail?.tournamentEventStatus, isOrganizer]);
 
-  console.log("Check prizeEventList", prizeEventList);
-
+  console.log('Check event detail', eventDetail);
 
   const [tabs, setTabs] = useState<TabsProps['items']>([
     {
@@ -125,12 +125,14 @@ const EventAgeDetails = ({
 
     ...(!isOrganizer
       ? [
-        {
-          label: 'Postest',
-          key: 'postest',
-          children: <PostestForm eventId={eventId} tournamentId={tournamentId} />,
-        },
-      ]
+          {
+            label: 'Postest',
+            key: 'postest',
+            children: (
+              <PostestForm eventId={eventId} tournamentId={tournamentId} />
+            ),
+          },
+        ]
       : []),
   ]);
   return (
@@ -141,15 +143,17 @@ const EventAgeDetails = ({
         size={'small'}
         style={{ marginBottom: 32, fontWeight: 600 }}
         items={tabs}
-      // onClick={}
+        // onClick={}
       />
 
-      {prizeEventList && prizeEventList?.length > 0 && <AwardEventForm
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        eventUUID={eventUUID}
-        prizeEventList={prizeEventList}
-      />}
+      {prizeEventList && prizeEventList?.length > 0 && (
+        <AwardEventForm
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          eventUUID={eventUUID}
+          prizeEventList={prizeEventList}
+        />
+      )}
     </div>
   );
 };

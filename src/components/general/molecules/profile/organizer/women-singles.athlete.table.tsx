@@ -31,7 +31,7 @@ import {
 } from '@/services/tour-registration';
 import { toast } from 'react-toastify';
 import { calculateAge } from '@/utils/calculateAge';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const useStyle = createStyles(({ css }) => ({
   customTable: css`
@@ -84,6 +84,8 @@ const WomenSinglesAthleteTable = ({
     name: string;
     registrationDocumentCreator: string[];
     isPayForTheRegistrationFee: boolean;
+    submittedAnswersForEvent: [];
+    submittedAnswersForTournament: [];
     status: string;
   }
 
@@ -152,7 +154,7 @@ const WomenSinglesAthleteTable = ({
         user?.access_token,
         eventId,
       );
-      // console.log(response?.data, 'check');
+      // console.log(response?.data?.data, 'check');
 
       if (
         response?.data?.statusCode === 200 ||
@@ -164,6 +166,8 @@ const WomenSinglesAthleteTable = ({
           name: regis.user.name,
           registrationDocumentCreator: regis.registrationDocumentCreator,
           isPayForTheRegistrationFee: regis.isPayForTheRegistrationFee,
+          submittedAnswersForEvent: regis.submittedAnswersForEvent,
+          submittedAnswersForTournament: regis.submittedAnswersForTournament,
           status: regis.status,
         }));
 
@@ -191,7 +195,7 @@ const WomenSinglesAthleteTable = ({
     setSearchText('');
   };
 
-  // console.log('Check verification', verificationList);
+  console.log('Check verification', verificationList);
 
   const handleVerify = async (id: string, option: boolean, reason: string) => {
     if (!user?.access_token) return;
@@ -581,6 +585,71 @@ const WomenSinglesAthleteTable = ({
           />
         );
       },
+    },
+
+    {
+      title: 'Tournament Answers',
+      dataIndex: 'submittedAnswersForTournament',
+      key: 'tournamentAnswers',
+      width: 250,
+      render: (_, record) => (
+        <div className="flex flex-col gap-1">
+          {record.submittedAnswersForTournament?.length > 0 ? (
+            record.submittedAnswersForTournament.map((answer, index) => (
+              <div key={index} className="text-xs text-gray-800">
+                {Object.keys(answer).length > 0
+                  ? Object.entries(answer)
+                      .filter(
+                        ([key, value]) => value !== 'Nguyen' && key !== 'name',
+                      )
+                      .map(([key, value]) => (
+                        <div
+                          key={key}
+                          className="text-xs text-gray-800 flex gap-1"
+                        >
+                          {key}: {value as string}
+                        </div>
+                      ))
+                  : null}
+              </div>
+            ))
+          ) : (
+            <div>None</div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Event Answers',
+      dataIndex: 'submittedAnswersForEvent',
+      key: 'eventAnswers',
+      width: 250,
+      render: (_, record) => (
+        <div className="flex flex-col gap-1">
+          {record.submittedAnswersForEvent?.length > 0 ? (
+            record.submittedAnswersForEvent.map((answer, index) => (
+              <div key={index} className="text-xs text-gray-800">
+                {Object.keys(answer).length > 0
+                  ? Object.entries(answer)
+                      .filter(
+                        ([key, value]) => value !== 'Nguyen' && key !== 'name',
+                      )
+                      .map(([key, value]) => (
+                        <div
+                          key={key}
+                          className="text-xs text-gray-800 flex gap-1"
+                        >
+                          {key}: {value as string}
+                        </div>
+                      ))
+                  : null}
+              </div>
+            ))
+          ) : (
+            <div>None</div>
+          )}
+        </div>
+      ),
     },
 
     {

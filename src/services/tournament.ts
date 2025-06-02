@@ -635,10 +635,8 @@ export const updateEventPrizeWinnerAPI = async (
 ) => {
   try {
     const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/update-event-prize-winner/${prizeId}`,
-      {
-        participantId,
-      },
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tournaments/update-event-prize-winner/${prizeId}?participantId=${participantId}`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

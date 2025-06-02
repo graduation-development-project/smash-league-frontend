@@ -57,11 +57,11 @@ export default function RevenueChart({
         >
           <div
             className="w-full max-w-[30px] bg-secondColor rounded-t-sm transition-all duration-300"
-            style={{ height: `${count * 10}px` }}
+            style={{ height: `${count / 1000}px` }}
           ></div>
           {/* Tooltip on hover */}
           <span className="absolute -top-6 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            {count}
+            {count} VND
           </span>
           <span className="text-xs mt-2">{month.split('-')[1]}</span>
         </div>
