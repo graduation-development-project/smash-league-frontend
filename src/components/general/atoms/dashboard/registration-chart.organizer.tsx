@@ -1,22 +1,28 @@
 'use client';
 
 import { registrationCountsAPI } from '@/services/org-dashboard';
-import { TableColumnsSplit } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function RegistrationsChart({
   period,
-  fromDate,
-  toDate,
+  fromDate: fromDateProp,
+  toDate: toDateProp,
 }: {
   period: string;
-  fromDate: string;
-  toDate: string;
+  fromDate?: string;
+  toDate?: string;
 }) {
   const [registrationCounts, setRegistrationCounts] = useState<
     [string, number][]
   >([]);
   const [user, setUser] = useState<any>({});
+
+  // Default date range: 01/2025 - 06/2025
+  const defaultFromDate = '2025-01-01';
+  const defaultToDate = '2025-06-30';
+
+  const fromDate = fromDateProp || defaultFromDate;
+  const toDate = toDateProp || defaultToDate;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -39,12 +45,28 @@ export default function RegistrationsChart({
 
       const data: Record<string, number> = response.data.data;
 
-      // Ensure we have all 12 months in order
-      const months = Array.from({ length: 12 }, (_, i) => {
-        const month = `${i + 1}`.padStart(2, '0');
-        const key = `2025-${month}`;
-        return [key, data[key] || 0] as [string, number];
-      });
+      // Calculate the months between fromDate and toDate
+      const start = new Date(fromDate);
+      start.setDate(1); // start at the first day of the month
+      const end = new Date(toDate);
+      end.setDate(1);
+
+      const months: [string, number][] = [];
+
+      let current = new Date(start);
+      while (
+        current.getFullYear() < end.getFullYear() ||
+        (current.getFullYear() === end.getFullYear() &&
+          current.getMonth() <= end.getMonth())
+      ) {
+        const year = current.getFullYear();
+        const month = `${current.getMonth() + 1}`.padStart(2, '0');
+        const key = `${year}-${month}`;
+        months.push([key, data[key] || 0]);
+
+        // Move to the next month
+        current.setMonth(current.getMonth() + 1);
+      }
 
       setRegistrationCounts(months);
     } catch (error) {
@@ -60,7 +82,7 @@ export default function RegistrationsChart({
 
   return (
     <div className="w-full h-full flex items-end gap-2">
-      {registrationCounts.map(([month, count], i) => (
+      {registrationCounts.map(([month, count]) => (
         <div
           key={month}
           className="flex-1 flex flex-col items-center group relative"
@@ -68,7 +90,7 @@ export default function RegistrationsChart({
           {/* Bar */}
           <div
             className="w-full max-w-[30px] bg-primaryColor rounded-t-sm transition-all duration-300"
-            style={{ height: `${count * 10}px` }}
+            style={{ height: `${(count / 2) * 5}px` }}
           />
 
           {/* Tooltip on hover */}
@@ -79,7 +101,9 @@ export default function RegistrationsChart({
           )}
 
           {/* Month label */}
-          <span className="text-xs mt-2">{month.split('-')[1]}</span>
+          <span className="text-xs mt-2">
+            {month.split('-')[1]}/{month.split('-')[0].slice(-2)}
+          </span>
         </div>
       ))}
     </div>
