@@ -27,6 +27,7 @@ function Match({
   topWon,
 }: MatchComponentProps) {
   console.log('Check topParty', topParty);
+  console.log('Check bottomParty', bottomParty);
 
   // console.log('Check match', match);
   return (

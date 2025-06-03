@@ -345,7 +345,7 @@ const BecomeUmpireForm = () => {
                           >
                             <Select
                               showSearch
-                              placeholder="Select a person"
+                              placeholder="Select type of degree"
                               filterOption={(input, option) =>
                                 (option?.label ?? '')
                                   .toLowerCase()
