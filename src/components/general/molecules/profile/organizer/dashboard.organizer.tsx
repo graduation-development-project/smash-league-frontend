@@ -161,7 +161,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
     try {
       const response = await getUmpiresInOwnedTourAPI(user.access_token);
       // console.log('response umpire list', response.data);
-      setUmpireList(response.data.data);
+      setUmpireList(response.data.data.slice(0, 5));
     } catch (error: any) {
       console.log('error', error);
     }
@@ -683,14 +683,14 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  {/* <Button
                     variant="ghost"
                     colorBtn={'whiteBtn'}
                     shadow={'shadowNone'}
                     className="w-full mt-4 text-sm hover:text-orange-500 hover:bg-transparent hover:underline"
                   >
                     View All Umpires
-                  </Button>
+                  </Button> */}
                 </CardContent>
               </Card>
             </div>

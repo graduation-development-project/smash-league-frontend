@@ -5,13 +5,19 @@ import { useEffect, useState } from 'react';
 
 export default function RevenueChart({
   period,
-  fromDate,
+  fromDate: fromDateProp,
 }: {
   period: string;
-  fromDate: string;
+  fromDate?: string;
 }) {
   const [revenueCounts, setRevenueCounts] = useState<[string, number][]>([]);
   const [user, setUser] = useState<any>({});
+
+  const defaultFromDate = '2025-01-01';
+  const defaultToDate = '2025-06-30';
+
+  const fromDate = fromDateProp || defaultFromDate;
+  const toDate = defaultToDate;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -25,16 +31,32 @@ export default function RevenueChart({
   const getRevenueCounts = async (token: string) => {
     try {
       const response = await revenueCountsAPI(period, fromDate, token);
-      console.log('Check response', response.data.data);
+      console.log('Check response revenue chart', response.data.data);
 
       const data: Record<string, number> = response.data.data;
 
-      // Ensure we have all 12 months in order
-      const months = Array.from({ length: 12 }, (_, i) => {
-        const month = `${i + 1}`.padStart(2, '0');
-        const key = `2025-${month}`;
-        return [key, data[key] || 0] as [string, number];
-      });
+      // Calculate the months between fromDate and the current month
+      const start = new Date(fromDate);
+      start.setDate(1); // start at the first day of the month
+      const end = new Date(toDate); // current month
+      end.setDate(1);
+
+      const months: [string, number][] = [];
+
+      let current = new Date(start);
+      while (
+        current.getFullYear() < end.getFullYear() ||
+        (current.getFullYear() === end.getFullYear() &&
+          current.getMonth() <= end.getMonth())
+      ) {
+        const year = current.getFullYear();
+        const month = `${current.getMonth() + 1}`.padStart(2, '0');
+        const key = `${year}-${month}`;
+        months.push([key, data[key] || 0]);
+
+        // Move to the next month
+        current.setMonth(current.getMonth() + 1);
+      }
 
       setRevenueCounts(months);
     } catch (error) {
@@ -60,10 +82,14 @@ export default function RevenueChart({
             style={{ height: `${count / 1000}px` }}
           ></div>
           {/* Tooltip on hover */}
-          <span className="absolute -top-6 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            {count} VND
+          {count > 0 && (
+            <span className="absolute -top-6 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              {count} VND
+            </span>
+          )}
+          <span className="text-xs mt-2">
+            {month.split('-')[1]}/{month.split('-')[0].slice(-2)}
           </span>
-          <span className="text-xs mt-2">{month.split('-')[1]}</span>
         </div>
       ))}
     </div>
