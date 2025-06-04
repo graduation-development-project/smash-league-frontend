@@ -250,6 +250,7 @@ const StandingBoardDetailTour = ({
 
   return (
     <div>
+      
       <div className="w-full h-full">
         {rankingArray?.length > 0 ? (
           rankingArray[0]?.partner ? (

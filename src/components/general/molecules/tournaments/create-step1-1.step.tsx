@@ -870,14 +870,18 @@ const CreateTourStep11 = ({
                   message: 'Please input max events an athlete can register!',
                 }
               ]}
+              initialValue={1}
             >
-              <Select placeholder="Max events per athlete can register">
-                {[1, 2, 3, 4, 5].map((num) => (
-                  <Select.Option key={num} value={num}>
-                    {num}
-                  </Select.Option>
-                ))}
-              </Select>
+              <Select
+                placeholder="Max events per athlete can register"
+                options={[
+                  { value: 1, label: '1' },
+                  { value: 2, label: '2' },
+                  { value: 3, label: '3' },
+                  { value: 4, label: '4' },
+                  { value: 5, label: '5' },
+                ]}
+              />
             </Form.Item>
 
             <Form.Item
@@ -945,7 +949,6 @@ const CreateTourStep11 = ({
                           <Select
                             defaultValue="FillIn"
                             placeholder="Select Condition Type"
-                            style={{ width: 120 }}
                             options={[
                               { value: 'FillIn', label: 'Fill In' },
                               { value: 'Selection', label: 'Select (Yes, No)' },
@@ -1067,9 +1070,13 @@ const CreateTourStep11 = ({
                                       }
                                     ]}
                                   >
-                                    <Select placeholder="Type">
-                                      <Select.Option value="SINGLE_ELIMINATION">Single Elimination</Select.Option>
-                                    </Select>
+                                    <Select
+                                      defaultValue="FillIn"
+                                      placeholder="Select Event Type Format"
+                                      options={[
+                                        { value: 'SINGLE_ELIMINATION', label: 'Single Elimination' },
+                                      ]}
+                                    />
                                   </Form.Item>
                                   <Form.Item
                                     name={[subField.name, 'minimumAthlete']}
@@ -1139,11 +1146,16 @@ const CreateTourStep11 = ({
                                       }
                                     ]}
                                   >
-                                    <Select>
-                                      {[1, 3, 5].map(num => (
-                                        <Select.Option key={num} value={num.toString()}>{num}</Select.Option>
-                                      ))}
-                                    </Select>
+                                    <Select
+                                      placeholder="Select number of games"
+                                      options={[
+                                        { value: 1, label: '1' },
+                                        { value: 2, label: '2' },
+                                        { value: 3, label: '3' },
+                                        { value: 4, label: '4' },
+                                        { value: 5, label: '5' },
+                                      ]}
+                                    />
                                   </Form.Item>
                                   <Form.Item
                                     name={[subField.name, 'winningPoint']}
@@ -1237,20 +1249,21 @@ const CreateTourStep11 = ({
                                                   ]
                                                 }
                                               >
-                                                <Input maxLength={55} style={{ width: '90%' }} placeholder='Name of Event Condition' />
+                                                <Input maxLength={55} style={{ width: '100%' }} placeholder='Name of Event Condition' />
                                               </Form.Item>
                                               <Form.Item
                                                 {...restField}
                                                 label="Event Condition Description"
+                                                // style={{width: '100%'}}
                                                 name={[name, 'requirementDescription']}
                                                 rules={[
                                                   {
                                                     required: true,
-                                                    message: 'Please input Event Condition Description!'  
+                                                    message: 'Please input Event Condition Description!'
                                                   }
                                                 ]}
                                               >
-                                                <Input maxLength={55} style={{ width: '90%' }} placeholder='Event Condition Description' />
+                                                <Input maxLength={55} style={{ width: '100%' }} placeholder='Event Condition Description' />
                                               </Form.Item>
                                               <Form.Item
                                                 label="Event Condition Type"
@@ -1259,7 +1272,6 @@ const CreateTourStep11 = ({
                                               >
                                                 <Select
                                                   defaultValue="FillIn"
-                                                  style={{ width: 120 }}
                                                   options={[
                                                     { value: 'FillIn', label: 'Fill In' },
                                                     { value: 'Selection', label: 'Select (Yes, No)' },
@@ -1298,7 +1310,7 @@ const CreateTourStep11 = ({
                                     <div>List of Award Recipients</div>
                                   </Form.Item>
                                   <Form.Item
-                                    name={[subField.name, 'championshipPrize']}
+                                    name={[subField.name, 'ChampionshipPrize']}
                                     label="Champion Award"
                                     rules={[
                                       {
@@ -1309,13 +1321,13 @@ const CreateTourStep11 = ({
                                   >
                                     <Input placeholder="Champion Award" />
                                   </Form.Item>
-                                  <Form.Item name={[subField.name, 'runnerUpPrize']} label="Runner-up Award">
+                                  <Form.Item name={[subField.name, 'RunnerUpPrize']} label="Runner-up Award">
                                     <Input placeholder="Runner-up Award" />
                                   </Form.Item>
-                                  <Form.Item name={[subField.name, 'thirdPlacePrize']} label="Third Place Award">
+                                  <Form.Item name={[subField.name, 'ThirdPlacePrize']} label="Third Place Award">
                                     <Input placeholder="Third Place Award" />
                                   </Form.Item>
-                                  <Form.Item name={[subField.name, 'jointThirdPlacePrize']} label="Joint Third Place Award">
+                                  <Form.Item name={[subField.name, 'JointThirdPlacePrize']} label="Joint Third Place Award">
                                     <Input placeholder="Joint Third Place Award" />
                                   </Form.Item>
 
@@ -1413,7 +1425,7 @@ const CreateTourStep11 = ({
             name={'registrationFeePerPair'}
             label={'Registration Fee Per Pair'}
             // style={isRegister ? { display: 'block' } : { display: 'none' }}
-            initialValue={0}
+            initialValue={1000}
             rules={[
               {
                 required: true,
@@ -1421,14 +1433,14 @@ const CreateTourStep11 = ({
               },
               {
                 type: 'number',
-                min: 0,
+                min: 1,
                 max: 1000000000,
                 message: 'Registration fee per pair must be under 1.000.000.000VND'
               }
             ]}
           >
             <InputNumber<number>
-              min={0}
+              min={1}
               max={1000000000}
               required
               suffix={'VND'}
@@ -1449,7 +1461,7 @@ const CreateTourStep11 = ({
             name={'registrationFeePerPerson'}
             label={'Registration Fee Per Person'}
 
-            initialValue={0}
+            initialValue={1000}
             rules={[
               {
                 required: true,
@@ -1457,14 +1469,14 @@ const CreateTourStep11 = ({
               },
               {
                 type: 'number',
-                min: 0,
+                min: 1,
                 max: 1000000000,
                 message: 'Registration fee per person must be under 1.000.000.000VND'
               }
             ]}
           >
             <InputNumber<number>
-              min={0}
+              min={1}
               max={1000000000}
               required
               suffix={'VND'}
@@ -1483,7 +1495,7 @@ const CreateTourStep11 = ({
           <Form.Item
             name={'protestFeePerTime'}
             label={'Potest Fee Per Time'}
-            initialValue={0}
+            initialValue={1000}
             rules={[
               {
                 required: true,
@@ -1491,14 +1503,14 @@ const CreateTourStep11 = ({
               },
               {
                 type: 'number',
-                min: 0,
+                min: 1,
                 max: 1000000000,
                 message: 'Protest fee per time must be under 1.000.000.000VND'
               }
             ]}
           >
             <InputNumber<number>
-              min={0}
+              min={1}
               max={1000000000}
               required
               suffix={'VND'}

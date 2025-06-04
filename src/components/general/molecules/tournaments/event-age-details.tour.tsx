@@ -11,6 +11,7 @@ import {
   getTournamentEventDetailAPI,
 } from '@/services/tournament';
 import AwardEventForm from './award-event.form';
+import { set } from 'react-hook-form';
 
 const EventAgeDetails = ({
   tournamentId,
@@ -32,25 +33,25 @@ const EventAgeDetails = ({
   const eventUUID = eventId.slice(eventId.indexOf('-') + 1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [prizeEventList, setPrizeEventList] = useState<any[]>([]);
+  const [needToUpdatePrize, setNeedToUpdatePrize] = useState<boolean>(false);
 
   // console.log('check tour details ', tour);
 
   const fetchGetTournamentEventDetailAPI = async () => {
     try {
       const res = await getTournamentEventDetailAPI(tournamentId);
-      // console.log("Check res", res.data);
       // console.log("eventUUID", (res?.data.find((event: any) => event.id === eventUUID)));
-
-      setEventDetail(res?.data.find((event: any) => event.id === eventUUID));
+      const eventDetailFilter = res?.data.find((event: any) => event.id === eventUUID);
+      setEventDetail(eventDetailFilter);
+      setNeedToUpdatePrize(eventDetailFilter?.needToUpdatePrize);
     } catch (error: any) {
       console.log(error);
     }
   };
-
   const getOtherPrizeOfEvent = async () => {
     try {
       const res = await getOtherPrizeOfEventAPI(eventUUID);
-      console.log('Check all prize of event', res?.data);
+      // console.log('Check all prize of event', res?.data);
       if (res.statusCode === 200 || res.statusCode === 201) {
         const excludedPrizeNames = [
           'championshipPrize',
@@ -75,11 +76,11 @@ const EventAgeDetails = ({
   }, [isOrganizer]);
 
   useEffect(() => {
-    if (isOrganizer && eventDetail?.tournamentEventStatus === 'ENDED') {
+    if (isOrganizer && eventDetail?.tournamentEventStatus === 'ENDED' && needToUpdatePrize) {
       setIsModalOpen(true);
       getOtherPrizeOfEvent();
     }
-  }, [eventDetail?.tournamentEventStatus, isOrganizer]);
+  }, [eventDetail?.tournamentEventStatus, isOrganizer, needToUpdatePrize]);
 
   console.log('Check event detail', eventDetail);
 
@@ -125,14 +126,14 @@ const EventAgeDetails = ({
 
     ...(!isOrganizer
       ? [
-          {
-            label: 'Postest',
-            key: 'postest',
-            children: (
-              <PostestForm eventId={eventId} tournamentId={tournamentId} />
-            ),
-          },
-        ]
+        {
+          label: 'Postest',
+          key: 'postest',
+          children: (
+            <PostestForm eventId={eventId} tournamentId={tournamentId} />
+          ),
+        },
+      ]
       : []),
   ]);
   return (
@@ -143,7 +144,7 @@ const EventAgeDetails = ({
         size={'small'}
         style={{ marginBottom: 32, fontWeight: 600 }}
         items={tabs}
-        // onClick={}
+      // onClick={}
       />
 
       {prizeEventList && prizeEventList?.length > 0 && (
