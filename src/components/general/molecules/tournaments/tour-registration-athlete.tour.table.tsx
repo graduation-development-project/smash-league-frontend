@@ -59,6 +59,7 @@ const TourRegistrationOfAthleteTable = ({
         user?.access_token,
       );
       console.log('Check tour', response.data.data);
+      
       if (
         response?.data?.statusCode === 200 ||
         response?.data?.statusCode === 201
@@ -66,6 +67,7 @@ const TourRegistrationOfAthleteTable = ({
         if (profileRole === 'UMPIRE') {
           const formatData = response.data.data
             .filter((regis: any) => regis?.registrationRole === 'UMPIRE')
+            .reverse()
             .map((regis: any) => ({
               key: regis?.id,
               tourName: regis?.tournament?.name,
@@ -82,6 +84,7 @@ const TourRegistrationOfAthleteTable = ({
         } else {
           const formatData = response.data.data
             .filter((regis: any) => regis?.registrationRole === 'ATHLETE')
+            .reverse()
             .map((regis: any) => ({
               key: regis?.id,
               tourName: regis?.tournament?.name,

@@ -151,7 +151,6 @@ const DetailsTourPage = () => {
 
   useEffect(() => {
     handleGetTourDetail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
 
   const renderContent = () => {

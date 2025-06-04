@@ -36,7 +36,7 @@ const PreviousMatches = ({ info }: { info: any }) => {
         PREVIOUS MATCHES
       </h2>
       <div className="w-full h-full flex justify-between items-center gap-2">
-        {matches.length > 0 &&
+        {matches?.length > 0 &&
           matches?.map((match: any) => (
             <div className='w-full h-full' key={match?.id}>
               <PreviousMatchBox match={match} />

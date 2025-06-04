@@ -52,8 +52,7 @@ const RegisterAthleteTournamentForm = ({
   const [tournamentConditionList, setTournamentConditionList] = useState<any[]>(
     [],
   );
-  const [tournamentEventConditionList, setTournamentEventConditionList] =
-    useState<any>([]);
+  const [tournamentEventConditionList, setTournamentEventConditionList] = useState<any>([]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -281,17 +280,19 @@ const RegisterAthleteTournamentForm = ({
     const imageList = [...identificationCardFiles, file];
     const imageListPartner = [...identificationCardFilesPartner, filePartner];
     // console.log('Check image', imageListPartner);
+    console.log('check submittedAnswerForEvent', submittedAnswerForEvent);
 
-    const submittedAnswerForTournamentArray = Object.entries(submittedAnswerTour)?.map(
+
+    const submittedAnswerForTournamentArray = submittedAnswerTour === null || submittedAnswerTour === undefined ? [] : Object.entries(submittedAnswerTour)?.map(
       ([key, value]) => ({
         [key]: value,
       })
     ) || [];
-    // const submittedAnswerForEventArray = Object.entries(submittedAnswerForEvent)?.map(
-    //   ([key, value]) => ({
-    //     [key]: value,
-    //   })
-    // ) || [];
+    const submittedAnswerForEventArray = submittedAnswerForEvent === null || submittedAnswerForEvent === undefined ? [] : Object.entries(submittedAnswerForEvent)?.map(
+      ([key, value]) => ({
+        [key]: value,
+      })
+    );
     console.log('submittedAnswerForTournament asdsa', submittedAnswerForTournamentArray);
     console.log(values, 'valuesRegister');
     try {
@@ -305,7 +306,7 @@ const RegisterAthleteTournamentForm = ({
         partnerEmail,
         imageListPartner,
         submittedAnswerForTournamentArray,
-        // submittedAnswerForEventArray,
+        submittedAnswerForEventArray,
       );
       if (response?.status === 200 || response?.status === 201) {
         setIsModalOpen(false);
@@ -409,78 +410,81 @@ const RegisterAthleteTournamentForm = ({
               >
                 <Input placeholder="Registration Role" disabled />
               </Form.Item>
+              {
+                tournamentConditionList?.length > 0 && tournamentConditionList ? (
+                  <Form.Item label="Tournament Conditions">
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        width: '90%',
+                      }}
+                    >
+                      {tournamentConditionList?.map((condition: any) => (
+                        condition?.requirementType === 'FillIn' ? (
+                          <Form.Item
+                            key={condition.id}
+                            name={['submittedAnswerTour', condition.requirementName]}
+                            label={condition.requirementName}
+                            rules={[
+                              {
+                                required: true,
+                                message: 'This field is required',
+                              },
+                            ]}
+                          >
+                            <Input placeholder={condition?.requirementDescription} />
+                          </Form.Item>
+                        ) : (
+                          condition?.requirementType === 'Selection' ? (
+                            <Form.Item
+                              key={condition.id}
+                              name={['submittedAnswerTour', condition.requirementName]}
+                              label={condition.requirementName}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'This field is required',
+                                },
+                              ]}
+                            >
+                              <Select
+                                placeholder={condition.requirementDescription}
+                                style={{ width: '100%' }}
+                                options={[{
+                                  label: "Yes",
+                                  value: "true"
+                                }, {
+                                  label: "No",
+                                  value: "false"
+                                }]}
+                              />
+                            </Form.Item>
+                          ) : (
+                            <Form.Item
+                              key={condition.id}
+                              name={['submittedAnswerTour', condition.requirementName]}
+                              label={condition.requirementName}
+                              initialValue={condition?.requirementDescription}
+                            >
+                              <Input
+                                variant="borderless"
+                                readOnly
+                                placeholder={condition?.requirementDescription}
+                                defaultValue={condition?.requirementDescription}
+                                style={{ color: 'gray' }}
+                              />
+                            </Form.Item>
+                          )
+                        )
 
-              <Form.Item label="Tournament Conditions">
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '90%',
-                  }}
-                >
-                  {tournamentConditionList?.map((condition: any) => (
-                    condition?.requirementType === 'FillIn' ? (
-                      <Form.Item
-                        key={condition.id}
-                        name={['submittedAnswerTour', condition.requirementName]}
-                        label={condition.requirementName}
-                        rules={[
-                          {
-                            required: true,
-                            message: 'This field is required',
-                          },
-                        ]}
-                      >
-                        <Input placeholder={condition?.requirementDescription} />
-                      </Form.Item>
-                    ) : (
-                      condition?.requirementType === 'Selection' ? (
-                        <Form.Item
-                          key={condition.id}
-                          name={['submittedAnswerTour', condition.requirementName]}
-                          label={condition.requirementName}
-                          rules={[
-                            {
-                              required: true,
-                              message: 'This field is required',
-                            },
-                          ]}
-                        >
-                          <Select
-                            placeholder={condition.requirementDescription}
-                            style={{ width: '100%' }}
-                            options={[{
-                              label: "Yes",
-                              value: "true"
-                            }, {
-                              label: "No",
-                              value: "false"
-                            }]}
-                          />
-                        </Form.Item>
-                      ) : (
-                        <Form.Item
-                          key={condition.id}
-                          name={['submittedAnswerTour', condition.requirementName]}
-                          label={condition.requirementName}
-                          // initialValue={condition?.requirementDescription}
-                        >
-                          <Input
-                            variant="borderless"
-                            readOnly
-                            placeholder={condition?.requirementDescription}
-                            defaultValue={condition?.requirementDescription}
-                            style={{ color: 'gray' }}
-                          />
-                        </Form.Item>
-                      )
-                    )
-
-                  ))}
-                </div>
-              </Form.Item>
-
-
+                      ))}
+                    </div>
+                  </Form.Item>
+                ) : (
+                  <></>
+                )
+              }
               <Form.Item
                 name="tournamentEventId"
                 label="Tournament Events"
@@ -494,76 +498,81 @@ const RegisterAthleteTournamentForm = ({
                 />
               </Form.Item>
 
-              <Form.Item label="Event Conditions">
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '90%',
-                  }}
-                >
-                  {/* <span>{tournamentEventConditionList[0]?.requirementType}</span> */}
+              {
+                tournamentEventConditionList?.length > 0 && tournamentEventConditionList ? (
+                  <Form.Item label="Event Conditions">
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        width: '90%',
+                      }}
+                    >
+                      {/* <span>{tournamentEventConditionList[0]?.requirementType}</span> */}
 
-                  {tournamentEventConditionList?.map((condition: any) => (
-                    condition?.requirementType === 'FillIn' ? (
-                      <Form.Item
-                        key={condition.id}
-                        name={['submittedAnswerTour', condition.requirementName]}
-                        label={condition.requirementName}
-                        rules={[
-                          {
-                            required: true,
-                            message: 'This field is required',
-                          },
-                        ]}
-                      >
-                        <Input placeholder={condition?.requirementDescription} />
-                      </Form.Item>
-                    ) : (
-                      condition?.requirementType === 'Selection' ? (
-                        <Form.Item
-                          key={condition.id}
-                          name={['submittedAnswerTour', condition.requirementName]}
-                          label={condition.requirementName}
-                          rules={[
-                            {
-                              required: true,
-                              message: 'This field is required',
-                            },
-                          ]}
-                        >
-                          <Select
-                            placeholder={condition.requirementDescription}
-                            style={{ width: '100%' }}
-                            options={[{
-                              label: "Yes",
-                              value: "true"
-                            }, {
-                              label: "No",
-                              value: "false"
-                            }]}
-                          />
-                        </Form.Item>
-                      ) : (
-                        <Form.Item
-                          key={condition.id}
-                          name={['submittedAnswerTour', condition.requirementName]}
-                          label={condition.requirementName}
-                          initialValue={""}
-                        >
-                          <Input
-                            variant="borderless"
-                            readOnly
-                            placeholder={condition?.requirementDescription}
-                          />
-                        </Form.Item>
-                      )
-                    )
+                      {tournamentEventConditionList?.map((condition: any) => (
+                        condition?.requirementType === 'FillIn' ? (
+                          <Form.Item
+                            key={condition.id}
+                            name={['submittedAnswerForEvent', condition.requirementName]}
+                            label={condition.requirementName}
+                            rules={[
+                              {
+                                required: true,
+                                message: 'This field is required',
+                              },
+                            ]}
+                          >
+                            <Input placeholder={condition?.requirementDescription} />
+                          </Form.Item>
+                        ) : (
+                          condition?.requirementType === 'Selection' ? (
+                            <Form.Item
+                              key={condition.id}
+                              name={['submittedAnswerForEvent', condition.requirementName]}
+                              label={condition.requirementName}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'This field is required',
+                                },
+                              ]}
+                            >
+                              <Select
+                                placeholder={condition.requirementDescription}
+                                style={{ width: '100%' }}
+                                options={[{
+                                  label: "Yes",
+                                  value: "true"
+                                }, {
+                                  label: "No",
+                                  value: "false"
+                                }]}
+                              />
+                            </Form.Item>
+                          ) : (
+                            <Form.Item
+                              key={condition.id}
+                              name={['submittedAnswerForEvent', condition.requirementName]}
+                              label={condition.requirementName}
+                              initialValue={""}
+                            >
+                              <Input
+                                variant="borderless"
+                                readOnly
+                                placeholder={condition?.requirementDescription}
+                              />
+                            </Form.Item>
+                          )
+                        )
 
-                  ))}
-                </div>
-              </Form.Item>
-
+                      ))}
+                    </div>
+                  </Form.Item>
+                ) : (
+                  <></>
+                )
+              }
               {/* <Form.Item
                 name="identificationCardImages"
                 label="ID Card Images"

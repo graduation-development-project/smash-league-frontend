@@ -14,12 +14,14 @@ export const registerTournamentByAthleteAPI = async (
 ) => {
   try {
     const formData = new FormData();
+    console.log("check answer", submittedAnswerForEvent);
+    
 
-    const submittedAnswerForEvent1 = [
-      {
-        name: 'Nguyen',
-      },
-    ];
+    // const submittedAnswerForEvent1 = [
+    //   {
+    //     name: 'Nguyen',
+    //   },
+    // ];
 
     formData.append('tournamentId', tournanmentId);
     if (tournamentEventId) {
@@ -38,10 +40,10 @@ export const registerTournamentByAthleteAPI = async (
         JSON.stringify(submittedAnswerForTournament),
       );
     partnerEmail && formData.append('partnerEmail', partnerEmail);
-    submittedAnswerForEvent1 &&
+    submittedAnswerForEvent &&
       formData.append(
         'submittedAnswerForEvent',
-        JSON.stringify(submittedAnswerForEvent1),
+        JSON.stringify(submittedAnswerForEvent),
       );
     if (partnerImages?.length > 0) {
       formData.append('partnerIdCardFront', partnerImages[0]);
