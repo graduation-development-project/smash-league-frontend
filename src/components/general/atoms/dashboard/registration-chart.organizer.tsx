@@ -1,6 +1,7 @@
 'use client';
 
 import { registrationCountsAPI } from '@/services/org-dashboard';
+import { message } from 'antd';
 import { useEffect, useState } from 'react';
 
 export default function RegistrationsChart({
@@ -9,8 +10,8 @@ export default function RegistrationsChart({
   toDate: toDateProp,
 }: {
   period: string;
-  fromDate?: string;
-  toDate?: string;
+  fromDate?: string | null;
+  toDate?: string | null;
 }) {
   const [registrationCounts, setRegistrationCounts] = useState<
     [string, number][]
@@ -24,6 +25,9 @@ export default function RegistrationsChart({
   const fromDate = fromDateProp || defaultFromDate;
   const toDate = toDateProp || defaultToDate;
 
+  const isSameYear = (date1: string, date2: string) =>
+    new Date(date1).getFullYear() === new Date(date2).getFullYear();
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user');
@@ -33,22 +37,14 @@ export default function RegistrationsChart({
     }
   }, []);
 
-  const getRegistrationCounts = async (token: string) => {
+  const getRegistrationCounts = async (token: string, from: string, to: string) => {
     try {
-      const response = await registrationCountsAPI(
-        period,
-        fromDate,
-        toDate,
-        token,
-      );
-      console.log('Check response', response.data.data);
-
+      const response = await registrationCountsAPI(period, from, to, token);
       const data: Record<string, number> = response.data.data;
 
-      // Calculate the months between fromDate and toDate
-      const start = new Date(fromDate);
-      start.setDate(1); // start at the first day of the month
-      const end = new Date(toDate);
+      const start = new Date(from);
+      start.setDate(1);
+      const end = new Date(to);
       end.setDate(1);
 
       const months: [string, number][] = [];
@@ -63,8 +59,6 @@ export default function RegistrationsChart({
         const month = `${current.getMonth() + 1}`.padStart(2, '0');
         const key = `${year}-${month}`;
         months.push([key, data[key] || 0]);
-
-        // Move to the next month
         current.setMonth(current.getMonth() + 1);
       }
 
@@ -75,9 +69,15 @@ export default function RegistrationsChart({
   };
 
   useEffect(() => {
-    if (user?.access_token) {
-      getRegistrationCounts(user.access_token);
+    if (!user?.access_token) return;
+
+    if (!isSameYear(fromDate, toDate)) {
+      message.warning('From Date and To Date must be in the same year!');
+      setRegistrationCounts([]); // clear chart data if invalid
+      return;
     }
+
+    getRegistrationCounts(user.access_token, fromDate, toDate);
   }, [user, period, fromDate, toDate]);
 
   return (
@@ -87,20 +87,15 @@ export default function RegistrationsChart({
           key={month}
           className="flex-1 flex flex-col items-center group relative"
         >
-          {/* Bar */}
           <div
             className="w-full max-w-[30px] bg-primaryColor rounded-t-sm transition-all duration-300"
             style={{ height: `${(count / 2) * 5}px` }}
           />
-
-          {/* Tooltip on hover */}
           {count > 0 && (
             <div className="w-max absolute bottom-full mb-1 hidden group-hover:flex items-center justify-center bg-gray-700 text-white text-xs px-2 py-1 rounded">
               {count} {count === 1 ? 'registration' : 'registrations'}
             </div>
           )}
-
-          {/* Month label */}
           <span className="text-xs mt-2">
             {month.split('-')[1]}/{month.split('-')[0].slice(-2)}
           </span>
