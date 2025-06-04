@@ -742,7 +742,11 @@ const MenDoublesAthleteTable = ({
                           key={key}
                           className="text-xs text-gray-800 flex gap-1"
                         >
-                          {key}: {value as string}
+                          {key}:{value === "true"
+                            ? 'Yes'
+                            : value === "false"
+                            ? 'No'
+                            : (value as string)}
                         </div>
                       ))
                   : null}
@@ -774,7 +778,11 @@ const MenDoublesAthleteTable = ({
                           key={key}
                           className="text-xs text-gray-800 flex gap-1"
                         >
-                          {key}: {value as string}
+                          {key}: {value === "true"
+                            ? 'Yes'
+                            : value === "false"
+                            ? 'No'
+                            : (value as string)}
                         </div>
                       ))
                   : null}
@@ -797,7 +805,7 @@ const MenDoublesAthleteTable = ({
       render: (_, record) => {
         const verificationRecord = record as VerificationDataType;
         return (
-          <div className="flex gap-2 p-1 justify-center items-center">
+          <div className="flex flex-col gap-2 p-1 justify-center items-center">
             {verificationRecord?.status === 'PENDING' ? (
               <>
                 <Button
