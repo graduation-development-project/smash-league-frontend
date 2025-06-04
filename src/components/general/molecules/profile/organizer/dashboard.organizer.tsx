@@ -41,7 +41,7 @@ import { Badge } from '@/components/ui/badge';
 import RegisterAthleteTournamentForm from '../../tournaments/register-athlete.tournament.form';
 import RegistrationsChart from '@/components/general/atoms/dashboard/registration-chart.organizer';
 import RevenueChart from '@/components/general/atoms/dashboard/revenue-chart.organizer';
-import { DatePicker, DatePickerProps } from 'antd';
+import { DatePicker, DatePickerProps, message, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { formatMoney } from '../../../../../utils/format';
@@ -76,8 +76,8 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
   const [registrationPeriod, setRegistrationPeriod] =
     useState<string>('monthly');
   const [revenuePeriod, setRevenuePeriod] = useState<string>('monthly');
-  const [fromDate, setFromDate] = useState<string>('');
-  const [toDate, setToDate] = useState<string>('');
+  const [fromDate, setFromDate] = useState<string | null>(null);
+  const [toDate, setToDate] = useState<string | null>(null);
   const [revenueFromDate, setRevenueFromDate] = useState<string>('');
   const [tournamentStatusList, setTournamentStatusList] = useState([]);
   const [matchStatusList, setMatchStatusList] = useState([]);
@@ -115,17 +115,27 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
   }, []);
   const onFromDateChange = (date: any) => {
     if (date) {
+      if (toDate && dayjs(toDate).year() !== dayjs(date).year()) {
+        message.error('From Date and To Date must be in the same year.');
+        return;
+      }
       const formatted = dayjs(date).utc().format('YYYY-MM-DDT00:00:00.000[Z]');
-      console.log(formatted);
       setFromDate(formatted);
+    } else {
+      setFromDate(null);
     }
   };
 
   const onToDateChange = (date: any) => {
     if (date) {
+      if (fromDate && dayjs(fromDate).year() !== dayjs(date).year()) {
+        message.error('From Date and To Date must be in the same year.');
+        return;
+      }
       const formatted = dayjs(date).utc().format('YYYY-MM-DDT00:00:00.000[Z]');
-      console.log(formatted);
       setToDate(formatted);
+    } else {
+      setToDate(null);
     }
   };
 
@@ -295,10 +305,12 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold">
-                      {currentMonthRegistration.currentCount}
-                    </div>
+                  <div className="flex items-center justify-between cursor-pointer">
+                    <Tooltip title={currentMonthRegistration?.currentCount}>
+                      <div className="text-3xl font-bold">
+                        {currentMonthRegistration.currentCount}
+                      </div>
+                    </Tooltip>
                     <User className="h-8 w-8 text-emerald-500" />
                   </div>
                   {currentMonthRegistration?.changeRate > 0 ? (
@@ -323,10 +335,12 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold">
-                      {currentMonthTour?.currentCount}
-                    </div>
+                  <div className="flex items-center justify-between cursor-pointer">
+                    <Tooltip title={currentMonthTour?.currentCount}>
+                      <div className="text-3xl font-bold">
+                        {currentMonthTour?.currentCount}
+                      </div>
+                    </Tooltip>
                     <Trophy className="h-8 w-8 text-emerald-500" />
                   </div>
                   {currentMonthTour?.changeRate > 0 ? (
@@ -351,10 +365,14 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold">
-                      {formatMoney(currentMonthRevenue?.currentRevenue)}
-                    </div>
+                  <div className="flex items-center justify-between cursor-pointer">
+                    <Tooltip
+                      title={formatMoney(currentMonthRevenue?.currentRevenue)}
+                    >
+                      <div className="text-3xl font-bold overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px]">
+                        {formatMoney(currentMonthRevenue?.currentRevenue)}
+                      </div>
+                    </Tooltip>
                     <FaMoneyBillTransfer className="h-8 w-8 text-emerald-500" />
                   </div>
                   {currentMonthRevenue?.changeRate > 0 ? (
@@ -379,10 +397,12 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold">
-                      {currentWeekMatch?.currentCount}
-                    </div>
+                  <div className="flex items-center justify-between cursor-pointer">
+                    <Tooltip title={currentWeekMatch?.currentCount}>
+                      <div className="text-3xl font-bold">
+                        {currentWeekMatch?.currentCount}
+                      </div>
+                    </Tooltip>
                     <Medal className="h-8 w-8 text-emerald-500" />
                   </div>
                   {currentWeekMatch?.changeRate > 0 ? (

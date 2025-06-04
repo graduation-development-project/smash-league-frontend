@@ -1,6 +1,7 @@
 'use client';
 
 import { revenueCountsAPI } from '@/services/org-dashboard';
+import { formatMoney } from '@/utils/format';
 import { useEffect, useState } from 'react';
 
 export default function RevenueChart({
@@ -68,6 +69,7 @@ export default function RevenueChart({
     if (user?.access_token) {
       getRevenueCounts(user.access_token);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, period, fromDate]);
 
   return (
@@ -79,12 +81,12 @@ export default function RevenueChart({
         >
           <div
             className="w-full max-w-[30px] bg-secondColor rounded-t-sm transition-all duration-300"
-            style={{ height: `${count / 1000}px` }}
+            style={{ height: `${count / 40000}px` }}
           ></div>
           {/* Tooltip on hover */}
           {count > 0 && (
             <span className="absolute -top-6 text-xs bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              {count} VND
+              {formatMoney(count)}
             </span>
           )}
           <span className="text-xs mt-2">
