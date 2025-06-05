@@ -379,8 +379,8 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                       <span className="text-emerald-500 font-medium">
                         ↑ {currentMonthRevenue?.changeRate}%
-                      </span>
-                      from last month
+                      </span>{' '}
+                       from last month
                     </p>
                   ) : (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
@@ -409,7 +409,7 @@ const DashboardOrganizer = ({ credit }: { credit: number | null }) => {
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                       <span className="text-emerald-500 font-medium">
                         ↑ {currentWeekMatch?.changeRate}%
-                      </span>
+                      </span>{' '}
                       from last week
                     </p>
                   ) : (
