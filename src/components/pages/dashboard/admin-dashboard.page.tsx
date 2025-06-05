@@ -159,6 +159,7 @@ const AdminDashboard = () => {
   const [usersList, setUsersList] = useState([]);
   const [createdToursList, setCreatedToursList] = useState([]);
   const [transactionList, setTransactionList] = useState([]);
+  const [pendingTransactions, setPendingTransactions] = useState([]);
   const [verificationsList, setVerificationsList] = useState([]);
   const [pendingVerifications, setPendingVerifications] = useState([]);
   const [reportList, setReportList] = useState([]);
@@ -243,6 +244,11 @@ const AdminDashboard = () => {
       console.log(response?.data, 'check');
       if (response?.statusCode === 200 || response.statusCode === 201) {
         setTransactionList(response?.data);
+        setPendingTransactions(
+          response?.data.filter(
+            (transaction: any) => transaction.status === 'PENDING',
+          ),
+        );
         setIsLoading(false);
       } else {
         setTransactionList([]);
@@ -381,9 +387,16 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{transactionList?.length}</div>
-            {/* <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">$45,230</span> total revenue
-            </p> */}
+            {pendingTransactions?.length > 0 ? (
+              <p className="text-xs text-muted-foreground">
+                <span className="text-red-600">
+                  {pendingTransactions?.length} transactions
+                </span>{' '}
+                pending
+              </p>
+            ) : (
+              <p className="text-xs text-green-500">No pending</p>
+            )}
           </CardContent>
         </Card>
 
