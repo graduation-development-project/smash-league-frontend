@@ -24,7 +24,7 @@ const MyParticipatedTournaments = () => {
       user.access_token,
     );
     console.log('response', response.data.data.data);
-    setTournaments(response.data.data.data);
+    setTournaments(response?.data?.data?.data);
     setIsLoading(false);
   };
 

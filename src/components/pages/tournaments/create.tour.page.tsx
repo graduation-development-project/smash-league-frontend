@@ -376,10 +376,10 @@ const CreateTourPage = ({ session }: any) => {
             const transformedDetail = { ...detail };
 
             const prizeFieldNames = [
-              "championshipPrize",
-              "runnerUpPrize",
-              "thirdPlacePrize",
-              "jointThirdPlacePrize",
+              "ChampionshipPrize",
+              "RunnerUpPrize",
+              "ThirdPlacePrize",
+              "ThirdPlacePrize",
             ];
             const prizesFromFields = [];
 
@@ -454,10 +454,10 @@ const CreateTourPage = ({ session }: any) => {
           const transformedDetail = { ...detail };
 
           const prizeFieldNames = [
-            "championshipPrize",
-            "runnerUpPrize",
-            "thirdPlacePrize",
-            "jointThirdPlacePrize",
+            "ChampionshipPrize",
+            "RunnerUpPrize",
+            "ThirdPlacePrize",
+            "JointThirdPlacePrize",
           ];
           const prizesFromFields = []; // This will store prizes in the order of prizeFieldNames
 
