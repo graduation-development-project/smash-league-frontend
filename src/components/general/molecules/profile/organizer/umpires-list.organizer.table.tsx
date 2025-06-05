@@ -404,7 +404,7 @@ const UmpiresListTable = ({
       fixed: 'left',
       // ...getColumnSearchProps('name'),
       render: (_, { user }) => (
-        <h1
+        <a target='_blank' href=''
           className="font-semibold text-[16px] hover:underline cursor-pointer"
           onClick={() => {
             localStorage.setItem('umpireId', user?.id as string);
@@ -413,7 +413,7 @@ const UmpiresListTable = ({
           }}
         >
           {user?.name}
-        </h1>
+        </a>
       ),
     },
     {

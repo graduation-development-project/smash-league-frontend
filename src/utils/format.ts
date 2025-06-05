@@ -69,7 +69,7 @@ export const formatTime = (date?: string) => {
     : time;
 };
 
-export const formatYearOfBirth = (date?: string) => {
+export const formatYearOfBirth = (date?: string | null | undefined | Date) => {
   return date ? dayjs(date).format('YYYY') : "N/A";
 }
 export const formatHeight = (height: number) => {

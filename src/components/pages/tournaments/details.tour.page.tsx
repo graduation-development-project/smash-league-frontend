@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import TourListBoard from '@/components/general/molecules/tournaments/tour-list.board';
-import OnGoingTournament from '@/components/general/organisms/tournaments/on-going.tournament';
 import { HomeContextProvider } from '@/context/home.context';
 import {
   CalendarOutlined,
@@ -20,12 +18,10 @@ import {
   TabsProps,
 } from 'antd';
 import BreadcrumbItem from 'antd/es/breadcrumb/BreadcrumbItem';
-import { SearchProps } from 'antd/es/input';
 import { Content } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import MyTournaments from './my-tour.tour';
 import { Button } from '@/components/ui/button';
 import InfoDetailsTour from '@/components/general/organisms/tournaments/info-details.tour';
 import BracketDetailsTour from '@/components/general/organisms/tournaments/bracket-details.tour';
