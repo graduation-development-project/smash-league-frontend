@@ -27,16 +27,12 @@ const EventAgeDetails = ({
   tour: any;
 }) => {
   const [bracket, setBracket] = useState({});
-  const [playerList, setPlayerList] = useState([]);
   const [matchList, setMatchList] = useState([]);
   const [eventDetail, setEventDetail] = useState<any>();
   const eventUUID = eventId.slice(eventId.indexOf('-') + 1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [prizeEventList, setPrizeEventList] = useState<any[]>([]);
   const [needToUpdatePrize, setNeedToUpdatePrize] = useState<boolean>(false);
-
-  // console.log('check tour details ', tour);
-
   const fetchGetTournamentEventDetailAPI = async () => {
     try {
       const res = await getTournamentEventDetailAPI(tournamentId);
@@ -51,7 +47,6 @@ const EventAgeDetails = ({
   const getOtherPrizeOfEvent = async () => {
     try {
       const res = await getOtherPrizeOfEventAPI(eventUUID);
-      // console.log('Check all prize of event', res?.data);
       if (res.statusCode === 200 || res.statusCode === 201) {
         const excludedPrizeNames = [
           'championshipPrize',
@@ -81,8 +76,6 @@ const EventAgeDetails = ({
       getOtherPrizeOfEvent();
     }
   }, [eventDetail?.tournamentEventStatus, isOrganizer, needToUpdatePrize]);
-
-  console.log('Check event detail', eventDetail);
 
   const [tabs, setTabs] = useState<TabsProps['items']>([
     {
