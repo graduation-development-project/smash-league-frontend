@@ -83,7 +83,7 @@ const BracketDetailsTour = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId]);
 
-  console.log('Check bracket', brackets);
+  // console.log('Check bracket', brackets);
   return (
     <div className="w-full h-max p-5">
       <div className="w-full h-max min-h-56 flex flex-col gap-6">
