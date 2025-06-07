@@ -15,6 +15,7 @@ import { HiMiniTrophy } from 'react-icons/hi2';
 import { LuMedal } from 'react-icons/lu';
 import EmptyCard from '../../molecules/empty/empty.card';
 import { calculateAge } from '@/utils/calculateAge';
+import { set } from 'react-hook-form';
 
 // type RankingList1 = {
 //   championship: RankingItem | null;
@@ -68,19 +69,32 @@ const StandingBoardDetailTour = ({
 
       if (res.statusCode === 200 || res.statusCode === 201) {
         setStandingList(res?.data);
-        console.log('standingList', res?.data);
+        let test = Object.entries(res?.data?.prizes).map(([prize, value]: any) => ({ prizeName: prize, winner: value }));
+        console.log('standingList', test);
+        // const test2 = test.map(([prize, value]: any) => ({ prizeName: prize, winner: value }));
+        // console.log('standingList123', test2);
+        
+        if (res?.data?.prizes) {
+          let rankingAwardsData1 = Object.entries(res?.data?.prizes);
+          console.log('rankingAwardsData1', rankingAwardsData1);
+          let rankingAwardsData = rankingAwardsData1?.map(([prize, value]: any) => ({ prizeName: prize, winner: value }));
+          console.log('rankingAwardsData123', rankingAwardsData.map((item: any) => console.log('item', item)));
+          if (rankingAwardsData.length > 2) {
+            const data = rankingAwardsData[2].winner.map((award: Winner) => ({ prizeName: "thirdPlace", winner: award }));
+            rankingAwardsData.pop();
+            rankingAwardsData = [...rankingAwardsData, ...data]
 
-        let rankingAwardsData = res?.data?.prizes ? Object.entries(res?.data?.prizes).map(([prize, value]: any) => ({ prizeName: prize, winner: value })) : [];
-        if (rankingAwardsData.length > 0) {
-          console.log('rankingAwardsData123', rankingAwardsData);
-          const data = rankingAwardsData.filter(({ prizeName, winner }: any) => Array.isArray(winner))
-          rankingAwardsData.pop();
-          rankingAwardsData = data && [...rankingAwardsData, ...data[0]?.winner?.map((item: Winner) => ({ prizeName: "thirdPlace", winner: item }))];
+            // if (data.length > 0 || Array.isArray(data)) {
+            //   rankingAwardsData.pop();
+            //   rankingAwardsData = data && [...rankingAwardsData, ...data[0]?.winner?.map((item: Winner) => ({ prizeName: "thirdPlace", winner: item }))];
+            // }
+            console.log('rankingAwardsDatahahaha', rankingAwardsData);
+          }
+            setRankingAwards(rankingAwardsData);
+          
         }
-        console.log('rankingAwardsDatahahaha', rankingAwardsData);
+        console.log("others", res?.data?.otherPrizes);
 
-
-        setRankingAwards(rankingAwardsData);
         setOtherAwards(res?.data?.otherPrizes);
       }
     } catch (error: any) {
@@ -150,25 +164,26 @@ const StandingBoardDetailTour = ({
                 className="h-max pt-10 text-lg font-medium text-center"
               >
                 <td className="h-32 flex justify-center items-center gap-1 font-bold">
-                  {awardList[0]?.prizeName === 'championship' ? (
-                    <div className="flex items-center gap-1">
-                      {index + 1} {
-                        index + 1 === 1 ? (
-                          <HiMiniTrophy className="text-yellow-500" />
-                        ) : index + 1 === 2 ? (
-                          <LuMedal className="text-[#bdc3c7] mt-1" />
-                        ) : (
-                          (
-                            <LuMedal className="text-[#cd7f36] mt-1" />
+                  {awardList[0]?.prizeName === 'championship' ?
+                    (
+                      <div className="flex items-center gap-1">
+                        {index + 1} {
+                          index + 1 === 1 ? (
+                            <HiMiniTrophy className="text-yellow-500" />
+                          ) : index + 1 === 2 ? (
+                            <LuMedal className="text-[#bdc3c7] mt-1" />
+                          ) : (
+                            (
+                              <LuMedal className="text-[#cd7f36] mt-1" />
+                            )
                           )
-                        )
-                      }
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1">
-                      <HiMiniTrophy className="text-yellow-500" /> {award.prizeName}
-                    </div>
-                  )
+                        }
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        <HiMiniTrophy className="text-yellow-500" /> {award.prizeName}
+                      </div>
+                    )
                   }
 
                 </td>
@@ -177,7 +192,7 @@ const StandingBoardDetailTour = ({
                     className="w-30 h-30 object-contain rounded-md"
                     src={
                       award.winner?.user?.avatarURL
-                        ? award.winner.user?.avatarURL
+                        ? 'https://avatar.iran.liara.run/public/girl'
                         : 'https://i.pinimg.com/736x/09/80/62/098062ede8791dc791c3110250d2a413.jpg'
                     }
                     alt=""
@@ -189,7 +204,7 @@ const StandingBoardDetailTour = ({
                 >
                   {award.winner?.user?.name || '-'}
                 </td>
-                <td>{formatYearOfBirth(award.winner?.user?.dateOfBirth) || '-'}</td>
+                <td>{calculateAge(award.winner?.user?.dateOfBirth) || '-'}</td>
                 {/* <td>{formatHeight(player?.user?.height)}</td> */}
                 {/* <td>{player?.user?.hands || 'N/A'}</td> */}
               </tr>

@@ -52,7 +52,7 @@ const DashboardOrganizerProfile = () => {
     try {
       setIsLoading(true);
       const response = await getAllTournamentsByUserAPI(user?.access_token);
-      setTournamentList(response?.data?.data);
+      setTournamentList(response?.data?.data.reverse());
     } catch (error: any) {
       console.log('error', error);
     }
@@ -145,9 +145,8 @@ const DashboardOrganizerProfile = () => {
           onClick={() => setCollapsed(!collapsed)}
         >
           <RiArrowLeftSLine
-            className={`transition-transform duration-300 ${
-              collapsed ? 'rotate-180' : ''
-            } hover:text-primaryColor`}
+            className={`transition-transform duration-300 ${collapsed ? 'rotate-180' : ''
+              } hover:text-primaryColor`}
           />
         </div>
 

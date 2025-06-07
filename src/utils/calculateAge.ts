@@ -1,4 +1,5 @@
-export const calculateAge = (dob: Date): number => {
+export const calculateAge = (dob: Date | string | null | undefined ): number => {
+  if (!dob) return 0;
   const birthDate = new Date(dob);
   const today = new Date();
 
