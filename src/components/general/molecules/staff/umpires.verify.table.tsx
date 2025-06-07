@@ -110,7 +110,7 @@ const UmpiresVerifyTable = () => {
           .map((veri: any) => ({
             ...veri,
             userName: veri.user?.name || 'N/A', // Thêm key userName để tránh lỗi undefined
-          })),
+          })).reverse(),
       );
       setFilterVerifications(
         response?.data?.data
@@ -118,7 +118,7 @@ const UmpiresVerifyTable = () => {
           .map((veri: any) => ({
             ...veri,
             userName: veri.user?.name || 'N/A', // Thêm key userName để tránh lỗi undefined
-          })),
+          })).reverse(),
       );
     } catch (error) {
       toast.error('Failed to fetch verifications.');
@@ -274,9 +274,9 @@ const UmpiresVerifyTable = () => {
     onFilter: (value: any, record: any) =>
       record[dataIndex]
         ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes((value as string).toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase())
         : false,
     render: (text) =>
       searchedColumn === dataIndex ? (

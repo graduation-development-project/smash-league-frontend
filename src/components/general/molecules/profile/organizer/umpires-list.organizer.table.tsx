@@ -174,7 +174,7 @@ const UmpiresListTable = ({
           status: regis.status,
         }));
 
-        setVetificationList(formatData);
+        setVetificationList(formatData.reverse());
         setIsLoading(false);
       } else {
         setVetificationList([]);
