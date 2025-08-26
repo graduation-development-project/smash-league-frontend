@@ -6,13 +6,6 @@ A digital platform for **tournament management**, enabling organizers to create 
 - **Name:** Smash League  
 - **Timeline:** Dec 2024 – May 2025  
 - **Team size:** 4  
-- **Role:** Front-end Developer, UI/UX Designer  
-
-## 🛠️ Responsibilities
-- Designed intuitive UI/UX flows that balanced **complex tournament rules** with ease of use.  
-- Built **responsive and scalable UIs** using Next.js, TypeScript, Ant Design, and TailwindCSS.  
-- Integrated **RESTful APIs** to support dynamic bracket generation, real-time athlete/referee registration, and match scoring.  
-- Collaborated closely with teammates, demonstrating adaptability, problem-solving, and strong communication to deliver milestones effectively.  
 
 ## ⚙️ Technology Stack
 - **Frontend:** Next.js, TypeScript, Ant Design, TailwindCSS  
